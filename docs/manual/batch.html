@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recipes and batches - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html" class="cur">Recipes &amp; batches</a>
+<div class="toc"><a href="#the-built-in-recipes">The built-in recipes</a><a href="#running-a-batch">Running a batch</a><a href="#your-own-recipes">Your own recipes</a><a href="#transform">Transform</a><a href="#from-claude-and-scripts">From Claude and scripts</a></div>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Recipes and batches -->
+<!-- nav: Recipes & batches -->
+<h1>Recipes and batches</h1>
+<p class="lead">A recipe is a list of steps that finishes a model: mend it, reduce it, texture it, export it. Run it
+on the model you have open, or on a whole folder of models at once, as a photo editor applies a preset to a whole shoot. A batch
+runs in a hidden Patina, so you can keep working, and it never changes the files themselves: the results go to an
+output folder.</p>
+<figure><img src="img/batch_window.png" alt="The Batch process window" style="max-width:618px"><figcaption>Two models
+through the <i>Web and AR</i> recipe.</figcaption></figure>
+
+<h2 id="the-built-in-recipes">The built-in recipes</h2>
+<table>
+  <tr><th>Recipe</th><th>Steps</th></tr>
+  <tr><td>Game asset</td><td>Mend, bake mesh maps (AO and curvature), export a GLB with three levels of detail and 2K
+    textures</td></tr>
+  <tr><td>Web and AR</td><td>Mend, reduce to a quarter of the triangles, export a light GLB with 1K textures</td></tr>
+  <tr><td>Clean up</td><td>Mend everything the <a href="mesh.html">Mesh Check</a> can, export a GLB</td></tr>
+  <tr><td>3D print</td><td>Mend (closing holes up to 512 edges, faces out), stand it on the ground, export an STL in
+    millimeters</td></tr>
+  <tr><td>Auto texture</td><td>Bake mesh maps, a library material per material slot from the slots' names, export a GLB</td></tr>
+  <tr><td>Worn painted metal</td><td>Bake mesh maps, the <i>Worn painted metal</i> smart material, export a GLB</td></tr>
+  <tr><td>Centimeters to meters</td><td>Scale a model made in centimeters to meters, origin at its base, export a GLB</td></tr>
+</table>
+
+<h2 id="running-a-batch">Running a batch</h2>
+<p>Open <i>File › Batch Process…</i>, pick a recipe, add files or folders (tick <i>Its subfolders too</i> to go
+deeper) and choose the output folder (by default a <code>patina_out</code> folder beside the first file). <b>Run the
+batch</b> opens each model in a hidden Patina, runs the steps and moves on. The window shows how far it has got and,
+for each file, whether it worked; hover a failed one to read why. A file that fails is left, and the rest carry on.
+<b>Stop after this file</b> ends the batch early.</p>
+<p><b>Apply to the open model</b> runs the same steps on the model you have open instead (its exports go beside its
+file).</p>
+
+<h2 id="your-own-recipes">Your own recipes</h2>
+<p><b>Edit / copy</b> shows a recipe's steps as text: each is a Patina command and its settings, the same ones Claude
+and scripts use (see <a href="commands.html">Commands</a>). Change them and <b>Save as my recipe</b>. In the steps,
+<code>${name}</code> is the model's name, <code>${file}</code> its file, <code>${dir}</code> its folder and
+<code>${out}</code> the output folder, so <code>"path": "${out}/${name}.glb"</code> exports each model under its own
+name. Your recipes are kept in your Patina folder and can be deleted; a copy of a built-in recipe under its id replaces
+it for you.</p>
+<pre>[
+ {"cmd": "mesh_fix", "args": {"all": true}},
+ {"cmd": "mesh_transform", "args": {"from_units": "cm", "origin": "base"}},
+ {"cmd": "mesh_reduce", "args": {"ratio": 0.5}},
+ {"cmd": "apply_smart_material", "args": {"id": "patina_smart_rusted_iron"}},
+ {"cmd": "export_model", "args": {"path": "${out}/${name}.glb", "texture_size": 2048, "lods": [0.5]}}
+]</pre>
+
+<h2 id="transform">Transform</h2>
+<p><i>Mesh › Transform…</i> (and the <code>mesh_transform</code> step) fixes models made in the wrong units or the
+wrong way round: the units it was made in (centimeters, millimeters, inches, feet, to Blender's meters), a scale, a turn
+around Blender's X, Y and Z, the origin (the center of its box, or the center of its bottom) and <i>Stand it on the
+ground</i>. The faces and UVs stay, so painted layers stay too; fill layers projected in 3D follow the new size. As
+with a fix, <i>Back to before</i> returns to the model as it was.</p>
+
+<h2 id="from-claude-and-scripts">From Claude and scripts</h2>
+<p><code>recipe_list</code>, <code>recipe_save</code>, <code>recipe_delete</code> and <code>recipe_apply</code> work with
+recipes; <code>batch_run</code> starts a batch (a recipe or steps, files and folders, an output folder),
+<code>batch_status</code> follows it and <code>batch_cancel</code> stops it. Outside Patina, <code>patina run job.json</code>
+runs a job with <code>"files"</code> and <code>"per_file"</code> steps the same way; <code>--progress</code> writes a
+line per finished file (see <a href="automation.html">Automation</a>).</p>
+
+</article>
+<footer class="pager"><a class="prev" href="mesh.html">← Mesh check &amp; export</a><a class="next" href="texture-set.html">Texture set &amp; export →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

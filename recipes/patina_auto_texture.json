@@ -1,0 +1,28 @@
+{
+ "patina_recipe": 1,
+ "id": "patina_auto_texture",
+ "name": "Auto texture",
+ "description": "A library material on each material slot, from the slots' names; exported as a GLB with its textures.",
+ "steps": [
+  {
+   "cmd": "bake_mesh_maps",
+   "args": {
+    "ao": true,
+    "curvature": true
+   }
+  },
+  {
+   "cmd": "auto_texture",
+   "args": {
+    "apply": true
+   }
+  },
+  {
+   "cmd": "export_model",
+   "args": {
+    "path": "${out}/${name}.glb",
+    "texture_size": 2048
+   }
+  }
+ ]
+}

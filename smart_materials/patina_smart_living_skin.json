@@ -1,0 +1,232 @@
+{
+ "description": "Light skin with redness in the creases and warm, translucent-looking thin parts (ears, nose, fingers).",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_skin_light",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Skin",
+   "opacity": 1.0,
+   "parent": 65,
+   "type": "fill",
+   "uid": 66,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.44999998807907104,
+    "invert": false,
+    "level": 0.30000001192092896,
+    "noise": 0.30000001192092896,
+    "noise_scale": 2.0,
+    "type": "occlusion"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.7799999713897705,
+      0.41999998688697815,
+      0.36000001430511475
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.550000011920929
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Redness in creases",
+   "opacity": 0.44999998807907104,
+   "parent": 65,
+   "type": "fill",
+   "uid": 67,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.5,
+    "invert": false,
+    "level": 0.550000011920929,
+    "noise": 0.20000000298023224,
+    "noise_scale": 2.0,
+    "type": "thin"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.8500000238418579,
+      0.41999998688697815,
+      0.3400000035762787
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Warm thin parts",
+   "opacity": 0.6000000238418579,
+   "parent": 65,
+   "type": "fill",
+   "uid": 68,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Living skin",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 65,
+   "visible": true
+  }
+ ],
+ "name": "Living skin",
+ "patina_smart_material": 1
+}

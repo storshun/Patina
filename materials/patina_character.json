@@ -1,0 +1,926 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Character",
+ "materials": [
+  {
+   "id": "patina_skin_fair",
+   "name": "Skin Fair",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "skin",
+   "description": "Fair skin with pores, fine creases, a few freckles and soft redness",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#ebc3ab",
+    "color_b": "#de9484",
+    "color_c": "#c08a68",
+    "roughness": [
+     0.5,
+     0.62
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.12,
+    "variation": 0.06,
+    "extra": [
+     0.8,
+     0.2,
+     0.5,
+     0.35
+    ],
+    "seed": 2,
+    "subsurface": 0.35,
+    "sheen": 0.1
+   },
+   "tags": [
+    "skin",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_skin_light",
+   "name": "Skin Light",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "skin",
+   "description": "Light warm skin with pores and soft redness",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#dba88a",
+    "color_b": "#d08470",
+    "color_c": "#a7714f",
+    "roughness": [
+     0.5,
+     0.62
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.12,
+    "variation": 0.06,
+    "extra": [
+     0.8,
+     0.05,
+     0.5,
+     0.3
+    ],
+    "seed": 3,
+    "subsurface": 0.35,
+    "sheen": 0.1
+   },
+   "tags": [
+    "skin",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_skin_medium",
+   "name": "Skin Medium",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "skin",
+   "description": "Medium olive skin with pores",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#bf8762",
+    "color_b": "#b06a54",
+    "color_c": "#8a5c3e",
+    "roughness": [
+     0.5,
+     0.62
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.12,
+    "variation": 0.06,
+    "extra": [
+     0.8,
+     0,
+     0.5,
+     0.25
+    ],
+    "seed": 4,
+    "subsurface": 0.32,
+    "sheen": 0.1
+   },
+   "tags": [
+    "skin",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_skin_brown",
+   "name": "Skin Brown",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "skin",
+   "description": "Brown skin with pores and subtle variation",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8a5638",
+    "color_b": "#7a4232",
+    "color_c": "#5a3825",
+    "roughness": [
+     0.5,
+     0.62
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.12,
+    "variation": 0.06,
+    "extra": [
+     0.8,
+     0,
+     0.5,
+     0.25
+    ],
+    "seed": 5,
+    "subsurface": 0.3,
+    "sheen": 0.1
+   },
+   "tags": [
+    "skin",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_skin_deep",
+   "name": "Skin Deep",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "skin",
+   "description": "Deep brown skin with pores and subtle variation",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5a3424",
+    "color_b": "#522a20",
+    "color_c": "#3a2418",
+    "roughness": [
+     0.5,
+     0.62
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.12,
+    "variation": 0.06,
+    "extra": [
+     0.8,
+     0,
+     0.5,
+     0.2
+    ],
+    "seed": 6,
+    "subsurface": 0.28,
+    "sheen": 0.1
+   },
+   "tags": [
+    "skin",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_skin_anime",
+   "name": "Skin Anime",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "skin",
+   "description": "Clean pale anime skin: flat color with a faint warm blush, no pores",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#fcdcc8",
+    "color_b": "#f6b4a6",
+    "color_c": "#e8a890",
+    "roughness": [
+     0.65,
+     0.65
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 3,
+    "height": 0.0,
+    "variation": 0.02,
+    "extra": [
+     0,
+     0,
+     0,
+     0.3
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "skin",
+    "stylized",
+    "anime"
+   ]
+  },
+  {
+   "id": "patina_skin_toon_warm",
+   "name": "Skin Toon Warm",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "skin",
+   "description": "Smooth stylized tan skin for cartoon characters",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e5a982",
+    "color_b": "#d98a6c",
+    "color_c": "#c07a58",
+    "roughness": [
+     0.6,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 3,
+    "height": 0.0,
+    "variation": 0.03,
+    "extra": [
+     0,
+     0,
+     0,
+     0.45
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "skin",
+    "stylized"
+   ]
+  },
+  {
+   "id": "patina_skin_painted",
+   "name": "Skin Hand-Painted",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "brush_strokes",
+   "description": "Hand-painted skin: soft strokes of shadow and light tones",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e8b596",
+    "color_b": "#dca184",
+    "color_c": "#f0c4a8",
+    "roughness": [
+     0.7,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 4,
+    "height": 0.0,
+    "variation": 0.0,
+    "extra": [
+     1,
+     1,
+     2,
+     0.2
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "skin",
+    "stylized",
+    "hand-painted"
+   ]
+  },
+  {
+   "id": "patina_hair_black",
+   "name": "Hair Black",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair",
+   "description": "Black hair: fine strands along V, loose locks",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1e1c1b",
+    "color_b": "#4a4440",
+    "color_c": "#0a0908",
+    "roughness": [
+     0.35,
+     0.55
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.25,
+    "variation": 0.12,
+    "extra": [
+     0.5,
+     0,
+     0,
+     0
+    ],
+    "seed": 2,
+    "sheen": 0.3
+   },
+   "tags": [
+    "hair",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_hair_brown",
+   "name": "Hair Brown",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair",
+   "description": "Brown hair: fine strands along V, loose locks",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5a3a24",
+    "color_b": "#9a6a42",
+    "color_c": "#24160d",
+    "roughness": [
+     0.4,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.25,
+    "variation": 0.15,
+    "extra": [
+     0.5,
+     0,
+     0,
+     0
+    ],
+    "seed": 3,
+    "sheen": 0.3
+   },
+   "tags": [
+    "hair",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_hair_blonde",
+   "name": "Hair Blonde",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair",
+   "description": "Blonde hair: fine strands along V, loose locks",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c7a26a",
+    "color_b": "#ecd6a2",
+    "color_c": "#7d6038",
+    "roughness": [
+     0.4,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.25,
+    "variation": 0.15,
+    "extra": [
+     0.4,
+     0,
+     0,
+     0
+    ],
+    "seed": 4,
+    "sheen": 0.3
+   },
+   "tags": [
+    "hair",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_hair_ginger",
+   "name": "Hair Ginger",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair",
+   "description": "Copper-red hair with gentle waves",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#9c4a22",
+    "color_b": "#d4834a",
+    "color_c": "#4a1e0c",
+    "roughness": [
+     0.4,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.25,
+    "variation": 0.15,
+    "extra": [
+     0.5,
+     0,
+     0,
+     3
+    ],
+    "seed": 5,
+    "sheen": 0.3
+   },
+   "tags": [
+    "hair",
+    "realistic"
+   ]
+  },
+  {
+   "id": "patina_hair_anime_pink",
+   "name": "Hair Anime Pink",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair",
+   "description": "Anime hair: two clean tones and a zig-zag highlight ring",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e98aa8",
+    "color_b": "#ffe4ee",
+    "color_c": "#a84a6c",
+    "roughness": [
+     0.55,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 4,
+    "height": 0.08,
+    "variation": 0.0,
+    "extra": [
+     0.3,
+     1,
+     1,
+     0
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "hair",
+    "stylized",
+    "anime"
+   ]
+  },
+  {
+   "id": "patina_hair_anime_blue",
+   "name": "Hair Anime Navy",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair",
+   "description": "Anime hair: dark navy with a pale blue highlight ring",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#2c3a6e",
+    "color_b": "#a9c4f2",
+    "color_c": "#141b38",
+    "roughness": [
+     0.5,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 4,
+    "height": 0.08,
+    "variation": 0.0,
+    "extra": [
+     0.3,
+     1,
+     1,
+     0
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "hair",
+    "stylized",
+    "anime"
+   ]
+  },
+  {
+   "id": "patina_satin_red",
+   "name": "Silk Satin Red",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Red silk satin: long smooth floats with a soft sheen",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#a3121e",
+    "color_b": "#8e0f19",
+    "color_c": "#000000",
+    "roughness": [
+     0.22,
+     0.4
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 16,
+    "detail": 4,
+    "height": 0.06,
+    "variation": 0.04,
+    "extra": [
+     2,
+     0,
+     0,
+     1
+    ],
+    "seed": 2,
+    "sheen": 0.5
+   },
+   "tags": [
+    "cloth",
+    "silk"
+   ]
+  },
+  {
+   "id": "patina_satin_black",
+   "name": "Silk Satin Black",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Black satin for dresses and linings",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1c1b1f",
+    "color_b": "#141316",
+    "color_c": "#000000",
+    "roughness": [
+     0.2,
+     0.38
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 16,
+    "detail": 4,
+    "height": 0.06,
+    "variation": 0.04,
+    "extra": [
+     2,
+     0,
+     0,
+     1
+    ],
+    "seed": 3,
+    "sheen": 0.5
+   },
+   "tags": [
+    "cloth",
+    "silk"
+   ]
+  },
+  {
+   "id": "patina_satin_ivory",
+   "name": "Silk Satin Ivory",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Ivory satin (wedding dress, shirts)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#ece3d2",
+    "color_b": "#ddd2bf",
+    "color_c": "#000000",
+    "roughness": [
+     0.25,
+     0.42
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 16,
+    "detail": 4,
+    "height": 0.06,
+    "variation": 0.03,
+    "extra": [
+     2,
+     0,
+     0,
+     1
+    ],
+    "seed": 4,
+    "sheen": 0.5
+   },
+   "tags": [
+    "cloth",
+    "silk"
+   ]
+  },
+  {
+   "id": "patina_school_skirt_plaid",
+   "name": "School Skirt Plaid Pleated",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Navy, green and red tartan with knife pleats (school uniform skirt)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1f2a44",
+    "color_b": "#2d5a3d",
+    "color_c": "#b8322e",
+    "roughness": [
+     0.75,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.06,
+    "extra": [
+     0,
+     2,
+     8,
+     0
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "cloth",
+    "uniform",
+    "pattern"
+   ]
+  },
+  {
+   "id": "patina_plaid_red",
+   "name": "Tartan Red",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Red tartan wool (shirts, scarves, skirts)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#a3242a",
+    "color_b": "#1d2b4a",
+    "color_c": "#e2c35a",
+    "roughness": [
+     0.8,
+     0.92
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 4,
+    "height": 0.25,
+    "variation": 0.06,
+    "extra": [
+     0,
+     2,
+     0,
+     0
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "cloth",
+    "pattern"
+   ]
+  },
+  {
+   "id": "patina_uniform_navy",
+   "name": "Uniform Wool Navy",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Navy wool gabardine for blazers and uniforms",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#232c45",
+    "color_b": "#1e263c",
+    "color_c": "#000000",
+    "roughness": [
+     0.75,
+     0.88
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 4,
+    "height": 0.15,
+    "variation": 0.05,
+    "extra": [
+     0,
+     0,
+     0,
+     0.2
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "cloth",
+    "uniform"
+   ]
+  },
+  {
+   "id": "patina_hair_card_blonde",
+   "name": "Hair Card Blonde",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair_cards",
+   "description": "Blonde strands for hair cards: roots at the top, tips cut out (use UV mapping)",
+   "default_scale": 1.0,
+   "tags": [
+    "hair",
+    "see-through",
+    "card"
+   ],
+   "params": {
+    "color_a": "#b89458",
+    "color_b": "#ecd8a0",
+    "color_c": "#000000",
+    "roughness": [
+     0.45,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     40,
+     0.5,
+     0.35,
+     0.5
+    ],
+    "sheen": 0.4,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_hair_card_brown",
+   "name": "Hair Card Brown",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair_cards",
+   "description": "Brown strands for hair cards (use UV mapping)",
+   "default_scale": 1.0,
+   "tags": [
+    "hair",
+    "see-through",
+    "card"
+   ],
+   "params": {
+    "color_a": "#4a2e1a",
+    "color_b": "#8a6440",
+    "color_c": "#000000",
+    "roughness": [
+     0.45,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     48,
+     0.5,
+     0.35,
+     0.3
+    ],
+    "sheen": 0.4,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_hair_card_black",
+   "name": "Hair Card Black",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair_cards",
+   "description": "Black strands for hair cards (use UV mapping)",
+   "default_scale": 1.0,
+   "tags": [
+    "hair",
+    "see-through",
+    "card"
+   ],
+   "params": {
+    "color_a": "#0c0b0b",
+    "color_b": "#3a3534",
+    "color_c": "#000000",
+    "roughness": [
+     0.4,
+     0.65
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     56,
+     0.6,
+     0.3,
+     0.2
+    ],
+    "sheen": 0.5,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_hair_card_anime_pink",
+   "name": "Hair Card Anime Pink",
+   "category": "Character",
+   "type": "procedural",
+   "generator": "hair_cards",
+   "description": "Pink anime hair strands for cards (use UV mapping)",
+   "default_scale": 1.0,
+   "tags": [
+    "hair",
+    "see-through",
+    "card",
+    "anime"
+   ],
+   "params": {
+    "color_a": "#e86aa0",
+    "color_b": "#ffc0dc",
+    "color_c": "#000000",
+    "roughness": [
+     0.5,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.15,
+    "extra": [
+     24,
+     0.7,
+     0.4,
+     0.6
+    ],
+    "sheen": 0.3,
+    "cutout": true
+   }
+  }
+ ]
+}

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patina Assistant - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html" class="cur">Assistant</a>
+<div class="toc"><a href="#assistant-model">Getting the model</a><a href="#assistant-use">Asking</a><a href="#assistant-parts">Parts of the model</a><a href="#assistant-what">What it can do</a><a href="#assistant-uv">One island per part</a><a href="#assistant-feedback">When it gets it wrong</a><a href="#assistant-scripting">From scripts and Claude</a><a href="#assistant-off">Switching it off</a></div>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Patina Assistant -->
+<!-- nav: Assistant -->
+<h1>Patina Assistant</h1>
+<p class="lead">Patina 0.11 adds an assistant you talk to in plain words: <i>"make the creases of the skin slightly
+redder"</i>, <i>"one UV island for the head and another for the body"</i>. A small model running on your own computer
+turns the request into Patina commands, shows you what it will do, and does it as one step you can undo. Nothing is sent
+anywhere, and there is no account or key.</p>
+
+<h2 id="assistant-model">Getting the model</h2>
+<p>The model is a separate download, so Patina itself stays small. It is one file, <code>patina-assistant-1.7b-q4_k_m.gguf</code>
+(1.1 GB). Download it from the link given with this Patina release<!-- MODEL_URL: the published link goes here -->, then in <i>Edit › Preferences › Features</i>, under
+<b>Patina Assistant</b>, click <b>Choose model file...</b> and pick it. Patina copies it into its own folder
+(<code>~/.local/share/patina/user/models</code> on Linux, <code>%LOCALAPPDATA%\Patina\user\models</code> on Windows) and checks
+it. The line under the button then says where the model runs: on the graphics card, or on the processor.</p>
+<p>The file's SHA-256 is <code>c0105bb18bceb516259312df7fc2a3e6ca45a8ccbadad5eefd1f6b214c89e9e0</code>. If Patina doesn't recognize a file, it still uses it and says so.</p>
+
+<h2 id="assistant-use">Asking</h2>
+<ol>
+  <li>Open <i>Window › Assistant</i>, or type into the command palette (<kbd>Ctrl+Shift+P</kbd>): when nothing matches,
+    the last row offers <b>Ask the Assistant</b>.</li>
+  <li>Type what you want and press <kbd>Enter</kbd>. The answer takes about a second on a recent graphics card and a few
+    seconds on the processor alone.</li>
+  <li>The Assistant says in one sentence what it will do, and lists the steps in plain words. Steps that delete a layer,
+    clear paint or rebuild the UVs have a <b>Careful</b> line.</li>
+  <li><b>Preview</b> runs the plan, so you see the real result in the viewport. <b>Keep</b> keeps it; <b>Cancel</b> takes it
+    back. While previewing, the <b>Strength</b> slider (and the <b>Color</b> of a tint) adjusts the result directly, without
+    asking again.</li>
+</ol>
+<p>Everything a request does is <b>one undo step</b>, named after it in the history: <kbd>Ctrl+Z</kbd> takes back the whole
+request. Requests that only change the view, the camera or the brush, or open a window, run at once.</p>
+<p>A few requests change something Patina can't undo: a texture set of its own for a part, the texture resolution, and
+the texture set layout (each of them clears the undo history). Their plan has no <b>Preview</b>; <b>Do it</b> runs it, and
+says first that it can't be undone.</p>
+<figure><img src="img/assistant_panel.png" alt="The Assistant window with a plan for a red tint in the creases" style="max-width:420px">
+  <figcaption>The plan for the tint request: one step, with the Color and Strength to adjust while previewing.</figcaption></figure>
+<figure><img src="img/assistant_tint.png" alt="A model before and after the Assistant's tint">
+  <figcaption>Before and after: the tint sits in the creases of the Skin slot only.</figcaption></figure>
+<p>With an empty request box, the panel shows examples made from your model's own part names; click one to fill the
+box. Your recent requests are listed under them.</p>
+
+<h3 id="follow-ups">Follow-ups</h3>
+<p>The Assistant remembers what the last request made, so you can carry on: <i>"a bit stronger"</i>, <i>"less red"</i>,
+<i>"only on the face"</i>, <i>"do that everywhere"</i>, <i>"put it on the edges instead"</i>, <i>"put it on the boots
+too"</i>, <i>"rename it to Base"</i>, <i>"hide it for now"</i>, <i>"actually, remove that"</i>.</p>
+
+<h3 id="when-it-asks-back">When it asks back</h3>
+<p>If a request is unclear, or names a part the model doesn't have, the Assistant asks a question instead of guessing.
+The parts it can see appear as buttons under the question: hover over one to see its faces, click it to answer. A vague
+request (<i>"make it look better"</i>) gets a few ideas for your model as buttons too.</p>
+
+<h3 id="assistant-cant">When it can't</h3>
+<p>Some things are outside Patina: changing the shape of the model, adding objects, animating or posing it, painting
+artwork for you, making video, uploading. The Assistant says so in one sentence instead of doing something else that
+sounds similar, and offers up to three close things it can do, as buttons: <i>"give him a cape"</i> gets an offer to set
+you up to paint a cape by hand, and a few changes to his parts; click one to ask for it.</p>
+<figure><img src="img/assistant_cant.png" alt="The Assistant saying it can't add a cape, with three requests it can do as buttons" style="max-width:420px">
+  <figcaption>Something Patina doesn't do: one sentence why, and requests it can do instead.</figcaption></figure>
+
+<h2 id="assistant-parts">Parts of the model</h2>
+<p>Requests name parts the way you would: the jacket, the left arm, the head. The Assistant knows the parts Patina finds
+(<code>mesh_parts</code> lists them):</p>
+<ul>
+  <li><b>Material slots</b>, by name: <i>Skin</i>, <i>Jeans</i>, <i>Boots_Leather</i>...</li>
+  <li><b>Vertex groups</b> sent from Blender (vertices with a weight of 0.5 or more): <i>Head</i>, <i>Arm.L</i>...</li>
+  <li><b>Pieces</b>: separate parts of the mesh, largest first, when no slot or group already names them.</li>
+  <li><b>The head and the body</b>, found from the shape: Patina looks for a neck, a narrow ring between a wider head
+    and wider shoulders. It looks again under long hair. If there is no neck (a prop, a creature with no clear neck) there
+    is no head part, and the Assistant asks which part is the head.</li>
+  <li><b>The selection</b>: select faces with the Island brush or the Select tool and say <i>"make these rusty"</i>.</li>
+</ul>
+<p>A part from a material slot or vertex group is the surest; name your slots and groups and the Assistant (and Auto
+texture) can find them.</p>
+<figure><img src="img/assistant_parts.png" alt="The head and the body found on a character" style="max-width:640px">
+  <figcaption>The head and the body Patina finds from the shape, shown in color.</figcaption></figure>
+
+<h2 id="assistant-what">What it can do</h2>
+<p>The Assistant sets things up; you finish them. Most requests leave layers with a <b>Strength</b> slider each, so you
+tune the result by hand instead of hunting for settings.</p>
+<ul>
+  <li><b>Whole looks</b> in one go: <i>"make the armor look battle-worn"</i>, weathered, rusty, abandoned, muddy, burnt,
+    snowy, overgrown, dusty, grimy. A look is a folder of weathering layers (dirt in the creases, dust on top, wear on the
+    edges...), one slider each. <i>"Slightly"</i> or <i>"very"</i> sets how strong it starts.</li>
+  <li><b>Several things at once</b>: <i>"make the jacket black leather, the jeans denim and put mud on the boots"</i>.</li>
+  <li><b>Getting ready to paint by hand</b>: <i>"I want to paint scratches on the helmet"</i> adds a paint layer that only
+    shows on the helmet, and picks the material, the brush and the Paint tool.</li>
+  <li><b>Adjustments</b>: <i>"make the jacket a bit darker"</i>, lighter, more or less saturated, more contrast, rougher,
+    glossier. Each is an adjustment layer limited to the part, so it can be undone or tuned at any time.</li>
+  <li>Tints and materials limited to a part and to a smart mask: creases, edges, sheltered places, where dust settles,
+    toward the bottom, in patches. Materials can have a color: <i>"red leather"</i>. A region can leave a part out:
+    <i>"dirt everywhere except the face"</i>.</li>
+  <li>Wear, dirt, dust, rust, moss, snow and soot, and the smart materials, on the whole model or one part.</li>
+  <li><b>The selection</b>: select faces and say <i>"make these gold"</i> or <i>"give these their own UV island"</i>.</li>
+  <li>UVs: one island per part, unwrapping or relaxing a part, packing, texel density, mirroring, fixing overlaps.</li>
+  <li>Baking AO, curvature and thickness.</li>
+  <li>Layers, by name or by what they are: <i>"turn the rust down"</i>, <i>"hide the dirt and the grime"</i>, rename, opacity,
+    blend mode, move, duplicate, delete, put in a folder.</li>
+  <li>The brush, the paint material or color, the tool, the view mode, the camera and symmetry. The Assistant knows how
+    the brush is set now, so <i>"a bit bigger"</i>, <i>"softer"</i>, <i>"less flow"</i>, <i>"smooth my strokes"</i> (lazy
+    mouse) and <i>"keep my strokes on one island"</i> work.</li>
+  <li><i>"Make it look clean again"</i> hides the weathering layers (dirt, dust, grime, rust, moss, soot, snow, edge wear);
+    <i>"remove all the weathering"</i> deletes them.</li>
+  <li><b>Texture sets</b> (new in 0.12): <i>"split the head into its own texture map"</i>, <i>"put the head on a separate UV
+    map"</i>, <i>"put the head on a new UDIM tile"</i> give the part a <a href="texture-set.html#new-set">texture set of its
+    own</a>. <i>"One texture per material"</i> and <i>"put everything back on one texture"</i> switch the layout, and
+    <i>"make the textures 4K"</i> sets the resolution.</li>
+  <li><b>Texture space for a part</b>: <i>"give the head more texture space"</i> (or <i>"twice the texel density"</i>,
+    <i>"less UV space for the body"</i>) scales the part's islands and packs the layout again, so the part gets more of
+    the texture without a texture set of its own.</li>
+  <li><b>Glow</b>: <i>"make the visor glow blue"</i> adds a layer that lights the part up in that color (emissive).
+    Adjustments include <i>"more metallic"</i> and <i>"less metallic"</i>.</li>
+  <li><b>Text to paint through</b>: <i>"write VALOR on the shield"</i> puts the letters over the view as a stencil, with a
+    paint layer on that part and the Paint tool ready; paint over the letters.</li>
+  <li><b>Selections</b>: <i>"select the head faces"</i>, <i>"also select the boots"</i>, <i>"invert the selection"</i>,
+    <i>"clear the selection"</i>.</li>
+  <li><b>The right window</b>: <i>"export the textures for Unreal"</i> opens the export window set up for Unreal;
+    <i>"render an image"</i>, <i>"check the symmetry"</i>, <i>"bake from my high poly"</i>, <i>"send it back to
+    Blender"</i>, <i>"show me the shortcuts"</i> open theirs. You choose the folder and press the button.</li>
+  <li><b>Questions about the model</b>: <i>"how many faces is this?"</i>, <i>"which parts can you see?"</i>, <i>"what layers
+    do I have?"</i>, <i>"how big are the textures?"</i>.</li>
+</ul>
+<figure><img src="img/assistant_panel_look.png" alt="The Assistant window with a battle-worn look: three layers, a slider each" style="max-width:420px">
+  <figcaption>A whole look is three layers in a folder, each with its own slider.</figcaption></figure>
+<figure><img src="img/assistant_look.png" alt="A barrel before and after making it look battle-worn">
+  <figcaption><i>"Make it look battle-worn"</i>: worn metal on the edges, dirt in the creases, soot in patches.</figcaption></figure>
+<p>It doesn't open, save or write files itself, or send anything to Blender: it opens the window where you do that. It
+doesn't add or reshape geometry, animate, or paint artwork for you (see <a href="#assistant-cant">When it can't</a>). Ask
+<i>"what can you do?"</i> for a short summary and a few ideas for your model.</p>
+
+<h2 id="assistant-uv">One island per part</h2>
+<p><i>"One UV island for the head and another for the body"</i> runs <code>uv_island_per_part</code>. Each part is cut along
+its border and unwrapped on its own. A part that is closed or a tube (a whole head, a torso) gets a cut down its back, and a
+part with limbs gets cuts from the hands and feet along the back of the arms and legs. That is how you would cut a
+character by hand. It is then relaxed (LSCM, then as-rigid-as-possible) and everything is packed. A part made of separate
+pieces (eyes, teeth, lashes) gets an island per piece. The command reports the stretch of each part.</p>
+<p>A whole body as one island is hard to lay flat: the arms and legs can end up on top of the torso, and layered hair on
+top of itself. Then two spots share the same texture. When that happens, the Assistant says so under the plan. For a
+cleaner layout, make more islands: paint an arm, a leg or a strand of hair with the Island brush (<kbd>L</kbd>) and press
+<kbd>Enter</kbd>.</p>
+<figure><img src="img/assistant_panel_uv.png" alt="The Assistant window with a plan to rebuild the UVs" style="max-width:420px">
+  <figcaption>Rebuilding the UVs gets a Careful line, because it replaces the old layout.</figcaption></figure>
+<figure><img src="img/assistant_uv.png" alt="Two UV islands, one for the head and one for the body">
+  <figcaption>The result: one island for the head and one for the body.</figcaption></figure>
+
+<h2 id="assistant-feedback">When it gets it wrong</h2>
+<p>Cancel, and try other words. <b>Not what I wanted</b> saves the request, the plan and a note of what you meant to
+<code>~/.local/share/patina/user/assistant/feedback.jsonl</code>. It stays on your computer; it's there if you want to
+help make the next model better. <b>Copy as commands</b> copies the plan's commands, to paste into the console or a
+script.</p>
+
+<h2 id="assistant-scripting">From scripts and Claude</h2>
+<p>The same commands are available to scripts, the HTTP API and MCP:</p>
+<ul>
+  <li><code>assistant_ask {request}</code>: the plan for a request, checked but not run.</li>
+  <li><code>assistant_apply {plan, request}</code>: runs a plan as one undo step. A step that fails undoes the ones
+    before it.</li>
+  <li><code>assistant_check {plan}</code>: the steps in plain words and the warnings.</li>
+  <li><code>assistant_panel {request, preview}</code>: opens the Assistant window in the desktop app and asks there;
+    with <code>preview</code> the plan is previewed as soon as it arrives, waiting for <b>Keep</b> or <b>Cancel</b>.</li>
+  <li><code>assistant_model {action: load | unload | status}</code>, <code>assistant_context {request}</code>,
+    <code>assistant_grammar</code>.</li>
+  <li>The commands plans use are ordinary commands too: <code>mesh_parts</code>, <code>select_part</code>,
+    <code>add_tint_layer</code>, <code>add_material_layer</code>, <code>update_layer_mask</code>,
+    <code>uv_island_per_part</code>, and <code>apply_smart_material</code> with a region.</li>
+</ul>
+<p>A plan is JSON: <code>{"say": "...", "steps": [{"cmd": "...", "args": {...}}]}</code>. <code>"$0.index"</code> in a step
+stands for the <code>index</code> that step 0 returned. With the macro recorder running, a request is recorded as its
+steps, so it replays without the model.</p>
+
+<h2 id="assistant-off">Switching it off</h2>
+<p><i>Edit › Preferences › Features › Patina Assistant</i>. Switched off, the window, the palette row and the Assistant's
+commands disappear. Without a model file it does nothing at all.</p>
+
+</article>
+<footer class="pager"><a class="prev" href="tools.html">← Search, checks &amp; macros</a><a class="next" href="painting.html">Painting →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

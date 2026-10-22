@@ -1,0 +1,103 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Basic",
+ "materials": [
+  {
+   "id": "patina_flat_white",
+   "name": "White",
+   "category": "Basic",
+   "type": "flat",
+   "color": "#f2f2f2",
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Flat color",
+   "tags": []
+  },
+  {
+   "id": "patina_flat_black",
+   "name": "Black",
+   "category": "Basic",
+   "type": "flat",
+   "color": "#101010",
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Flat color",
+   "tags": []
+  },
+  {
+   "id": "patina_flat_gray",
+   "name": "Gray",
+   "category": "Basic",
+   "type": "flat",
+   "color": "#808080",
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Flat color",
+   "tags": []
+  },
+  {
+   "id": "patina_flat_red",
+   "name": "Red",
+   "category": "Basic",
+   "type": "flat",
+   "color": "#c0201c",
+   "roughness": 0.45,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Flat color",
+   "tags": []
+  },
+  {
+   "id": "patina_flat_green",
+   "name": "Green",
+   "category": "Basic",
+   "type": "flat",
+   "color": "#2f8a35",
+   "roughness": 0.45,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Flat color",
+   "tags": []
+  },
+  {
+   "id": "patina_flat_blue",
+   "name": "Blue",
+   "category": "Basic",
+   "type": "flat",
+   "color": "#1f4fbf",
+   "roughness": 0.45,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Flat color",
+   "tags": []
+  },
+  {
+   "id": "patina_flat_yellow",
+   "name": "Yellow",
+   "category": "Basic",
+   "type": "flat",
+   "color": "#f0c419",
+   "roughness": 0.45,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Flat color",
+   "tags": []
+  },
+  {
+   "id": "patina_flat_orange",
+   "name": "Orange",
+   "category": "Basic",
+   "type": "flat",
+   "color": "#e8761c",
+   "roughness": 0.45,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Flat color",
+   "tags": []
+  }
+ ]
+}

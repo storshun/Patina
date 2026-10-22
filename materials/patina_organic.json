@@ -1,0 +1,412 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Organic",
+ "materials": [
+  {
+   "id": "patina_scales",
+   "name": "Scales",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "cells",
+   "description": "Reptile scales",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#4f6b3a",
+    "color_b": "#7f9a56",
+    "color_c": "#1e2a16",
+    "roughness": [
+     0.4,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 4,
+    "height": 0.6,
+    "variation": 0.6,
+    "extra": [
+     0.08,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_fish_scales",
+   "name": "Fish Scales",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "scales",
+   "description": "Round silvery fish scales with bright rims",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8fa7a8",
+    "color_b": "#d9e3df",
+    "color_c": "#2c3a3d",
+    "roughness": [
+     0.3,
+     0.5
+    ],
+    "metallic": [
+     0.3,
+     0
+    ],
+    "scale": 8,
+    "detail": 4,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0.6,
+     0,
+     0
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "creature"
+   ]
+  },
+  {
+   "id": "patina_dragon_scales",
+   "name": "Dragon Scales",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "scales",
+   "description": "Pointed green scales with a central keel",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#2f5a2a",
+    "color_b": "#9cb04a",
+    "color_c": "#0e1a0c",
+    "roughness": [
+     0.45,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 4,
+    "height": 0.7,
+    "variation": 0.2,
+    "extra": [
+     1,
+     0.5,
+     1,
+     0
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "creature",
+    "fantasy"
+   ]
+  },
+  {
+   "id": "patina_snake_scales",
+   "name": "Snake Scales",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "scales",
+   "description": "Small tight brown snake scales",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#6e5a3c",
+    "color_b": "#a89068",
+    "color_c": "#1f170e",
+    "roughness": [
+     0.35,
+     0.55
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 12,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.3,
+    "extra": [
+     0.5,
+     0.3,
+     0,
+     0.58
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "creature"
+   ]
+  },
+  {
+   "id": "patina_feathers_brown",
+   "name": "Feathers Brown",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "feathers",
+   "description": "Overlapping brown feathers",
+   "default_scale": 1.0,
+   "tags": [
+    "feathers",
+    "bird"
+   ],
+   "params": {
+    "color_a": "#6a4c30",
+    "color_b": "#c8b090",
+    "color_c": "#2a1c10",
+    "roughness": [
+     0.6,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     2,
+     24,
+     0,
+     0.3
+    ],
+    "sheen": 0.4
+   }
+  },
+  {
+   "id": "patina_feathers_hawk",
+   "name": "Feathers Hawk",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "feathers",
+   "description": "Barred hawk feathers",
+   "default_scale": 1.0,
+   "tags": [
+    "feathers",
+    "bird"
+   ],
+   "params": {
+    "color_a": "#8a6a46",
+    "color_b": "#e8dcc4",
+    "color_c": "#3a2814",
+    "roughness": [
+     0.6,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     2,
+     24,
+     1,
+     0.3
+    ],
+    "sheen": 0.4
+   }
+  },
+  {
+   "id": "patina_feathers_peacock",
+   "name": "Feathers Peacock",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "feathers",
+   "description": "Peacock feathers with eyes",
+   "default_scale": 1.0,
+   "tags": [
+    "feathers",
+    "bird"
+   ],
+   "params": {
+    "color_a": "#14705a",
+    "color_b": "#d8b030",
+    "color_c": "#102a6a",
+    "roughness": [
+     0.4,
+     0.7
+    ],
+    "metallic": [
+     0.2,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     2,
+     30,
+     3,
+     0.2
+    ],
+    "sheen": 0.5
+   }
+  },
+  {
+   "id": "patina_leaves_autumn",
+   "name": "Leaves Autumn",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "leaves",
+   "description": "Fallen autumn leaves on soil",
+   "default_scale": 1.0,
+   "tags": [
+    "leaves",
+    "ground"
+   ],
+   "params": {
+    "color_a": "#8a6a1e",
+    "color_b": "#c8501a",
+    "color_c": "#3a2a18",
+    "roughness": [
+     0.7,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0.35,
+     0.8,
+     0.9
+    ],
+    "subsurface": 0.15
+   }
+  },
+  {
+   "id": "patina_leaves_forest_floor",
+   "name": "Leaves Forest Floor",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "leaves",
+   "description": "Green and brown leaves on a forest floor",
+   "default_scale": 1.0,
+   "tags": [
+    "leaves",
+    "ground"
+   ],
+   "params": {
+    "color_a": "#3e5a22",
+    "color_b": "#7a5a2a",
+    "color_c": "#2a2016",
+    "roughness": [
+     0.7,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0.3,
+     0.7,
+     0.5
+    ],
+    "subsurface": 0.15
+   }
+  },
+  {
+   "id": "patina_leaf_card_green",
+   "name": "Leaf Card Green",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "leaves",
+   "description": "One leaf filling the tile, cut out around it (a foliage card); light shines through it",
+   "default_scale": 1.0,
+   "tags": [
+    "leaves",
+    "see-through",
+    "card"
+   ],
+   "params": {
+    "color_a": "#3f6e22",
+    "color_b": "#9ab83a",
+    "color_c": "#000000",
+    "roughness": [
+     0.45,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     1,
+     0.35,
+     0.9,
+     0.2
+    ],
+    "subsurface": 0.45,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_foliage_ivy",
+   "name": "Foliage Ivy",
+   "category": "Organic",
+   "type": "procedural",
+   "generator": "leaves",
+   "description": "A mass of ivy leaves with see-through gaps",
+   "default_scale": 1.0,
+   "tags": [
+    "leaves",
+    "see-through",
+    "foliage"
+   ],
+   "params": {
+    "color_a": "#2f5a1e",
+    "color_b": "#58842e",
+    "color_c": "#000000",
+    "roughness": [
+     0.4,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     2,
+     0.4,
+     0.7,
+     0.3
+    ],
+    "subsurface": 0.35,
+    "cutout": true
+   }
+  }
+ ]
+}

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome to Patina - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html" class="cur">Welcome &amp; quick start</a>
+<div class="toc"><a href="#what-makes-it-different">What makes it different</a><a href="#quick-start">Quick start</a><a href="#where-to-go-next">Where to go next</a><a href="#formats">Model formats</a><a href="#model-textures">Models that come with textures or vertex colors</a></div>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Welcome to Patina -->
+<!-- nav: Welcome & quick start -->
+<h1>Welcome to Patina</h1>
+<p class="lead">Patina is a texture painter for Linux and Windows. You paint materials such as rust, worn paint, wood or
+fabric straight onto a 3D model, and they come out as PBR texture maps for Blender, game engines and glTF.</p>
+
+<figure>
+  <img src="img/overview.png" alt="The Patina window with a painted Suzanne model, the UV editor, the layer stack and the material library">
+  <figcaption>Suzanne with a fill layer of chipped paint, rust on the edges from a smart mask, cavity dirt and a hand-painted gold trim.</figcaption>
+</figure>
+
+<h2 id="what-makes-it-different">What makes it different</h2>
+<ul>
+  <li><b>Paint ignores the UV layout.</b> Each brush dab is worked out in 3D, on the surface under your cursor. Strokes
+    therefore run straight across UV seams, across islands at different scales and across rotated islands, with no
+    breaks or stretching.</li>
+  <li><b>Materials, not just colors.</b> One stroke paints base color, roughness, metallic, height and emission
+    together. The <a href="materials.html">Patina default library</a> has 270 ready-made materials, and you can add
+    your own PBR scans or design procedural ones.</li>
+  <li><b>UV editing in the same app.</b> Paint the part you want as an island and Patina unwraps, orients and sizes it
+    for you, or unwrap, pack, move islands and mark seams by hand. Paint you have already done moves along with the UVs.</li>
+  <li><b>A live link to Blender.</b> Send a mesh from Blender with one click, and the textures come back into a
+    Principled BSDF material automatically. You can keep modeling after you've painted.</li>
+  <li><b>Claude can drive it.</b> Through MCP, Claude can paint, set up layers, unwrap and export. It can also take
+    screenshots of the window so it sees what you see.</li>
+</ul>
+
+<div class="callout tip"><span class="t">New in 0.24</span>More procedural materials: 16 new
+<a href="materials.html#the-material-editor">generators</a> (stripes, checks, dots, animal prints, cracked earth and
+lava, flagstones, pebbles, rock layers, crackle, chainmail, damascus, circuit boards, stained glass, mosaic, sequins,
+paper), 225 library materials, and <a href="materials.html#wear-and-wobble">grime, worn edges and warp</a> for every
+one. The material editor names each generator's settings. Masks gain <a href="layers.html#mask-effects">Pattern</a> (any
+material as a mask), Grow / shrink, Edges, the Gradient and Drips smart masks and four new kinds of noise.</div>
+
+<div class="callout tip"><span class="t">New in 0.10</span>A <a href="tools.html#palette">command palette</a>
+(<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) that finds anything by name; a <a href="tools.html#symmetry">mesh symmetry
+check</a> with a heat map, which can also select the off vertices in Blender; <a href="tools.html#texture-set-tools">Set
+lock and Isolate</a> for texture sets; <a href="tools.html#auto-texture">auto texture</a> from material slot names; a
+<a href="tools.html#macros">macro recorder</a>; layered PSD per texture set; and <a href="blender.html#auto-update">Auto
+Update Mesh</a> in Blender. Each new feature can be <a href="tools.html#features">switched off</a>.</div>
+
+<div class="callout tip"><span class="t">New in 0.8</span>UV tools: <a href="uv.html#packing">packing by shape</a>
+(far tighter layouts), a <a href="uv.html#seams">seam brush</a>, Cylinder and Sphere unwraps, and Relax. The
+<a href="materials.html">library</a> grows to 173 materials and 19 smart materials, with character skin and hair, cloth,
+and a hand-painted / toon set.</div>
+
+<div class="callout tip"><span class="t">New in 0.7.4</span>No more <a href="gotchas.html">ghosting</a>: patterned materials
+such as diamond plate no longer show a faint second copy on curved surfaces or on symmetric islands.</div>
+
+<div class="callout tip"><span class="t">New in 0.7.3</span>The <a href="web.html#island-brush">Island brush in Patina
+Web</a>, with mirroring, orientation, texel density, pinning and the UV right-click menu. Symmetric islands also stack on
+<a href="uv.html#mirror-matching">models whose halves differ in shape</a>. <a href="automation.html#claude-app">Connect to
+Claude app</a> sets up MCP in the Claude desktop app with one click. Patina has an application icon.</div>
+
+<div class="callout tip"><span class="t">New in 0.7.1</span><a href="uv.html#pinning">Pin UV islands</a> so they can't be moved
+by accident (the Island brush pins what it makes), the halves of a symmetric island stay together when either one moves,
+and the UV editor has a <a href="uv.html#uv-context-menu">right-click menu</a> with every UV operation.</div>
+
+<div class="callout tip"><span class="t">New in 0.7</span>A <a href="masks-guide.html">beginner's guide to masks and smart
+materials</a>. New bakes: <a href="texture-set.html#thickness">thickness</a> (with a <i>Thin parts</i> smart mask) and bent
+normals, and curvature that gives clean edges on low-poly models and picks up a high-poly normal map's detail.
+<a href="uv.html#rectify">Rectify</a> straightens quad islands into grids and <a href="uv.html#mirror-uvs">Mirror UVs</a>
+stacks one half on the other. Export as <a href="texture-set.html#layered-psd">layered PSD</a> files, and at 16K or 32K.</div>
+
+<div class="callout tip"><span class="t">New in 0.6</span><a href="layers.html#mask-effects">Mask effect stacks</a>, layer
+thumbnails and <a href="layers.html#instances">instances</a>, a smudge brush, blur that crosses UV seams, stencils and a
+text tool, notes pinned to the model, a <a href="interface.html#compare">compare view</a>, FBX, STL and 3MF import, and
+symmetric islands with the Island brush.</div>
+
+<div class="callout tip"><span class="t">New in 0.5.1</span>Better <a href="painting.html#pen-tablets">pen tablet</a> support:
+every tablet sample reaches the brush, a pressure curve, the eraser end, tilt, mappable pen buttons, and a Pen Tablet Test
+window to check a Wacom, Huion or other tablet.</div>
+
+<div class="callout tip"><span class="t">New in 0.5</span>Materials exported from <a href="materials.html#substance">Substance</a>
+import as they are (packed ORM and MaskMap maps, several texture sets, EXR). Other applications can drive Patina over
+the <a href="api.html">HTTP API</a>, on this machine or across the local network, with background jobs for bakes and exports,
+and <code>patina run job.json</code> runs a job file from scripts and CI.</div>
+
+<div class="callout tip"><span class="t">New in 0.4.1</span><a href="painting.html#stroke-locks">Topology lock and
+island lock</a> on the brush bar: a stroke stays on the piece of mesh, or inside the UV island, where it started.</div>
+
+<div class="callout tip"><span class="t">New in 0.4</span>The <a href="uv.html#island-brush">Island brush</a>: paint a part
+of the model and press <kbd>Enter</kbd>, and it becomes a UV island at the right <a href="uv.html#texel-density">texel
+density</a>, upright and placed in free space. Also density and stretch heat maps, overlap repair,
+<a href="texture-set.html#high-poly">baking from a high-poly sculpt</a>, material slots from Blender, facing and material
+smart masks, masks from a selection, <a href="interface.html#render">rendered images and turntables</a> (<kbd>F12</kbd>),
+save incremental, export again, reloading a changed mesh, crash recovery and a welcome window.</div>
+
+<div class="callout tip"><span class="t">New in 0.3</span>Layer folders, solo (<kbd>Alt</kbd>+click an eye), color tags,
+smart materials, undo for every slider and a History panel, a Colors panel with swatches, quick color picking, radial
+symmetry, rebindable shortcuts with a <a href="shortcuts-blender.html">Blender keymap</a>, navigation presets, UI scale, recent files and export name templates. Most of these came
+from what texture artists keep asking Substance Painter for. See <a href="organizing.html">Folders, solo and smart
+materials</a> and <a href="interface.html#workspace">Making it yours</a>.</div>
+
+<h2 id="quick-start">Quick start</h2>
+<ol class="steps">
+  <li><b>Open a model.</b> Use <i>File › Open…</i> (<kbd>Ctrl</kbd>+<kbd>O</kbd>) or drag a <code>.glb</code>,
+    <code>.gltf</code>, <code>.fbx</code>, <code>.obj</code>, <code>.stl</code>, <code>.3mf</code> or <code>.ply</code> onto the window
+    (<a href="#formats">which formats</a>). The <code>samples</code> folder includes
+    <code>Suzanne.glb</code>. To start on a primitive shape, use <i>File › New</i>.</li>
+  <li><b>Pick a material.</b> Click a sphere in the <b>Materials</b> panel at the bottom. Hover over it for a description.</li>
+  <li><b>Paint.</b> Hold the left mouse button over the model. To orbit, hold <kbd>Alt</kbd> and drag, or drag
+    with the middle mouse button. The mouse wheel zooms. <kbd>[</kbd> and <kbd>]</kbd> change the brush size.</li>
+  <li><b>Build it up in layers.</b> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b> in the Layers panel covers the whole model with the current material.
+    Choose <i>Edges</i> as the <a href="layers.html#smart-masks">smart mask</a> and the material appears only on the edges.
+    Or click <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L14.5 9.5"/><path d="M14.5 9.5 L16.5 7.5" stroke="#E8852C" stroke-width="2.5"/><path d="M18 2.8 V5.8 M16.5 4.3 H19.5 M20.2 9.5 V11.5 M19.2 10.5 H21.2 M10.5 3 V5 M9.5 4 H11.5" stroke="#E8852C" stroke-width="1.5"/></svg> <b>Smart materials</b> and pick a ready-made <a href="organizing.html#smart-materials">smart material</a>.
+    New to masks? <a href="masks-guide.html">The beginner's guide to masks and smart materials</a> explains them
+    from scratch.</li>
+  <li><b>Export.</b> Use <i>File › Export Textures…</i> (<kbd>Ctrl</kbd>+<kbd>E</kbd>), choose a preset for Blender,
+    glTF, Unreal or Unity, and click Export. If you came from Blender, press <kbd>Ctrl</kbd>+<kbd>B</kbd> instead.</li>
+</ol>
+
+<div class="callout tip"><span class="t">Tip</span>Press <kbd>F1</kbd> at any time for a shortcut sheet. Press
+<kbd>/</kbd> in this manual to search it.</div>
+
+<h2 id="where-to-go-next">Where to go next</h2>
+<div class="cards">
+  <a href="install.html"><b>Install</b><span>Fedora, Windows, the Blender add-on and Claude.</span></a>
+  <a href="interface.html"><b>The interface</b><span>Every panel, and how to navigate the view.</span></a>
+  <a href="painting.html"><b>Painting</b><span>Brushes, tools, projection modes, pen pressure, symmetry.</span></a>
+  <a href="materials.html"><b>Materials</b><span>The default library, importing scans, the material editor.</span></a>
+  <a href="masks-guide.html"><b>Guide: masks &amp; smart materials</b><span>What masks are for, step by step, for newcomers to texture painting.</span></a>
+  <a href="layers.html"><b>Layers &amp; masks</b><span>Paint, fill and adjustment layers, plus smart masks.</span></a>
+  <a href="organizing.html"><b>Folders &amp; smart materials</b><span>Folders, solo, color tags, smart materials, history.</span></a>
+  <a href="uv.html"><b>UV editing</b><span>The Island brush, texel density, unwrap, pack, seams, texture-space painting.</span></a>
+  <a href="texture-set.html"><b>Texture set &amp; export</b><span>Resolution, bakes (high-poly too), export presets, projects.</span></a>
+  <a href="blender.html"><b>Blender bridge</b><span>The round trip, step by step.</span></a>
+  <a href="automation.html"><b>Claude &amp; automation</b><span>MCP, the console and the command server.</span></a>
+  <a href="api.html"><b>HTTP API &amp; batch mode</b><span>Pipelines, render farms, job files.</span></a>
+  <a href="web.html"><b>Patina Web</b><span>The lightweight three.js painter that runs in your browser.</span></a>
+  <a href="gotchas.html"><b>Gotchas &amp; troubleshooting</b><span>Things that surprise people, and what to do about them.</span></a>
+</div>
+
+<h2 id="formats">Model formats</h2>
+<table>
+  <tr><th>Format</th><th>What Patina reads</th></tr>
+  <tr><td><b>glTF</b> <code>.glb</code> / <code>.gltf</code></td><td>Every mesh in the scene with its transforms, UVs, normals, material slots and <a href="#model-textures">their textures</a>. The best choice for games and the web.</td></tr>
+  <tr><td><b>FBX</b> <code>.fbx</code></td><td>Binary and ASCII FBX from 2006 on (FBX 6 and 7), from Maya, 3ds Max, Blender, ZBrush, Unreal, Unity and others: every mesh in the scene, UVs (the first UV set), normals and material slots with <a href="#model-textures">their textures</a>. Converted to meters and Y up, so a Maya file in centimeters comes in at the right size.</td></tr>
+  <tr><td><b>OBJ</b> <code>.obj</code></td><td>Polygons, UVs, normals and material groups, with <a href="#model-textures">the textures</a> its <code>.mtl</code> names.</td></tr>
+  <tr><td><b>STL</b> <code>.stl</code></td><td>Binary and ASCII, as exported for 3D printing. Read as millimeters with Z up, and converted.</td></tr>
+  <tr><td><b>3MF</b> <code>.3mf</code></td><td>The 3D printing package: all objects and components on the build plate with their transforms, the units the file says, texture coordinates when it has them, and its base materials as material slots.</td></tr>
+  <tr><td><b>PLY</b> <code>.ply</code></td><td>ASCII and binary PLY, as scans and generated models come: faces, UVs
+    (per vertex, or MeshLab's per face), normals and <a href="#model-textures">vertex colors</a>. Read Z up, as Blender
+    reads it. A PLY without faces (a point cloud) cannot be opened.</td></tr>
+  <tr><td>Patina bridge <code>.ptmesh</code></td><td>What the Blender add-on sends.</td></tr>
+</table>
+<h2 id="model-textures">Models that come with textures or vertex colors</h2>
+<p>A textured model (a game asset, a scan, a model made by Meshy, Tripo or another generator, a Sketchfab download)
+opens looking as it did where it came from. Patina reads each material slot's textures and values from the file and
+paints them into a layer called <b>From the model</b> at the bottom of the stack: base color, roughness and metallic,
+the normal map, glow and opacity (cut-outs and see-through parts). Everything you add goes on top, so you can wear it,
+dirty it, recolor one part or paint over it, and turn the layer off to see the model without it.</p>
+<figure><img src="img/model_textures.png" alt="A painted model opened again with its textures"
+style="max-width:1200px"><figcaption>A model exported as a <code>.glb</code> opens again with its textures, as the
+layer <i>From the model</i>; the status line says what came in.</figcaption></figure>
+<ul>
+  <li><b>glTF</b>: the metallic-roughness maps and values, normal map, glow (with its strength), alpha (<i>Mask</i> as a
+    cut-out, <i>Blend</i> as it is), texture transforms, clearcoat and sheen. Older specular-glossiness materials are
+    read as roughness. Textures may be inside the <code>.glb</code> or beside the <code>.gltf</code>.</li>
+  <li><b>OBJ</b>: the <code>.mtl</code> file's <code>map_Kd</code>, <code>map_Pr</code>, <code>map_Pm</code>,
+    <code>map_Ke</code>, <code>map_d</code> and normal or bump maps (a bump map that is really a normal map is
+    recognized), and <code>Kd</code>, <code>Pr</code>, <code>Pm</code>, <code>Ns</code> and <code>d</code> where there is
+    no map, as Blender reads them.</li>
+  <li><b>FBX</b>: the textures (embedded or as files) and colors of each material, including the transparency maps
+    Blender and other programs write.</li>
+</ul>
+<p><b>Vertex colors</b> come in the same way: from glTF (multiplied by the material's color, as glTF says), OBJ
+(<code>v x y z r g b</code>), FBX, PLY and Blender objects sent with the add-on. Where a slot has a color texture, OBJ,
+FBX and PLY files show the texture, as Blender does. Many generated models and scans carry their color this way.</p>
+<p>Textures are looked for where the file says, beside the model, and in <code>textures</code> folders and FBX
+<code>.fbm</code> folders next to it. If some are not found, a message names them, and those slots show their color
+instead. When the textures are bigger than the texture set (4K textures, say), the texture set grows to match them, up
+to 4K, unless you chose a resolution. A model whose materials are only a plain gray brings nothing in.</p>
+<p><i>File › Bring In the Model's Textures</i> (or <code>import_model_textures</code>) does it again: after you deleted
+the layer, or to compare with your work. It reads the UVs from the file when the model has the same faces, so it works
+after you changed the UVs too. Switch it off in <i>Preferences › Features</i> (<i>The model's own textures</i>).</p>
+
+<p>STL files, and most 3MF files, have no UVs. Patina then makes them with <i>Smart UV Project</i> when the model opens
+(the status line says so), so you can paint at once. For hard-surface parts it is worth checking the islands in the UV
+editor, or marking seams and unwrapping again (see <a href="uv.html">UV editing</a>).</p>
+
+
+</article>
+<footer class="pager"><span></span><a class="next" href="install.html">Install →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

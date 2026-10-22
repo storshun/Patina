@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Patina
+GenericName=Texture Painter
+Comment=Paint materials directly on 3D models
+Exec=patina %f
+Icon=patina
+Terminal=false
+Categories=Graphics;3DGraphics;
+MimeType=model/obj;model/gltf+json;model/gltf-binary;

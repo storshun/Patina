@@ -1,0 +1,40 @@
+Patina @VERSION@ - prebuilt for Linux x86_64 on @BUILT_ON@ (needs glibc @GLIBC@ or newer and SDL 3)
+=====================================================================================================
+
+Install (no root needed):
+
+    tar xf patina-@VERSION@-linux-x86_64.tar.gz
+    cd patina-@VERSION@-linux-x86_64
+    ./install.sh                     # -> ~/.local/bin/patina + menu entry
+    # PREFIX=/opt/patina ./install.sh   to put it somewhere else
+    # ./install.sh --uninstall
+
+Or just run it in place: ./bin/patina [mesh.glb]
+
+Runtime requirements (Fedora package names):
+    sudo dnf install SDL3 mesa-dri-drivers libglvnd-egl libglvnd-glx libX11 libXi zenity
+An older system, or another distribution without glibc @GLIBC@: build from the source tarball (below).
+An OpenGL 4.5 driver is needed (Mesa radeonsi / iris / llvmpipe, or NVIDIA).
+
+Display: this binary uses X11, so on a Wayland session it runs through XWayland
+(default on GNOME/KDE). Tablet pressure works through XInput2. For a native
+Wayland build, build from the source tarball:
+
+    sudo dnf install gcc-c++ cmake ninja-build SDL3-devel mesa-libGL-devel mesa-libEGL-devel
+    tar xf patina-@VERSION@-src.tar.gz && cd patina-@VERSION@ && ./scripts/build-fedora.sh
+
+Blender: install patina_bridge.zip
+    Blender 4.2+:    Edit > Preferences > Get Extensions > (v) > Install from Disk...
+    Blender 3.6-4.1: Edit > Preferences > Add-ons > Install...
+then open the "Patina" tab in the 3D view sidebar (N).
+
+Claude:  claude mcp add patina -- ~/.local/bin/patina --mcp
+
+Manual:      share/doc/patina/manual/index.html  (after install: ~/.local/share/doc/patina/manual, or Help > Manual)
+Patina Web:  share/patina/web/index.html         (the three.js browser painter; works offline from the file)
+Sample:      share/patina/samples/Suzanne.glb    (CC0)
+
+Files: your own materials/brushes go to ~/.local/share/patina/user, settings to
+~/.config/patina, autosaves and the Blender exchange folder to ~/.cache/patina.
+See README.md and share/doc/patina/ for the full manual, command reference
+(COMMANDS.md) and bridge protocol (BRIDGE.md).

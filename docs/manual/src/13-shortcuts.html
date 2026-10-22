@@ -1,0 +1,117 @@
+<!-- title: Keyboard and mouse reference -->
+<!-- nav: Shortcuts (Patina keymap) -->
+<h1>Keyboard and mouse reference</h1>
+<p class="lead">These are the defaults of the Patina keymap. If you come from Blender, switch to the
+<a href="shortcuts-blender.html">Blender keymap</a> in <i>Edit › Preferences</i>; it has its own reference page. Every key
+in the <i>Tools</i>, <i>Layers</i> and <i>Application</i> tables can be changed in <i>Edit › Keyboard shortcuts</i>, and <i>View › Navigation</i> switches the mouse navigation to Blender, Maya or
+ZBrush style (see <a href="interface.html#navigating-the-view">The interface</a>).</p>
+
+<h2>Viewport</h2>
+<table>
+  <tr><th>Action</th><th>Input</th></tr>
+  <tr><td>Paint with the current tool</td><td>Left mouse</td></tr>
+  <tr><td>Orbit</td><td><kbd>Alt</kbd> + left drag · middle drag</td></tr>
+  <tr><td>Pan</td><td><kbd>Shift</kbd> + middle drag · <kbd>Alt</kbd>+<kbd>Shift</kbd> + left drag · <kbd>Alt</kbd>+<kbd>Shift</kbd> + right drag</td></tr>
+  <tr><td>Zoom</td><td>Wheel · <kbd>Alt</kbd> + right drag · <kbd>Ctrl</kbd> + middle drag · <kbd>Alt</kbd>+<kbd>Ctrl</kbd> + left drag</td></tr>
+  <tr><td>Brush size / hardness</td><td><kbd>[</kbd> <kbd>]</kbd> · <kbd>Ctrl</kbd> + wheel · <kbd>Ctrl</kbd> + right drag (x = size, y = hardness)</td></tr>
+  <tr><td>Straight line from the last stroke</td><td><kbd>Shift</kbd>+click</td></tr>
+  <tr><td>Clone source</td><td><kbd>Ctrl</kbd>+click (Clone tool)</td></tr>
+  <tr><td>Quick color pick</td><td>Hold <kbd>I</kbd> and click · <kbd>Alt</kbd> + right-click</td></tr>
+  <tr><td>Erase with the Fill tool</td><td><kbd>Alt</kbd>+click</td></tr>
+  <tr><td>Pen tablet</td><td>Tip paints · eraser end erases · lower / upper barrel button: right / middle click (change in <i>Preferences › Pen tablet</i>)</td></tr>
+  <tr><td>Topology lock / island lock on or off</td><td><kbd>Alt</kbd>+<kbd>T</kbd> / <kbd>Alt</kbd>+<kbd>L</kbd></td></tr>
+  <tr><td>Stencil: move / rotate / scale</td><td>Hold <kbd>T</kbd>: left drag / <kbd>Shift</kbd> + left drag / wheel</td></tr>
+  <tr><td>Stencil on or off</td><td><kbd>Shift</kbd>+<kbd>T</kbd></td></tr>
+  <tr><td>Split / compare view on or off · take a snapshot</td><td><kbd>\</kbd> · <kbd>Shift</kbd>+<kbd>\</kbd> (drag the divider to wipe)</td></tr>
+  <tr><td>New note / edit a note</td><td>Click the model / a pin with the Note tool (<kbd>N</kbd>); <kbd>Ctrl</kbd>+<kbd>Enter</kbd> saves</td></tr>
+  <tr><td>Frame the model</td><td><kbd>F</kbd></td></tr>
+  <tr><td>Rotate the lighting</td><td><kbd>Shift</kbd> + right drag</td></tr>
+  <tr><td>Front / right / top (opposite with <kbd>Ctrl</kbd>)</td><td>Numpad <kbd>1</kbd> <kbd>3</kbd> <kbd>7</kbd></td></tr>
+  <tr><td>Orthographic on/off</td><td>Numpad <kbd>5</kbd></td></tr>
+  <tr><td>Back to your view (again: the side view)</td><td>Numpad <kbd>0</kbd></td></tr>
+  <tr><td>Snap to the nearest side view while orbiting</td><td>Middle drag, then hold <kbd>Alt</kbd> · <kbd>Shift</kbd> during an <kbd>Alt</kbd> + left drag</td></tr>
+  <tr><td>View pie (lit, solid, unlit, path traced, wireframe, seams...)</td><td>Hold <kbd>Z</kbd>, point, let go · tap <kbd>Z</kbd>, click</td></tr>
+  <tr><td>Channel pie (base color, normal, roughness...)</td><td>Hold <kbd>Shift</kbd>+<kbd>Z</kbd></td></tr>
+  <tr><td>Edit mode pie (the tools)</td><td>Hold <kbd>`</kbd> (the key under <kbd>Esc</kbd>)</td></tr>
+  <tr><td>Quick Favorites pie (your own eight)</td><td>Hold <kbd>Q</kbd></td></tr>
+  <tr><td>View modes</td><td><kbd>1</kbd> material · <kbd>2</kbd> base color · <kbd>3</kbd> roughness · <kbd>4</kbd> metallic · <kbd>5</kbd> normal · <kbd>6</kbd> height · <kbd>7</kbd> emissive · <kbd>8</kbd> AO · <kbd>9</kbd> curvature</td></tr>
+</table>
+
+
+<h2 id="sliders">Sliders</h2>
+<table>
+  <tr><th>Action</th><th>Input</th></tr>
+  <tr><td>Type a slider's value (<kbd>Enter</kbd> keeps it, <kbd>Esc</kbd> goes back)</td><td>Right-click the slider · <kbd>Ctrl</kbd>+click</td></tr>
+  <tr><td>Drag it / set it where you click</td><td>Left drag / left click</td></tr>
+</table>
+<h2>Tools</h2>
+<table>
+  <tr><td><kbd>B</kbd> Paint</td><td><kbd>E</kbd> Erase</td><td><kbd>U</kbd> Blur</td><td><kbd>C</kbd> Clone</td></tr>
+  <tr><td><kbd>P</kbd> Polygon fill</td><td><kbd>I</kbd> Pick</td><td><kbd>S</kbd> Select faces</td><td><kbd>M</kbd> Seams</td></tr>
+  <tr><td><kbd>L</kbd> Island brush</td><td><kbd>J</kbd> Smudge</td><td><kbd>N</kbd> Note</td><td><kbd>X</kbd> Swap colors</td></tr>
+  <tr><td><kbd>Shift</kbd>+<kbd>X</kbd> X mirror</td><td></td><td></td><td></td></tr>
+</table>
+
+<h2>Island brush and face selection</h2>
+<table>
+  <tr><th>Action</th><th>Input</th></tr>
+  <tr><td>Paint the area that becomes an island / remove from it</td><td>Left drag · <kbd>Ctrl</kbd> + left drag (Island tool)</td></tr>
+  <tr><td>Make the island</td><td><kbd>Enter</kbd></td></tr>
+  <tr><td>Select all faces / none</td><td><kbd>A</kbd> / <kbd>Alt</kbd>+<kbd>A</kbd></td></tr>
+  <tr><td>Grow / shrink the selection</td><td><kbd>Ctrl</kbd>+Numpad <kbd>+</kbd> / <kbd>Ctrl</kbd>+Numpad <kbd>-</kbd></td></tr>
+  <tr><td>Unpin the selected islands</td><td><kbd>Alt</kbd>+<kbd>P</kbd> (also in the UV editor)</td></tr>
+</table>
+
+<h2>Layers</h2>
+<table>
+  <tr><th>Action</th><th>Input</th></tr>
+  <tr><td>New paint layer / group into a folder</td><td><kbd>Ctrl</kbd>+<kbd>L</kbd> / <kbd>Ctrl</kbd>+<kbd>G</kbd></td></tr>
+  <tr><td>Duplicate / delete</td><td><kbd>Ctrl</kbd>+<kbd>D</kbd> / <kbd>Delete</kbd></td></tr>
+  <tr><td>Make an instance (linked copy)</td><td><kbd>Alt</kbd>+<kbd>D</kbd></td></tr>
+  <tr><td>Solo a layer</td><td><kbd>Alt</kbd>+click its eye · <kbd>Alt</kbd>+<kbd>S</kbd> for the selected layer</td></tr>
+  <tr><td>Rename</td><td>Double-click the name</td></tr>
+  <tr><td>Move into a folder / reorder</td><td>Drag onto the middle of a folder row / onto the top or bottom half of a row</td></tr>
+  <tr><td>Everything else</td><td>Right-click a layer</td></tr>
+</table>
+
+<h2>UV editor</h2>
+<table>
+  <tr><th>Action</th><th>Input</th></tr>
+  <tr><td>Select / add / remove</td><td>Click · <kbd>Shift</kbd>+click · <kbd>Ctrl</kbd>+click</td></tr>
+  <tr><td>Box select</td><td>Drag on empty space</td></tr>
+  <tr><td>Select all / none</td><td><kbd>A</kbd> (toggles) · <kbd>Alt</kbd>+<kbd>A</kbd> none</td></tr>
+  <tr><td>Move / rotate / scale</td><td>Drag the selection (it starts moving after a few pixels, so a click never moves it) · <kbd>G</kbd> / <kbd>R</kbd> / <kbd>S</kbd> (<kbd>Ctrl</kbd> snaps)</td></tr>
+  <tr><td>Context menu (every UV operation)</td><td>Right-click</td></tr>
+  <tr><td>Pin / unpin the selected islands</td><td><kbd>P</kbd> / <kbd>Alt</kbd>+<kbd>P</kbd></td></tr>
+  <tr><td>Frame the selection</td><td><kbd>F</kbd></td></tr>
+  <tr><td>Confirm / cancel a transform</td><td>Click or <kbd>Enter</kbd> / right-click or <kbd>Esc</kbd></td></tr>
+  <tr><td>Pan / zoom</td><td>Middle drag or <kbd>Alt</kbd> + left drag / wheel</td></tr>
+  <tr><td>Reset the view</td><td><kbd>Home</kbd></td></tr>
+</table>
+
+<h2>Application</h2>
+<table>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd> Open</td><td><kbd>Ctrl</kbd>+<kbd>S</kbd> Save</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> Save as</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>E</kbd> Export textures</td><td><kbd>Ctrl</kbd>+<kbd>B</kbd> Send to Blender</td><td><kbd>Ctrl</kbd>+<kbd>L</kbd> New paint layer</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> Undo</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> Redo</td><td><kbd>F1</kbd> Shortcut sheet</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd> Save incremental</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> Export again</td><td><kbd>F12</kbd> Render image</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> <a href="tools.html#palette">Command palette</a></td><td></td><td></td></tr>
+  <tr><td><kbd>Esc</kbd> Close help / about / export / shortcuts and other windows</td><td><kbd>Ctrl</kbd>+<kbd>Q</kbd> Quit</td><td><kbd>Tab</kbd> Hide / show all panels</td></tr>
+</table>
+
+<h2>Command line</h2>
+<pre><code>patina [mesh.glb | .gltf | .fbx | .obj | .stl | .3mf | project.patina]
+  --headless        automation server without a window
+  --mcp             Model Context Protocol on stdin/stdout (Windows: patina-cli.exe)
+  --setup-claude    add Patina to the Claude desktop app's MCP servers, then exit
+  --port N          command server port (default 7860, or $PATINA_PORT)
+  --no-server       do not open the command server
+  --resolution N    default texture resolution (default 2048)
+  --verbose         debug logging
+  --version</code></pre>
+<p>Setting <code>PATINA_FRAME_STATS</code> to a file name makes the window write a line every 120 frames: the frame rate,
+the time each part of a frame takes on the processor, and the time the 3D view and the whole frame take on the
+graphics card. Useful when Patina feels slow on a machine.</p>
+<p>Setting <code>PATINA_UI_ID_CHECK</code> (to anything) makes Patina check each frame for two buttons or options in one
+window that Dear ImGui can't tell apart (they would fight over clicks), log each one, and list them for the
+<code>ui_id_conflicts</code> command. For testing Patina itself.</p>

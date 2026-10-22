@@ -1,0 +1,28 @@
+{
+ "patina_recipe": 1,
+ "id": "patina_worn_metal",
+ "name": "Worn painted metal",
+ "description": "The Worn painted metal smart material over the whole model; exported as a GLB.",
+ "steps": [
+  {
+   "cmd": "bake_mesh_maps",
+   "args": {
+    "ao": true,
+    "curvature": true
+   }
+  },
+  {
+   "cmd": "apply_smart_material",
+   "args": {
+    "id": "patina_smart_worn_painted_metal"
+   }
+  },
+  {
+   "cmd": "export_model",
+   "args": {
+    "path": "${out}/${name}.glb",
+    "texture_size": 2048
+   }
+  }
+ ]
+}

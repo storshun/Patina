@@ -1,0 +1,27 @@
+{
+ "patina_recipe": 1,
+ "id": "patina_print",
+ "name": "3D print",
+ "description": "Mended (closed, facing out), stood on the ground, exported as an STL in millimeters.",
+ "steps": [
+  {
+   "cmd": "mesh_fix",
+   "args": {
+    "all": true,
+    "fill_hole_edges": 512
+   }
+  },
+  {
+   "cmd": "mesh_transform",
+   "args": {
+    "origin": "base"
+   }
+  },
+  {
+   "cmd": "export_model",
+   "args": {
+    "path": "${out}/${name}.stl"
+   }
+  }
+ ]
+}

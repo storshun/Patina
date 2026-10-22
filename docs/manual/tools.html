@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search, checks and macros - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html" class="cur">Search, checks &amp; macros</a>
+<div class="toc"><a href="#features">Switching features on and off</a><a href="#palette">The command palette</a><a href="#symmetry">Mesh symmetry check</a><a href="#texture-set-tools">Working with texture sets</a><a href="#auto-texture">Auto texture from material slots</a><a href="#macros">Macros</a><a href="#gotchas">Gotchas</a></div>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Search, checks and macros -->
+<!-- nav: Search, checks & macros -->
+<h1>Search, checks and macros</h1>
+<p class="lead">Patina 0.10 adds a command palette that finds anything by name, a mesh symmetry check, tools for models with
+several texture sets, a one-click first pass of materials from the model's slot names, and a macro recorder. Each one
+can be switched off in <i>Preferences › Features</i> if it gets in your way.</p>
+
+<h2 id="features">Switching features on and off</h2>
+<p>New features arrive switched on. <i>Edit › Preferences</i> lists them under <b>Features</b>, with what each one does.
+Untick one and its menu entries, buttons, shortcuts and commands go away (scripts and Claude get an error saying it is
+switched off). The choice is saved with your session; tick it again to bring it back. Nothing else changes: a project
+painted with a feature on opens fine with it off.</p>
+<figure><img src="img/features_prefs.png" alt="The Features section of the preferences" style="max-width:520px">
+  <figcaption>Every switch says what it controls and which version added it.</figcaption></figure>
+<table>
+  <tr><th>Feature</th><th>Where it shows up</th></tr>
+  <tr><td>Command palette</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> or <kbd>F3</kbd> (<kbd>F3</kbd> or
+    <kbd>Ctrl</kbd>+<kbd>K</kbd> in the Blender keymap), <i>Edit › Search Everything</i>, <i>Search everything</i> on the
+    Guided layout's step bar</td></tr>
+  <tr><td>Guided layout</td><td>The step bar (Model, UVs, Bake, Paint, Export), <b>Guided</b> and <b>Full</b> at the
+    right of the menu bar, the welcome window's <i>Layout</i>, the <code>layout</code> command (see
+    <a href="guided.html">The Guided layout</a>)</td></tr>
+  <tr><td>Bake-down</td><td><i>Bake › Bake Down to a Low-Poly Model</i>, the <b>Bake-Down Check</b> view mode, the compare
+    view's high-poly, the layers kept by <i>Use the quads as the model</i>, the <code>bake_down</code> command (see
+    <a href="texture-set.html#bake-down">Baking down</a>)</td></tr>
+  <tr><td>Mesh symmetry check</td><td><i>UV › Mirrored Halves › Check Mesh Symmetry</i>, the <b>Symmetry</b> view mode, the
+    <code>mesh_symmetry</code> command, <i>Select Asymmetric Vertices</i> in Blender</td></tr>
+  <tr><td>Texture set lock and isolate</td><td><b>Set lock</b> in the brush bar, <b>Current set</b>, <b>Isolate</b>
+    and <b>Select faces</b> in the Texture Set panel, <i>View › Isolate current texture set</i></td></tr>
+  <tr><td>Auto texture from slot names</td><td><i>Edit › Auto Texture from Material Slots</i>, the
+    <code>auto_texture</code> command</td></tr>
+  <tr><td>Macro recorder</td><td><i>Edit › Record Macro / Play Macro / Macro Recorder</i>, the <code>macro_*</code>
+    commands</td></tr>
+</table>
+
+<h2 id="palette">The command palette</h2>
+<p>Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (or <kbd>F3</kbd>; <kbd>Ctrl</kbd>+<kbd>K</kbd> too in the
+Blender keymap) and type a few letters of what you want. The palette searches every
+keyboard action, window, view mode, command, library material, brush, layer and recent file. <kbd>↑</kbd>
+<kbd>↓</kbd> choose, <kbd>Enter</kbd> runs it and <kbd>Esc</kbd> closes the palette.</p>
+<figure><img src="img/command_palette.png" alt="The command palette searching for rust" style="max-width:640px">
+  <figcaption>"rust" finds the rust materials and brushes. Picking a material makes it the paint material.</figcaption></figure>
+<ul>
+  <li><b>Typing:</b> a whole word ranks highest, then the start of a word, then letters that begin words, so
+    <code>msc</code> finds <i>Mesh symmetry check</i> and <code>prefs</code> finds <i>Preferences</i>. Letters scattered at
+    random through a name don't count, so the list stays short.</li>
+  <li><b>What you used recently</b> comes first when the box is empty, and gets a small boost when you type.</li>
+  <li><b>Actions</b> run as if you had pressed their shortcut, so they also work for actions you never gave a key.
+    Commands that need arguments are left out; use the console or a script for those.</li>
+  <li><b>Layers</b> select the layer; <b>recent files</b> open; <b>features</b> can be switched from here too.</li>
+</ul>
+
+<h2 id="symmetry">Mesh symmetry check</h2>
+<p>Characters and props are usually meant to be mirror-symmetric, and small differences between the halves cause
+trouble later: mirrored painting misses, symmetric UVs don't stack, and shape keys or rigging built for one side don't
+fit the other. <i>UV › Mirrored Halves › Check Mesh Symmetry</i> measures it. Every vertex is mirrored across X (Blender's X) and Patina
+measures how far it lands from the surface on the other side. Because it compares shapes, not vertex lists, it works even
+where the two halves have different topology.</p>
+<div class="two">
+  <figure><img src="img/symmetry_window.png" alt="The Mesh symmetry window"><figcaption>The verdict, the numbers, and the
+    worst spots. <b>Look</b> frames one in the viewport.</figcaption></figure>
+  <figure><img src="img/symmetry_heatmap.png" alt="A bust with a pushed-out cheek and a raised shoulder in the symmetry heat
+    map"><figcaption>The <b>Symmetry</b> view mode: gray-blue is symmetric, yellow is off by about the tolerance, red by
+    ten times as much or more.</figcaption></figure>
+</div>
+<ul>
+  <li><b>Tolerance</b> is 0.1% of the model's largest size: on a 1.8 m character, 1.8 mm. Vertices further off than that
+    count as asymmetric. Both halves light up: a bump on the right also shows on the left, where the mirror of the
+    left side finds no bump.</li>
+  <li><b>Magenta</b> means there is no surface at all on the other side within 5% of the size: one-sided parts such as a
+    holster, or a model that isn't meant to be symmetric.</li>
+  <li><b>The mirror plane</b> is x = 0 when the model sits on it, else the middle of the model's bulk (a stray vertex or
+    one big bump doesn't move it). <i>Custom mirror plane</i> sets it by hand.</li>
+  <li><b>Per material slot</b> and <b>Per height</b> break the result down, so you can tell whether the problem is the
+    face, the clothes or the hands.</li>
+  <li><b>Worst spots</b> are listed in Blender's axes, so the positions match Blender's N panel. Spots closer than 8% of
+    the size are listed once.</li>
+</ul>
+<p>From Blender, <b>Select Asymmetric Vertices</b> in the Patina panel runs the same check on the mesh Patina has open and
+selects the vertices that are off (and, optionally, the unmatched ones) in Blender, in Object or Edit Mode. Use it to
+find what to fix with Blender's own symmetrize or snap tools. It needs the mesh sent without modifiers that add or remove
+faces, so the vertex numbers match.</p>
+<div class="callout tip"><span class="t">It doesn't change the mesh</span>Patina is a texture painter, so it reports
+asymmetry but leaves fixing it to Blender, where shape keys, weights and the rig can be kept in step.</div>
+
+<h2 id="texture-set-tools">Working with texture sets</h2>
+<p>With <a href="texture-set.html#texture-sets">texture sets per material slot or UDIM tiles</a>, the Texture Set panel
+gets three more controls:</p>
+<ul>
+  <li><b>Current set</b> picks the texture set the UV editor shows (the same as the list in the UV editor's toolbar).</li>
+  <li><b>Isolate</b> draws the other texture sets as dark ghosts in the viewport, and strokes only paint the current
+    set, wherever they start. Handy for the inside of a jacket or a belt over a shirt.</li>
+  <li><b>Set lock</b> keeps each stroke on the texture set it starts on, so a stroke that starts on the skin stops at
+    the collar. With a single texture it uses the material slot instead. It combines with the topology and island
+    locks.</li>
+  <li><b>Select faces</b> selects every face of the current set; fill with <i>Selection</i> to fill just that set.</li>
+</ul>
+<figure><img src="img/texture_set_isolate.png" alt="A bust textured with skin and fabric, and the same with only the cloth set
+  shown"><figcaption>Left: the whole model. Right: <i>Isolate</i> on the 'Cloth' set.</figcaption></figure>
+<p>Layered PSD export now works with texture sets and UDIM tiles too: each set or tile gets its own PSD files, named like
+the PNG maps (<code>Hero_Body_basecolor.psd</code>, <code>Hero_basecolor.1002.psd</code>).</p>
+
+<h2 id="auto-texture">Auto texture from material slots</h2>
+<p>A model from Blender usually arrives with sensible slot names: <i>Skin</i>, <i>Hair</i>, <i>Jeans</i>,
+<i>Boots_Leather</i>, <i>M_Steel</i>. <i>Edit › Auto Texture from Material Slots</i> picks a library material for each
+slot from its name and adds a fill layer per slot, masked by the <i>Material slot</i> smart mask, so you start from a
+textured model instead of a gray one.</p>
+<figure><img src="img/auto_texture_window.png" alt="The Auto texture window" style="max-width:480px"><figcaption>Each slot
+  with its guess. Change any of them, or choose <i>(skip)</i>, before adding the layers.</figcaption></figure>
+<ul>
+  <li>Names are split into words (<code>M_BootLeather.001</code> → boot, leather) and matched against material names,
+    tags and categories, with a list of everyday words: <i>body</i> and <i>face</i> mean skin, <i>shirt</i> linen,
+    <i>jacket</i> a puffer, <i>buckle</i> brass, <i>sole</i> rubber, <i>hull</i> sci-fi panels and so on.</li>
+  <li><b>Prefer</b>: realistic or stylized materials. A slot named <i>Toon_Hair</i> asks for the stylized ones by itself.</li>
+  <li>Slots that want painting by hand are skipped: eyes, teeth, tongue, glass, decals, logos. So are names with nothing
+    to go on (<i>Material.001</i>).</li>
+  <li>The layers go into an <b>Auto texture</b> folder at the bottom of the stack, so anything you paint stays on top.
+    Delete the folder to start again.</li>
+  <li><b>Projection</b>: triplanar (no seams, ignores the UVs) or UV.</li>
+</ul>
+
+<h2 id="macros">Macros</h2>
+<p>The macro recorder keeps what you do as commands, to replay on another model. <i>Edit › Record Macro</i> starts it
+(the status bar shows <b>REC</b> and the number of steps); do your thing; <i>Edit › Stop Recording Macro</i>. <i>Play
+Macro</i> runs the steps on whatever is open now.</p>
+<figure><img src="img/macro_recorder.png" alt="The macro recorder window" style="max-width:460px"><figcaption>Three fill
+  layers recorded: a base, edge wear and dust. Remove a step with <b>x</b>.</figcaption></figure>
+<ul>
+  <li><b>What is recorded:</b> menu actions and windows that run commands (adding layers and fills, smart materials,
+    smart masks, UV tools, bakes, exports, auto texture), and every command a script or Claude runs while recording.
+    Questions that change nothing (state, lists, renders) are left out.</li>
+  <li><b>What isn't:</b> brush strokes you paint in the viewport (they are tied to one model and one view), and opening,
+    saving and the Blender link, so a macro works on whatever is open when you play it.</li>
+  <li><b>Undo while recording:</b> a step you undo drops out of the macro, and comes back if you redo it.</li>
+  <li><b>Save</b> writes the macro as a job file in your configuration folder (<code>macros/</code>). It is the same
+    format <code>patina run</code> uses, so the macro also runs without a window:
+    <code>patina run ~/.config/patina/macros/rust_pass.json</code>. Saved macros are listed in the window with a
+    <b>Play</b> button.</li>
+  <li><b>Playing</b> stops at the first step that fails and says which one. Each step is its own undo step.</li>
+</ul>
+<p>Shortcuts: <i>Macro: start / stop recording</i> and <i>Macro: play</i> have no key by default; give them one in
+<i>Edit › Keyboard Shortcuts</i>.</p>
+
+<h2 id="gotchas">Gotchas</h2>
+<ul>
+  <li>The symmetry check compares across X only. A model that is symmetric across another axis reads as asymmetric.</li>
+  <li>Auto texture guesses from names; it doesn't look at the shape. A slot called <i>Body</i> on a car gets skin.</li>
+  <li>A macro replays commands with the values they had: layer indices, materials and paths. Steps that pick a layer by
+    number may pick a different layer on a model with another stack.</li>
+</ul>
+
+</article>
+<footer class="pager"><a class="prev" href="interface.html">← The interface</a><a class="next" href="assistant.html">Assistant →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

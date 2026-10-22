@@ -1,0 +1,229 @@
+{
+ "description": "Granite with moss growing on top and dark dirt in the crevices.",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_stone_granite",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Granite",
+   "opacity": 1.0,
+   "parent": 25,
+   "type": "fill",
+   "uid": 26,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.30000001192092896,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_dirt_mud",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Crevice dirt",
+   "opacity": 0.8500000238418579,
+   "parent": 25,
+   "type": "fill",
+   "uid": 27,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.550000011920929,
+    "noise": 0.6499999761581421,
+    "noise_scale": 2.0,
+    "type": "gradient_y"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_moss_patchy",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Moss",
+   "opacity": 1.0,
+   "parent": 25,
+   "type": "fill",
+   "uid": 28,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Mossy stone",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 25,
+   "visible": true
+  }
+ ],
+ "name": "Mossy stone",
+ "patina_smart_material": 1
+}

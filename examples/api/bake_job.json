@@ -1,0 +1,14 @@
+{
+  "name": "Bake a sculpt and export game textures",
+  "vars": {"resolution": "2048", "preset": "unreal"},
+  "steps": [
+    {"cmd": "open_file", "args": {"path": "${low}"}},
+    {"cmd": "set_resolution", "args": {"resolution": "${resolution}"}},
+    {"cmd": "bake_from_high_poly", "args": {"path": "${high}", "ao_samples": 128}},
+    {"cmd": "bake_mesh_maps", "args": {"ao": false, "curvature": true}},
+    {"cmd": "apply_smart_material", "args": {"id": "patina_smart_worn_painted_metal"}},
+    {"cmd": "export_textures", "args": {"directory": "out/${asset}", "preset": "${preset}"}},
+    {"cmd": "render_image", "args": {"path": "out/${asset}/preview.png", "width": 1280, "height": 720}},
+    {"cmd": "save_project", "args": {"path": "out/${asset}/${asset}.patina"}}
+  ]
+}

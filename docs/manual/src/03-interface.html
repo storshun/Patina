@@ -1,0 +1,442 @@
+<!-- title: The interface -->
+<!-- nav: The interface -->
+<h1>The interface</h1>
+<p class="lead">Patina has two layouts. The <a href="guided.html">Guided layout</a> splits the work into five steps, each
+with what it needs in front, and a new Patina starts in it. This page describes the <b>Full layout</b>, which shows every
+panel at once. Switch between them with <b>Guided</b> and <b>Full</b> at the right of the menu bar.</p>
+<p>In the Full layout every panel is a dockable window. Drag a panel's tab to rearrange the layout, and Patina remembers it,
+along with which tool windows were open (Retopology, Assistant, Texel density, Mesh symmetry, Auto texture, Macro
+recorder, Material Editor). The Retopology window starts as a tab beside Properties; nothing of retopology runs or shows
+until you choose a retopology tool or its tab. To get the default layout back, use <i>View › Reset layout</i>.</p>
+
+<figure><img src="img/overview.png" alt="Patina main window"></figure>
+
+<table>
+  <tr><th>Area</th><th>What it is for</th></tr>
+  <tr><td><b>Tools</b> (left strip)</td><td>Every tool, grouped by job: <b>Paint</b> (paint, erase, blur, smudge,
+    clone, fill, pick), <b>UV</b> (select faces, seams, the island brush), <b>Retopo</b> (zone lines, zones, flow,
+    density), <b>Symmetry</b> (mirror X, Y, Z and radial) and <b>Notes</b>. See <a href="#toolbars">The toolbars</a>.</td></tr>
+  <tr><td><b>Viewport</b></td><td>The model, lit by a studio environment. This is where you paint. The bar along the top
+    holds the brush essentials, the projection mode, the locks, the view mode and the overlays, then the chosen tool's
+    own settings.</td></tr>
+  <tr><td><b>UV Editor</b></td><td>The UV layout over any texture map. You can edit UVs or paint in texture space here
+    (see <a href="uv.html">UV editing</a>).</td></tr>
+  <tr><td><b>Layers</b></td><td>The layer stack with folders. The selected layer's settings appear below the list.</td></tr>
+  <tr><td><b>Properties</b></td><td>Brush settings and the current paint material.</td></tr>
+  <tr><td><b>Colors</b></td><td>Primary and secondary color, recent colors and your swatches (see <a href="painting.html#colors">Colors</a>).</td></tr>
+  <tr><td><b>Texture Set</b></td><td>Resolution, base material, mesh-map bakes and lighting.</td></tr>
+  <tr><td><b>Blender Link</b></td><td>The state of the link to Blender and of the command server.</td></tr>
+  <tr><td><b>Materials / Brushes / History / Notes / Console</b></td><td>The material library (in front), the brush
+    presets, every undo step, the notes pinned to the model, and a command line for every automation command.</td></tr>
+  <tr><td><b>Status bar</b></td><td>The project name (<code>*</code> means unsaved changes), the texture size, the layer count,
+    the frame rate and Blender's status. Messages from the last action appear here too.</td></tr>
+</table>
+
+<h2 id="step-colors">The steps' colors</h2>
+<p>Each step of the <a href="guided.html">Guided layout</a> has a color: <b>Model</b> blue, <b>UVs</b> teal,
+<b>Bake</b> violet, <b>Paint</b> copper and <b>Export</b> green. The Full layout uses the same colors to show which step
+a tool, panel or menu belongs to:</p>
+<ul>
+  <li>The tool strip: a stripe beside each group and its name in the group's color (Paint copper, UV teal, Retopo
+    blue). The tool in use is filled with that color.</li>
+  <li>The panels' tabs: a hint of the color on the tab, and a line over the one in front. UV Editor is teal; Layers,
+    Properties, Materials, Brushes and Colors copper; Texture Set and Retopology blue; Blender Link green. Viewport,
+    History, Notes and Console belong to every step and keep no color.</li>
+  <li>The menu bar: the menus of the work follow the steps' order, <i>Mesh</i>, <i>Retopology</i>, <i>UV</i>,
+    <i>Bake</i>, <i>Blender</i>, each underlined in its step's color.</li>
+</ul>
+
+<h2 id="welcome">The welcome window</h2>
+<p>When Patina starts without a file, the welcome window offers the recent files, the sample model (Suzanne), and a new
+sphere or cube. It also asks three things:</p>
+<ul>
+  <li><b>You come from</b>: Blender (the <a href="shortcuts-blender.html">Blender keymap</a>, where the middle button
+    orbits and F3 searches), Maya (Alt with the left, middle and right buttons) or something else (Patina's keys).</li>
+  <li><b>Your textures go to</b>: the export preset.</li>
+  <li><b>Layout</b>: Guided or Full.</li>
+</ul>
+<p>Untick <i>Show this window on start</i> to skip it, and <i>Help › Welcome Window</i> brings it back. In the Guided layout
+it appears only the first time, because the Model step offers the same things after that.</p>
+<div class="callout tip"><span class="t">Unsaved work</span>Patina asks before anything replaces a project with unsaved
+changes: New, Open, Open Recent, the autosave, the sample, the welcome window's buttons, a dropped file.</div>
+<figure><img src="img/welcome.png" alt="Welcome window" style="max-width:660px"></figure>
+
+<h2 id="toolbars">The toolbars</h2>
+<p>The tool strip on the left and the bars over the 3D view, the UV editor and the layers show icons. They are drawn
+after the ones painting and 3D programs use, so a brush is a brush and a bucket fills. Rest the pointer on an icon to
+see its name and shortcut. Right-click a tool to see or change its shortcut.</p>
+<div class="two">
+  <figure><img src="img/tools.png" alt="Tool strip"><figcaption>The tool strip, grouped by job</figcaption></figure>
+  <figure><img src="img/menu_file.png" alt="File menu"><figcaption>The File menu</figcaption></figure>
+</div>
+<p>The retopology tools are always in the strip (with the <i>Retopology</i> feature on). Choosing one shows the zone
+lines and the quads; its settings are in the bar over the view and in the Retopology window, which opens as a tab if it
+was closed. You don't need to open the Retopology tab first.</p>
+<table class="icons">
+  <tr><th>Icon</th><th>Tool</th><th>What it does</th></tr>
+  <tr><td>[[icon:paint]]</td><td>Paint <kbd>B</kbd></td><td>Paints the brush's material or color.</td></tr>
+  <tr><td>[[icon:erase]]</td><td>Erase <kbd>E</kbd></td><td>Erases paint (or a mask).</td></tr>
+  <tr><td>[[icon:blur]]</td><td>Blur <kbd>U</kbd></td><td>Softens paint, across UV seams too.</td></tr>
+  <tr><td>[[icon:smudge]]</td><td>Smudge <kbd>J</kbd></td><td>Drags the paint under the brush along the stroke.</td></tr>
+  <tr><td>[[icon:clone]]</td><td>Clone <kbd>C</kbd></td><td>Copies paint from a source (<kbd>Ctrl</kbd>+click sets it).</td></tr>
+  <tr><td>[[icon:fill]]</td><td>Fill <kbd>P</kbd></td><td>Fills a face, a UV island, a connected part, the mesh, the selection or a material slot.</td></tr>
+  <tr><td>[[icon:pick]]</td><td>Pick <kbd>I</kbd></td><td>Picks the color and values under the pointer.</td></tr>
+  <tr><td>[[icon:select]]</td><td>Select <kbd>S</kbd></td><td>Selects faces or UV islands, for UV work.</td></tr>
+  <tr><td>[[icon:seams]]</td><td>Seams <kbd>M</kbd></td><td>Lays UV seams along the model's edges as you drag.</td></tr>
+  <tr><td>[[icon:island]]</td><td>Island <kbd>L</kbd></td><td>Paint over a part, then make it one UV island.</td></tr>
+  <tr><td>[[icon:zone_lines]]</td><td>Zone lines</td><td>Retopology: draw where the edge flow changes.</td></tr>
+  <tr><td>[[icon:zone]]</td><td>Zones</td><td>Retopology: choose a zone and set its resolution.</td></tr>
+  <tr><td>[[icon:flow]]</td><td>Flow</td><td>Retopology: which way a zone's quads run.</td></tr>
+  <tr><td>[[icon:density]]</td><td>Density</td><td>Retopology: more or fewer quads where you paint.</td></tr>
+  <tr><td>[[icon:mirror_x]] [[icon:mirror_y]] [[icon:mirror_z]]</td><td>Mirror X, Y, Z</td><td>Mirror strokes across the object's axes (the letters in Blender's axis colors). <kbd>Shift</kbd>+<kbd>X</kbd> toggles X.</td></tr>
+  <tr><td>[[icon:radial]]</td><td>Radial</td><td>Repeats every dab around an axis.</td></tr>
+  <tr><td>[[icon:note]]</td><td>Note <kbd>N</kbd></td><td>Pins a comment to the model.</td></tr>
+</table>
+<p>The tool in use is solid copper. A switch that is on (a mirror, a lock, the seams overlay) has a copper outline.</p>
+<p>The bar over the 3D view:</p>
+<table class="icons">
+  <tr><th>Icon</th><th>Setting</th><th>What it does</th></tr>
+  <tr><td>[[icon:size]]</td><td>Size</td><td>The brush's diameter in pixels (<kbd>[</kbd> <kbd>]</kbd>, <kbd>Ctrl</kbd>+wheel).</td></tr>
+  <tr><td>[[icon:hardness]]</td><td>Hardness</td><td>How much of the brush paints at full strength before its edge fades.</td></tr>
+  <tr><td>[[icon:flow_rate]]</td><td>Flow</td><td>How much paint each dab lays down.</td></tr>
+  <tr><td>[[icon:opacity]]</td><td>Opacity</td><td>The most a stroke can cover.</td></tr>
+  <tr><td>[[icon:spacing]]</td><td>Spacing</td><td>The gap between dabs.</td></tr>
+  <tr><td>[[icon:proj_screen]] [[icon:proj_surface]] [[icon:proj_uv]]</td><td>Screen, Surface 3D, UV</td><td>How the brush is projected (see <a href="painting.html">Painting</a>).</td></tr>
+  <tr><td>[[icon:lock_topology]] [[icon:lock_island]] [[icon:lock_set]]</td><td>Topology, island and set lock</td><td>Keep a stroke on the part, the UV island or the texture set it starts on.</td></tr>
+  <tr><td>[[icon:view]]</td><td>View mode</td><td>What the view shows (see <a href="#view-modes">View modes</a>).</td></tr>
+  <tr><td>[[icon:wire]] [[icon:seams_show]]</td><td>Wireframe, Seams</td><td>Draw the mesh's edges, or the UV seams, over the model: only on the side you can see.</td></tr>
+  <tr><td>[[icon:path_trace]]</td><td>Path tracing</td><td>In the Path traced view mode: its samples, light bounces and the ground's shadow (see <a href="#path-traced">Path traced</a>).</td></tr>
+  <tr><td>[[icon:retopo_view]]</td><td>Retopology preview</td><td>Shows the retopology zones (or density) and the quads on the model whatever tool is chosen. The arrow beside it chooses what shows (see <a href="retopology.html#retopo-show">Retopology</a>).</td></tr>
+</table>
+<p>After those come the chosen tool's own settings: the fill mode, the island brush's
+[[icon:make_island]] <i>Make island</i>, [[icon:deselect]] <i>Clear</i>, [[icon:pin]] <i>Pin</i> and [[icon:unpin]]
+<i>Unpin</i>, the select tool's [[icon:sel_face]] faces or [[icon:sel_island]] islands with [[icon:pin]] <i>Pin</i> and
+[[icon:unpin]] <i>Unpin</i> (see <a href="uv.html#pins-3d">Pinning in the 3D view</a>), and the retopology tools' settings with [[icon:quads]]
+<i>Make quads</i>. The UV editor's bar has [[icon:uv_edit]] <i>Edit UVs</i> or [[icon:paint]] <i>Paint</i>, the
+selection [[icon:sel_vertex]] [[icon:sel_face]] [[icon:sel_island]], then [[icon:unwrap]] <i>Unwrap</i>,
+[[icon:pack]] <i>Pack</i>, [[icon:seams]] <i>Seams</i> and [[icon:more]] <i>More</i>. The layers' bar has
+[[icon:add_paint]] a paint layer, [[icon:add_fill]] a fill layer, [[icon:add_adjust]] an adjustment layer,
+[[icon:add_folder]] a folder and [[icon:smart]] smart materials, then [[icon:duplicate]] duplicate, [[icon:delete]]
+delete and [[icon:move_up]] [[icon:move_down]] move. [[icon:mask]] on a layer's row adds or edits its mask.</p>
+<div class="callout tip"><span class="t">Names beside the icons</span><i>Edit › Preferences › Names beside the toolbar
+icons</i> (or right-click the tool strip) shows each icon with its name. Switching off the <i>Icons in the toolbars</i>
+feature shows the names alone, as before 0.36. The icons are SVG files in Patina's <code>icons</code> folder.</div>
+
+<h2 id="right-click">Right-click menus</h2>
+<p>A right-click opens a menu of what you can do there. In the 3D view it is a click without dragging, so the
+right-button navigation (zoom with <kbd>Alt</kbd>, orbit in the ZBrush preset) still works. <kbd>Alt</kbd>+right-click
+still picks a color, and <kbd>Ctrl</kbd>+right-drag still sizes the brush.</p>
+<p id="type-values"><b>Right-click any slider to type its value</b>: the slider turns into a box with the number
+selected; type, then <kbd>Enter</kbd> keeps it and <kbd>Esc</kbd> goes back. It is the quick way to set exact values
+(a brush size of 100, a strength of 0.5). A typed value stays in the slider's range. A left click on a slider works
+as before, and <kbd>Ctrl</kbd>+click types too. <i>Preferences › Features › Type values into sliders</i> switches
+it off.</p>
+<figure><img src="img/view_context.png" alt="The 3D view's right-click menu" style="max-width:620px"><figcaption>The 3D view's menu, for the spot under the pointer.</figcaption></figure>
+<table>
+  <tr><th>Where</th><th>The menu has</th></tr>
+  <tr><td><b>3D view</b>, on the model</td><td>What is there (face, UV island, material slot). <i>Pick the color here</i>.
+    <i>Layers painted here</i>: every layer that shows on that spot, with how much, to select one. <i>Fill with the
+    paint material</i> (this face, its UV island, the connected part, its material slot) and erase an island.
+    <i>Select</i> the same parts, or all, none, invert. <i>Add a note here</i>, <i>Set the clone source here</i> and
+    <i>Center the view here</i>.</td></tr>
+  <tr><td><b>3D view</b>, anywhere</td><td><i>Tool</i> (every tool, grouped), <i>Symmetry</i> (mirrors and radial
+    copies), <i>Brush</i> (the locks, the projection, swap the colors), <i>View</i> (frame the model, front, back,
+    left, right, top, bottom, orthographic, the view mode, wireframe, seams, note pins, the retopology preview, the axis
+    gizmo, compare, hide the panels), and
+    with a retopology tool <i>Make quads</i>.</td></tr>
+  <tr><td><b>Tool strip</b></td><td>On a tool: its shortcut, change it, reset it. Elsewhere: names beside the icons, the
+    shortcuts editor.</td></tr>
+  <tr><td><b>Layers</b>, on a layer</td><td>Hide or show it, open or close a folder, a new layer above it, rename,
+    duplicate, delete, instances, move up or down, a fill layer's material (use the paint material, paint with its
+    material), folders, solo, the color tag, masks, clear the paint, copy and paste settings, save as a smart material,
+    export.</td></tr>
+  <tr><td><b>Layers</b>, below the layers</td><td>New layers and folders, a smart material, open or close all folders,
+    end solo.</td></tr>
+  <tr><td><b>Mask effects</b></td><td>Turn an effect off or on, move it up or down, duplicate it, remove it.</td></tr>
+  <tr><td><b>Materials</b></td><td>On a material: paint with it, add it as a fill layer, use it on the selected fill
+    layer, edit or duplicate it, copy its id. In the empty part: import a folder, a new procedural material, your
+    materials folder.</td></tr>
+  <tr><td><b>Smart materials and smart masks</b></td><td>Add one above the selected layer (or give the layer the mask),
+    a new fill layer with the mask, copy its id, the smart materials folder.</td></tr>
+  <tr><td><b>Brushes</b></td><td>Paint with a brush, copy its id, your brushes folder.</td></tr>
+  <tr><td><b>Colors</b></td><td>Use a color as the primary or secondary color, swap them, add it to the swatches, copy or
+    paste a hex code, move or remove a swatch, clear the recent colors.</td></tr>
+  <tr><td><b>History</b></td><td>Go back to a step, undo, redo, clear the history.</td></tr>
+  <tr><td><b>Notes</b></td><td>Go to a note, edit, resolve or reopen it, copy its text, delete it.</td></tr>
+  <tr><td><b>Console</b></td><td>Copy the log or only its errors and warnings, clear it, list the commands.</td></tr>
+  <tr><td><b>UV editor</b></td><td>Everything for the selection: move, rotate, scale, flip, align, weld, pin, unwrap,
+    straighten, orient, texel density, relax, pack, mirrored halves, texture sets, seams, select, the whole layout and
+    the view (see <a href="uv.html">UV editing</a>).</td></tr>
+</table>
+<p>Switching off the <i>Right-click menus</i> feature (<i>Edit › Preferences › Features</i>) leaves only the menus
+Patina had before 0.36: layers, materials, swatches and the UV editor.</p>
+
+<h2 id="language">Language</h2>
+<p><i>Edit › Preferences › Language</i> shows Patina in another language, from a translation file. Anyone can make one;
+see <a href="translating.html">Translating Patina</a>.</p>
+
+<h2 id="navigate">Navigating the view</h2>
+<figure class="right"><img src="img/view_gizmo.png" alt="The axis gizmo in the 3D view's corner" style="max-width:300px"><figcaption>The axis gizmo, pointing at the X end.</figcaption></figure>
+<p><b>The axis gizmo</b> in the top right corner of the 3D view shows which way the X, Y and Z axes point as the camera
+turns: X red, Y green and Z blue, as in Blender and most 3D programs (the letters on the mirror buttons have the same
+colors). Patina's Y axis points up. The dots without letters are the negative ends.</p>
+<ul>
+  <li><b>Click an end</b> to look along that axis: X for the right view, Y for the top view, Z for the front view, and
+    the plain dots for the opposite sides. The view jumps there (see <a href="#side-views">Side views</a>).</li>
+  <li><b>Click the end facing you</b> to see the model from the other side.</li>
+  <li><b>Drag</b> inside the gizmo to orbit. The wheel zooms over it, as over the rest of the view.</li>
+</ul>
+<p><i>View › Axis gizmo</i> hides or shows it. Patina Web has the same gizmo.</p>
+
+<h3 id="side-views">Side views, and back to your view</h3>
+<figure class="right"><img src="img/view_back.png" alt="The Back button under the axis gizmo" style="max-width:340px"><figcaption>On a side view, the Back button under the gizmo.</figcaption></figure>
+<p>The numpad (<kbd>1</kbd> front, <kbd>3</kbd> right, <kbd>7</kbd> top, with <kbd>Ctrl</kbd> the opposite side), a
+click on the gizmo and <i>View › View front</i> and the others <b>jump</b> to a side, top or bottom view. Side views are
+<b>orthographic</b> (no perspective), as in Blender, until you orbit away; then the perspective comes back.
+<i>Preferences › Mouse</i> can keep the perspective instead, or turn to the side views in a quarter second
+instead of jumping.</p>
+<p>A side view remembers the view you had before it. <b>Numpad <kbd>0</kbd></b>, or the <b>Back</b> button under the
+gizmo, takes you back there. Press it again to go back to the side view, so you can flip between the two.</p>
+<p><b>Snapping while orbiting:</b> hold <kbd>Alt</kbd> while you orbit with the middle button and the view snaps to the
+nearest side, top or bottom view as you move the mouse, the way Blender does. Let go of <kbd>Alt</kbd> to orbit freely
+again from there. With the Blender preset, <kbd>Alt</kbd> + middle drag snaps from the start; with Patina's preset,
+<kbd>Alt</kbd> + middle drag pans (as in Substance and Maya), so press <kbd>Alt</kbd> once the orbit has begun. When you
+orbit with <kbd>Alt</kbd> + left (or the right button in the ZBrush preset), <kbd>Shift</kbd> does the snapping.
+<kbd>Numpad 0</kbd> goes back to where the orbit began.</p>
+
+<h3 id="view-pie">Pie menus</h3>
+<div class="two">
+  <figure><img src="img/view_pie.png" alt="The view pie round the pointer, Solid chosen"><figcaption>Hold <kbd>Z</kbd>,
+    point at an item, let go. Here: Solid.</figcaption></figure>
+  <figure><img src="img/view_solid.png" alt="The Solid view: the model in light gray"><figcaption>The Solid view: the
+    shape alone, without textures.</figcaption></figure>
+</div>
+<p>Four pies open round the pointer over the 3D view, eight items each. Hold the key, move toward an item and let go.
+Or tap the key and click an item. <kbd>Esc</kbd> closes a pie, and so does a right-click away from the items.</p>
+<table>
+  <tr><th>Key</th><th>Pie</th><th>What is in it</th></tr>
+  <tr><td><kbd>Z</kbd></td><td>View</td><td>How the model shows: lit, solid, unlit, path traced, wireframe, seams, the UV checker, the retopology preview.</td></tr>
+  <tr><td><kbd>Shift</kbd>+<kbd>Z</kbd></td><td>Channels</td><td>One channel at a time: base color, normal, roughness, metallic, height, emissive, AO, the layer mask.</td></tr>
+  <tr><td><kbd>`</kbd> (under <kbd>Esc</kbd>)</td><td>Edit mode</td><td>The tools: paint, erase, fill, select, seams, the Island brush, the retopology lines and edge loops.</td></tr>
+  <tr><td><kbd>Q</kbd></td><td>Quick Favorites</td><td>Eight items you choose (see <a href="#quick-favorites">Quick Favorites</a>).</td></tr>
+</table>
+<p>The view pie is laid out like Blender's shading pie: Wireframe left, Solid right, Lit down, Path traced up.</p>
+<table>
+  <tr><th>Where</th><th>Item</th><th>What it does</th></tr>
+  <tr><td>Left</td><td>[[icon:wire]] Wireframe</td><td>The mesh's edges on or off.</td></tr>
+  <tr><td>Right</td><td>[[icon:view_solid]] Solid</td><td>The shape alone: light gray, lit, no textures or normal map. Again: back to the view mode before.</td></tr>
+  <tr><td>Down</td><td>[[icon:view_lit]] Lit</td><td>The material, lit by the environment: the usual view.</td></tr>
+  <tr><td>Up</td><td>[[icon:path_trace]] Path traced</td><td>The path tracer (see <a href="#path-traced">Path traced</a>). Again: the view mode before.</td></tr>
+  <tr><td>Up left</td><td>[[icon:view_unlit]] Unlit</td><td>The colors without the light (the base color). Again: the view mode before.</td></tr>
+  <tr><td>Up right</td><td>[[icon:seams_show]] Seams</td><td>The UV seams on or off.</td></tr>
+  <tr><td>Down left</td><td>[[icon:uv_checker]] UV Checker</td><td>The checker pattern, to see stretching. Again: the view mode before.</td></tr>
+  <tr><td>Down right</td><td>[[icon:retopo_view]] Retopo preview</td><td>The retopology's zones and quads on or off, whatever tool is chosen.</td></tr>
+</table>
+<div class="two">
+  <figure><img src="img/pie_edit.png" alt="The edit mode pie: the tools round the pointer"><figcaption><kbd>`</kbd>: the
+    edit modes. The chosen tool has a copper edge.</figcaption></figure>
+  <figure><img src="img/pie_channels.png" alt="The channel pie: base color, normal, roughness and more"><figcaption>
+    <kbd>Shift</kbd>+<kbd>Z</kbd>: the channels. Choose one again to go back.</figcaption></figure>
+</div>
+<p>In the channel pie, choosing the channel you are looking at goes back to the view you had. The other channels, the
+bakes and the checks are still in the view mode list.</p>
+
+<h3 id="quick-favorites">Quick Favorites</h3>
+<div class="two">
+  <figure><img src="img/pie_favorites.png" alt="Quick Favorites: six items and two empty places"><figcaption><kbd>Q</kbd>:
+    your eight. An empty place says Add a favorite.</figcaption></figure>
+  <figure><img src="img/pie_picker.png" alt="The list to choose a favorite from, with a search box"><figcaption>Choose
+    an empty place: search, then click or press <kbd>Enter</kbd>.</figcaption></figure>
+</div>
+<p><kbd>Q</kbd> opens a pie of your own, as Blender's Quick Favorites menu. It starts with Clear selection, Make island,
+X mirror, Swap colors, Back to your view and Render image, and two empty places. To fill a place:</p>
+<ul>
+  <li>Right-click a button on the toolbars, or an item in another pie, and choose <i>Add to Quick Favorites</i>. It goes
+    into the first empty place.</li>
+  <li>Choose an empty place in the pie. A list opens with everything a pie can hold: the tools, the view modes, the
+    toggles and every shortcut action. Type to search.</li>
+  <li>In <i>Edit › Preferences › Pie menus</i>, click a place to choose its item, or <b>x</b> to empty it.</li>
+</ul>
+<p>Right-click an item in the Quick Favorites pie to replace it or take it out.</p>
+<div class="two">
+  <figure><img src="img/pie_menu_add.png" alt="An item's right-click menu: Add to Quick Favorites"><figcaption>
+    Right-click Solid in the view pie.</figcaption></figure>
+  <figure><img src="img/prefs_pies.png" alt="Preferences: the pie keys and the eight Quick Favorites"><figcaption>
+    <i>Preferences › Pie menus</i>.</figcaption></figure>
+</div>
+<p>The Solid view is also in the view mode list, with the other view modes.</p>
+<p>Patina's default navigation is below. If your hands already know another program, pick it in <i>View › Navigation</i>:</p>
+<table>
+  <tr><th>Preset</th><th>Orbit</th><th>Pan</th><th>Zoom</th></tr>
+  <tr><td>Patina (default)</td><td><kbd>Alt</kbd> + left, or middle</td><td><kbd>Shift</kbd> + middle</td><td>wheel, <kbd>Alt</kbd> + right</td></tr>
+  <tr><td>Blender</td><td>middle</td><td><kbd>Shift</kbd> + middle</td><td>wheel, <kbd>Ctrl</kbd> + middle</td></tr>
+  <tr><td>Maya / Substance</td><td><kbd>Alt</kbd> + left</td><td><kbd>Alt</kbd> + middle</td><td>wheel, <kbd>Alt</kbd> + right</td></tr>
+  <tr><td>ZBrush style</td><td>right</td><td><kbd>Alt</kbd> + right</td><td>wheel, <kbd>Shift</kbd> + right</td></tr>
+</table>
+<p>In every preset the wheel zooms and <kbd>Ctrl</kbd> + right drag sets the brush size and hardness. The table below is
+the default preset.</p>
+<table>
+  <tr><th>Action</th><th>Mouse / keys</th></tr>
+  <tr><td>Orbit</td><td><kbd>Alt</kbd> + left drag, or middle drag</td></tr>
+  <tr><td>Pan</td><td><kbd>Shift</kbd> + middle drag, or <kbd>Alt</kbd> + <kbd>Shift</kbd> + left drag</td></tr>
+  <tr><td>Zoom</td><td>Mouse wheel, <kbd>Alt</kbd> + right drag, or <kbd>Alt</kbd> + <kbd>Ctrl</kbd> + left drag</td></tr>
+  <tr><td>Frame the model</td><td><kbd>F</kbd></td></tr>
+  <tr><td>Rotate the lighting (environment)</td><td><kbd>Shift</kbd> + right drag (<kbd>Alt</kbd>+<kbd>Shift</kbd> + right drag in the ZBrush preset)</td></tr>
+  <tr><td>Front / right / top view</td><td>Numpad <kbd>1</kbd> / <kbd>3</kbd> / <kbd>7</kbd> (with <kbd>Ctrl</kbd> for the opposite side), or a click on Z, X or Y in the axis gizmo. Numpad <kbd>5</kbd> toggles orthographic.</td></tr>
+  <tr><td>Back to your view (again: the side view)</td><td>Numpad <kbd>0</kbd>, or the Back button under the gizmo</td></tr>
+  <tr><td>Snap to the nearest side view while orbiting</td><td>Middle drag, then hold <kbd>Alt</kbd> (<kbd>Shift</kbd> during an <kbd>Alt</kbd> + left drag)</td></tr>
+  <tr><td>View pie</td><td>Hold <kbd>Z</kbd>, point, let go</td></tr>
+  <tr><td>View modes</td><td><kbd>1</kbd> – <kbd>9</kbd>: material, base color, roughness, metallic, normal, height, emissive, AO, curvature</td></tr>
+</table>
+<div class="callout tip"><span class="t">Trackpads</span>Every navigation action has an <kbd>Alt</kbd> + left-button
+variant, so no middle button is needed.</div>
+
+<h2 id="workspace">Making it yours</h2>
+<div class="two">
+  <figure><img src="img/menu_view.png" alt="View menu"><figcaption><i>View</i>: distraction-free mode, UI scale and the navigation presets.</figcaption></figure>
+  <figure><img src="img/keymap_editor.png" alt="Keyboard shortcuts editor"><figcaption><i>Edit › Keyboard shortcuts</i>. Shortcuts used twice are shown in red.</figcaption></figure>
+</div>
+<ul>
+  <li><b>Preferences:</b> <i>Edit › Preferences…</i> collects the keymap, the mouse navigation, Ctrl-paints-secondary and
+  the UI scale in one window.</li>
+  <li><b>Blender keymap:</b> choose <i>Blender keymap</i> in Preferences to use Blender's keys (S samples, F resizes the
+  brush, Shift+A adds, Shift+D duplicates, middle mouse orbits…). See the <a href="shortcuts-blender.html">Blender keymap
+  reference</a>.</li>
+  <li><b>Keyboard shortcuts:</b> <i>Edit › Keyboard shortcuts</i> lists every rebindable action. Click a shortcut and press
+  the new combination. <kbd>Backspace</kbd> clears it and <kbd>Esc</kbd> cancels. They are saved in
+  <code>keymap.json</code> in the settings folder (<i>Help › About</i> shows where), so you can copy them to another
+  machine.</li>
+  <li><b>Hide the panels:</b> <kbd>Tab</kbd> shows only the viewport and its brush bar. Press <kbd>Tab</kbd> again to bring
+  everything back exactly as it was.</li>
+  <li><b>UI scale:</b> <i>View › UI scale</i> makes text and controls 75–200% of their normal size. It is applied
+  immediately and remembered.</li>
+  <li><b>Versions and re-exports:</b> <i>File › Save Incremental</i> (<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd>) and
+  <i>File › Export Again</i> (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>); see <a href="texture-set.html#projects">Projects</a>.</li>
+  <li><b>Recent files:</b> <i>File › Open Recent</i> lists the last 12 projects and meshes, including ones opened from
+  Blender or by Claude. Missing files are grayed out.</li>
+  <li><b>Remembered between sessions:</b> the brush and its settings, the paint material, the tool, the colors and
+  swatches, symmetry, the UI scale, the navigation preset and the export settings. They live in
+  <code>session.json</code> in the settings folder. Delete it to start fresh.</li>
+  <li><b>Errors:</b> if saving or exporting fails, Patina says so in a dialog (with a <i>Copy message</i> button) instead of
+  only in the status bar.</li>
+</ul>
+<figure><img src="img/focus_mode.png" alt="Distraction-free view"><figcaption><kbd>Tab</kbd>: only the model and the brush bar.</figcaption></figure>
+
+<h2 id="view-modes">View modes</h2>
+<p>The view combo in the viewport bar shows a single channel, a baked map or a debugging aid. <b>UV checker</b> shows a
+checker pattern through the model's UVs, which reveals stretching and texel density at a glance. Paint is projected in 3D,
+so a stretched checker doesn't affect how a stroke looks. It does mean those areas get fewer texture pixels.</p>
+<figure><img src="img/view_modes.png" alt="Six view modes"><figcaption>Base color, roughness, normal, curvature, ambient occlusion and the UV checker.</figcaption></figure>
+<p>Three view modes help with the layout and the parts of the model: <b>Texel Density</b> and <b>UV Stretch</b> are heat
+maps (see <a href="uv.html#texel-density">Texel density</a>), and <b>Material Slots</b> colors each Blender material
+slot differently. <b>Symmetry</b> shows how far each part of the model is from its mirror image across X (see
+<a href="tools.html#symmetry">Mesh symmetry check</a>).</p>
+<p><b>PBR Range</b> marks base colors that no real material has, the way Substance's PBR validation does. Red: a
+non-metal darker than sRGB 30 (darker than charcoal). Blue: a non-metal brighter than 240 (whiter than fresh snow).
+Orange: a metal darker than 180 (metals reflect at least about half the light). Purple: metallic half-way between
+metal and non-metal, which is fine along a border, but odd over an area (a few of Patina's own materials, such as the
+metallic car paints, are half-metal on purpose). Everything else is gray. Engines light such colors oddly: too-dark
+colors look dirty, too-bright ones glow.</p>
+<figure><img src="img/pbr_range.png" alt="The PBR Range view" style="max-width:460px"><figcaption>The PBR Range view
+of a worn painted metal: the blue car paint is half-metal (purple), and the scratched steel is darker than real steel
+(orange).</figcaption></figure>
+<p><b>Layer Mask</b> shows the selected layer's mask in black and white: its effective mask, which is the painted
+mask, the smart mask and any mask effect stack combined, exactly as the layer uses it. Use it while tuning a smart
+mask's Level and Contrast (see <a href="masks-guide.html#seeing-a-mask">the masks guide</a>). <b>Thickness</b> and
+<b>Bent Normals</b> show those bakes once they are baked. <b>Bake-Down Check</b> shows, after a bake-down, where the
+paint found the high-poly and where it had to be guessed (see <a href="texture-set.html#bake-down">Baking
+down</a>). <b>Face Sets</b> shows each face set in its color (see <a href="uv.html#face-sets">Face sets</a>).</p>
+
+<h2 id="compare">Compare view</h2>
+<p>To see what a change does, split the view: <i>View › Compare view</i>, or <kbd>\</kbd>. The left of the divider shows
+a <b>snapshot</b> of the textures, the right the live result. Drag the divider to wipe between them. <kbd>Shift</kbd>+<kbd>\</kbd>
+takes a new snapshot, so the usual way is: take a snapshot, change a mask or a material, and wipe. The camera, lighting
+and brush are shared by both sides, and you can keep painting on the right.</p>
+<figure><img src="img/compare_notes.png" alt="Compare view with notes" style="max-width:656px"><figcaption>The
+snapshot on the left still has the edge rust that is now hidden. The numbered pins are notes.</figcaption></figure>
+<p>The left side can also show a <b>view mode</b> instead (<i>Compare view › Left: a view mode</i>), for example the
+roughness or the normal map next to the lit material. After a <a href="texture-set.html#bake-down">bake-down</a>,
+<i>Left: the high-poly before the bake-down</i> shows the painted high-poly as it was, beside the low-poly with the
+layers baked down. The snapshot lives only for the session, and a new texture resolution clears it. Claude uses <code>set_compare</code>, and <code>render_view</code> renders the split too.</p>
+
+<h2 id="notes">Notes</h2>
+<p><b>Notes</b> are comments pinned to the model, saved in the project: review remarks, to-dos, hand-over notes. Pick
+the Note tool (<kbd>N</kbd>) and click on the model, type, and press <i>Save</i> (<kbd>Ctrl</kbd>+<kbd>Enter</kbd>). Click
+a pin with the Note tool to edit it, mark it resolved or delete it. Hover over a pin with any tool to read it. Pins
+behind the model are drawn faint.</p>
+<div class="two">
+  <figure><img src="img/notes_panel.png" alt="Notes panel"></figure>
+  <div>
+  <p>The <b>Notes</b> panel (next to History) lists every note with its number. Click one to turn the camera to the view
+  it was written from, double-click to edit it, and tick it when it's resolved. <i>Resolved</i> shows or hides resolved
+  notes, <i>Pins</i> hides the pins in the view, and <i>Copy all</i> copies the list as a Markdown checklist, for an
+  issue tracker or an email.</p>
+  <p>Notes keep the author (your user name) and the date. Claude reads and writes them with <code>list_notes</code>,
+  <code>add_note</code>, <code>update_note</code>, <code>delete_note</code> and <code>go_to_note</code>, so it can work
+  through review notes left in a project.</p>
+  </div>
+</div>
+
+<h2 id="path-traced">Path traced</h2>
+<div class="two">
+  <figure><img src="img/pt_raster.png" alt="Polished gold in the Material view"><figcaption>The <b>Material</b> view:
+    quick, lit by the environment, no shadows.</figcaption></figure>
+  <figure><img src="img/pt_traced.png" alt="The same in the Path traced view"><figcaption><b>Path traced</b>, 256
+    samples: the ear reflects in the head, the shadow lies on the ground.</figcaption></figure>
+</div>
+<p>The <b>Path traced</b> view mode follows the light the way a renderer such as Blender's Cycles does: real shadows,
+reflections of the model in itself, and light bouncing between its parts. It uses everything you paint (base color,
+roughness, metallic, the normal map, emissive, opacity, sheen, clearcoat, subsurface) and the same environment light as
+the other views, so <kbd>Shift</kbd> + right drag turns the light here too. An invisible ground under the model shows
+its shadow, as in a product photo.</p>
+<p>The picture starts grainy and gets cleaner the longer nothing changes; the count in the view's corner says how far it
+has got. Anything you change (the camera, a stroke, the light) starts it again, with a quick picture first so the view
+stays smooth. It stops at its number of samples, so the graphics card can rest.</p>
+<figure class="right"><img src="img/pt_settings.png" alt="The path tracer's settings" style="max-width:360px"><figcaption>[[icon:path_trace]] <i>Path tracing</i> on the bar.</figcaption></figure>
+<p>In this mode the bar over the view has a [[icon:path_trace]] <b>Path tracing</b> button with the settings:</p>
+<ul>
+  <li><b>Samples</b>: where the view stops (512). More removes the last grain in soft shadows and dull metal.</li>
+  <li><b>Light bounces</b>: how many times light may bounce after the first hit (6). More lights the inside of folds and
+    cavities; 0 is direct light only.</li>
+  <li><b>Shadow on the ground</b>: the invisible ground with the model's shadow, on or off.</li>
+  <li><b>Brightest bounce</b>: lower it if bright speckles (fireflies) linger; it costs a little of the brightest glints.</li>
+</ul>
+<p>Over MCP: <code>set_view {mode: path_traced}</code>, <code>path_trace</code> for the settings and how far it has got,
+<code>render_view</code> with <code>samples</code>, and <code>render_image</code> with <code>path_traced</code>.</p>
+
+<h2 id="render">Rendering an image</h2>
+<p><i>File › Render Image…</i> (<kbd>F12</kbd>) saves what the viewport shows as a PNG, without the brush circle, seams or
+wireframe: for a portfolio, a client, or a quick work-in-progress post.</p>
+<div class="two">
+  <figure><img src="img/render_dialog.png" alt="Render image dialog"></figure>
+  <div>
+  <ul>
+    <li><b>Size:</b> any width and height, with HD, 4K and square presets. It doesn't have to match the window.</li>
+    <li><b>Transparent background:</b> only the model, for compositing or a web page.</li>
+    <li><b>Anti-aliasing:</b> renders 2–4 times larger and scales down, for smooth edges.</li>
+    <li><b>Turntable frames:</b> 2 or more renders the model turning once around, as
+    <code>name_0001.png</code>, <code>name_0002.png</code>… ready for a GIF or video tool.</li>
+    <li><b>Path traced:</b> the render made by the path tracer (see <a href="#path-traced">Path traced</a>), with its
+    number of <b>Samples</b> (256 is clean for most models). It takes seconds to minutes; a bar shows how far it has
+    got, and <i>Cancel</i> stops it. The window keeps working meanwhile. No anti-aliasing is needed: the samples
+    smooth the edges. With a transparent background, the ground's shadow is kept as see-through black.</li>
+  </ul>
+  <figure><img src="img/render_pt.png" alt="The Render image dialog's path traced option"></figure>
+  <p>Use <kbd>Shift</kbd> + right drag first to turn the lighting to taste.</p>
+  </div>
+</div>
+<figure><img src="img/render_example.png" alt="A rendered image" style="max-width:640px"><figcaption>A render at 640 × 400, 2× anti-aliasing.</figcaption></figure>
+
+<h2>The console</h2>
+<p>The <b>Console</b> tab takes the same commands as Claude and the Blender add-on. Type a command name, then optional
+JSON arguments, for example <code>set_brush {"size": 48}</code>. <code>list_commands</code> lists them all, and the
+<a href="commands.html">command reference</a> describes each one. It is handy for precise values and for repeating a set-up.</p>
+<figure><img src="img/console_panel.png" alt="Console"></figure>
+
+<h2>Help windows</h2>
+<p><kbd>F1</kbd> opens a shortcut sheet. <i>Help › Manual</i> opens this manual in your browser. <i>Help › About</i>
+shows the version, the graphics driver and the folders on your machine.</p>
+<div class="two">
+  <figure><img src="img/help_window.png" alt="Shortcut sheet"></figure>
+  <figure><img src="img/about_window.png" alt="About window"></figure>
+</div>

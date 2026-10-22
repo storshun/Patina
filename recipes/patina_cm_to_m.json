@@ -1,0 +1,21 @@
+{
+ "patina_recipe": 1,
+ "id": "patina_cm_to_m",
+ "name": "Centimeters to meters",
+ "description": "For models exported in centimeters: scaled to Blender's meters and stood on the ground; exported as a GLB.",
+ "steps": [
+  {
+   "cmd": "mesh_transform",
+   "args": {
+    "from_units": "cm",
+    "origin": "base"
+   }
+  },
+  {
+   "cmd": "export_model",
+   "args": {
+    "path": "${out}/${name}.glb"
+   }
+  }
+ ]
+}

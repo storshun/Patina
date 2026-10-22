@@ -1,0 +1,142 @@
+<!-- title: Blender keymap reference -->
+<!-- nav: Shortcuts (Blender keymap) -->
+<h1>Blender keymap reference</h1>
+<p class="lead">If you paint in Blender, switch Patina to the <b>Blender keymap</b>: S samples a color, X flips colors,
+F resizes the brush, Shift+A adds, Shift+D duplicates, and the middle mouse button orbits. This page lists every key in
+that keymap. The <a href="shortcuts.html">default Patina keymap</a> has its own page.</p>
+
+<h2>Turning it on</h2>
+<div class="two">
+  <figure><img src="img/preferences.png" alt="Preferences window with the Blender keymap selected"><figcaption><i>Edit › Preferences…</i></figcaption></figure>
+  <div>
+  <ol class="steps">
+    <li>Open <i>Edit › Preferences…</i></li>
+    <li>Choose <b>Blender keymap</b>. The navigation switches to Blender's as well (middle mouse orbits,
+    <kbd>Shift</kbd> + middle pans, <kbd>Ctrl</kbd> + middle zooms), and <i>Hold Ctrl while painting to paint with the
+    secondary color</i> is turned on. Both can be changed back separately in the same window.</li>
+    <li>The choice is saved and kept on the next start. <kbd>F1</kbd> shows the keys of the active keymap.</li>
+  </ol>
+  <p>You can also switch from <i>Edit › Keyboard shortcuts</i> or from the <kbd>F1</kbd> window. Switching keymaps
+  replaces any keys you changed yourself. Individual keys can still be changed afterward in <i>Edit › Keyboard
+  shortcuts</i>.</p>
+  </div>
+</div>
+
+<h2>Painting</h2>
+<p>The <b>Blender</b> column shows what the key does in Blender's texture paint mode. Where Blender has no key for an
+action, Patina's own key is kept, marked <i>Patina</i>.</p>
+<table>
+  <tr><th>Action</th><th>Key</th><th>Blender</th></tr>
+  <tr><td>Sample the color under the cursor</td><td><kbd>S</kbd></td><td>Same (Sample Color)</td></tr>
+  <tr><td>Swap primary and secondary color</td><td><kbd>X</kbd></td><td>Same (Flip Colors)</td></tr>
+  <tr><td>Paint with the secondary color</td><td>Hold <kbd>Ctrl</kbd> while painting</td><td>Same</td></tr>
+  <tr><td>Brush size</td><td><kbd>F</kbd>, move the mouse, click (or <kbd>Enter</kbd>) to confirm; right-click or <kbd>Esc</kbd> cancels</td><td>Same (radial control)</td></tr>
+  <tr><td>Brush opacity (Blender's strength)</td><td><kbd>Shift</kbd>+<kbd>F</kbd>, then the same</td><td>Same</td></tr>
+  <tr><td>Brush flow</td><td><kbd>G</kbd>, then the same</td><td><i>Patina</i> (Blender has no flow)</td></tr>
+  <tr><td>Brush hardness</td><td><kbd>Shift</kbd>+<kbd>G</kbd>, then the same</td><td><i>Patina</i></td></tr>
+  <tr><td>Brush angle</td><td><kbd>Ctrl</kbd>+<kbd>F</kbd>, move the mouse round (<kbd>Shift</kbd>: steps of 15 degrees)</td><td>Same (Blender turns the brush texture)</td></tr>
+  <tr><td>Brush smaller / bigger</td><td><kbd>[</kbd> / <kbd>]</kbd></td><td>Same</td></tr>
+  <tr><td>Clone source</td><td><kbd>Ctrl</kbd>+click with the Clone tool</td><td>Same (Ctrl+click sets the clone point)</td></tr>
+  <tr><td>Straight line from the last stroke</td><td><kbd>Shift</kbd>+click</td><td><i>Patina</i> (Blender uses a Line stroke method)</td></tr>
+  <tr><td>Toggle X mirror</td><td><kbd>Shift</kbd>+<kbd>X</kbd></td><td><i>Patina</i></td></tr>
+  <tr><td>Topology lock: stay on the connected piece of mesh</td><td><kbd>Alt</kbd>+<kbd>T</kbd></td><td><i>Patina</i> (Blender's face mask limits painting to selected faces instead)</td></tr>
+  <tr><td>Island lock: stay inside the UV island</td><td><kbd>Alt</kbd>+<kbd>L</kbd></td><td><i>Patina</i></td></tr>
+  <tr><td>Command palette: search everything</td><td><kbd>F3</kbd></td><td>Same (Blender's menu search)</td></tr>
+  <tr><td>Stencil: move / rotate / scale</td><td>Hold <kbd>T</kbd>: left drag / <kbd>Shift</kbd> + left drag / wheel</td><td><i>Patina</i> (Blender moves its stencil with the right mouse button)</td></tr>
+  <tr><td>Stencil on or off</td><td><kbd>Shift</kbd>+<kbd>T</kbd></td><td><i>Patina</i></td></tr>
+  <tr><td>Pen tablet: eraser end, barrel buttons</td><td>Eraser end erases; lower / upper button: right / middle click (middle orbits, as in Blender)</td><td>Same idea (Blender maps the buttons to right / middle click too)</td></tr>
+  <tr><td>Brush size and hardness by dragging</td><td><kbd>Ctrl</kbd> + right drag</td><td><i>Patina</i></td></tr>
+</table>
+<figure><img src="img/blender_radius.png" alt="Resizing the brush with F" style="max-width:460px"><figcaption><kbd>F</kbd>: the circle follows the mouse, click to keep the new size.</figcaption></figure>
+<div class="two">
+  <figure><img src="img/brush_hardness.png" alt="Setting the hardness: a soft copper edge round a full disc"><figcaption>
+    <kbd>Shift</kbd>+<kbd>G</kbd>: the copper disc paints at full strength, the rest fades out.</figcaption></figure>
+  <figure><img src="img/brush_angle.png" alt="Setting the brush angle: a line from the middle"><figcaption>
+    <kbd>Ctrl</kbd>+<kbd>F</kbd>: the line shows where the tip points.</figcaption></figure>
+</div>
+
+
+<h2 id="sliders">Sliders</h2>
+<table>
+  <tr><th>Action</th><th>Input</th></tr>
+  <tr><td>Type a slider's value (<kbd>Enter</kbd> keeps it, <kbd>Esc</kbd> goes back)</td><td>Right-click the slider · <kbd>Ctrl</kbd>+click</td></tr>
+  <tr><td>Drag it / set it where you click</td><td>Left drag / left click</td></tr>
+</table>
+<h2>Tools</h2>
+<p>Blender's paint tools have no single-key shortcuts, so the Patina keys stay, except where Blender uses the key for
+something else.</p>
+<table>
+  <tr><td><kbd>B</kbd> Paint</td><td><kbd>E</kbd> Erase</td><td><kbd>C</kbd> Clone</td><td><kbd>P</kbd> Polygon fill</td></tr>
+  <tr><td><kbd>M</kbd> Seams</td><td><kbd>L</kbd> Island brush</td><td><kbd>J</kbd> Smudge</td><td><kbd>N</kbd> Note</td></tr>
+  <tr><td colspan="4">Blur, Pick and Select faces: tool strip</td></tr>
+</table>
+<p>Blur has no key in the Blender keymap since 0.4, because <kbd>U</kbd> unwraps, as in Blender. Give it one in
+<i>Edit › Keyboard shortcuts</i> if you use it a lot.</p>
+<div class="callout tip"><span class="t">Picking colors</span>In the Blender keymap the Pick tool has no key, because
+<kbd>S</kbd> already samples straight away, without a click. <kbd>Alt</kbd> + right-click also picks with any tool.</div>
+
+<h2>UVs and face selection</h2>
+<table>
+  <tr><th>Action</th><th>Key</th><th>Blender</th></tr>
+  <tr><td>Island brush: paint the area, <kbd>Ctrl</kbd> removes</td><td><kbd>L</kbd>, then left drag</td><td>Similar (<kbd>L</kbd> selects linked faces)</td></tr>
+  <tr><td>Make the painted area an island</td><td><kbd>U</kbd></td><td>Same idea (<kbd>U</kbd> opens the Unwrap menu)</td></tr>
+  <tr><td>Select all faces / none</td><td><kbd>A</kbd> / <kbd>Alt</kbd>+<kbd>A</kbd></td><td>Same</td></tr>
+  <tr><td>Grow / shrink the selection</td><td><kbd>Ctrl</kbd>+Numpad <kbd>+</kbd> / <kbd>-</kbd></td><td>Same (Select More / Less)</td></tr>
+  <tr><td>Unpin the selected islands</td><td><kbd>Alt</kbd>+<kbd>P</kbd></td><td>Same (in Blender's UV editor)</td></tr>
+</table>
+
+<h2>Layers</h2>
+<table>
+  <tr><th>Action</th><th>Key</th><th>Blender</th></tr>
+  <tr><td>Add menu: paint, fill, fill with black mask, adjustment, folder, smart material</td><td><kbd>Shift</kbd>+<kbd>A</kbd> (opens at the mouse)</td><td>Same (Add)</td></tr>
+  <tr><td>Duplicate the selected layer</td><td><kbd>Shift</kbd>+<kbd>D</kbd></td><td>Same (Duplicate)</td></tr>
+  <tr><td>Make an instance (linked copy)</td><td><kbd>Alt</kbd>+<kbd>D</kbd></td><td>Same (Duplicate Linked)</td></tr>
+  <tr><td>Group into a folder</td><td><kbd>Ctrl</kbd>+<kbd>G</kbd></td><td>Same (Make Group)</td></tr>
+  <tr><td>Solo the selected layer (toggle)</td><td>Numpad <kbd>/</kbd></td><td>Same idea (Local View)</td></tr>
+  <tr><td>Delete the selected layer</td><td><kbd>Delete</kbd></td><td>Same (<kbd>X</kbd> is Flip Colors while painting)</td></tr>
+  <tr><td>Solo any layer</td><td><kbd>Alt</kbd>+click its eye</td><td><i>Patina</i> (Blender's outliner uses Ctrl+click)</td></tr>
+</table>
+
+<h2>View</h2>
+<table>
+  <tr><th>Action</th><th>Key</th><th>Blender</th></tr>
+  <tr><td>Orbit / pan / zoom</td><td>Middle drag / <kbd>Shift</kbd> + middle / <kbd>Ctrl</kbd> + middle or the wheel</td><td>Same</td></tr>
+  <tr><td>Frame the model</td><td><kbd>Home</kbd> or Numpad <kbd>.</kbd></td><td>Same (View All / View Selected)</td></tr>
+  <tr><td>Front / right / top (opposite with <kbd>Ctrl</kbd>)</td><td>Numpad <kbd>1</kbd> <kbd>3</kbd> <kbd>7</kbd></td><td>Same</td></tr>
+  <tr><td>Orthographic on/off</td><td>Numpad <kbd>5</kbd></td><td>Same</td></tr>
+  <tr><td>Snap to the nearest side view while orbiting</td><td><kbd>Alt</kbd> + middle drag, or hold <kbd>Alt</kbd> during one</td><td>Same</td></tr>
+  <tr><td>Back to your view (again: the side view)</td><td>Numpad <kbd>0</kbd></td><td><i>Patina</i> (Blender's Numpad 0 is the scene camera)</td></tr>
+  <tr><td>View pie</td><td>Hold <kbd>Z</kbd></td><td>Same idea (Blender's shading pie)</td></tr>
+  <tr><td>Channel pie</td><td>Hold <kbd>Shift</kbd>+<kbd>Z</kbd></td><td><i>Patina</i></td></tr>
+  <tr><td>Edit mode pie (the tools)</td><td>Hold <kbd>`</kbd></td><td><i>Patina</i> (Blender's <kbd>`</kbd> is the view pie; its <kbd>Ctrl</kbd>+<kbd>Tab</kbd> is the mode pie)</td></tr>
+  <tr><td>Quick Favorites</td><td>Hold <kbd>Q</kbd></td><td>Same idea (Blender's Quick Favorites, as a pie)</td></tr>
+  <tr><td>Hide all panels</td><td><kbd>Ctrl</kbd>+<kbd>Space</kbd></td><td>Same idea (Toggle Maximize Area)</td></tr>
+  <tr><td>View modes</td><td><kbd>1</kbd> – <kbd>9</kbd></td><td><i>Patina</i></td></tr>
+  <tr><td>Shortcut window</td><td><kbd>F1</kbd></td><td><i>Patina</i> (Blender's F1 opens its manual)</td></tr>
+  <tr><td>Split / compare view · take a snapshot</td><td><kbd>\</kbd> · <kbd>Shift</kbd>+<kbd>\</kbd></td><td><i>Patina</i></td></tr>
+</table>
+
+<h2>Files and editing</h2>
+<table>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd> Open</td><td><kbd>Ctrl</kbd>+<kbd>S</kbd> Save</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> Save as</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> Undo</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> Redo</td><td><kbd>Ctrl</kbd>+<kbd>Q</kbd> Quit</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd> Save incremental (same as Blender)</td><td><kbd>F12</kbd> Render image (same as Blender)</td><td><kbd>Shift</kbd> + right drag Rotate the lighting <i>(Patina)</i></td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>E</kbd> Export textures <i>(Patina)</i></td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> Export again <i>(Patina)</i></td><td><kbd>Ctrl</kbd>+<kbd>B</kbd> Send to Blender <i>(Patina)</i></td></tr>
+</table>
+<p>The UV editor keys (<kbd>G</kbd> / <kbd>R</kbd> / <kbd>S</kbd>, <kbd>A</kbd> / <kbd>Alt</kbd>+<kbd>A</kbd>,
+<kbd>P</kbd> / <kbd>Alt</kbd>+<kbd>P</kbd> to pin and unpin, <kbd>F</kbd> to frame, click and box select) already follow
+Blender in both keymaps. See <a href="shortcuts.html#uv-editor">the UV editor table</a>.</p>
+
+<h2>Gotchas</h2>
+<div class="callout gotcha"><span class="t"><kbd>S</kbd> samples where the mouse is</span>As in Blender, <kbd>S</kbd>
+picks the color under the cursor immediately, and the brush then paints that flat color instead of the library
+material. Click a material again to go back to it.</div>
+<div class="callout gotcha"><span class="t"><kbd>F</kbd> no longer frames the model</span>In the Blender keymap
+<kbd>F</kbd> resizes the brush. Use <kbd>Home</kbd> or Numpad <kbd>.</kbd> to frame.</div>
+<div class="callout gotcha"><span class="t">Tab does not hide the panels</span>In Blender <kbd>Tab</kbd> switches modes,
+so the Blender keymap uses <kbd>Ctrl</kbd>+<kbd>Space</kbd> for the distraction-free view.</div>
+<div class="callout gotcha"><span class="t"><kbd>U</kbd> no longer selects Blur</span>In 0.3.1 <kbd>U</kbd> was the Blur
+tool in both keymaps. The Blender keymap now uses it to make an island, as Blender's Unwrap does. Saved Blender keymaps
+from 0.3.1 are updated on the first start, and keys you changed yourself are kept.</div>
+<div class="callout tip"><span class="t">Mixing</span>The keymap and the mouse navigation are separate settings. For
+example, you can keep Patina's keys and use Blender navigation, or the other way round.</div>

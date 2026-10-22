@@ -1,0 +1,265 @@
+{
+ "description": "Oak bleached by the weather, with dirt in the cracks and lighter worn edges.",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_wood_oak",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Oak",
+   "opacity": 1.0,
+   "parent": 19,
+   "type": "fill",
+   "uid": 20,
+   "visible": true
+  },
+  {
+   "adjust": {
+    "brightness": 1.1200000047683716,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": 0.15000000596046448,
+    "saturation": 0.550000011920929
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Bleach",
+   "opacity": 1.0,
+   "parent": 19,
+   "type": "adjust",
+   "uid": 21,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.550000011920929,
+    "noise": 0.4000000059604645,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_dirt_mud",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Dirt",
+   "opacity": 0.800000011920929,
+   "parent": 19,
+   "type": "fill",
+   "uid": 22,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.699999988079071,
+    "invert": false,
+    "level": 0.6499999761581421,
+    "noise": 0.5,
+    "noise_scale": 3.0,
+    "type": "edges"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_wood_pine",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Worn edges",
+   "opacity": 0.6000000238418579,
+   "parent": 19,
+   "type": "fill",
+   "uid": 23,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Weathered wood",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 19,
+   "visible": true
+  }
+ ],
+ "name": "Weathered wood",
+ "patina_smart_material": 1
+}

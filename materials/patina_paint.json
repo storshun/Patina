@@ -1,0 +1,478 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Paint",
+ "materials": [
+  {
+   "id": "patina_paint_chipped_red",
+   "name": "Painted Metal Chipped (Red)",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "chipped_paint",
+   "description": "Red paint chipping off steel",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#a3201b",
+    "color_b": "#8c8f93",
+    "color_c": "#3a1a12",
+    "roughness": [
+     0.45,
+     0.35
+    ],
+    "metallic": [
+     0,
+     1
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.15,
+    "variation": 0.08,
+    "extra": [
+     0.62,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_paint_chipped_yellow",
+   "name": "Painted Metal Chipped (Yellow)",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "chipped_paint",
+   "description": "Industrial yellow paint over steel",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e0b21a",
+    "color_b": "#7f8286",
+    "color_c": "#4a3a10",
+    "roughness": [
+     0.5,
+     0.35
+    ],
+    "metallic": [
+     0,
+     1
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.15,
+    "variation": 0.08,
+    "extra": [
+     0.6,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_car_paint_blue",
+   "name": "Car Paint Blue",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "car_paint",
+   "description": "Metallic flake car paint",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#123c8a",
+    "color_b": "#6f9be8",
+    "roughness": [
+     0.18,
+     0.1
+    ],
+    "metallic": [
+     0.3,
+     1
+    ],
+    "scale": 4,
+    "detail": 3,
+    "height": 0.0,
+    "variation": 0.05,
+    "coat": 1.0
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_car_paint_red",
+   "name": "Car Paint Red",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "car_paint",
+   "description": "Metallic flake car paint",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8a1010",
+    "color_b": "#e86f5c",
+    "roughness": [
+     0.18,
+     0.1
+    ],
+    "metallic": [
+     0.3,
+     1
+    ],
+    "scale": 4,
+    "detail": 3,
+    "height": 0.0,
+    "variation": 0.05,
+    "coat": 1.0
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_paint_chipped_green",
+   "name": "Painted Metal Chipped (Green)",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "chipped_paint",
+   "description": "Military green paint chipping off steel",
+   "default_scale": 1.0,
+   "tags": [
+    "weathered"
+   ],
+   "params": {
+    "color_a": "#4a5a33",
+    "color_b": "#85888c",
+    "color_c": "#2b2012",
+    "roughness": [
+     0.55,
+     0.35
+    ],
+    "metallic": [
+     0,
+     1
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.15,
+    "variation": 0.1,
+    "extra": [
+     0.6,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_paint_peeling_white",
+   "name": "Peeling White Paint",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "chipped_paint",
+   "description": "Old white paint flaking off gray wood",
+   "default_scale": 1.0,
+   "tags": [
+    "weathered"
+   ],
+   "params": {
+    "color_a": "#e4e0d6",
+    "color_b": "#6f6458",
+    "color_c": "#3d332a",
+    "roughness": [
+     0.6,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.2,
+    "variation": 0.06,
+    "extra": [
+     0.58,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_powder_coat_black",
+   "name": "Powder Coat Black",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "plastic",
+   "description": "Fine-textured black powder coat",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#141416",
+    "color_b": "#141416",
+    "color_c": "#141416",
+    "roughness": [
+     0.55,
+     0.55
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 16,
+    "detail": 4,
+    "height": 0.08,
+    "variation": 0.05,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_car_paint_pearl",
+   "name": "Car Paint Pearl White",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "car_paint",
+   "description": "Pearlescent white automotive paint",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#eceae4",
+    "color_b": "#d6dbe8",
+    "color_c": "#d6dbe8",
+    "roughness": [
+     0.12,
+     0.2
+    ],
+    "metallic": [
+     0,
+     0.6
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.02,
+    "variation": 0.03,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "coat": 1.0
+   }
+  },
+  {
+   "id": "patina_camo_woodland",
+   "name": "Camo Woodland",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "camo",
+   "description": "Four-color woodland camouflage",
+   "default_scale": 1.0,
+   "tags": [
+    "pattern"
+   ],
+   "params": {
+    "color_a": "#4e5a34",
+    "color_b": "#2f3a22",
+    "color_c": "#6b5232",
+    "roughness": [
+     0.7,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.04,
+    "variation": 0.06,
+    "extra": [
+     1,
+     0.015,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_camo_desert",
+   "name": "Camo Desert",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "camo",
+   "description": "Desert camouflage",
+   "default_scale": 1.0,
+   "tags": [
+    "pattern"
+   ],
+   "params": {
+    "color_a": "#c9b48a",
+    "color_b": "#a88b5f",
+    "color_c": "#7e6646",
+    "roughness": [
+     0.7,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.04,
+    "variation": 0.05,
+    "extra": [
+     0.6,
+     0.02,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_camo_urban",
+   "name": "Camo Urban",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "camo",
+   "description": "Gray urban camouflage",
+   "default_scale": 1.0,
+   "tags": [
+    "pattern"
+   ],
+   "params": {
+    "color_a": "#9a9c9e",
+    "color_b": "#5f6265",
+    "color_c": "#2c2e30",
+    "roughness": [
+     0.6,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.03,
+    "variation": 0.05,
+    "extra": [
+     1,
+     0.01,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_crazed_glaze",
+   "name": "Crazed Glaze Cream",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "crackle",
+   "description": "Glossy ceramic glaze with fine crazing",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#ebe6d6",
+    "color_b": "#d8d0c0",
+    "color_c": "#7a6a56",
+    "roughness": [
+     0.12,
+     0.35
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0,
+     0.6,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "ceramic"
+   ]
+  },
+  {
+   "id": "patina_alligator_paint",
+   "name": "Alligator Paint White",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "crackle",
+   "description": "Old white paint cracked into islands over wood",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d8dccf",
+    "color_b": "#7a5a3a",
+    "color_c": "#2a1e14",
+    "roughness": [
+     0.6,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     0,
+     1,
+     0.4,
+     0
+    ],
+    "seed": 1,
+    "grime": 0.2
+   },
+   "tags": [
+    "aged"
+   ]
+  },
+  {
+   "id": "patina_craquelure",
+   "name": "Craquelure Varnish",
+   "category": "Paint",
+   "type": "procedural",
+   "generator": "crackle",
+   "description": "Old varnish with a fine net of cracks (paintings, furniture)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8a6a3a",
+    "color_b": "#6a4a2a",
+    "color_c": "#2a1a0c",
+    "roughness": [
+     0.3,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.1,
+    "extra": [
+     0.02,
+     2,
+     0.5,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "aged"
+   ]
+  }
+ ]
+}

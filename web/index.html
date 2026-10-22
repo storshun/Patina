@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patina Web</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand"><img class="logo" src="icon.png" alt=""> Patina <span class="sub">Web</span></div>
+    <div class="menu">
+      <button id="btnOpen" title="Open a model (.glb .gltf .obj .fbx .stl .3mf), a Patina Web project (.patinaweb) or an image to use as a material (or drop it on the window) · Ctrl+O">Open</button>
+      <button id="btnSave" title="Save the project (model, layers, island pins, your image materials) as a .patinaweb file · Ctrl+S">Save project</button>
+      <select id="selPrimitive" title="Start on a built-in shape">
+        <option value="">Shape…</option>
+        <option value="sphere">Sphere</option>
+        <option value="cube">Rounded cube</option>
+        <option value="torus">Torus</option>
+        <option value="knot">Torus knot</option>
+        <option value="cylinder">Cylinder</option>
+        <option value="suzanne">Suzanne (sample model)</option>
+      </select>
+      <span class="sep"></span>
+      <button id="btnUndo" title="Undo (Ctrl+Z)">Undo</button>
+      <button id="btnRedo" title="Redo (Ctrl+Shift+Z)">Redo</button>
+      <span class="sep"></span>
+      <label title="Texture resolution">Res
+        <select id="selRes">
+          <option value="512">512</option>
+          <option value="1024" selected>1024</option>
+          <option value="2048">2048</option>
+          <option value="4096">4096</option>
+        </select>
+      </label>
+      <button id="btnUnwrap" title="Give every triangle its own space in the texture (fixes overlapping / missing UVs)">Unique UVs</button>
+      <span class="sep"></span>
+      <button id="btnExportZip" title="Download the texture maps for the chosen target">Export textures</button>
+      <select id="selPreset" title="Maps and names for the target program">
+        <option value="gltf">for glTF / Blender</option><option value="unreal">for Unreal</option><option value="unity">for Unity</option></select>
+      <button id="btnExportGlb" title="Download the painted model as .glb">Export GLB</button>
+      <span class="sep"></span>
+      <button id="btnHelp">Help</button>
+    </div>
+    <input type="file" id="fileInput" accept=".glb,.gltf,.obj,.fbx,.stl,.3mf,.patinaweb,.png,.jpg,.jpeg,.webp" hidden>
+  </header>
+
+  <nav id="tools">
+    <button class="tool active" data-tool="paint" title="Paint (B)">Paint</button>
+    <button class="tool" data-tool="erase" title="Erase (E)">Erase</button>
+    <button class="tool" data-tool="blur" title="Blur (R): softens the layer under the brush">Blur</button>
+    <button class="tool" data-tool="fill" title="Polygon fill (P): click a triangle, a UV island, a part or the whole model; Ctrl+click erases">Fill</button>
+    <button class="tool" data-tool="pick" title="Color picker (I; hold I and click for a quick pick): takes color, roughness and metallic from the model">Pick</button>
+    <button class="tool" data-tool="island" title="Island brush (L): paint over a part of the model, press Enter, and it becomes one UV island">Island</button>
+    <div class="toolsep"></div>
+    <button id="btnUV" class="tool" title="Show the texture / UV view (U); you can paint there too">UV view</button>
+    <button id="btnFrame" class="tool" title="Frame the model (F)">Frame</button>
+  </nav>
+
+  <main id="viewport">
+    <canvas id="canvas"></canvas>
+    <div id="cursor"></div>
+    <div id="dropHint" hidden>Drop a model, a .patinaweb project or an image (it becomes a material)</div>
+    <div id="uvPanel" hidden>
+      <div class="uvhead">Texture / UV view
+        <select id="selUVMode" title="Paint: paint in texture space. Islands: select, move and pin UV islands (right-click for more)"><option value="paint">Paint</option><option value="islands">Islands</option></select>
+        <select id="selUVMap"><option value="color">Base color</option><option value="roughness">Roughness</option><option value="metallic">Metallic</option><option value="height">Height</option><option value="normal">Normal</option></select>
+        <label><input type="checkbox" id="chkWire" checked> UVs</label>
+      </div>
+      <canvas id="uvCanvas" width="512" height="512"></canvas>
+    </div>
+    <div id="viewInfo"></div>
+  </main>
+
+  <aside id="side">
+    <section id="islandBox" hidden>
+      <h3>Island brush</h3>
+      <div class="dim" id="islSelCount"></div>
+      <div class="btns"><button id="islMake" title="Make the painted region one UV island (Enter)">Make island</button><button id="islClear" title="Clear the painted region (Alt+A)">Clear</button></div>
+      <div class="btns"><button id="islPinSel" title="Pin the painted region's islands: later UV edits leave them where they are. Pinned islands have blue stripes on the model.">Pin</button><button id="islUnpinSel" title="Unpin the painted region's islands, so UV edits can move them again (Alt+P)">Unpin</button></div>
+      <div class="btns"><button id="islAll" title="Select the whole model (A)">All</button><button id="islGrow" title="Grow the region by a ring of triangles (Ctrl + =)">Grow</button><button id="islShrink" title="Shrink the region by a ring of triangles (Ctrl + -)">Shrink</button></div>
+      <div class="row"><label>Orientation</label><select id="islOrient"><option value="upright" selected>Upright (up = up)</option><option value="longest">Longest side</option><option value="none">Keep</option></select></div>
+      <div class="row"><label>Density</label><select id="islDensity" title="How many texels a unit of surface gets"><option value="auto" selected>Automatic</option><option value="layout">Match the layout</option><option value="fit">Fit the texture</option><option value="custom">Custom</option></select></div>
+      <div class="row" id="islCustomRow" hidden><label>Texels / unit</label><input type="number" id="islCustom" min="1" step="16" value="1024"></div>
+      <div class="row checks"><span class="lbl">Mirror</span>
+        <label title="The mirrored half is selected too and gets the same UVs, stacked in one place"><input type="checkbox" id="islSymX" checked> X</label>
+        <label><input type="checkbox" id="islSymY"> Y</label>
+        <label><input type="checkbox" id="islSymZ"> Z</label>
+      </div>
+      <div class="row checks">
+        <label title="Pinned islands keep their place through later UV edits (P / Alt+P in the UV view's Islands mode; Alt+P in the 3D view too)"><input type="checkbox" id="islPin" checked> Pin new islands</label>
+        <label title="Move the paint with the UVs, so nothing changes on the model"><input type="checkbox" id="islKeep" checked> Keep paint</label>
+      </div>
+    </section>
+    <section>
+      <h3>Brush</h3>
+      <div class="row"><label>Size</label><input type="range" id="brSize" min="2" max="400" value="60"><output id="brSizeV"></output></div>
+      <div class="row"><label>Hardness</label><input type="range" id="brHard" min="0" max="1" step="0.01" value="0.7"><output id="brHardV"></output></div>
+      <div class="row"><label>Opacity</label><input type="range" id="brOpacity" min="0" max="1" step="0.01" value="1"><output id="brOpacityV"></output></div>
+      <div class="row"><label>Flow</label><input type="range" id="brFlow" min="0.02" max="1" step="0.01" value="0.6"><output id="brFlowV"></output></div>
+      <div class="row"><label>Spacing</label><input type="range" id="brSpacing" min="0.03" max="1" step="0.01" value="0.12"><output id="brSpacingV"></output></div>
+      <div class="row"><label>Tip</label>
+        <select id="brTip"><option value="0">Round</option><option value="1">Square</option><option value="2">Spray</option><option value="3">Grunge</option></select>
+      </div>
+      <div class="row checks">
+        <label title="Pen pressure changes the size"><input type="checkbox" id="brPressSize" checked> Pressure → size</label>
+        <label title="Pen pressure changes the flow"><input type="checkbox" id="brPressFlow"> Pressure → flow</label>
+        <label title="Also paint back faces and hidden surfaces under the brush"><input type="checkbox" id="brThrough"> Paint through</label>
+      </div>
+      <div class="row checks"><span class="lbl">Mirror</span>
+        <label title="Paint both sides of the model at once (mirrored across X)"><input type="checkbox" id="brSymX"> X</label>
+        <label><input type="checkbox" id="brSymY"> Y</label>
+        <label><input type="checkbox" id="brSymZ"> Z</label>
+      </div>
+      <div class="row" id="fillModeRow" hidden><label>Fill</label><select id="fillMode" title="What a click with the Fill tool covers">
+        <option value="tri">Triangle</option><option value="island" selected>UV island</option><option value="part">Connected part</option><option value="all">Whole model</option></select></div>
+      <div class="row" id="blurRow" hidden><label>Blur radius</label><input type="range" id="brBlur" min="1" max="24" step="0.5" value="6"><output id="brBlurV"></output></div>
+      <div class="row checks"><span class="lbl">Channels</span>
+        <label><input type="checkbox" id="chColor" checked> Color</label>
+        <label><input type="checkbox" id="chRM" checked> Rough/Metal</label>
+        <label><input type="checkbox" id="chHeight" checked> Height</label>
+      </div>
+    </section>
+
+    <section>
+      <h3>Material</h3>
+      <div class="curmat">
+        <img id="curThumb" alt="">
+        <div>
+          <div id="curName">Flat color</div>
+          <div id="curDesc" class="dim"></div>
+        </div>
+      </div>
+      <div class="row"><label>Scale</label><input type="range" id="mScale" min="0.1" max="8" step="0.05" value="1"><output id="mScaleV"></output></div>
+      <div class="row"><label>Mapping</label><select id="mMapping"><option value="0">Tri-planar (3D)</option><option value="1">UV</option></select></div>
+      <div class="row"><label>Tint</label><input type="color" id="mTint" value="#ffffff"></div>
+      <div class="row"><label>Height</label><input type="range" id="mHeight" min="0" max="3" step="0.05" value="1"><output id="mHeightV"></output></div>
+      <div class="row"><label>Rough +/-</label><input type="range" id="mRough" min="-0.5" max="0.5" step="0.01" value="0"><output id="mRoughV"></output></div>
+      <div id="flatBox">
+        <div class="row"><label>Color</label><input type="color" id="fColor" value="#c23b22"></div>
+        <div class="row"><label>Roughness</label><input type="range" id="fRough" min="0" max="1" step="0.01" value="0.45"><output id="fRoughV"></output></div>
+        <div class="row"><label>Metallic</label><input type="range" id="fMetal" min="0" max="1" step="0.01" value="0"><output id="fMetalV"></output></div>
+      </div>
+    </section>
+
+    <section>
+      <h3>Layers</h3>
+      <div class="btns">
+        <button id="lyAddPaint" title="New paint layer">+ Paint</button>
+        <button id="lyAddFill" title="New fill layer with the current material (paint to shape its mask)">+ Fill</button>
+        <button id="lyAddAdj" title="New adjustment layer: hue, saturation, brightness, contrast, roughness and metallic of everything below (paint to shape its mask)">+ Adj</button>
+        <button id="lyUp" title="Move up">▲</button>
+        <button id="lyDown" title="Move down">▼</button>
+        <button id="lyClear" title="Clear layer (fill: hide everywhere)">Clear</button>
+        <button id="lyDel" title="Delete layer">Del</button>
+      </div>
+      <ul id="layerList"></ul>
+      <div class="row"><label>Opacity</label><input type="range" id="lyOpacity" min="0" max="1" step="0.01" value="1"><output id="lyOpacityV"></output></div>
+      <div class="row"><label>Blend</label><select id="lyBlend" title="How the layer's color combines with the layers below">
+        <option value="normal">Normal</option><option value="multiply">Multiply</option><option value="screen">Screen</option><option value="overlay">Overlay</option>
+        <option value="add">Add</option><option value="softlight">Soft light</option><option value="darken">Darken</option><option value="lighten">Lighten</option></select></div>
+      <div id="genOpts" hidden>
+        <div class="row"><label>Smart mask</label><select id="genType" title="Where the layer shows, from the shape of the model (multiplies the painted mask)">
+          <option value="none">None (painted mask)</option><option value="edges">Edges (wear)</option><option value="cavity">Cavities (dirt)</option>
+          <option value="up">Facing up (dust, snow)</option><option value="gradient">Height gradient</option><option value="noise">Noise</option></select></div>
+        <div id="genParams" hidden>
+          <div class="row"><label>Amount</label><input type="range" id="genLevel" min="0" max="1" step="0.01" value="0.5"><output id="genLevelV"></output></div>
+          <div class="row"><label>Softness</label><input type="range" id="genContrast" min="0.02" max="0.5" step="0.01" value="0.1"><output id="genContrastV"></output></div>
+          <div class="row"><label>Breakup</label><input type="range" id="genNoise" min="0" max="1" step="0.01" value="0.3"><output id="genNoiseV"></output></div>
+          <div class="row checks"><label><input type="checkbox" id="genInvert"> Invert</label></div>
+        </div>
+      </div>
+      <div id="adjOpts" hidden>
+        <div class="row"><label>Hue</label><input type="range" id="adjHue" min="-0.5" max="0.5" step="0.01" value="0"><output id="adjHueV"></output></div>
+        <div class="row"><label>Saturation</label><input type="range" id="adjSat" min="0" max="2" step="0.01" value="1"><output id="adjSatV"></output></div>
+        <div class="row"><label>Brightness</label><input type="range" id="adjBright" min="0" max="2" step="0.01" value="1"><output id="adjBrightV"></output></div>
+        <div class="row"><label>Contrast</label><input type="range" id="adjContrast" min="0" max="2" step="0.01" value="1"><output id="adjContrastV"></output></div>
+        <div class="row"><label>Rough +/-</label><input type="range" id="adjRough" min="-1" max="1" step="0.01" value="0"><output id="adjRoughV"></output></div>
+        <div class="row"><label>Metal +/-</label><input type="range" id="adjMetal" min="-1" max="1" step="0.01" value="0"><output id="adjMetalV"></output></div>
+      </div>
+      <div id="fillOpts" hidden>
+        <div class="row checks"><span class="lbl">Fill channels</span>
+          <label><input type="checkbox" id="fchColor" checked> Color</label>
+          <label><input type="checkbox" id="fchRM" checked> R/M</label>
+          <label><input type="checkbox" id="fchHeight" checked> Height</label>
+        </div>
+        <div class="btns"><button id="fillUseMat">Use current material</button><button id="fillShowAll">Show everywhere</button></div>
+      </div>
+      <div class="row"><label>Base</label><input type="color" id="baseColor" value="#9a9a9a">
+        <input type="range" id="baseRough" min="0" max="1" step="0.01" value="0.6" title="Base roughness">
+      </div>
+      <div class="row"><label>Normal str.</label><input type="range" id="nStrength" min="0" max="4" step="0.05" value="1"><output id="nStrengthV"></output></div>
+    </section>
+
+    <section class="grow">
+      <h3>Library <span id="libCount" class="dim"></span> <button id="libAddImage" class="mini" title="Make a material from an image (it tiles; roughness and metallic come from the flat values)">+ Image</button></h3>
+      <div class="row"><input id="libSearch" type="search" placeholder="search materials"><select id="libCat"></select></div>
+      <div id="libGrid"></div>
+    </section>
+  </aside>
+
+  <footer id="status"><span id="statusText">Loading…</span><span id="statusRight"></span></footer>
+
+  <div id="help" hidden>
+    <div class="helpbox">
+      <h2>Patina Web</h2>
+      <p>A lightweight browser version of the Patina texture painter. Paint library materials straight onto a
+        model: brush dabs are projected in 3D, so strokes ignore how the UVs are laid out.</p>
+      <table>
+        <tr><td>Paint / erase / blur</td><td>Left mouse · <kbd>B</kbd> / <kbd>E</kbd> / <kbd>R</kbd></td></tr>
+        <tr><td>Fill (triangle, island, part, all)</td><td><kbd>P</kbd>, then click</td></tr>
+        <tr><td>Pick a color</td><td>hold <kbd>I</kbd> and click, or tap <kbd>I</kbd> for one pick</td></tr>
+        <tr><td>Orbit</td><td>Alt + left mouse, or middle mouse</td></tr>
+        <tr><td>Pan / zoom</td><td>Right mouse / wheel</td></tr>
+        <tr><td>Look along an axis</td><td>click X, Y or Z in the top right corner (again: from the other side); drag there to orbit</td></tr>
+        <tr><td>Brush size</td><td><kbd>[</kbd> <kbd>]</kbd>, or Ctrl + wheel</td></tr>
+        <tr><td>Straight line</td><td>Shift + click (from the end of the last stroke)</td></tr>
+        <tr><td>Undo / redo</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td></tr>
+        <tr><td>Open / save project</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd> / <kbd>Ctrl</kbd>+<kbd>S</kbd></td></tr>
+        <tr><td>UV view / frame</td><td><kbd>U</kbd> / <kbd>F</kbd></td></tr>
+        <tr><td>Island brush / make the island</td><td><kbd>L</kbd> / <kbd>Enter</kbd> (Ctrl + paint removes)</td></tr>
+        <tr><td>Island brush: all / none / grow / shrink</td><td><kbd>A</kbd> / <kbd>Alt</kbd>+<kbd>A</kbd> / <kbd>Ctrl</kbd>+<kbd>=</kbd> / <kbd>Ctrl</kbd>+<kbd>-</kbd></td></tr>
+        <tr><td>UV view, Islands mode</td><td>click selects an island, drag moves it, right-click for everything else, <kbd>P</kbd> / <kbd>Alt</kbd>+<kbd>P</kbd> pin / unpin</td></tr>
+      </table>
+      <p><b>Mirror X / Y / Z</b> in the brush settings paints both sides of a symmetric model at once.</p>
+      <p><b>Layers</b>: paint layers, <b>fill layers</b> (a material over the whole model; painting paints its mask) and
+        <b>adjustment layers</b> (hue, saturation, brightness, contrast, roughness, metallic). Fill and adjustment layers
+        can use a <b>smart mask</b> (edges, cavities, upward faces, a gradient or noise), multiplied with the painted
+        one. Each layer has an opacity and a blend mode.</p>
+      <p><b>Island brush</b> (<kbd>L</kbd>): paint over a part of the model and press <kbd>Enter</kbd>. It becomes one UV
+        island, unwrapped flat, turned upright, at the texel density of the rest of the layout, in free space, and pinned so
+        later edits leave it alone. With <b>Mirror X</b> on, the other half is selected too and shares the island's texels.
+        Paint moves with the UVs. In the UV view, right-click an island to relax, orient, scale or pack. <b>Unique UVs</b>
+        rebuilds the UVs when a model has none, or when islands overlap.</p>
+      <p><b>Save project</b> keeps the model, layers, islands and your image materials in one <code>.patinaweb</code> file.
+        <b>+ Image</b> in the library turns a photo or texture into a material. Export the maps for glTF / Blender,
+        Unreal or Unity, or a textured GLB.</p>
+      <p class="dim">The desktop app adds full UV editing (seams, unwrap methods, UDIM), clone and smudge, baked AO,
+        the material editor, the Blender bridge and Claude (MCP) automation. Everything here stays in your browser; nothing
+        is uploaded.</p>
+      <button id="helpClose">Close</button>
+    </div>
+  </div>
+</div>
+<script src="library/index.js"></script>
+<script src="patina-web.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!-- title: Translating Patina -->
+<!-- nav: Translating Patina -->
+<h1>Translating Patina</h1>
+<p class="lead">Patina's interface can be shown in any language. A translation is one text file: every text of the
+interface in English, each with its translation beside it. You don't need to know any programming to make one, and
+the tools translators already use (Poedit, Weblate, Crowdin, Lokalize) read and write it.</p>
+
+<h2 id="choose">Choosing a language</h2>
+<p><i>Edit › Preferences › Language</i> lists English, the translations that come with Patina, and yours. Pick one and
+the interface changes at once. Patina remembers it.</p>
+<figure><img src="img/prefs_language.png" alt="The Language section of the preferences" style="max-width:560px"></figure>
+<p>The list also has a <b>test language</b>. It shows every translatable text with accents and brackets, like
+<code>[Påïñt··]</code>, a third longer than the English. Text that still shows plain English can't be translated yet.
+Longer text shows where a translation will need more room.</p>
+
+<h2 id="start">Starting a translation</h2>
+<ol>
+  <li>In <i>Edit › Preferences › Language</i>, choose <b>Make a new translation…</b>.</li>
+  <li>Type the language's code: two letters for the language, with a region after an underscore if it matters
+    (<code>fr</code>, <code>de</code>, <code>es</code>, <code>pt_BR</code>, <code>zh_CN</code>, <code>ja</code>). Then its
+    name in that language (<i>Français</i>, <i>Deutsch</i>). Choose <b>Make it</b>.</li>
+  <li>Patina copies the template to <code>&lt;code&gt;.po</code> in your languages folder and opens the folder. An
+    existing file is never replaced.</li>
+  <li>Open the file in <a href="https://poedit.net">Poedit</a> (free, for Windows, macOS and Linux) or any text
+    editor, and translate.</li>
+  <li>Save it, then choose your language in Preferences, or press <b>Reload</b> to see the changes while you work.</li>
+</ol>
+<p>Your languages folder is <code>~/.local/share/patina/user/languages</code> on Linux and
+<code>%LOCALAPPDATA%\Patina\user\languages</code> on Windows. <b>Open the languages folder</b> in Preferences opens it.
+The template, <code>patina.pot</code>, is in the <code>languages</code> folder next to Patina's materials.</p>
+
+<h2 id="file">What the file looks like</h2>
+<p>Each text is an entry: <code>msgid</code> is the English, <code>msgstr</code> is your translation. The
+<code>#:</code> line says where in Patina's code the text is, which helps when a word could mean two things.</p>
+<pre><code>#: src/ui/Toolbars.cpp:120
+msgid "Paint"
+msgstr "Peindre"
+
+#: src/ui/LanguageUI.cpp:66
+#, c-format
+msgid "%d of %d texts translated"
+msgstr "%d textes traduits sur %d"
+</code></pre>
+<p>An entry you leave empty stays English. Poedit shows how many are done and lets you jump to the next one.</p>
+
+<h2 id="rules">The rules</h2>
+<ul>
+  <li><b>Keep the % codes</b>, in the same order: <code>%d</code> and <code>%zu</code> are whole numbers, <code>%s</code>
+    is a text (such as a layer's name), <code>%.1f</code> is a number with one decimal, <code>%%</code> is a percent
+    sign. You may move the words around them, but not swap two codes. A translation whose codes don't match the English
+    is not used. Preferences says how many, and lists them when you rest the pointer on the warning.</li>
+  <li><b>Keep the line breaks</b> (<code>\n</code>) in long tooltips, or put them where your sentence breaks well.</li>
+  <li><b>Don't translate keys</b> such as <kbd>Ctrl</kbd>+<kbd>Z</kbd>, <kbd>Alt</kbd>+click or Numpad 1: they are the
+    names on the keyboard. Words around them are fine to translate.</li>
+  <li><b>Fuzzy</b> entries (Poedit's "Needs work") are not used, the way gettext does it.</li>
+  <li>Save the file as <b>UTF-8</b> (Poedit always does).</li>
+</ul>
+
+<h2 id="plurals">Plurals</h2>
+<p>Some texts change with a number: <i>1 face</i>, <i>2 faces</i>. They have a <code>msgid_plural</code> and one
+<code>msgstr[n]</code> for each plural form of your language:</p>
+<pre><code>msgid "%d translation is not used: its %% codes are not the same as the English."
+msgid_plural "%d translations are not used: their %% codes are not the same as the English."
+msgstr[0] "..."
+msgstr[1] "..."
+</code></pre>
+<p>How many forms there are, and which number takes which, is in the file's header line <code>Plural-Forms</code>.
+Patina fills it in for the common languages when it makes your file (French, Russian, Polish, Czech, Japanese,
+Chinese, Korean...). For other languages, the <a href="https://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html">gettext
+manual</a> lists them, and Poedit sets it from the language.</p>
+
+<h2 id="context">Words with two meanings</h2>
+<p>A few short English words mean two things in Patina. Those entries have a <code>msgctxt</code> line that says
+which one it is (for example <code>layer</code> or <code>tool</code>); translate each on its own.</p>
+
+<h2 id="fonts">Fonts and scripts</h2>
+<p>Latin, Greek and Cyrillic letters work with the fonts Patina uses on every system. For Chinese, Japanese and
+Korean, Patina uses a system font that has the characters (Microsoft YaHei, Yu Gothic, Meiryo or Malgun Gothic on
+Windows; Droid Sans Fallback or Noto Sans CJK on Linux). To use another font, name it in the file's header:</p>
+<pre><code>"X-Patina-Font: NotoSansJP-Regular.otf\n"
+</code></pre>
+<p>A name without a folder is looked for next to the <code>.po</code> file. Patina only loads the characters your
+translation uses, so a large font costs little.</p>
+<div class="callout warn"><span class="t">Not yet</span>Right-to-left scripts (Arabic, Hebrew) and scripts that join or
+stack their letters (Hindi, Thai) don't show correctly yet: the interface toolkit draws each letter on its
+own.</div>
+
+<h2 id="check">Checking your work</h2>
+<ul>
+  <li><b>Reload</b> in Preferences reads your file again after you save it.</li>
+  <li><b>Save the untranslated text…</b> writes the texts Patina showed since you chose the language and that have no
+    translation yet, as <code>&lt;code&gt;-untranslated.po</code> beside your file. Translate those first: they are the
+    ones people see.</li>
+  <li>Look around with the language on: menus, tooltips (rest the pointer on things), the right-click menus and the tool
+    windows. Watch for text that is cut off or too wide.</li>
+</ul>
+
+<h2 id="update">After a new Patina version</h2>
+<p>New versions add texts and change some. The template that comes with each version has all of them. In Poedit,
+choose <i>Translation › Update from POT File…</i> and pick <code>patina.pot</code>: the new texts are added, the
+changed ones are marked fuzzy for you to check, and the rest stay as you translated them. With gettext's tools it is
+<code>msgmerge -U fr.po patina.pot</code>.</p>
+
+<h2 id="english">What stays in English</h2>
+<ul>
+  <li><b>Names</b>: the materials, brushes, smart materials and recipes that come with Patina, and the names you give
+    layers and files.</li>
+  <li><b>Messages from commands</b>: the console, the MCP tools, the HTTP API and their results, which scripts and agents
+    read. An error message from such a command can show in an error window in English.</li>
+  <li><b>The Assistant</b>: its model works in English, so what you type to it and its examples stay English (its window
+    is translated).</li>
+  <li><b>This manual</b>, Patina Web and the Blender add-on.</li>
+</ul>
+
+<h2 id="share">Sharing a translation</h2>
+<p>A translation is the one <code>.po</code> file: send it to others, and they put it in their languages folder. To have
+it come with Patina, it goes in the <code>languages</code> folder of Patina's source.</p>
+
+<h2 id="agents">For scripts and agents</h2>
+<p><code>language_list</code> lists the languages and how much of the current one is translated,
+<code>language_set</code> switches the interface (the results of commands stay English), <code>language_new</code>
+starts a translation from the template, and <code>language_untranslated</code> lists (or saves) the texts shown without
+a translation. See the <a href="commands.html">command reference</a>.</p>

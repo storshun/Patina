@@ -1,0 +1,397 @@
+<!-- title: Texture set, baking and export -->
+<!-- nav: Texture set & export -->
+<h1>Texture set, baking and export</h1>
+<p class="lead">The texture set holds the output maps of a project. This page covers their resolution, the mesh maps
+that smart masks use, baking a high-poly sculpt, exporting to other tools, and saving projects.</p>
+
+<div class="two">
+  <figure><img src="img/texture_set_panel.png" alt="Texture Set panel"></figure>
+  <figure><img src="img/export_dialog.png" alt="Export dialog"></figure>
+</div>
+
+<h2>Resolution</h2>
+<p><i>Texture Set › Resolution</i> can be 512 to 8192 (2048 by default), per texture set or UDIM tile when the model
+has several (see <a href="#texture-sets">Texture sets and UDIM tiles</a>). Changing it resamples every layer, so you can
+paint at 2K and export at 4K. Higher resolutions use a lot more memory: a fully painted paint layer takes about 85 MB of GPU
+memory at 2K, 330 MB at 4K and 1.3 GB at 8K. Fill and adjustment layers are much cheaper.</p>
+<p>The <b>Base material</b> (color, roughness, metallic) is what shows where no layer covers the model.
+<b>Height→normal</b> sets how strongly the height channel becomes normal-map detail. <b>Dilate seams</b> pads the space
+around UV islands, so mipmaps and texture filtering in other programs don't pick up background color at the seams.
+Leave it on.</p>
+
+<h2>Mesh maps (baking)</h2>
+<p>Mesh maps are worked out once from the model and stored in the project. Smart masks are built from them, and some
+are exported for game engines. Use the buttons in the Texture Set panel, or the <i>Bake</i> menu (<i>Bake › All mesh
+maps</i> bakes everything). Smart masks bake what they need the first time you use them, so you rarely have to think
+about it, but after large mesh or UV changes, bake again so the masks follow.</p>
+<figure><img src="img/bakes_07.png" alt="Ambient occlusion, curvature, thickness and bent normals on Suzanne"><figcaption>The
+four mesh maps, each shown with its view mode: ambient occlusion, curvature, thickness (dark is thin) and bent normals.</figcaption></figure>
+<table>
+  <tr><th>Map</th><th>What it holds</th><th>Used by</th></tr>
+  <tr><td><b>Ambient occlusion</b></td><td>How much surrounding light reaches each point: dark in corners and crevices.
+    <i>AO samples</i> trades quality for time: 64 is fast, 256 is smoother on complex models. Baked on the GPU.</td>
+    <td>Occlusion and Cavity smart masks; exported as AO.</td></tr>
+  <tr><td><b>Bent normals</b></td><td>The average direction light arrives from at each point (object space), baked
+    together with the AO.</td><td>Exported for engines that use them for specular occlusion and better ambient
+    lighting.</td></tr>
+  <tr><td><b>Curvature</b></td><td>Gray on flat areas, brighter on convex edges, darker in creases.</td><td>Edges and Cavity
+    smart masks.</td></tr>
+  <tr><td id="thickness"><b>Thickness</b></td><td>How thick the model is behind each point: white is thick, dark is thin.
+    Rays are cast into the model from every texel. <i>Rays</i> trades quality for time (32 is a good default). Baked on
+    the CPU with every core; a few seconds at 2K.</td><td>The <i>Thin parts</i> smart mask; exported as a thickness map for
+    subsurface scattering and translucency.</td></tr>
+</table>
+<p><b>Curvature</b> is measured on the surface at a fixed size (3% of the model's radius), with short rays on both sides of
+the surface. That makes it independent of how the model is tessellated: a low-poly box gets clean, thin bright edges
+and flat faces stay neutral gray, while a smooth sphere is only slightly brighter than flat, so an edge mask doesn't
+cover it. Smoothly curved shapes (a dense, organic sculpt) add their own gentle curvature on top. When a
+<a href="#high-poly">high-poly normal map</a> is baked, the curvature also picks up the normal map's own detail: rivets,
+panel lines and dents in the sculpt get worn edges and dirty creases even though the low-poly mesh has none.</p>
+<div class="two">
+  <figure><img src="img/thin_parts.png" alt="A red fill layer on the thin parts of Suzanne"><figcaption>A fill layer with the
+  <i>Thin parts</i> smart mask: the ears and the thin rims light up.</figcaption></figure>
+  <div>
+  <p>The thickness map, the bent normals and the curvature each have a view mode (<i>Thickness (baked)</i>, <i>Bent
+  Normals (baked)</i>, <i>Curvature</i>) for checking them.</p>
+  <p>Thickness needs a closed model to be meaningful: on a single-sided plane, rays find nothing behind it and it reads as
+  thick everywhere. Lower <code>thickness_distance</code> in the <code>bake_mesh_maps</code> command (default: half the model's radius) to
+  look for thinness at a smaller scale.</p>
+  </div>
+</div>
+
+<h2 id="baked-layers">Fixing a bake: baked map layers</h2>
+<p>A bake is not always right: too few AO samples leave it blotchy, a crease comes out too dark, a part that touches
+another picks up shadow it should not have. Every baked map has a <b>layer of its own</b> for that: ambient occlusion,
+curvature and thickness each get one in the <b>Baked maps</b> section under the layer stack when they are baked (and
+when you open a project from before 0.41). What the layer makes is the map the rest of Patina reads: smart masks, the
+3D view and exported maps all use the fixed one. The layer adds nothing to the color, roughness or other channels.</p>
+<div class="two">
+  <figure><img src="img/baked_layers_list.png" alt="The Baked maps section of the layer list"><figcaption>The Baked maps
+  section, under the stack. <i>fix</i>: fixes are painted on it; <i>fx</i>: it has adjustments.</figcaption></figure>
+  <figure><img src="img/baked_layer_props.png" alt="A baked map layer's properties"><figcaption>The AO layer's properties:
+  strength, the value the brush paints, the adjustments, Bake again.</figcaption></figure>
+</div>
+<p><b>Select the layer</b> and the 3D view shows its map (the view comes back when you select another layer). Then:</p>
+<ul>
+  <li><b>Paint</b> on the model to fix the map. The brush paints the <i>Paint value</i> in the layer's properties (for
+    the AO, 1 is no shadow and 0 is fully shadowed; the curvature's flat is 0.5). The picker takes the value under the
+    cursor.</li>
+  <li><b>Erase</b> brings the bake back under the brush. <i>Reset the fixes</i> takes all of them away.</li>
+  <li><b>Blur</b> smooths the map, <b>Smudge</b> pushes it around and <b>Clone</b> copies a good part over a bad one. The
+    polygon fill fills faces with the paint value.</li>
+  <li><b>Adjustments</b> work on the whole map: Levels, Blur, Fill, Noise and the other effects of a
+    <a href="layers.html#mask-effects">mask effect stack</a>, starting from the bake with your fixes.</li>
+  <li><b>Strength</b> scales the map in the end: 0 turns it off, 1 is the map as it is, 2 doubles it (a darker AO).
+    <b>Opacity</b> is how much of your fixes and adjustments applies.</li>
+  <li><b>The layer's check</b> switches the map off (0.44.2). The 3D view no longer shades the model with the ambient
+    occlusion, and exports leave the map out. Smart masks keep using the map either way. (Before 0.44.2 the check
+    only took your fixes away, so a bad bake kept showing.)</li>
+</ul>
+<p><b>Baked for other UVs.</b> When you edit the UVs after a bake (unwrap, make islands, move or rotate them, a mesh
+from Blender with new UVs), the maps move along with the paint. Where islands changed, that blurs them and can leave
+dark patches and blocks in the 3D view. The Baked maps section then says <i>Baked for other UVs</i>, with a
+<b>Re-bake</b> button: it bakes those maps again for the UVs as they are, and your fixes stay (0.44.2). Projects saved
+before 0.44.2 don't know what their bakes were made for: if you see dark patches that the base color doesn't have,
+bake again with <i>Bake › All mesh maps</i>.</p>
+<div class="two">
+  <figure><img src="img/baked_ao_before.png" alt="A rough AO bake on Suzanne"><figcaption>A rough AO bake (6 samples):
+  blotchy, the eye sockets too dark.</figcaption></figure>
+  <figure><img src="img/baked_ao_after.png" alt="The same AO, fixed on its layer"><figcaption>Fixed on its layer: the
+  sockets painted lighter and a Blur adjustment over the noise.</figcaption></figure>
+</div>
+<p>Baking the map again (<i>Bake again</i> in the layer's properties, or the Bake menu) keeps your fixes and adjustments
+on top of the new bake. Deleting the layer drops them and uses the bake as it is; <i>Add a layer for…</i> under the
+section (or <i>Baked map layer</i> in the Add menu) gives the map a new one. <i>Export this map…</i> writes the fixed map
+as a grayscale PNG. Agents use <code>baked_maps</code> (see <a href="commands.html">Commands</a>). The feature can be
+switched off in <i>Preferences › Features</i>.</p>
+
+<h2 id="high-poly">Baking from a high-poly mesh</h2>
+<p>A game model is usually a light, low-poly mesh with the detail of a heavy sculpt baked into its textures.
+<i>Bake › From a High-poly Mesh…</i> (or <b>Bake from high-poly…</b> in the Texture Set panel) does that: choose the
+sculpt (<code>.glb</code>, <code>.gltf</code>, <code>.fbx</code>, <code>.obj</code>, <code>.stl</code> or <code>.3mf</code>) and press <b>Bake</b>.</p>
+<div class="two">
+  <figure><img src="img/highpoly_dialog.png" alt="High-poly bake dialog"></figure>
+  <figure><img src="img/highpoly_result.png" alt="A low-poly ball with baked dimples"><figcaption>A 48 × 24 sphere with
+  the dimples of a 160,000-triangle sculpt baked in.</figcaption></figure>
+</div>
+<table>
+  <tr><th>Option</th><th>What it does</th></tr>
+  <tr><td>Normal map</td><td>The sculpt's surface direction for every texel. It is combined with the normals of every layer
+    (so fill layers don't hide it), shown in the viewport and exported with the textures.</td></tr>
+  <tr><td>Ambient occlusion</td><td>AO of the sculpt's surface instead of the low-poly one. Smart masks use it too.</td></tr>
+  <tr><td>Curvature (automatic)</td><td>When the normal map is baked, the curvature is baked again with the normal map's
+    detail added, so edge and cavity masks follow the sculpt's detail.</td></tr>
+  <tr><td>Material slots</td><td>The material slots of the sculpt, for the <a href="layers.html#smart-masks">Material slot</a>
+    mask and the fill tool.</td></tr>
+  <tr><td>Points per texel</td><td>Each texel is measured at this many points spread over it (1, 4, 9 or 16), and what
+    they find is averaged. More points give smoother edges to the detail, without stair steps. 4 is the default.</td></tr>
+  <tr><td>Distance</td><td>How far along the low-poly's normals, both ways, Patina looks for the sculpt. Each point
+    takes the nearest surface it finds that way, and prefers one that faces the same way as the low-poly. When the rays
+    find nothing, it takes the nearest point of the sculpt. By default the distance is <b>measured</b>: 1.5 times the gap
+    between the two meshes at almost every point. <i>Set the distance by hand</i> to choose it yourself. Raise it when
+    the result has flat patches, lower it when detail from a nearby part shows up in the wrong place.</td></tr>
+</table>
+<p>Both meshes must be in the same place and at the same scale: export them from the same Blender scene, with the same
+transform settings. The bake is stored in the project and is redone when you change the texture resolution. Paint,
+UV edits and the bake survive each other: when the UVs change, the baked maps move with them. <b>Remove the bake</b>
+goes back to the low-poly normals.</p>
+
+<h2 id="bake-down">Baking down to a low-poly model</h2>
+<p>Painting the sculpt itself is often easier: the detail is all there, and smart masks find every crease. But a game
+needs the light model. <i>Bake › Bake Down to a Low-Poly Model…</i> moves every layer of the model you have open, the
+painted high-poly, onto its low-poly version, which then becomes the model. The low-poly can be a file (from
+Blender's retopology, or any other tool) or the quads of Patina's own <a href="retopology.html">retopology</a>. The
+layer stack stays as it was: you go on painting, in layers, on the light model.</p>
+<figure><img src="img/bakedown_compare.png" alt="The compare view after a bake-down"><figcaption>After a bake-down,
+the compare view: the painted high-poly as it was (its triangles) left of the divider, and its retopology quads with
+every layer baked down onto them right of it. Drag the divider across the model.</figcaption></figure>
+<ul>
+  <li><b>Paint and masks</b>, and the fixes painted over a baked map, are measured texel by texel. Each texel of the
+    low-poly is sampled at several points spread over it (<b>Points per texel</b>: 9 by default). Each point looks
+    along the low-poly's normal, both ways, for the high-poly's surface, as the high-poly bake does. What the points
+    find there is averaged, weighted by how much paint covers it, so paint next to bare surface keeps its color.</li>
+  <li><b>Painted normals</b> (a normal stamp, a material with a normal map painted with the brush) are turned to fit
+    the low-poly's surface, so the bumps point the same way in the world as they did on the high-poly.</li>
+  <li><b>Fills, adjustments, folders and smart masks</b> stay as they are. They are worked out on the low-poly, over
+    its new bakes: the high-poly's shape goes into the low-poly's normal map, ambient occlusion and material slots
+    (<i>Bake the high-poly's shape into the normal map and AO</i>), and curvature and thickness are baked again.</li>
+  <li><b>Notes</b> move onto the low-poly's surface.</li>
+</ul>
+<p>The result is a <b>new project</b>: it has no file yet, and it is not linked to Blender. The high-poly's project
+stays as it was saved. If it has unsaved changes, Patina asks first. The high-poly stays with the new project as its
+high-poly model, so a resolution change or new UVs bake its shape again. The undo history starts afresh.</p>
+<div class="two">
+  <figure><img src="img/bakedown_window.png" alt="The Bake Down window"><figcaption>The window, with the last
+  bake-down's report.</figcaption></figure>
+  <figure><img src="img/bakedown_check.png" alt="The Bake-Down Check view"><figcaption>The check: gray where the rays
+  found the high-poly, amber where only the nearest point did.</figcaption></figure>
+</div>
+<table>
+  <tr><th>Option</th><th>What it does</th></tr>
+  <tr><td>A model file / The retopology's quads</td><td>The low-poly: a <code>.glb</code>, <code>.gltf</code>,
+    <code>.fbx</code>, <code>.obj</code>, <code>.ply</code>, <code>.stl</code> or <code>.3mf</code> file in the same place
+    as the high-poly, or the quads you made in Retopology. A low-poly without UVs gets new ones.</td></tr>
+  <tr><td>Points per texel</td><td>1 (fastest), 4, 9 (fine) or 16 (finest). More points are smoother along the edges of
+    paint and in fine detail, and take longer. Above a 4K texture, at most 4.</td></tr>
+  <tr><td>Resolution</td><td>The low-poly's textures, per texture set or UDIM tile. <i>As now</i> keeps the
+    high-poly's.</td></tr>
+  <tr><td>Set the distance by hand</td><td>As for the <a href="#high-poly">high-poly bake</a>: off, it is measured
+    from the two models.</td></tr>
+  <tr><td>Bake the high-poly's shape…</td><td>On, the sculpted detail becomes the low-poly's normal map, and its
+    ambient occlusion and material slots are measured on the high-poly. Off, the low-poly has its own bakes.</td></tr>
+</table>
+<p>When it is done, the window says how much of the texture found the high-poly along the normals, how much only by
+the nearest point, and how much had to be guessed. <b>Show the check</b> (the <i>Bake-Down Check</i> view mode) marks
+those places on the model:</p>
+<table>
+  <tr><th>Color</th><th>Means</th></tr>
+  <tr><td>Gray (the texture, faded)</td><td>The rays found the high-poly: the paint there is what the high-poly has.</td></tr>
+  <tr><td>Amber</td><td>Only the nearest point of the high-poly was found: close by, but not straight along the normal.</td></tr>
+  <tr><td>Red</td><td>Guessed from farther away: the low-poly has a part the high-poly doesn't, or the two are not in
+    the same place there.</td></tr>
+  <tr><td>Magenta</td><td>The low-poly faces away from the high-poly there. It is turned inside out (flip it: <i>Mesh ›
+    Mesh Check</i>, or Blender's <i>Recalculate Outside</i>), or it folds over a hollow the high-poly has. It keeps its
+    own shading there; a denser low-poly follows the hollow.</td></tr>
+</table>
+<p><b>Compare with the high-poly</b> puts the high-poly, as it looked before the bake-down, left of the
+<a href="interface.html#compare">compare view</a>'s divider, and the low-poly right of it. Turn the wireframe on to see
+the two meshes. The check and the compare last until another model or project is opened.</p>
+<div class="callout tip"><span class="t">Both models in the same place</span>Patina refuses a low-poly that is far from
+the high-poly ("not in the same place"), and nothing changes. Export both from the same Blender scene with the same
+transform settings, or apply their transforms first.</div>
+<p>Agents use <code>bake_down</code> (the low-poly's file) or <code>retopo_use_as_model</code> (the quads), then
+<code>set_view</code> with <code>bake_check</code> and <code>set_compare</code> with <code>high_poly</code> (see
+<a href="commands.html">Commands</a>). The <i>Bake-down</i> feature switch (<i>Preferences › Features</i>) turns it
+off.</p>
+
+<h2 id="material-slots">Material slots</h2>
+<p>Models from Blender often already have their parts separated by material slots (rubber, metal, glass…). Patina keeps
+them: the <i>Material Slots</i> view mode shows them in colors, the <b>Fill</b> tool's <i>Material slot</i> mode fills every face
+of the clicked slot, <i>UV › Selection › Select the Whole Material Slot</i> extends a face selection to its slots, and the <b>Material slot</b> smart mask turns a fill layer
+on for one slot only. When you bake from a high-poly mesh with <i>Material slots</i> on, the sculpt's slots are used.</p>
+
+<h2 id="texture-sets">Texture sets and UDIM tiles</h2>
+<p>Characters and props often give each part its own textures: the body, the clothes and the hair each laid out over the
+whole 0–1 square, or a hero asset spread over several UDIM tiles (1001, 1002, 1011…). <i>Texture Set › Texture sets</i>
+chooses how Patina stores the paint:</p>
+<table>
+  <tr><th>Setting</th><th>What gets its own textures</th></tr>
+  <tr><td>One texture</td><td>Nothing: every face shares one set of maps (as before 0.9).</td></tr>
+  <tr><td>Per material slot</td><td>Each material slot, with its own 0–1 UV space. Slots may overlap in UV space.</td></tr>
+  <tr><td>UDIM tiles</td><td>Each UV tile the islands sit in: 1001 is 0–1, 1002 the square to its right, 1011 the one above.</td></tr>
+  <tr><td>Per slot and UDIM</td><td>Each UDIM tile of each material slot.</td></tr>
+</table>
+<figure><img src="img/texture_sets.png" alt="A head and a torso, each with its own texture set"><figcaption>Two material
+  slots laid out over the same UV square. With a texture set each, the skin and the denim never share texels.</figcaption></figure>
+<p>Patina picks the layout when it opens a model: <b>per material slot</b> when two slots cover the same part of the UV
+square, and <b>UDIM tiles</b> when the islands sit in several unit tiles. Islands in other tiles are no longer moved into
+0–1 for UDIM models. You can switch at any time. The paint stays where it is on the model, but the undo history is cleared.
+When the slots overlap and you choose <i>One texture</i>, they share texels again, so their paint mixes.</p>
+<h3 id="new-set">A texture set of its own: the head and the body</h3>
+<p>To give part of the model its own texture, for example one for the head and one for the body, select its faces and
+choose <i>UV › Selection › New Texture Set from Selection</i>. The same is in the UV editor's right-click menu (<i>Texture sets</i>),
+at the bottom of its list of sets, and under <i>Texture Set › New set from selection</i>.</p>
+<ol>
+  <li>Select the faces. <b>Select the head</b> in the window picks everything above the neck in one click; otherwise use
+    the <b>Select</b> tool in the viewport or click islands in the UV editor.</li>
+  <li>Give the set a name, such as <i>Head</i>. The name of an existing set moves the faces into that set instead.</li>
+  <li>Leave <b>Pack each set to fill its space</b> on: the new set's islands grow to fill its whole square (pinned islands
+    move too and stay pinned), and the set the faces came from is packed again, unless it has pinned islands.</li>
+</ol>
+<p>The faces go into a new material slot, and <i>One texture</i> becomes <i>Per material slot</i>. The paint moves with
+the faces, and the undo history is cleared. With the Blender link, the next <i>Send textures to Blender</i> adds the slot
+to the object in Blender and assigns the faces to it (add-on 0.6.1 or later), so the head gets its own material there
+too. With <i>UDIM tiles</i>, the faces' islands move to the next free tile instead. <i>Move selection to</i> in the UV
+editor's right-click menu moves faces into a set that already exists.</p>
+<div class="two">
+  <figure><img src="img/texture_sets_panel.png" alt="Texture sets in the Texture Set panel"><figcaption>The layout, and the
+    texture sets it made.</figcaption></figure>
+  <figure><img src="img/udim_tiles.png" alt="A model with UVs in two UDIM tiles"><figcaption>One material over two UDIM
+    tiles: each tile is a texture of its own.</figcaption></figure>
+</div>
+<ul>
+  <li><b>Resolution is per tile.</b> At 2048 every texture set or UDIM tile is 2048 × 2048. Patina keeps them together in
+    one large texture, so memory grows with the number of tiles: 4 tiles at 2048 use as much as one 4096 texture. The
+    limit is 64 tiles, and 16384 pixels across all of them together (16 tiles at 4096, or 64 at 2048).</li>
+  <li><b>One layer stack paints them all.</b> Strokes run across from one texture set to the next, and fill layers cover
+    every set. To limit a layer to one set, give it the <i>Material slot</i> smart mask. To keep strokes on one set, use
+    <a href="tools.html#texture-set-tools">Set lock or Isolate</a>.</li>
+  <li><b>The UV editor shows one tile at a time.</b> Pick it in the list at the left of its toolbar. Faces of other
+    texture sets are hidden; neighboring UDIM tiles show around it in their place. Painting in the UV editor paints the
+    tile you see.</li>
+  <li><b>UV tools work per tile.</b> Pack, Unwrap, the Island brush, Fix Overlaps and Move into Free Space keep every
+    island in its own tile and pack each tile on its own, at the same texel density. Islands of different texture sets
+    don't count as overlapping.</li>
+  <li><b>Moving an island into a new UDIM tile</b> adds that tile. The paint moves with it, and the undo history is
+    cleared, because the texture is rebuilt.</li>
+  <li><b>UV-mapped materials</b> (fill layers with <i>Mapping: UV</i>) follow each tile's UVs, so a tiling texture lines up
+    across UDIM tiles.</li>
+</ul>
+
+<h2 id="export">Exporting textures</h2>
+<p>Open the dialog with <i>File › Export Textures…</i> (<kbd>Ctrl</kbd>+<kbd>E</kbd>). Pick a folder, a preset, a size
+and how the files are named. Under the settings the dialog lists every file the export will write, as they are now:
+each file's name, what its channels hold (<i>R occlusion, G roughness, B metallic</i>), its bits (8 or 16), and whether
+it is a color map (<b>sRGB</b>) or a data map (<b>Non-Color</b>, as Blender calls it; an engine's "sRGB" off). With
+texture sets or UDIM tiles it lists one set's files and says how many sets there are. Files that are already there are
+replaced.</p>
+<table>
+  <tr><th>Preset</th><th>Files (<code>Name_…png</code>)</th><th>Notes</th></tr>
+  <tr><td>Blender (Principled BSDF)</td><td>basecolor, roughness, metallic, normal, height (16-bit), emission, ao</td><td>Normal is OpenGL style. Connect it through a Normal Map node set to Tangent Space.</td></tr>
+  <tr><td>glTF (metallicRoughness)</td><td>baseColor, metallicRoughness (G = roughness, B = metallic), normal, emissive, occlusion</td><td>Ready for glTF / three.js / Babylon.js.</td></tr>
+  <tr><td>Unreal (ORM, DirectX normal)</td><td>BaseColor, OcclusionRoughnessMetallic, Normal (green flipped), Height, Emissive</td><td>Import the ORM texture with sRGB off.</td></tr>
+  <tr><td>Unity (MaskMap)</td><td>BaseMap, MaskMap (R metallic, G AO, B detail mask = 0, A smoothness), Normal, Height, Emission</td><td>For HDRP and URP Lit. Mark the normal as a <i>Normal map</i> in the importer.</td></tr>
+</table>
+<p><b>Opacity, sheen, clearcoat and subsurface</b> (0.26) are exported only when the texture set uses them: the base
+material sets them, a paint layer has painted them, or a fill layer's material has them. Blender gets
+<code>opacity</code>, <code>sheen</code>, <code>coat</code> and <code>subsurface</code> maps (the live link connects them
+to the Principled BSDF's Alpha, Sheen, Coat and Subsurface weights). glTF and Unity keep the opacity in the base
+color's alpha channel, and get <code>sheenColor</code>, <code>clearcoat</code> and <code>subsurface</code> (glTF) or
+<code>Sheen</code>, <code>CoatMask</code> and <code>SubsurfaceMask</code> (Unity). Unreal gets <code>Opacity</code>,
+<code>Sheen</code>, <code>ClearCoat</code> and <code>Subsurface</code>. Layered PSD export adds a file for each of them
+that is used.</p>
+<p>With texture sets or UDIM tiles, every tile is exported on its own, at the chosen size. Unless the name template
+says otherwise, the set's name comes before the map name and the UDIM number before the extension:
+<code>Hero_Body_basecolor.png</code>, <code>Hero_Clothes_basecolor.png</code>, <code>Hero_basecolor.1001.png</code>,
+<code>Hero_basecolor.1002.png</code>. In templates, <code>$set</code> is the material slot's name, <code>$udim</code> the
+tile number and <code>$tile</code> both. Blender, Substance, Mari and Unreal read the UDIM numbers this way.</p>
+<p><b>Size</b> can be the texture set's own size or anything from 512 to 32768, without changing the project's
+resolution. Below the texture set's size the maps are scaled down. Above it, Patina renders the export in tiles: fill
+layers' materials and smart masks are rendered at the full export size, so they really have 16K or 32K detail, while
+painted layers and masks (which only exist at the texture set's resolution) are scaled up. The PNG files are written
+a band at a time, so a 32K export doesn't need the whole image in memory, but it does take a while and needs space on
+disk: a 32K base color PNG is often over a gigabyte.</p>
+<p>The <b>AO</b>, <b>Thickness</b> and <b>Bent normals</b> boxes add those baked maps to the export (as
+<code>ao</code>, <code>thickness</code> and <code>bentNormal</code>; <code>Thickness</code> and <code>BentNormal</code> for
+Unreal and Unity). They are only available once baked. Bent normals are tangent space, OpenGL style, or DirectX style
+for Unreal.</p>
+<h3 id="layered-psd">Layered PSD</h3>
+<p>Set <b>Format</b> to <i>Layered PSD</i> to hand the layer stack to Photoshop, Krita, GIMP or Affinity Photo instead of
+flat maps. Patina writes one <code>.psd</code> file per map: base color, roughness, metallic, height (16-bit),
+normal and emission. In each file:</p>
+<ul>
+  <li>every Patina layer is a Photoshop layer with the same name, opacity, blend mode and visibility;</li>
+  <li>its mask (painted, smart mask or effect stack, as Patina uses it) becomes a <b>layer mask</b> you can keep
+  editing;</li>
+  <li>folders become layer groups;</li>
+  <li>a paint layer holds its paint, a fill layer its material over the whole canvas (the mask cuts it down, as in
+  Patina), and an adjustment layer the result of the adjustment on the layers below, marked <i>(adjustment, baked)</i>;</li>
+  <li>the bottom layer, <i>Base</i>, holds the base material (and the high-poly normal map, if baked);</li>
+  <li>the flattened image is Patina's own result, so programs that ignore layers still show the right texture.</li>
+</ul>
+<p>PSD files are written at the texture set's size. With <a href="#texture-sets">texture sets or UDIM tiles</a>, each set
+or tile gets its own PSD files, named like the PNG maps (<code>Hero_Body_basecolor.psd</code>,
+<code>Hero_basecolor.1002.psd</code>). The normal file uses the preset's convention (DirectX for Unreal).
+Blend modes Photoshop doesn't have are mapped to the closest one: <i>add signed</i> becomes linear light. Normal maps
+don't blend like colors, so for the normal file treat the layers as a reference and use the flattened image.</p>
+<h3>File names</h3>
+<p><i>File names</i> is a template. The default <code>$mesh_$map</code> gives <code>Suzanne_basecolor.png</code>. The
+dialog shows an example name as you type.</p>
+<table>
+  <tr><th>Token</th><th>Becomes</th></tr>
+  <tr><td><code>$mesh</code></td><td>The <i>$mesh</i> field, or the mesh name when that is empty</td></tr>
+  <tr><td><code>$project</code></td><td>The project file name without <code>.patina</code> (<code>untitled</code> if not saved yet)</td></tr>
+  <tr><td><code>$map</code></td><td>The map name of the preset, for example <code>basecolor</code>, <code>ORM</code>… or <code>mask</code></td></tr>
+  <tr><td><code>$size</code></td><td>The output size in pixels, for example <code>2048</code></td></tr>
+  <tr><td><code>$preset</code></td><td><code>blender</code>, <code>gltf</code>, <code>unreal</code> or <code>unity</code></td></tr>
+  <tr><td><code>$layer</code></td><td>The exported layer's name, or <code>all</code></td></tr>
+</table>
+<p>For example, <code>T_$mesh_$map_$size</code> gives <code>T_Suzanne_BaseColor_2048.png</code>, a common Unreal naming
+style. Characters that are not allowed in file names are replaced with <code>_</code>. Templates cannot create folders.</p>
+<h3>Exporting one layer or a mask</h3>
+<p>The <i>Export</i> combo chooses what to write:</p>
+<ul>
+  <li><b>All layers</b>: the finished textures.</li>
+  <li><b>Only the selected layer</b>: the maps as they look with that layer or folder soloed, over the base material.
+  Use it to hand a decal layer or a dirt pass to another tool.</li>
+  <li><b>The selected layer's mask</b>: the painted mask as a grayscale PNG (<code>$map</code> is <code>mask</code>), at
+  the chosen size.</li>
+</ul>
+<figure><img src="img/export_layer_dialog.png" alt="Export dialog set to one layer" style="max-width:560px"></figure>
+<p>Right-click a layer ▸ <i>Export this layer…</i> or <i>Export its mask…</i> opens the dialog set up for it. If an export
+fails (for example, the folder is read-only or the disk is full), Patina shows an error dialog, and nothing that was
+there before is half-overwritten. Each file is written to a temporary name first and then renamed.</p>
+<p><b>Export again</b> (<i>File › Export Again</i>, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>) repeats the last export
+with the same folder, preset, size and names, without the dialog. The settings are stored in the project, so it works
+after reopening it too.</p>
+<p>When you work with the Blender bridge,
+<kbd>Ctrl</kbd>+<kbd>B</kbd> exports straight into the linked Blender material instead, as described in
+<a href="blender.html">Blender bridge</a>.</p>
+
+<h2>Projects</h2>
+<p><i>File › Save</i> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) writes a single <code>.patina</code> file. It holds the mesh, UVs,
+seams, every layer and mask, the bakes and the settings, so you can move it to another computer and carry on. Projects
+open the same way on Linux and Windows.</p>
+<p>While the window is open, Patina <b>autosaves</b> every 5 minutes after you stop painting (<i>Preferences › Saving</i>
+changes how often, or turns it off). The autosave is written in the background, so painting carries on while it saves.
+It goes to the cache folder (see <a href="install.html#where-patina-keeps-files">where files live</a>), and
+<i>File › Open Autosave</i> recovers it. Autosaving never changes the path your project is saved to.</p>
+<ul>
+  <li><b>Save Incremental</b> (<i>File › Save Incremental</i>, <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd>) saves a new
+  numbered version next to the current one: <code>crate.patina</code> → <code>crate_v002.patina</code> →
+  <code>crate_v003.patina</code>, never overwriting an older version.</li>
+  <li><b>Crash recovery:</b> if Patina didn't close properly, the next start offers to restore the autosave. Several
+  Patina windows can be open at once without setting this off.</li>
+  <li><b>The mesh changed on disk:</b> when the <code>.glb</code> or <code>.obj</code> you opened is saved again by another
+  program (you edited it in Blender and exported over it), Patina offers to <b>update the mesh</b>. Your layers are kept:
+  paint follows changed UVs, and is carried over through 3D when the topology changed. <i>Always update</i> (or
+  <i>File › Reload Automatically When the Mesh Changes</i>) skips the question. <i>File › Reload Mesh (keep layers)</i> does it
+  by hand.</li>
+</ul>
+
+<h2>Gotchas</h2>
+<div class="callout gotcha"><span class="t">Colors look different in another program</span>Base color and emission are
+sRGB. Roughness, metallic, height, normal and AO are <b>linear (non-color)</b> data. If an engine imports them as sRGB,
+roughness looks too glossy and normals look wrong. Untick sRGB, or set the color space to <i>Non-Color</i> in Blender,
+for everything except base color and emission.</div>
+<div class="callout gotcha"><span class="t">Normal map looks inverted (lit from below)</span>The green channel convention
+differs between programs. Patina writes OpenGL style (Blender, glTF, Unity), except for the Unreal preset, which writes
+DirectX style. If you import into another DirectX-style tool, flip the green channel there or use the Unreal preset.</div>
+<div class="callout gotcha"><span class="t">High-poly bake: flat patches or “many texels missed”</span>The two meshes
+are not in the same place, or the cage distance is too small for how far the sculpt sticks out. Check that both were
+exported with the same transform (apply scale in Blender), then raise <i>Distance</i>. Detail that appears on a part
+where it doesn't belong means the distance is too large: lower it.</div>
+<div class="callout warn"><span class="t">Height isn't displacement</span>Height is exported as a map (16-bit for precision)
+and shown in Patina as bump detail through the normal map. It doesn't move the geometry in the viewport. For real
+displacement, connect the height map to a displacement modifier or node in Blender (the add-on has a <i>Use
+Displacement</i> option).</div>

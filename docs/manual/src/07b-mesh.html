@@ -1,0 +1,158 @@
+<!-- title: Checking, mending, reducing and exporting models -->
+<!-- nav: Mesh check & export -->
+<h1>Checking, mending, reducing and exporting models</h1>
+<p class="lead">Before a model goes into a game engine, a printer or a render, it is worth knowing what it is made of and
+what is wrong with it. The Mesh Check tells you both, shows the problems on the model, and mends the ones that can be
+mended without touching your paint. It is the first of Patina's tools for finishing models made in Blender, scanned or
+generated: post-process your models the way you would a photo.</p>
+
+<h2>The Mesh Check window</h2>
+<p>Open it with <i>Mesh › Check Mesh…</i>. The top half lists the numbers: vertices, faces (triangles, quads and
+n-gons), the triangles an engine draws, separate parts, material slots, UV islands, the size in meters along Blender's
+X, Y and Z, the surface area and volume, whether the model is closed, and how much of the UV square it uses.</p>
+<figure><img src="img/mesh_check.png" alt="The Mesh Check window" style="max-width:552px"><figcaption>A cube with a
+missing face and a top face that isn't joined to the rest.</figcaption></figure>
+<p>Below are the problems, worst first. Each says how many there are and what it means. <b>Select</b> selects its faces
+(for example to make an island of them or to look at them in the UV editor), <b>Look</b> turns the view to the first
+one, and <b>Fix</b> mends it. Tick <i>Show the problems on the model</i> to color the faces: red for a problem, orange
+for a warning, blue for a note. The back of any face shows magenta, which makes flipped faces easy to spot.</p>
+<table>
+  <tr><th>Problem</th><th>What it is</th><th>Fix</th></tr>
+  <tr><td>Non-manifold edges</td><td>Edges shared by three faces or more. Engines, printers and bakers can't tell inside
+    from outside there.</td><td>Mend it in Blender</td></tr>
+  <tr><td>Flipped faces</td><td>Faces turned the other way from their neighbors: dark or see-through in engines, broken
+    bakes and smoothing.</td><td>Turns them like their neighbors</td></tr>
+  <tr><td>Inside-out parts</td><td>Closed parts whose faces all point inwards.</td><td>Turns them to face out</td></tr>
+  <tr><td>Open seams</td><td>Vertices at the same place that aren't joined: a cut in the surface.</td><td>Joins
+    them (within the weld distance)</td></tr>
+  <tr><td>Holes</td><td>Open borders. Fine for clothes and planes; a problem for printing and solid models.</td><td>Closes
+    each hole up to a size with a face</td></tr>
+  <tr><td>Bowtie vertices</td><td>Fans of faces that only touch at one vertex.</td><td>Mend it in Blender</td></tr>
+  <tr><td>Degenerate faces</td><td>Faces with no area, or the same corner twice.</td><td>Removes them</td></tr>
+  <tr><td>Duplicate faces</td><td>Two faces on the same corners: they flicker and double the paint.</td><td>Removes one</td></tr>
+  <tr><td>Specks and floaters</td><td>Tiny separate pieces, under 3% of the model's size: leftovers of scans and
+    generated models.</td><td>Removes them</td></tr>
+  <tr><td>Faces without UV space</td><td>Faces whose UVs have no area: paint can't show on them.</td><td>Unwrap them</td></tr>
+  <tr><td>Overlapping UVs</td><td>Islands on top of each other: paint on one shows on the other (fine for mirrored halves
+    on purpose).</td><td><i>UV › Fix Overlapping UVs</i></td></tr>
+  <tr><td>Loose vertices</td><td>Vertices no face uses.</td><td>Removes them</td></tr>
+  <tr><td>Very small / very large</td><td>A model under 5 mm or over 500 m long, usually exported in the wrong units.</td><td>Rescale it in Blender</td></tr>
+</table>
+
+<h2 id="fixing">Fixing</h2>
+<p><b>Fix everything that can be fixed</b> (also in the <i>Mesh</i> menu) does all the fixes at once, in the right
+order: it joins open seams before it closes holes, so a seam isn't capped twice. <i>Fix settings</i> sets the weld
+distance (automatic: a hundred-thousandth of the model's size) and the biggest hole to close.</p>
+<p>A fix makes a new mesh: UVs, material slots, seams and vertex groups stay with their faces, and Patina moves the
+layers' paint over, as it does when you update a mesh from Blender. A new face closing a hole takes its border's UVs,
+so it shows the texture next to it until you unwrap it.</p>
+<div class="callout warn"><span class="t">Undo after a fix</span>A new mesh clears the undo history. Patina keeps a copy
+of the project from just before the fix: <b>Back to before the fix</b> (in the window and the <i>Mesh</i> menu) returns
+to it, layers and paint included.</div>
+<div class="callout gotcha"><span class="t">Models linked to Blender</span>After a fix the mesh no longer matches the
+Blender object it came from, so Patina's textures fit the mended mesh, not the object. Send the mended model back with
+<b>Send the mended model to Blender</b> (see <a href="#to-blender">below</a>): it becomes a new object with the
+textures, and Patina links to it.</div>
+
+<h2 id="reduce">Fewer polygons</h2>
+<p><i>Mesh › Reduce Polygons…</i> takes a model down to a share of its triangles, for games, the web and AR. Choose
+how much to keep; the window says how many triangles that leaves and how far the shape moves (as a share of the
+model's size) before you click <b>Reduce</b>. The UV layout stays: UV seams and the borders between material slots
+don't move, and every corner that is left keeps its UV, so the textures fit as they are and nothing is repainted.
+<i>Keep open borders</i> holds the edges of clothes, planes and cut-offs in place. The result is triangles.</p>
+<figure><img src="img/reduce.png" alt="Suzanne at 3936, 984 and 236 triangles"><figcaption>Suzanne with tiles at all of
+its 3936 triangles, at 25% and at 6%. The tiles stay where they were.</figcaption></figure>
+<p>As with a fix, reducing clears the undo history, and <b>Back to before the reduction</b> returns to the model as it
+was. A reduced model linked to Blender goes back with <i>Send Model to Blender</i>.</p>
+<h3 id="lods">Levels of detail</h3>
+<p>In <i>File › Export Model…</i>, <b>Levels of detail</b> adds lighter copies of the model, each with half the
+triangles of the one before. They share the model's textures. In glTF they are meshes named <i>name_LOD0</i>,
+<i>name_LOD1</i>… (the full model carries the <code>MSFT_lod</code> extension, which some engines read); with OBJ they
+are <i>name_LOD1.obj</i>… beside the model. Unity, Unreal and Godot all recognize the <i>_LOD</i> names.</p>
+
+<h2 id="export-model">Exporting the model</h2>
+<p><i>File › Export Model…</i> writes the model with its textures, ready for a game engine, a web viewer or another 3D
+program:</p>
+<ul>
+<li><b>GLB</b>: one file with the textures inside. Three.js, Babylon.js, Godot, Unity (with glTFast), Unreal (with its
+glTF importer), Sketchfab and Blender read it.</li>
+<li><b>glTF</b>: the same as a <code>.gltf</code> file with a <code>.bin</code> and PNG files beside it.</li>
+<li><b>OBJ</b>: <code>.obj</code> and <code>.mtl</code> with PNG maps (base color, roughness, metallic, normal, glow, and
+opacity when used). Faces keep their quads and n-gons.</li>
+<li><b>STL</b>: the shape alone, for 3D printing, in millimeters with Z up (one meter in Blender is 1000 mm). Mend the
+model first so it is closed; the <a href="batch.html">3D print recipe</a> does that, stands it on the ground and
+exports it.</li>
+<li><b>PLY</b>: the model with its base color as vertex colors (one color per corner, read from the textures),
+with UVs and normals, Z up in meters as Blender reads it. For color 3D printing and programs that use vertex colors.
+Faces keep their quads and n-gons.</li>
+</ul>
+<p>Each texture set or UDIM tile becomes a material of its own (glTF has no UDIM tiles, so each tile's UVs are moved
+back into the square). The glTF material has the base color (with opacity in its alpha: <i>Mask</i> when the opacity
+is all solid or cut out, <i>Blend</i> when it has partly see-through parts), metallic and roughness, the normal map,
+glow, ambient occlusion when baked, and sheen and clearcoat (the <code>KHR_materials_sheen</code> and
+<code>KHR_materials_clearcoat</code> extensions) when the texture set uses them. <i>Textures</i> picks the texture size.</p>
+
+<h2 id="collision">Collision shapes</h2>
+<p>A game engine does not collide against the model itself, which is far too detailed: it uses a few simple, convex
+shapes around it. <i>Mesh › Collision…</i> makes them and shows them in green over the model; <i>File › Export
+Model</i> writes them after the model, named the way the engine looks for them.</p>
+<figure><img src="img/collision.png" alt="Convex pieces around a ring" style="max-width:666px"><figcaption>A ring split
+into twelve convex pieces. One hull would fill its hole.</figcaption></figure>
+<table>
+  <tr><th>Shapes</th><th>For</th></tr>
+  <tr><td><b>Convex pieces</b></td><td>Anything that bends in: chairs, arches, rings, characters. The model is split
+    where one hull would hold too much empty space. The closest fit.</td></tr>
+  <tr><td><b>A hull per separate part</b></td><td>Models made of separate parts: kits, furniture, a car and its wheels.</td></tr>
+  <tr><td><b>One convex hull</b></td><td>Rocks, bottles, round props.</td></tr>
+  <tr><td><b>A box per separate part</b>, <b>One box</b></td><td>Crates, books, walls. The cheapest for the engine. A box
+    is upright unless a turned one is clearly smaller.</td></tr>
+</table>
+<p><b>Most shapes</b> limits how many (more fit closer but cost the engine more: 4 to 16 is usual for a prop). <b>Most
+corners per hull</b> keeps each hull simple (engines like 32 or fewer). For convex pieces, <b>Empty space allowed</b>
+sets when a piece is split again (lower: more, closer pieces), and <b>Detail</b> how finely the model is looked at.
+After <b>Make</b>, the window says how many shapes there are and how much more they hold than the model (under 20%
+is a close fit). The shapes belong to the mesh as it is: after a fix, a reduction or a transform, make them again.</p>
+<p>In <i>Export Model</i>, <b>Collision</b> names them for <b>Unreal</b> (<code>UCX_</code> before the model's name for
+hulls, <code>UBX_</code> for boxes: Unreal uses them as the mesh's simple collision), <b>Godot</b>
+(<code>-convcolonly</code> at the end: Godot 4 turns each into a convex collision shape) or with plain names (Unity has
+no naming rule: add a Mesh Collider set to <i>Convex</i> on each). GLB, glTF and OBJ carry them. The <i>Game asset</i>
+recipe makes convex pieces and exports them for Unreal.</p>
+
+<h2 id="lightmap">Lightmap UVs</h2>
+<p>Game engines bake their lighting (shadows, light bouncing between surfaces) into a <i>lightmap</i>, a texture laid
+over the model through a second UV map. That map has stricter rules than the one the paint uses: no face may share
+space with another (mirrored and stacked islands, fine for painting, are not allowed), the detail should be the same
+everywhere, and the islands need a gap between them so light does not bleed across. <i>Mesh › Lightmap UVs…</i>
+makes it.</p>
+<figure><img src="img/lightmap.png" alt="The Lightmap UVs window" style="max-width:489px"><figcaption>New islands made
+for a lightmap of 512 pixels, four pixels apart.</figcaption></figure>
+<ul>
+  <li><b>Lightmap size</b>: the size the engine will bake at (Unity and Unreal often use 64 to 1024 per object). The
+    gap is measured in its pixels.</li>
+  <li><b>Gap</b>: pixels between islands. 2 to 4 is usual; a small lightmap needs the larger gaps.</li>
+  <li><b>Islands</b>: <i>The model's own UV islands</i>, repacked, keeps the shapes the paint uses (best for models with
+    clean UVs; islands that fold over themselves are unwrapped again). <i>New ones made for lightmaps</i> asks
+    xatlas, the unwrapper Godot uses, for new islands: for scans and generated models whose UVs are a mess. It takes a
+    while on dense models (half a minute for 100,000 faces): reduce them first.</li>
+</ul>
+<p>The paint's UVs do not change. The lightmap UVs are saved with the project, written to GLB and glTF files as the
+second UV map (<code>TEXCOORD_1</code>, which Unity, Unreal and Godot use for lightmaps), and a model sent to Blender
+gets them as the UV map <i>Lightmap</i>. Opening a glTF that has a second UV map keeps it. A transform keeps them; a
+fix or a reduction changes the faces, so make them again. The <i>Game asset</i> recipe makes them before it exports.</p>
+
+<h2 id="to-blender">Sending the model to Blender</h2>
+<p><i>Blender › Send Model to Blender as a New Object</i> gives Blender the model as it is in Patina, for example
+after a fix: a new object, <i>name_patina</i>, next to the linked one in its place and collections (or at the world
+origin for a model opened from a file), with its UVs, material slots, seams and vertex groups, and Patina's material on
+it. Patina links to the new object from then on, so painting and <i>Send textures to Blender</i> go there. <i>Replace
+the Linked Object's Mesh</i> gives the linked object Patina's mesh instead (its modifiers stay; Undo in Blender goes
+back). After a fix on a linked model, the Mesh Check window has a <b>Send the mended model to Blender</b> button. Both
+need Blender's live link and the 0.9 add-on.</p>
+
+<h2>From Claude and scripts</h2>
+<p><code>mesh_check</code> returns the numbers and problems (with places in Blender's axes, and each problem's faces on
+request), <code>mesh_fix</code> mends (<code>all</code>, or the fixes one by one, with <code>weld_distance</code>,
+<code>small_part_size</code> and <code>fill_hole_edges</code>), and <code>mesh_fix_revert</code> goes back. The
+<code>mesh_check</code> view mode shows the heat map. <code>mesh_reduce</code> reduces (with <code>preview</code> to only
+count), <code>export_model</code> writes the model with its textures (<code>lods</code> for levels of detail), and
+<code>send_model_to_blender</code> sends it to Blender. See <a href="commands.html">Commands</a>.</p>

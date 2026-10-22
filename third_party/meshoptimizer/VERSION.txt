@@ -1,0 +1,1 @@
+meshoptimizer v0.25 (https://github.com/zeux/meshoptimizer, tag v0.25, commit 6daea4695c48338363b08022d2fb15deaef6ac09): src/ only.

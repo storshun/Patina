@@ -1,0 +1,632 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Stylized",
+ "materials": [
+  {
+   "id": "patina_toon_cloth_blue",
+   "name": "Toon Cloth Blue",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "brush_strokes",
+   "description": "Flat toon blue with soft painted gradients",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#3d6fb6",
+    "color_b": "#3866a8",
+    "color_c": "#4475bd",
+    "roughness": [
+     0.85,
+     0.88
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 4,
+    "height": 0.0,
+    "variation": 0.0,
+    "extra": [
+     1,
+     0,
+     2,
+     0
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "toon",
+    "cel"
+   ]
+  },
+  {
+   "id": "patina_toon_cloth_red",
+   "name": "Toon Cloth Red",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "brush_strokes",
+   "description": "Flat toon red with soft painted gradients",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c8383a",
+    "color_b": "#bb3236",
+    "color_c": "#d14240",
+    "roughness": [
+     0.85,
+     0.88
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 4,
+    "height": 0.0,
+    "variation": 0.0,
+    "extra": [
+     1,
+     2,
+     2,
+     0
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "toon",
+    "cel"
+   ]
+  },
+  {
+   "id": "patina_toon_cloth_white",
+   "name": "Toon Cloth White",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "brush_strokes",
+   "description": "Toon white shirt: cool shade, warm light",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#eceae6",
+    "color_b": "#e0e2e8",
+    "color_c": "#f4f2ec",
+    "roughness": [
+     0.85,
+     0.88
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 1,
+    "detail": 4,
+    "height": 0.0,
+    "variation": 0.0,
+    "extra": [
+     1,
+     1,
+     2,
+     0
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "toon",
+    "cel"
+   ]
+  },
+  {
+   "id": "patina_cel_bands_yellow",
+   "name": "Cel Bands Yellow",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "brush_strokes",
+   "description": "Hard-edged cel tones in three steps",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#f1c232",
+    "color_b": "#d39b1e",
+    "color_c": "#fbe27a",
+    "roughness": [
+     0.8,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 4,
+    "height": 0.0,
+    "variation": 0.0,
+    "extra": [
+     0,
+     0,
+     3,
+     0
+    ],
+    "seed": 5
+   },
+   "tags": [
+    "toon",
+    "cel"
+   ]
+  },
+  {
+   "id": "patina_painted_grass",
+   "name": "Hand-Painted Grass",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "brush_strokes",
+   "description": "Painterly grass with directional strokes",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5f8a3a",
+    "color_b": "#3d6129",
+    "color_c": "#93b75a",
+    "roughness": [
+     0.85,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.04,
+    "extra": [
+     0.2,
+     1,
+     4,
+     1
+    ],
+    "seed": 6
+   },
+   "tags": [
+    "hand-painted",
+    "ground"
+   ]
+  },
+  {
+   "id": "patina_painted_leather",
+   "name": "Hand-Painted Leather",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "brush_strokes",
+   "description": "Painted brown leather with long strokes",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#7a4a2c",
+    "color_b": "#6a3f25",
+    "color_c": "#8c5a36",
+    "roughness": [
+     0.7,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.03,
+    "extra": [
+     0.6,
+     0,
+     3,
+     0.6
+    ],
+    "seed": 7
+   },
+   "tags": [
+    "hand-painted"
+   ]
+  },
+  {
+   "id": "patina_painted_cobbles",
+   "name": "Hand-Painted Cobbles",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_stone",
+   "description": "Stylized cobblestones: painted highlights, shadows and dark outlines",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8c8f99",
+    "color_b": "#a29a8c",
+    "color_c": "#2c2a33",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 4,
+    "height": 0.6,
+    "variation": 0.15,
+    "extra": [
+     0.05,
+     0,
+     0.5,
+     1
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "hand-painted",
+    "floor"
+   ]
+  },
+  {
+   "id": "patina_painted_stone_wall",
+   "name": "Hand-Painted Stone Wall",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_stone",
+   "description": "Stylized castle wall of rounded blocks",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#a39a86",
+    "color_b": "#8d8a80",
+    "color_c": "#2f2a2a",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 4,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     0.06,
+     1,
+     0.5,
+     1
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "hand-painted",
+    "wall"
+   ]
+  },
+  {
+   "id": "patina_painted_dungeon_wall",
+   "name": "Hand-Painted Dungeon Wall",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_stone",
+   "description": "Dark blue-gray blocks for dungeons",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5e6672",
+    "color_b": "#4e5460",
+    "color_c": "#16161c",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 4,
+    "height": 0.5,
+    "variation": 0.2,
+    "extra": [
+     0.07,
+     1,
+     0.8,
+     0.8
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "hand-painted",
+    "wall"
+   ]
+  },
+  {
+   "id": "patina_painted_planks",
+   "name": "Hand-Painted Planks",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_wood",
+   "description": "Stylized wooden planks: painted grain, knots and nails",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#9a6a3e",
+    "color_b": "#d6a66a",
+    "color_c": "#3a2416",
+    "roughness": [
+     0.8,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.12,
+    "extra": [
+     3,
+     0.6,
+     0.12,
+     1
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "hand-painted",
+    "floor"
+   ]
+  },
+  {
+   "id": "patina_painted_planks_dark",
+   "name": "Hand-Painted Planks Dark",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_wood",
+   "description": "Old dark stylized boards",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5e3f2a",
+    "color_b": "#8f6a48",
+    "color_c": "#1e130c",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     4,
+     0.4,
+     0.1,
+     0
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "hand-painted"
+   ]
+  },
+  {
+   "id": "patina_painted_crate",
+   "name": "Hand-Painted Crate Wood",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_wood",
+   "description": "Pale pine slats for stylized crates",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c9a46a",
+    "color_b": "#f0d49a",
+    "color_c": "#4a321c",
+    "roughness": [
+     0.8,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 4,
+    "height": 0.35,
+    "variation": 0.08,
+    "extra": [
+     2,
+     0.3,
+     0.14,
+     1
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "hand-painted"
+   ]
+  },
+  {
+   "id": "patina_painted_steel_plates",
+   "name": "Hand-Painted Steel Plates",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_metal",
+   "description": "Stylized riveted steel: painted bevels, scratches and gradient",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#7d8794",
+    "color_b": "#d8e2ec",
+    "color_c": "#262a33",
+    "roughness": [
+     0.45,
+     0.7
+    ],
+    "metallic": [
+     0.7,
+     0.2
+    ],
+    "scale": 2,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.08,
+    "extra": [
+     0.08,
+     1,
+     0.6,
+     1
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "hand-painted",
+    "hard surface"
+   ]
+  },
+  {
+   "id": "patina_painted_gold_trim",
+   "name": "Hand-Painted Gold Trim",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_metal",
+   "description": "Stylized gold with bright painted edges",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c9962e",
+    "color_b": "#ffe7a0",
+    "color_c": "#5a3a12",
+    "roughness": [
+     0.35,
+     0.6
+    ],
+    "metallic": [
+     0.85,
+     0.2
+    ],
+    "scale": 3,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.05,
+    "extra": [
+     0.1,
+     0,
+     0.3,
+     1
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "hand-painted"
+   ]
+  },
+  {
+   "id": "patina_painted_iron_dark",
+   "name": "Hand-Painted Dark Iron",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "painted_metal",
+   "description": "Dark stylized iron plates with rivets",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#4a4d55",
+    "color_b": "#9aa3b0",
+    "color_c": "#121318",
+    "roughness": [
+     0.55,
+     0.75
+    ],
+    "metallic": [
+     0.6,
+     0.1
+    ],
+    "scale": 2,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.1,
+    "extra": [
+     0.07,
+     1,
+     0.8,
+     0.8
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "hand-painted",
+    "hard surface"
+   ]
+  },
+  {
+   "id": "patina_crosshatch_ink",
+   "name": "Crosshatch Ink",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "crosshatch",
+   "description": "Pen crosshatching on white paper",
+   "default_scale": 1.0,
+   "tags": [
+    "ink",
+    "comic",
+    "hatching"
+   ],
+   "params": {
+    "color_a": "#f4f1e8",
+    "color_b": "#1c1c24",
+    "color_c": "#08080c",
+    "roughness": [
+     0.85,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.15,
+    "variation": 0.15,
+    "extra": [
+     0.3,
+     4,
+     0.5,
+     0.4
+    ]
+   }
+  },
+  {
+   "id": "patina_crosshatch_sepia",
+   "name": "Crosshatch Sepia",
+   "category": "Stylized",
+   "type": "procedural",
+   "generator": "crosshatch",
+   "description": "Sepia pencil hatching on cream paper",
+   "default_scale": 1.0,
+   "tags": [
+    "pencil",
+    "sketch",
+    "hatching"
+   ],
+   "params": {
+    "color_a": "#efe2c4",
+    "color_b": "#6a4a2a",
+    "color_c": "#3a2412",
+    "roughness": [
+     0.9,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.1,
+    "variation": 0.15,
+    "extra": [
+     0.25,
+     3,
+     0.4,
+     0.7
+    ]
+   }
+  }
+ ]
+}

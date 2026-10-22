@@ -1,0 +1,273 @@
+{
+ "description": "Damp oak darkened in sheltered places, dirt in the cracks and moss on the surfaces that face up.",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_wood_oak",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Oak",
+   "opacity": 1.0,
+   "parent": 34,
+   "type": "fill",
+   "uid": 35,
+   "visible": true
+  },
+  {
+   "adjust": {
+    "brightness": 0.6200000047683716,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": -0.10000000149011612,
+    "saturation": 0.800000011920929
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.5,
+    "invert": false,
+    "level": 0.30000001192092896,
+    "noise": 0.4000000059604645,
+    "noise_scale": 2.0,
+    "type": "occlusion"
+   },
+   "name": "Damp",
+   "opacity": 1.0,
+   "parent": 34,
+   "type": "adjust",
+   "uid": 36,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.550000011920929,
+    "noise": 0.4000000059604645,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_dirt_mud",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Dirt",
+   "opacity": 0.800000011920929,
+   "parent": 34,
+   "type": "fill",
+   "uid": 37,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "direction": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "invert": false,
+    "level": 0.7200000286102295,
+    "noise": 0.6000000238418579,
+    "noise_scale": 2.5,
+    "type": "facing"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_moss",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Moss on top",
+   "opacity": 1.0,
+   "parent": 34,
+   "type": "fill",
+   "uid": 38,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Mossy wood",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 34,
+   "visible": true
+  }
+ ],
+ "name": "Mossy wood",
+ "patina_smart_material": 1
+}

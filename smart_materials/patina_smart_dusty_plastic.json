@@ -1,0 +1,229 @@
+{
+ "description": "Satin gray plastic with dust settled on upward-facing parts and grime in the cavities.",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_plastic_satin_gray",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Plastic",
+   "opacity": 1.0,
+   "parent": 14,
+   "type": "fill",
+   "uid": 15,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.44999998807907104,
+    "invert": false,
+    "level": 0.6000000238418579,
+    "noise": 0.44999998807907104,
+    "noise_scale": 2.5,
+    "type": "gradient_y"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_dust",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Dust from above",
+   "opacity": 0.8500000238418579,
+   "parent": 14,
+   "type": "fill",
+   "uid": 16,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.6000000238418579,
+    "noise": 0.30000001192092896,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_dirt_mud",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Grime",
+   "opacity": 0.6000000238418579,
+   "parent": 14,
+   "type": "fill",
+   "uid": 17,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Dusty plastic",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 14,
+   "visible": true
+  }
+ ],
+ "name": "Dusty plastic",
+ "patina_smart_material": 1
+}

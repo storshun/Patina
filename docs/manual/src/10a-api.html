@@ -1,0 +1,180 @@
+<!-- title: HTTP API and batch mode -->
+<!-- nav: HTTP API & batch mode -->
+<h1>HTTP API and batch mode</h1>
+<p class="lead">Other programs can use Patina as a service: an asset pipeline that bakes every model checked in, a render
+farm that textures hundreds of props overnight, an in-house tool with a "make textures" button. They talk to Patina over
+HTTP with JSON, on this machine or across your local network, but never from the internet. For scripts and CI there is
+also a batch mode that runs a job file and exits.</p>
+
+<h2>Starting the API</h2>
+<pre><code>patina --headless --http                        # this machine only, port 7870
+patina --headless --lan --workspace /srv/patina # the local network, with a token</code></pre>
+<p>In the desktop application, turn it on in <i>Edit › Preferences › HTTP API</i> (<i>Enable</i>, and <i>Local network</i>
+for other machines). The window then takes requests while you work, and you can watch them happen.</p>
+<figure><img src="img/prefs_http.png" alt="The HTTP API section of Preferences" style="max-width:520px"></figure>
+<p>On a server, run it
+headless: Linux needs no display (EGL); Windows needs a logged-in desktop session with a GPU driver.</p>
+<table>
+  <tr><th>Option</th><th>Meaning</th></tr>
+  <tr><td><code>--http</code>, <code>--http-port N</code></td><td>Start the API (default port 7870). On its own it answers this machine only.</td></tr>
+  <tr><td><code>--lan</code></td><td>Also answer other machines of the local network (see <a href="#reach">who can connect</a>).</td></tr>
+  <tr><td><code>--bind ADDR</code></td><td>Listen on one network interface only, for example the internal network card of a server.</td></tr>
+  <tr><td><code>--allow CIDR</code></td><td>Accept only these address ranges (plus this machine), for example <code>--allow 10.20.0.0/16</code>. Repeatable.</td></tr>
+  <tr><td><code>--token T</code></td><td>The access token (or <code>PATINA_TOKEN</code>). With <code>--lan</code> one is generated if you give none.</td></tr>
+  <tr><td><code>--workspace DIR</code></td><td>The folder for uploads and results. Relative paths in commands are inside it.
+    Default: <code>api</code> in Patina's cache folder.</td></tr>
+  <tr><td><code>--sandbox</code></td><td>Refuse any path outside the workspace. Recommended for shared servers.</td></tr>
+  <tr><td><code>--max-upload-mb N</code></td><td>The largest file that can be uploaded (default 4096).</td></tr>
+  <tr><td><code>--cors-origin URL</code></td><td>Let a web page from this origin call the API (an intranet dashboard). Off by default.</td></tr>
+</table>
+
+<h2 id="reach">Who can connect</h2>
+<ul>
+  <li><b>This machine</b> (the default): Patina listens on 127.0.0.1 only. Requests whose <code>Host</code> header names
+  another site are refused, so a web page can't reach the API through DNS tricks.</li>
+  <li><b>Local network</b> (<code>--lan</code>): Patina listens on the network but answers only clients with private
+  addresses: 10.x, 172.16–31.x, 192.168.x, link-local 169.254.x, IPv6 unique-local (fc00::/7) and link-local (fe80::/10), and this
+  machine. Anything else, including every internet address, gets <code>403</code> and a line in the log. <code>--allow</code>
+  narrows this to your own ranges.</li>
+  <li><b>Token:</b> on the network every request needs <code>Authorization: Bearer &lt;token&gt;</code> (or an
+  <code>X-Patina-Token</code> header). If you don't give one, Patina generates it once, stores it in <code>api_token</code> in the
+  settings folder (on Linux readable only by you), and prints it at start-up. <i>Preferences</i> shows and copies it, and <i>New
+  token</i> replaces it. Only <code>/api/v1/health</code> works without the token, for load balancers and monitoring.</li>
+  <li><b>Browsers:</b> requests that carry an <code>Origin</code> header (sent by web pages) are refused unless that origin is
+  listed with <code>--cors-origin</code>.</li>
+</ul>
+<div class="callout warn"><span class="t">Treat the token like a password</span>Whoever has it can run any command, which
+includes reading and writing files the Patina process can reach. Use <code>--sandbox</code> and a dedicated user account on shared
+servers, and keep the port closed in the firewall toward anything that is not your network.</div>
+
+<h2>Endpoints</h2>
+<p>All under <code>http://host:7870/api/v1</code>. Replies are JSON with <code>"ok": true</code> or <code>"ok": false</code> and an
+<code>"error"</code> message.</p>
+<table>
+  <tr><th>Request</th><th>Does</th></tr>
+  <tr><td><code>GET /health</code></td><td>Version, whether a job is running, queue length. No token needed.</td></tr>
+  <tr><td><code>GET /info</code></td><td>Version, workspace, limits, the current state (mesh, layers, resolution…).</td></tr>
+  <tr><td><code>GET /commands</code></td><td>Every command with its description and JSON Schema (the same list Claude sees).</td></tr>
+  <tr><td><code>GET /openapi.json</code></td><td>An OpenAPI 3 description of everything, for client generators and API tools.</td></tr>
+  <tr><td><code>POST /commands/{name}</code></td><td>Runs one command; the body is its arguments. Answers when it is done.</td></tr>
+  <tr><td><code>POST /jobs</code></td><td>Queues a job (several commands in order) and answers at once with its id (<code>202</code>).</td></tr>
+  <tr><td><code>GET /jobs</code>, <code>GET /jobs/{id}?wait=S</code></td><td>Job status, progress and results. <code>wait</code> holds the
+    reply up to S seconds until the job finishes.</td></tr>
+  <tr><td><code>DELETE /jobs/{id}</code></td><td>Cancels a job.</td></tr>
+  <tr><td><code>PUT /files/{path}</code></td><td>Uploads a file into the workspace (the raw body).</td></tr>
+  <tr><td><code>GET /files?dir=D&amp;recursive=1</code></td><td>Lists the workspace.</td></tr>
+  <tr><td><code>GET /files/{path}</code>, <code>DELETE /files/{path}</code></td><td>Downloads or deletes a workspace file or folder.</td></tr>
+</table>
+<p>Every <a href="commands.html">command</a> works: opening meshes and projects, layers and smart materials, painting, UV
+tools, <code>bake_mesh_maps</code>, <code>bake_from_high_poly</code>, <code>export_textures</code>, <code>render_image</code>,
+<code>save_project</code> and the rest.</p>
+
+<h2>Jobs</h2>
+<p>Long work (bakes, high resolutions, many assets) belongs in jobs. Jobs run one at a time in the order they arrive. A job
+has the engine to itself while it runs, so no other client can change the project between its steps.</p>
+<pre><code>POST /api/v1/jobs
+{
+  "name": "crate",
+  "stop_on_error": true,
+  "steps": [
+    {"cmd": "open_file",           "args": {"path": "in/crate_low.glb"}},
+    {"cmd": "set_resolution",      "args": {"resolution": 4096}},
+    {"cmd": "bake_from_high_poly", "args": {"path": "in/crate_high.glb"}},
+    {"cmd": "apply_smart_material","args": {"id": "patina_smart_worn_painted_metal"}},
+    {"cmd": "export_textures",     "args": {"directory": "out/crate", "preset": "unreal"}}
+  ]
+}</code></pre>
+<p>The status (<code>GET /jobs/{id}</code>) looks like this while it runs:</p>
+<pre><code>{"id": "j7-3fa2c1", "name": "crate", "status": "running", "steps": 5, "current_step": 2,
+ "progress": 0.52, "label": "Baking from the high-poly mesh", "results": [ ... ]}</code></pre>
+<ul>
+  <li><b>status</b> is <code>queued</code>, <code>running</code>, <code>done</code>, <code>failed</code> or <code>cancelled</code>.</li>
+  <li><b>progress</b> runs from 0 to 1 over the whole job. Bakes, renders and exports report their own progress.</li>
+  <li><b>results</b> has one entry per finished step: <code>cmd</code>, <code>ok</code>, <code>seconds</code>, and <code>result</code> or
+  <code>error</code>. With <code>stop_on_error</code> (the default), the first failing step ends the job as <code>failed</code>.</li>
+  <li><b>Canceling</b> drops a queued job. A running one stops at the next safe point: bakes and turntable renders stop
+  early, other steps finish first. The project is left as it was after the last finished step.</li>
+  <li>The last 500 jobs are kept in memory; they don't survive a restart.</li>
+</ul>
+<p>Single commands (<code>POST /commands/…</code>) wait up to 30 seconds while a job runs, then answer <code>409</code> (busy)
+with a <code>Retry-After</code> header. <code>?busy_wait=S</code> changes the wait. Commands that only read (<code>get_state</code>,
+<code>list_layers</code>, <code>list_materials</code>, <code>history</code>…) are answered between the job's steps.</p>
+
+<h2>Files and paths</h2>
+<p>Relative paths in arguments (<code>path</code>, <code>directory</code>, <code>…_path</code>) are inside the workspace, so a client on
+another machine uploads its inputs, runs commands with relative paths, and downloads the results:</p>
+<pre><code>curl -H "Authorization: Bearer $T" -X PUT --data-binary @crate_low.glb  http://render-07:7870/api/v1/files/in/crate_low.glb
+curl -H "Authorization: Bearer $T" "http://render-07:7870/api/v1/files?dir=out/crate"
+curl -H "Authorization: Bearer $T" -o crate_BaseColor.png http://render-07:7870/api/v1/files/out/crate/crate_low_BaseColor.png</code></pre>
+<p>Absolute paths work too when the server and the client share a disk (a network share), unless the server runs with
+<code>--sandbox</code>. The file endpoints never reach outside the workspace.</p>
+
+<h2>The Python client</h2>
+<p><code>clients/python/patina_api.py</code> (standard library only) wraps all of this:</p>
+<pre><code>from patina_api import Patina
+pt = Patina("http://render-07:7870", token="…")
+pt.upload("crate_low.glb", "in/crate_low.glb")
+pt.upload("crate_high.glb", "in/crate_high.glb")
+job = pt.run([("open_file", {"path": "in/crate_low.glb"}),
+              ("bake_from_high_poly", {"path": "in/crate_high.glb"}),
+              ("export_textures", {"directory": "out/crate", "preset": "gltf"})],
+             name="crate", on_progress=lambda j: print(j["progress"], j.get("label")))
+for f in pt.files("out/crate"):
+    pt.download(f["path"], "textures/" + f["path"].split("/")[-1])</code></pre>
+<p><code>pt.call("set_brush", size=40)</code> runs a single command. Errors raise <code>PatinaError</code> (with the HTTP status) and
+failed jobs raise <code>JobFailed</code> (with the job's results). For other languages, generate a client from
+<code>/api/v1/openapi.json</code>.</p>
+<p><b>A small render farm:</b> <code>examples/api/farm_bake.py</code> takes a folder of <code>name_low.glb</code> /
+<code>name_high.glb</code> pairs and a list of Patina servers, gives each server the next asset as soon as it is free, and
+collects the textures. Run one Patina per GPU; each one works on one job at a time.</p>
+<pre><code>python3 examples/api/farm_bake.py --token $PATINA_TOKEN \
+    --server http://render-01:7870 --server http://render-02:7870 --preset unreal assets/</code></pre>
+
+<h2 id="batch">Batch mode</h2>
+<p><code>patina run</code> runs a job file on this machine without a window or a server, then exits. It suits CI, cron
+and shell loops:</p>
+<pre><code>patina run bake_job.json --set low=crate_low.glb --set high=crate_high.glb --set asset=crate
+for f in props/*_low.glb; do
+  n=$(basename "$f" _low.glb)
+  patina run bake_job.json --set low="$f" --set high="props/${n}_high.glb" --set asset="$n" --quiet || echo "$n failed"
+done</code></pre>
+<p>The job file has the same <code>steps</code> as an API job, plus optional default <code>vars</code>
+(<code>examples/api/bake_job.json</code> is a complete one):</p>
+<pre><code>{
+  "name": "Bake and export",
+  "vars": {"resolution": "2048", "preset": "unreal"},
+  "steps": [
+    {"cmd": "open_file",           "args": {"path": "${low}"}},
+    {"cmd": "set_resolution",      "args": {"resolution": "${resolution}"}},
+    {"cmd": "bake_from_high_poly", "args": {"path": "${high}"}},
+    {"cmd": "export_textures",     "args": {"directory": "out/${asset}", "preset": "${preset}"}}
+  ]
+}</code></pre>
+<ul>
+  <li><code>${name}</code> is replaced by <code>--set name=value</code>, else by <code>vars</code>. A value that is a whole number or
+  <code>true</code> / <code>false</code> keeps that type when it stands alone (<code>"${resolution}"</code> becomes 2048). <code>${job_dir}</code>
+  and <code>${cwd}</code> are always defined. A name without a value stops the run before anything happens.</li>
+  <li>Relative paths are next to the job file.</li>
+  <li>Each step prints one line on stderr (<code>[3/4] bake_from_high_poly ... ok (11.0 s)</code>; <code>--quiet</code> hides them,
+  <code>--verbose</code> adds the log). The report (every step's result) goes to stdout, or to a file with
+  <code>--report report.json</code>.</li>
+  <li>Exit status: <b>0</b> every step worked, <b>1</b> a step failed, <b>2</b> the job file or its variables are wrong,
+  <b>3</b> no GPU context.</li>
+</ul>
+<p><code>patina call &lt;command&gt; '{"json": "arguments"}'</code> runs one command and prints its result: in the Patina that is
+already running on this machine (window or headless, through the command server), or in a headless Patina started just for
+it. For example <code>patina call export_again</code> re-exports the project open in your window.</p>
+
+<h2>Gotchas</h2>
+<div class="callout gotcha"><span class="t">"Patina only answers requests from the local network"</span>The client's address
+isn't private. That happens through NAT gateways, some VPNs (Tailscale uses 100.64.0.0/10, which is not private) and port
+forwarding. Add the range with <code>--allow</code> if it is yours.</div>
+<div class="callout gotcha"><span class="t">get_state is slow while a job runs</span>Read-only commands are answered between
+a job's steps, so during a long bake they wait for it. Use <code>GET /jobs/{id}</code> or <code>/health</code> to watch a job;
+those never wait.</div>
+<div class="callout gotcha"><span class="t">One project per server</span>A Patina server holds one project at a time, and jobs
+replace it with whatever they open. Start each job with <code>open_file</code> or <code>new_project</code>, and run several Patina
+processes (different <code>--http-port</code>, ideally one per GPU) to work in parallel.</div>
+<div class="callout tip"><span class="t">The local command server is still there</span>The newline-JSON server on port 7860
+(<a href="automation.html#the-command-server">Claude and automation</a>) keeps working for local scripts, Blender and MCP. The
+HTTP API is separate and off unless you start it.</div>

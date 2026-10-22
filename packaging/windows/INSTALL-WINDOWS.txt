@@ -1,0 +1,40 @@
+Patina @VERSION@ for Windows 10 / 11 (x64)
+===========================================
+
+Install (no administrator rights needed)
+  1. Unzip this folder anywhere.
+  2. Right-click install.ps1 > "Run with PowerShell".
+     If PowerShell refuses to run scripts:
+         powershell -ExecutionPolicy Bypass -File install.ps1            (add -AddToPath to use patina-cli in terminals)
+  3. Start "Patina" from the Start menu.
+
+  Or run patina.exe straight from this folder. The folder is portable.
+
+Files
+  patina.exe       the desktop app
+  patina-cli.exe   the same program as a console app: use it for  --mcp  and  --headless
+  docs\manual\     the manual (open index.html)
+  web\             Patina Web, the three.js browser painter (open index.html; works offline)
+  materials\       the Patina default library (270 patina_* materials)
+  samples\         Suzanne.glb (CC0) to try things out
+  patina_bridge.zip  the Blender add-on
+
+Requirements
+  * A GPU driver with OpenGL 4.5 (any NVIDIA, AMD or Intel GPU from the last ~10 years, with the vendor's driver).
+    Remote Desktop sessions and most virtual machines only offer OpenGL 1.1 and will not work.
+  * Windows 10 version 1903 or later (for UTF-8 file names).
+
+Claude
+  claude mcp add patina -- "%LOCALAPPDATA%\Programs\Patina\patina-cli.exe" --mcp
+
+Blender
+  Edit > Preferences > Get Extensions > (v) > Install from Disk... > patina_bridge.zip
+  Then the "Patina" tab in the 3D view sidebar (N).
+
+Notes
+  * The program is not code-signed: Windows SmartScreen may warn ("More info" > "Run anyway").
+  * This build was cross-compiled from Linux (llvm-mingw). It is built from the same code as the Linux version, which
+    passes its automated tests, but this build has not yet been run on Windows. If something misbehaves, run
+    patina-cli.exe from a terminal to see the log (it reports the OpenGL driver it found) and please report it.
+  * Your materials and brushes are stored in %LOCALAPPDATA%\Patina\user, settings in %APPDATA%\Patina,
+    autosaves and the Blender exchange folder in %LOCALAPPDATA%\Patina\cache.

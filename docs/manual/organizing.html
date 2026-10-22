@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folders, solo and smart materials - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html" class="cur">Folders &amp; smart materials</a>
+<div class="toc"><a href="#folders">Folders</a><a href="#solo-see-what-one-layer-does">Solo: see what one layer does</a><a href="#color-tags-names-and-layer-settings">Color tags, names and layer settings</a><a href="#smart-materials">Smart materials</a><a href="#history">Undo and the History panel</a><a href="#gotchas">Gotchas</a></div>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Folders, solo and smart materials -->
+<!-- nav: Folders & smart materials -->
+<h1>Folders, solo and smart materials</h1>
+<p class="lead">A real texture quickly grows to twenty or thirty layers. Folders keep them tidy and let you mask a whole
+group at once. Solo shows what one layer actually contributes. Smart materials save a finished stack, so you can use it
+again on another model. And the History panel lets you step back through every change, sliders included.</p>
+
+<div class="two">
+  <figure><img src="img/layers_folders.png" alt="Layer stack with a folder and color tags"><figcaption>A <i>Wear</i> folder holding two fill layers. The colored strips on the left are color tags.</figcaption></figure>
+  <figure><img src="img/layer_context.png" alt="Layer context menu"><figcaption>Right-click any layer for the full menu.</figcaption></figure>
+</div>
+
+<h2 id="folders">Folders</h2>
+<p>A folder groups layers. Everything inside it is composited first. The result then goes on top of the layers below
+the folder, through the folder's own <b>opacity</b>, <b>blend mode</b>, <b>channels</b>, <b>mask</b> and <b>smart
+mask</b>. Folders can hold other folders.</p>
+<table>
+  <tr><th>To…</th><th>Do this</th></tr>
+  <tr><td>Make a folder</td><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 19 H5 A1.5 1.5 0 0 1 3.5 17.5 V6 A1.5 1.5 0 0 1 5 4.5 H9 L11 7 H18.5 A1.5 1.5 0 0 1 20 8.5 V12.5"/><path d="M3.5 10 H20" stroke="#E8852C"/><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Folder</b>. It goes above the selected layer, or inside the selected folder.</td></tr>
+  <tr><td>Put a layer in a new folder</td><td>Select it and press <kbd>Ctrl</kbd>+<kbd>G</kbd> (<i>Group into a folder</i>).</td></tr>
+  <tr><td>Move a layer into a folder</td><td>Drag it onto the middle of the folder's row. Or right-click it ▸ <i>Move into folder</i>.</td></tr>
+  <tr><td>Reorder</td><td>Drag a layer onto the top or bottom half of another row (an orange line shows where it goes). <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19.5 V5 M6 11 L12 5 L18 11" stroke="#E8852C" stroke-width="2"/></svg> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 V19 M6 13 L12 19 L18 13" stroke="#E8852C" stroke-width="2"/></svg> move it within its folder.</td></tr>
+  <tr><td>Take a layer out</td><td>Drag it out of the folder, or right-click ▸ <i>Move out of the folder</i>.</td></tr>
+  <tr><td>Open or close a folder</td><td>Click the arrow on its row. The number after the name counts the layers directly inside it.</td></tr>
+</table>
+<p>New layers go above the selection. If a folder is selected, they go to the top of that folder. Deleting or
+duplicating a folder deletes or duplicates everything in it.</p>
+<div class="callout tip"><span class="t">Masking a whole group</span>Put a base fill, an edge-wear fill and a dirt fill in
+one folder and give the folder a black mask. Painting the folder's mask now reveals the whole worn-metal look at once,
+instead of painting three masks. An adjustment layer inside a folder only acts where the folder's mask lets it.</div>
+
+<h2 id="solo-see-what-one-layer-does">Solo: see what one layer does</h2>
+<p><kbd>Alt</kbd>+click a layer's eye (visibility box) to <b>solo</b> it. Only that layer (or folder) is shown, over the
+base material. The eye gets a yellow ring and a <b>Solo: …</b> button appears above the list. Click that button, or
+<kbd>Alt</kbd>+click the eye again, to show everything. <kbd>Alt</kbd>+<kbd>S</kbd> solos the selected layer.</p>
+<div class="two">
+  <figure><img src="img/solo_layers.png" alt="Solo button and highlighted eye"></figure>
+  <figure><img src="img/solo_view.png" alt="Only the soloed folder visible"><figcaption>The <i>Wear</i> folder soloed: just the rust and the dirt.</figcaption></figure>
+</div>
+<p>Solo is only a way of looking. It does not change any layer's visibility, it is not saved, and exports always contain
+the whole stack. To export one layer on its own, use <i>Export ▸ Only the selected layer</i> (see
+<a href="texture-set.html#export">Export</a>).</p>
+
+<h2 id="color-tags-names-and-layer-settings">Color tags, names and layer settings</h2>
+<ul>
+  <li><b>Color tags:</b> pick a color under the layer's name in the properties, or right-click ▸ <i>Color tag</i>. A
+  strip of that color marks the row.</li>
+  <li><b>Rename:</b> double-click the name in the list, or edit the <i>Name</i> field.</li>
+  <li><b>Copy and paste settings:</b> right-click ▸ <i>Copy layer settings</i>, then <i>Paste layer settings</i> on
+  another layer. This copies the opacity, blend mode, channels, channel opacities and smart mask. Between two fill layers
+  it also copies the material, and between two adjustment layers the adjustment.</li>
+  <li><b>Fill with a black mask:</b> the arrow next to <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b> ▸ <i>Fill layer with a black mask</i> adds a fill that
+  stays hidden until you paint its mask. This is the usual way to paint a material onto part of a model.</li>
+  <li><b>Clear paint:</b> <i>Clear paint</i> in a paint layer's properties (or the right-click menu) removes everything
+  painted on the layer and keeps its mask. It is undoable.</li>
+</ul>
+
+<h2 id="smart-materials">Smart materials</h2>
+<p class="dim">If smart materials are new to you, <a href="masks-guide.html#smart-materials-saving-the-recipe">the
+beginner's guide</a> builds one from scratch and explains what carries over to other models.</p>
+<p>A smart material is a saved layer or folder: usually a few fill layers with smart masks, plus adjustments. Because
+smart masks are worked out from the shape of the model, the same smart material looks right on any mesh. The
+<i>Smart materials</i> tab of the Materials panel shows them all: click one to add it above the selected layer, or drag
+it to where you want it in the stack (or onto the model). <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L14.5 9.5"/><path d="M14.5 9.5 L16.5 7.5" stroke="#E8852C" stroke-width="2.5"/><path d="M18 2.8 V5.8 M16.5 4.3 H19.5 M20.2 9.5 V11.5 M19.2 10.5 H21.2 M10.5 3 V5 M9.5 4 H11.5" stroke="#E8852C" stroke-width="1.5"/></svg> <b>Smart materials</b> above the layer list has them too.</p>
+<div class="two">
+  <figure><img src="img/smart_menu.png" alt="Smart materials menu"></figure>
+  <figure><img src="img/smart_materials.png" alt="The first eight built-in smart materials on Suzanne"><figcaption>The first eight built-in smart materials on Suzanne. Top: aged brass, dusty plastic, edge wear overlay (on red plastic), mossy stone. Bottom: rusted iron, snow cover (on mossy stone), weathered wood, worn painted metal.</figcaption></figure>
+</div>
+<figure><img src="img/smart_materials_2.png" alt="Eleven more built-in smart materials on Suzanne"><figcaption>And eleven more. Top: scratched painted steel, oxidized copper, grimy plastic, worn leather. Middle: dirty fabric, mossy wood, heat-tinted metal, worn gold trim. Bottom: worn sci-fi panels, living skin, stylized edge highlights on toon red and on hand-painted planks.</figcaption></figure>
+<table>
+  <tr><th>Built-in</th><th>What it is</th></tr>
+  <tr><td>Worn painted metal</td><td>Blue paint over scratched steel, worn off on the edges, dirt in the cavities.</td></tr>
+  <tr><td>Rusted iron</td><td>Cast iron with light and heavy rust, plus bright worn edges.</td></tr>
+  <tr><td>Aged brass</td><td>Tarnished brass, verdigris in the cavities, polished edges.</td></tr>
+  <tr><td>Dusty plastic</td><td>Satin plastic with dust settled on top and grime in the creases.</td></tr>
+  <tr><td>Weathered wood</td><td>Bleached oak with dirt in the cracks and lighter edges.</td></tr>
+  <tr><td>Mossy stone</td><td>Granite, crevice dirt and moss growing on top.</td></tr>
+  <tr><td>Snow cover</td><td>An overlay: snow on everything facing up. Apply it on top of another material.</td></tr>
+  <tr><td>Edge wear + grime overlay</td><td>An overlay of two adjustment layers that lighten edges and darken cavities of whatever is below.</td></tr>
+  <tr><td>Scratched painted steel</td><td>Red enamel over brushed steel, worn through on the edges and chipped by a noise mask (a mask effect stack), oily grime in the cavities.</td></tr>
+  <tr><td>Oxidized copper</td><td>Tarnished copper with chalky verdigris in sheltered areas and cavities, rubbed bright on the edges.</td></tr>
+  <tr><td>Heat-tinted metal</td><td>Brushed steel tinted in bands from straw to purple to blue going up, soot in the cavities.</td></tr>
+  <tr><td>Worn gold trim</td><td>Gold dulled in patches, dark grime in the recesses, bright rubbed edges.</td></tr>
+  <tr><td>Worn sci-fi panels</td><td>White hull paneling worn through to gunmetal on the edges, grime in the grooves, dust on top.</td></tr>
+  <tr><td>Grimy plastic</td><td>Yellowed off-white plastic with smudges and oily grime in the creases.</td></tr>
+  <tr><td>Worn leather</td><td>Brown leather with dark creases, scuffs and pale worn edges (adjustment layers only).</td></tr>
+  <tr><td>Dirty fabric</td><td>Denim faded on the edges, grime in the folds and mud splashed up from below.</td></tr>
+  <tr><td>Mossy wood</td><td>Damp oak, dirt in the cracks and moss on everything facing up.</td></tr>
+  <tr><td>Living skin</td><td>Light skin with redness in the creases and warm thin parts (ears, nose) from the <i>Thin parts</i> mask; it bakes thickness the first time.</td></tr>
+  <tr><td>Stylized edge highlights</td><td>An overlay for toon and hand-painted materials: crisp light edges, dark painted cavities and light from above.</td></tr>
+  <tr><td>Rain-streaked concrete</td><td>Concrete with dark rain streaks running down the sides (the <i>Drips</i> smart mask) and dirt in the cavities.</td></tr>
+  <tr><td>Chipped paint with primer</td><td>Blue-gray paint chipped off the edges, with a rim of red-oxide primer round each chip (<i>Grow / shrink</i>) and steel in the middle.</td></tr>
+  <tr><td>Rust runs</td><td>Cream paint with rust on the edges and runs of rust streaking down from them.</td></tr>
+</table>
+<p>A smart material arrives as one folder. Open it and change anything: drag a material from the Materials tab onto
+one of its fill layers to swap it (the smart mask stays), drag a smart mask onto a layer, copy a mask from one layer to
+another by dragging its thumbnail, move a smart mask's <i>Level</i>, or paint the folder's mask
+(<a href="layers.html#drag-and-drop">Drag and drop</a> lists them all). Patina bakes the AO and curvature maps the smart masks need if they are not
+baked yet.</p>
+<h3 id="saving-your-own">Saving your own</h3>
+<p>Right-click a layer or folder ▸ <i>Save as smart material…</i> (or <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L14.5 9.5"/><path d="M14.5 9.5 L16.5 7.5" stroke="#E8852C" stroke-width="2.5"/><path d="M18 2.8 V5.8 M16.5 4.3 H19.5 M20.2 9.5 V11.5 M19.2 10.5 H21.2 M10.5 3 V5 M9.5 4 H11.5" stroke="#E8852C" stroke-width="1.5"/></svg> <b>Smart materials</b> ▸ <i>Save the selected layer…</i>).
+Give it a name, then decide whether to <b>include painted textures and masks</b>.</p>
+<ul>
+  <li><b>Without paint</b> (the default), the smart material keeps only settings: layers, materials, smart masks,
+  adjustments, opacities and blend modes. It works on any mesh.</li>
+  <li><b>With paint</b>, painted channels and masks are stored too. Use this to copy hand-painted layers between projects
+  of the <i>same</i> model. Paint follows the UV layout, so on a different mesh it lands in the wrong places.</li>
+</ul>
+<p>Your smart materials are JSON files in <code>~/.local/share/patina/user/smart_materials</code> (on Windows,
+<code>%LOCALAPPDATA%\Patina\user\smart_materials</code>). <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L14.5 9.5"/><path d="M14.5 9.5 L16.5 7.5" stroke="#E8852C" stroke-width="2.5"/><path d="M18 2.8 V5.8 M16.5 4.3 H19.5 M20.2 9.5 V11.5 M19.2 10.5 H21.2 M10.5 3 V5 M9.5 4 H11.5" stroke="#E8852C" stroke-width="1.5"/></svg> <b>Smart materials</b> ▸ <i>Open the smart materials folder</i> takes you
+there. To share one, copy its file to another machine. A file with the same name as a built-in one replaces it.</p>
+
+<h2 id="history">Undo and the History panel</h2>
+<p>Everything that changes the project can be undone: strokes, fills, layers added, deleted, moved or grouped, every
+layer setting (opacity, blend mode, channels, materials, smart masks, adjustments, names, color tags), masks added or
+removed, <i>Clear paint</i>, smart materials and UV edits. Dragging a slider makes <b>one</b> step, recorded when you let
+go.</p>
+<p>The <b>History</b> panel (next to Properties) lists the steps. Click one to go back to that point. Later steps stay
+grayed out until you change something, and then they are dropped, as with undo.</p>
+<figure><img src="img/history_panel.png" alt="History panel" style="max-width:420px"></figure>
+<p>Patina keeps the last 100 steps, or 1 GB of undo data on the graphics card, whichever comes first. Painting stores only
+the parts of the textures that changed. Opening a project, changing the texture resolution or loading a new mesh starts
+a new history.</p>
+
+<h2 id="gotchas">Gotchas</h2>
+<div class="callout gotcha"><span class="t">Painting on a folder paints its mask</span>As with fill and adjustment layers,
+the brush edits the folder's mask. A folder without a mask gets a <b>black</b> one at the first dab, which hides
+everything in the folder except where you paint. If you only want to hide a few spots, use <i>Add white mask</i> first
+and then erase.</div>
+<div class="callout gotcha"><span class="t">“My layer disappeared”</span>Check for a <b>Solo: …</b> button above the list.
+Solo is still on, and it lasts until you turn it off (it is not saved with the project).</div>
+<div class="callout warn"><span class="t">Smart materials with paint on another model</span>Paint is stored by UV
+position, not by surface position. On a different mesh it appears in random-looking places. Save without paint to share
+a look between models.</div>
+<div class="callout tip"><span class="t">Undo and slider drags</span>A value is recorded when the slider is released. If
+you undo while still holding a slider, the drag is finished first and then undone as one step.</div>
+
+</article>
+<footer class="pager"><a class="prev" href="layers.html">← Layers &amp; masks</a><a class="next" href="scene.html">Scenes →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

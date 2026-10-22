@@ -1,0 +1,364 @@
+{
+ "description": "Brushed steel tinted by heat in bands from straw to purple to blue (bottom to top), soot in the cavities.",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_steel_brushed",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Steel",
+   "opacity": 1.0,
+   "parent": 40,
+   "type": "fill",
+   "uid": 41,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.550000011920929,
+    "invert": false,
+    "level": 0.30000001192092896,
+    "noise": 0.3499999940395355,
+    "noise_scale": 1.5,
+    "type": "gradient_y"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.7799999713897705,
+      0.6200000047683716,
+      0.36000001430511475
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 1.0,
+     "roughness": 0.30000001192092896
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Straw",
+   "opacity": 1.0,
+   "parent": 40,
+   "type": "fill",
+   "uid": 42,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.550000011920929,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.3499999940395355,
+    "noise_scale": 1.5,
+    "type": "gradient_y"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.5,
+      0.33000001311302185,
+      0.5799999833106995
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 1.0,
+     "roughness": 0.30000001192092896
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Purple",
+   "opacity": 1.0,
+   "parent": 40,
+   "type": "fill",
+   "uid": 43,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.550000011920929,
+    "invert": false,
+    "level": 0.6800000071525574,
+    "noise": 0.3499999940395355,
+    "noise_scale": 1.5,
+    "type": "gradient_y"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.30000001192092896,
+      0.41999998688697815,
+      0.7799999713897705
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 1.0,
+     "roughness": 0.30000001192092896
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Blue",
+   "opacity": 1.0,
+   "parent": 40,
+   "type": "fill",
+   "uid": 44,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6499999761581421,
+    "invert": false,
+    "level": 0.6000000238418579,
+    "noise": 0.4000000059604645,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_soot",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Soot",
+   "opacity": 0.800000011920929,
+   "parent": 40,
+   "type": "fill",
+   "uid": 45,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Heat-tinted metal",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 40,
+   "visible": true
+  }
+ ],
+ "name": "Heat-tinted metal",
+ "patina_smart_material": 1
+}

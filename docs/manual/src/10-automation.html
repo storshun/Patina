@@ -1,0 +1,119 @@
+<!-- title: Claude and automation -->
+<!-- nav: Claude & automation -->
+<h1>Claude and automation</h1>
+<p class="lead">Every action in Patina is also a command. Claude can call the commands through MCP, scripts can call
+them over a local socket, other applications over HTTP (see <a href="api.html">HTTP API and batch mode</a>), and you can type
+them in the Console. Claude can set up layer stacks, paint, unwrap, export,
+and look at the result.</p>
+
+<h2>Connecting Claude (MCP)</h2>
+<h3 id="claude-app">The Claude desktop app</h3>
+<p>Open the <b>Blender Link</b> panel and click <b>Connect to Claude app</b>, or run <code>patina --setup-claude</code>. Then quit
+the Claude app completely and open it again. Patina adds itself to the app's MCP servers in
+<code>claude_desktop_config.json</code> (<code>~/.config/Claude/</code> on Linux, <code>%APPDATA%\Claude\</code> on Windows),
+with the full path to this copy of Patina. Other servers, such as Blender MCP, and other settings are kept. The previous
+file is saved next to it as <code>claude_desktop_config.json.bak</code>. On Windows the entry points to
+<code>patina-cli.exe</code>, because the app talks to Patina over stdin/stdout. Once it is set up, the panel shows
+<i>The Claude app can drive this window</i>.</p>
+<div class="callout warn"><span class="t">"Patina isn't connected to this chat"</span>The Claude app reads its MCP servers only
+when it starts, so restart it after connecting. Keep a Patina window open if you want Claude to work in it. Otherwise Claude
+starts its own Patina without a window. If the button reports that the file is not valid JSON, fix or remove the file first:
+Patina never overwrites a configuration it can't read.</div>
+<h3>Claude Code and other MCP clients</h3>
+<pre><code>claude mcp add patina -- ~/.local/bin/patina --mcp                     # Linux
+claude mcp add patina -- "%LOCALAPPDATA%\Programs\Patina\patina-cli.exe" --mcp   # Windows</code></pre>
+<p>Any other MCP client works with the same command. For example, in a JSON configuration:</p>
+<pre><code>{ "mcpServers": { "patina": { "command": "/home/you/.local/bin/patina", "args": ["--mcp"] } } }</code></pre>
+<p><code>patina --mcp</code> chooses one of two modes when it starts:</p>
+<table>
+  <tr><th>Mode</th><th>When</th><th>What Claude sees</th></tr>
+  <tr><td><b>Live</b></td><td>A Patina window is already open</td><td>Claude works in your window. You see every stroke, and
+    <code>screenshot_window</code> returns exactly what is on your screen.</td></tr>
+  <tr><td><b>Headless</b></td><td>No window is open</td><td>Patina runs off-screen. <code>render_view</code> and <code>render_uv</code> return
+    pictures. <code>open_gui_window</code> hands the project to a real window at any time, and later calls then drive that window.</td></tr>
+</table>
+
+<h3 id="guides">What Claude gets to work with (0.34)</h3>
+<p>Every tool comes with its settings: their type, their range, their default, and a sentence on what moving them does
+(<i>“Lower: more, closer pieces”</i>). On top of the tools, the MCP server gives agents:</p>
+<table>
+  <tr><th>What</th><th>For</th></tr>
+  <tr><td><b>Guides</b> (the <code>patina_guide</code> tool, and the resources <code>patina://guide/…</code>)</td><td>
+    <i>workflow</i>: the order of the tools from opening a model to exporting it; <i>mesh</i>: checking, mending,
+    transforming, reducing and collision, setting by setting; <i>develop</i>: the adjustment layer's settings and how to
+    tune them by numbers; <i>export</i>: formats, sizes, levels of detail and collision names per engine; <i>batch</i>:
+    recipes and batches; <i>painting</i>; and <i>parameters</i>: every setting of every tool, written from the tools
+    themselves so it is always up to date.</td></tr>
+  <tr><td><b>Prompts</b></td><td><i>Finish a model</i> (for a game, the web, printing or rendering), <i>Develop the
+    textures</i>, <i>Make it game ready</i> (Unreal, Godot or Unity) and <i>Batch a folder</i>. In Claude Code they are
+    slash commands such as <code>/mcp__patina__finish_model</code>.</td></tr>
+  <tr><td><b>Numbers to check by</b></td><td><code>mesh_check</code> (problems), <code>mesh_reduce</code> with
+    <code>preview</code> (how far the shape would move), <code>mesh_collision</code> (<i>fit</i>), and
+    <code>texture_check</code>: how much of the color is out of a real material's range, the color cast and spread,
+    with hints naming the setting to move. Claude changes a setting, measures, and looks with <code>render_view</code>.</td></tr>
+</table>
+
+<h3>Things to ask Claude</h3>
+<ul>
+  <li>“Finish <code>~/Downloads/robot.glb</code> for Godot: mend it, keep it under 20,000 triangles, convex collision, two
+    levels of detail.”</li>
+  <li>“The textures of this scan are too dark and orange, and the creases are baked in. Develop it to a neutral daylight
+    look and tell me the settings.”</li>
+  <li>“Run the Game asset recipe on every model in <code>~/assets/props</code> and tell me which failed.”</li>
+  <li>“Open <code>~/models/crate.glb</code>, give it worn painted metal with rust on the edges and dirt in the cavities, and show me.”</li>
+  <li>“The UVs of this mesh overlap. Unwrap it with smart project, pack it, and check that the paint stayed in place.”</li>
+  <li>“Apply the rusted iron smart material, put a snow cover on top, and solo the snow folder so I can see it.”</li>
+  <li>“Paint a 2 cm red stripe around the middle of the barrel, then export for Unreal at 4K into <code>~/exports</code>.”</li>
+  <li>“Compare three rust variations using an adjustment layer and take a screenshot of each.”</li>
+</ul>
+<p>Claude can read the full list of tools with their parameters. Images (renders, screenshots, textures) are returned to it
+as pictures.</p>
+
+<h2>The console</h2>
+<p>The Console tab takes <code>command {json}</code>, for example:</p>
+<pre><code>add_layer {"type": "fill", "material": {"id": "patina_rust_heavy"}, "generator": {"type": "edges", "level": 0.55}}
+paint_stroke {"points": [[0.4, 0.5], [0.6, 0.5]], "brush": {"size": 40}}
+export_textures {"directory": "/tmp/out", "preset": "gltf"}</code></pre>
+
+<h2>The command server</h2>
+<p>Patina listens on <code>127.0.0.1:7860</code> (change it with <code>--port</code> or <code>PATINA_PORT</code>). The protocol is
+newline-delimited JSON: one request per line, and one response per line with the same <code>id</code>.</p>
+<pre><code>import json, socket
+s = socket.create_connection(("127.0.0.1", 7860)); f = s.makefile("rwb")
+def call(cmd, **args):
+    f.write((json.dumps({"id": 1, "cmd": cmd, "args": args}) + "\n").encode()); f.flush()
+    return json.loads(f.readline())
+print(call("get_state")["result"]["mesh"])
+call("set_paint_material", id="patina_gold_polished")
+call("paint_stroke", points=[[0.3, 0.5], [0.7, 0.5]])</code></pre>
+<p>To repeat a sequence of commands, record it with the <a href="tools.html#macros">macro recorder</a>: every command a
+script or Claude runs while it records becomes a step, and the saved macro is a job file for <code>patina run</code>.</p>
+<p>To run the same steps on many models, save them as a <a href="batch.html">recipe</a> and use a batch.</p>
+<p><code>patina --headless</code> runs only the server, with no window. <code>scripts/patina_client.py</code> in the source is a
+small ready-made client. For other applications, other machines, background jobs and job files, use the
+<a href="api.html">HTTP API and batch mode</a>.</p>
+
+<h2>Coordinates</h2>
+<ul>
+  <li><code>paint_stroke</code> points are <b>normalized viewport</b> coordinates by default: 0–1, with the origin at the top
+    left. <code>"space": "uv"</code> gives texture coordinates (origin at the bottom left) and <code>"space": "viewport"</code> gives pixels.</li>
+  <li><code>paint_world_points</code> paints at 3D positions on the model, so you can work without the camera.</li>
+  <li><code>pick</code> tells you what is under a viewport point: the 3D position, the UV and the current values.</li>
+</ul>
+<p>The <a href="commands.html">command reference</a> lists every command with its parameters. The desktop window adds a few
+of its own: <code>screenshot_window</code>, <code>pen_info</code> (what the pen tablet sends) and <code>set_pen_settings</code>
+(the pressure curve and the pen buttons).</p>
+
+<h2>Gotchas</h2>
+<div class="callout gotcha"><span class="t">Windows: use patina-cli.exe</span>MCP clients talk to the server over standard
+input and output, which only console programs have. Point the client at <code>patina-cli.exe</code>, not at <code>patina.exe</code>.</div>
+<div class="callout gotcha"><span class="t">Two windows, one port</span>A second Patina window can't open port 7860 while
+the first one has it. It still works, but Claude and Blender talk to the first window. Start the second window with
+<code>--port 7861</code> if you need both.</div>
+<div class="callout warn"><span class="t">Headless needs a GPU driver too</span>Headless mode renders off-screen with the
+same OpenGL 4.5 code. Linux uses EGL, so no display server is needed. Windows uses a hidden window, so it needs a
+normal desktop session with a GPU driver.</div>
+<div class="callout tip"><span class="t">Security</span>The server accepts connections only from this computer
+(127.0.0.1). Any program you run locally can drive Patina, but nothing on the network can. Start Patina with
+<code>--no-server</code> to turn the server off. The <a href="api.html">HTTP API</a> can answer the local network, with a
+token; it is off unless you start it.</div>

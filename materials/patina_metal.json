@@ -1,0 +1,1177 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Metal",
+ "materials": [
+  {
+   "id": "patina_iron_raw",
+   "name": "Iron Raw",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "two_tone",
+   "description": "Dark forged iron with mottling",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5a5b5d",
+    "color_b": "#3e3f41",
+    "roughness": [
+     0.55,
+     0.75
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.15,
+    "variation": 0.2,
+    "extra": [
+     0,
+     0.25,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_steel_brushed",
+   "name": "Steel Brushed",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "brushed_metal",
+   "description": "Brushed stainless steel",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b9bcbf",
+    "roughness": [
+     0.28,
+     0.42
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.12
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_aluminum_brushed",
+   "name": "Aluminum Brushed",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "brushed_metal",
+   "description": "Light brushed aluminum",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d5d8dc",
+    "roughness": [
+     0.32,
+     0.5
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.04,
+    "variation": 0.1
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_steel_scratched",
+   "name": "Steel Scratched",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "scratched_metal",
+   "description": "Worn steel with scratches",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#a8abaf",
+    "color_b": "#d8dade",
+    "roughness": [
+     0.4,
+     0.18
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.08,
+    "variation": 0.15,
+    "extra": [
+     3,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_gold_polished",
+   "name": "Gold Polished",
+   "category": "Metal",
+   "type": "flat",
+   "color": "#ffd27a",
+   "roughness": 0.18,
+   "metallic": 1.0,
+   "height": 0.5,
+   "description": "Polished yellow gold",
+   "tags": []
+  },
+  {
+   "id": "patina_copper",
+   "name": "Copper",
+   "category": "Metal",
+   "type": "flat",
+   "color": "#f2a27a",
+   "roughness": 0.3,
+   "metallic": 1.0,
+   "height": 0.5,
+   "description": "Clean copper",
+   "tags": []
+  },
+  {
+   "id": "patina_chrome",
+   "name": "Chrome",
+   "category": "Metal",
+   "type": "flat",
+   "color": "#f5f6f8",
+   "roughness": 0.05,
+   "metallic": 1.0,
+   "height": 0.5,
+   "description": "Mirror chrome",
+   "tags": []
+  },
+  {
+   "id": "patina_brass_aged",
+   "name": "Brass Aged",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "two_tone",
+   "description": "Brass with tarnish",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d9b45a",
+    "color_b": "#7a6a3c",
+    "roughness": [
+     0.3,
+     0.6
+    ],
+    "metallic": [
+     1,
+     0.6
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.1,
+    "extra": [
+     0.05,
+     0.15,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_rust_heavy",
+   "name": "Rust Heavy",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "rust",
+   "description": "Heavy flaking rust over steel",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#7d8085",
+    "color_b": "#6b2d14",
+    "color_c": "#b5541c",
+    "roughness": [
+     0.45,
+     0.92
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.35,
+    "variation": 0.15,
+    "extra": [
+     0.42,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_rust_light",
+   "name": "Rust Light",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "rust",
+   "description": "Light surface rust spots",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8f9296",
+    "color_b": "#7a3618",
+    "color_c": "#c0662a",
+    "roughness": [
+     0.38,
+     0.85
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.2,
+    "variation": 0.15,
+    "extra": [
+     0.6,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_diamond_plate_steel",
+   "name": "Diamond Plate Steel",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "diamond_plate",
+   "description": "Steel tread plate with raised lozenges",
+   "default_scale": 1.0,
+   "tags": [
+    "hard surface",
+    "floor"
+   ],
+   "params": {
+    "color_a": "#8a8d91",
+    "color_b": "#a3a6aa",
+    "color_c": "#a3a6aa",
+    "roughness": [
+     0.45,
+     0.3
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 6,
+    "detail": 6,
+    "height": 0.6,
+    "variation": 0.12,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_diamond_plate_aluminum",
+   "name": "Diamond Plate Aluminum",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "diamond_plate",
+   "description": "Bright aluminum tread plate",
+   "default_scale": 1.0,
+   "tags": [
+    "hard surface",
+    "floor"
+   ],
+   "params": {
+    "color_a": "#c4c7cb",
+    "color_b": "#d8dbde",
+    "color_c": "#d8dbde",
+    "roughness": [
+     0.35,
+     0.22
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 8,
+    "detail": 6,
+    "height": 0.6,
+    "variation": 0.08,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_hammered_copper",
+   "name": "Hammered Copper",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "hammered",
+   "description": "Hand-hammered copper with soft dents",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#b8734a",
+    "color_b": "#d79a6d",
+    "color_c": "#d79a6d",
+    "roughness": [
+     0.25,
+     0.4
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 10,
+    "detail": 6,
+    "height": 0.5,
+    "variation": 0.25,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_hammered_steel",
+   "name": "Hammered Steel",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "hammered",
+   "description": "Planished steel with overlapping dents",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#9b9ea2",
+    "color_b": "#b9bcc0",
+    "color_c": "#b9bcc0",
+    "roughness": [
+     0.3,
+     0.45
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 12,
+    "detail": 6,
+    "height": 0.45,
+    "variation": 0.12,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_corrugated_galvanized",
+   "name": "Corrugated Galvanized",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "corrugated",
+   "description": "Galvanized corrugated sheet with light grime",
+   "default_scale": 1.0,
+   "tags": [
+    "roof",
+    "wall"
+   ],
+   "params": {
+    "color_a": "#a7abae",
+    "color_b": "#6d675d",
+    "color_c": "#6d675d",
+    "roughness": [
+     0.4,
+     0.75
+    ],
+    "metallic": [
+     1,
+     0.3
+    ],
+    "scale": 24,
+    "detail": 6,
+    "height": 0.8,
+    "variation": 0.18,
+    "extra": [
+     0.4,
+     0.4,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_corrugated_rusty",
+   "name": "Corrugated Rusty",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "corrugated",
+   "description": "Old corrugated iron with rust streaks",
+   "default_scale": 1.0,
+   "tags": [
+    "roof",
+    "weathered"
+   ],
+   "params": {
+    "color_a": "#7d7f80",
+    "color_b": "#7a3d1c",
+    "color_c": "#7a3d1c",
+    "roughness": [
+     0.5,
+     0.85
+    ],
+    "metallic": [
+     1,
+     0.1
+    ],
+    "scale": 20,
+    "detail": 6,
+    "height": 0.8,
+    "variation": 0.25,
+    "extra": [
+     1.1,
+     1.2,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_perforated_steel",
+   "name": "Perforated Steel",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "perforated",
+   "description": "Staggered round-hole perforated sheet",
+   "default_scale": 1.0,
+   "tags": [
+    "grille",
+    "hard surface"
+   ],
+   "params": {
+    "color_a": "#8f9296",
+    "color_b": "#b0b3b7",
+    "color_c": "#101112",
+    "roughness": [
+     0.4,
+     0.9
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 16,
+    "detail": 6,
+    "height": 0.8,
+    "variation": 0.08,
+    "extra": [
+     0.3,
+     0,
+     1,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_perforated_black",
+   "name": "Perforated Black",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "perforated",
+   "description": "Black powder-coated speaker grille",
+   "default_scale": 1.0,
+   "tags": [
+    "grille"
+   ],
+   "params": {
+    "color_a": "#1c1d1f",
+    "color_b": "#2a2b2e",
+    "color_c": "#050505",
+    "roughness": [
+     0.55,
+     0.95
+    ],
+    "metallic": [
+     0.2,
+     0
+    ],
+    "scale": 28,
+    "detail": 6,
+    "height": 0.8,
+    "variation": 0.05,
+    "extra": [
+     0.32,
+     0,
+     1,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_cast_iron",
+   "name": "Cast Iron",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "two_tone",
+   "description": "Rough sand-cast iron",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#4a4b4d",
+    "color_b": "#38393b",
+    "color_c": "#38393b",
+    "roughness": [
+     0.7,
+     0.85
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 8,
+    "detail": 7,
+    "height": 0.35,
+    "variation": 0.2,
+    "extra": [
+     0,
+     0.3,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_titanium_anodized",
+   "name": "Titanium Anodized",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "brushed_metal",
+   "description": "Blue-violet anodized titanium, brushed",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#5d63a8",
+    "color_b": "#5d63a8",
+    "color_c": "#5d63a8",
+    "roughness": [
+     0.25,
+     0.4
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_gunmetal",
+   "name": "Gunmetal",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "brushed_metal",
+   "description": "Dark brushed gunmetal",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#3b3d41",
+    "color_b": "#3b3d41",
+    "color_c": "#3b3d41",
+    "roughness": [
+     0.3,
+     0.45
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.2,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_bronze_verdigris",
+   "name": "Bronze Verdigris",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "rust",
+   "description": "Bronze with green patina in patches",
+   "default_scale": 1.0,
+   "tags": [
+    "weathered"
+   ],
+   "params": {
+    "color_a": "#9c7a3c",
+    "color_b": "#4f9b83",
+    "color_c": "#2f6b5a",
+    "roughness": [
+     0.35,
+     0.8
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.25,
+    "variation": 0.15,
+    "extra": [
+     0.5,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_silver_tarnished",
+   "name": "Silver Tarnished",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "rust",
+   "description": "Polished silver with dark tarnish",
+   "default_scale": 1.0,
+   "tags": [
+    "weathered"
+   ],
+   "params": {
+    "color_a": "#c9cacc",
+    "color_b": "#4b4640",
+    "color_c": "#2c2925",
+    "roughness": [
+     0.15,
+     0.55
+    ],
+    "metallic": [
+     1,
+     0.8
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.1,
+    "extra": [
+     0.62,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_galvanized_spangle",
+   "name": "Galvanized Spangle",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "cells",
+   "description": "Hot-dip galvanized steel with zinc crystals",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#a9adb1",
+    "color_b": "#c3c7ca",
+    "color_c": "#9a9ea2",
+    "roughness": [
+     0.35,
+     0.45
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 10,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.8,
+    "extra": [
+     0.02,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_expanded_metal",
+   "name": "Expanded Metal",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "grille",
+   "description": "Expanded steel mesh: diamond openings and tilted strands",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8e9296",
+    "color_b": "#6a5e52",
+    "color_c": "#101112",
+    "roughness": [
+     0.45,
+     0.9
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 5,
+    "detail": 4,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     0.2,
+     0,
+     1,
+     0
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "grille",
+    "hard surface"
+   ]
+  },
+  {
+   "id": "patina_chain_link",
+   "name": "Chain-Link Fence",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "grille",
+   "description": "Galvanized chain-link wire mesh",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#a7adb2",
+    "color_b": "#7d7a70",
+    "color_c": "#121314",
+    "roughness": [
+     0.4,
+     0.9
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     0.1,
+     1,
+     0,
+     0
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "grille",
+    "fence"
+   ]
+  },
+  {
+   "id": "patina_wire_mesh_brass",
+   "name": "Woven Wire Mesh Brass",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "grille",
+   "description": "Woven brass wire cloth",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b39a5e",
+    "color_b": "#6e6a50",
+    "color_c": "#121314",
+    "roughness": [
+     0.35,
+     0.9
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 8,
+    "detail": 4,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     0.22,
+     2,
+     0,
+     0
+    ],
+    "seed": 6
+   },
+   "tags": [
+    "grille"
+   ]
+  },
+  {
+   "id": "patina_knurled_steel",
+   "name": "Knurled Steel",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "knurling",
+   "description": "Diamond-knurled steel grip with polished crests",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8f9398",
+    "color_b": "#d3d6da",
+    "color_c": "#3a3632",
+    "roughness": [
+     0.4,
+     0.22
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 16,
+    "detail": 4,
+    "height": 0.5,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0.7,
+     0.1,
+     0.5
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "hard surface",
+    "grip"
+   ]
+  },
+  {
+   "id": "patina_knurled_aluminum",
+   "name": "Knurled Aluminum Straight",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "knurling",
+   "description": "Straight-knurled aluminum",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c5c9ce",
+    "color_b": "#eceef0",
+    "color_c": "#55585c",
+    "roughness": [
+     0.35,
+     0.2
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 16,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.08,
+    "extra": [
+     1,
+     0.5,
+     0.2,
+     0.3
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "hard surface",
+    "grip"
+   ]
+  },
+  {
+   "id": "patina_scale_armor",
+   "name": "Scale Armor Steel",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "scales",
+   "description": "Overlapping steel scales (lamellar armor)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8b9096",
+    "color_b": "#c3c8cd",
+    "color_c": "#1b1c1e",
+    "roughness": [
+     0.35,
+     0.6
+    ],
+    "metallic": [
+     1,
+     0.3
+    ],
+    "scale": 5,
+    "detail": 4,
+    "height": 0.7,
+    "variation": 0.15,
+    "extra": [
+     0.35,
+     0.6,
+     0.6,
+     0.62
+    ],
+    "seed": 5
+   },
+   "tags": [
+    "armor",
+    "hard surface"
+   ]
+  },
+  {
+   "id": "patina_steel_heat_tint",
+   "name": "Steel Heat Tint",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "two_tone",
+   "description": "Brushed steel tinted straw, purple and blue by heat",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b8925a",
+    "color_b": "#5a4c8a",
+    "color_c": "#000000",
+    "roughness": [
+     0.3,
+     0.3
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 1,
+    "detail": 5,
+    "height": 0.03,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0.35,
+     0,
+     0
+    ],
+    "seed": 7
+   },
+   "tags": [
+    "weathered"
+   ]
+  },
+  {
+   "id": "patina_verdigris_crust",
+   "name": "Verdigris Crust",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "dirt",
+   "description": "Chalky blue-green copper corrosion",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5fa38a",
+    "color_b": "#3f7f69",
+    "color_c": "#9cc9b2",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.25,
+    "variation": 0.2,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "seed": 5
+   },
+   "tags": [
+    "weathered"
+   ]
+  },
+  {
+   "id": "patina_chainmail_steel",
+   "name": "Chainmail Steel",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "chainmail",
+   "description": "Riveted steel rings (European 4-in-1)",
+   "default_scale": 2.0,
+   "params": {
+    "color_a": "#b8bcc0",
+    "color_b": "#5a4a3a",
+    "color_c": "#1a1816",
+    "roughness": [
+     0.35,
+     0.9
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.8,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0,
+     0,
+     0.3
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "armor",
+    "fantasy"
+   ]
+  },
+  {
+   "id": "patina_chainmail_rusty",
+   "name": "Chainmail Rusty",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "chainmail",
+   "description": "Old rings with rust",
+   "default_scale": 2.0,
+   "params": {
+    "color_a": "#8a8a88",
+    "color_b": "#7a3a18",
+    "color_c": "#141210",
+    "roughness": [
+     0.5,
+     0.95
+    ],
+    "metallic": [
+     0.9,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.8,
+    "variation": 0.3,
+    "extra": [
+     0,
+     0,
+     0,
+     1
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "armor",
+    "fantasy"
+   ]
+  },
+  {
+   "id": "patina_damascus",
+   "name": "Damascus Steel",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "damascus",
+   "description": "Pattern-welded steel, etched (blades)",
+   "default_scale": 2.0,
+   "params": {
+    "color_a": "#c8cacc",
+    "color_b": "#3c3e42",
+    "color_c": "#000000",
+    "roughness": [
+     0.25,
+     0.45
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     0.5,
+     0,
+     0.4,
+     1
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "weapon"
+   ]
+  },
+  {
+   "id": "patina_damascus_ladder",
+   "name": "Damascus Ladder",
+   "category": "Metal",
+   "type": "procedural",
+   "generator": "damascus",
+   "description": "Ladder-pattern damascus",
+   "default_scale": 2.0,
+   "params": {
+    "color_a": "#c8cacc",
+    "color_b": "#3c3e42",
+    "color_c": "#000000",
+    "roughness": [
+     0.25,
+     0.45
+    ],
+    "metallic": [
+     1,
+     1
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     0.4,
+     1,
+     0.4,
+     1
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "weapon"
+   ]
+  }
+ ]
+}

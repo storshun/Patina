@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retopology - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html" class="cur">Retopology</a>
+<div class="toc"><a href="#retopo-start">Starting</a><a href="#retopo-lines">Zone lines</a><a href="#retopo-zones">Zones and their resolution</a><a href="#retopo-rings">Rings between two lines</a><a href="#retopo-character">Lines for a character</a><a href="#retopo-loops">Seeing the flow: loops and poles</a><a href="#retopo-flow">Flow strokes</a><a href="#retopo-density">The density brush</a><a href="#retopo-symmetry">Symmetry</a><a href="#retopo-big">Big models</a><a href="#retopo-use">Using the quads</a><a href="#retopo-commands">From scripts</a></div>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Retopology -->
+<!-- nav: Retopology -->
+<h1>Retopology: clean quads over a high-poly model</h1>
+<p class="lead">Patina makes a low-poly model of quads over a sculpt or a scan. The quads follow the model's shape on
+their own, and you steer them: <b>zone lines</b> where the edge flow should change (each becomes an edge loop),
+<b>zones</b> with a resolution of their own, <b>flow strokes</b> for more edge loops (or only which way the quads
+run), and a <b>density brush</b>. It is not a one-button remesher: the more you set, the closer the quads follow you.</p>
+
+<div class="two">
+  <figure><img src="img/retopo_zones.png" alt="Zone lines and zones on Suzanne"><figcaption>Two zone lines (yellow) on a
+  subdivided Suzanne: one round the face, one round the snout. Each zone has its own color; the face is set to ×2 and
+  the snout to ×3. The blue stroke across the forehead is a flow stroke.</figcaption></figure>
+  <figure><img src="img/retopo_alone.png" alt="The quads on their own"><figcaption>After <b>Make quads</b>, shown on their
+  own (<b>Alone</b>): an edge loop runs along each line, and the quads get smaller from zone to zone.</figcaption></figure>
+</div>
+
+<h2 id="retopo-start">Starting</h2>
+<ol class="steps">
+  <li>Open the high-poly model (<i>File › Open</i>, or <i>Send to Patina</i> from Blender).</li>
+  <li>Pick a retopology tool in the tool strip's <b>Retopo</b> group: <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.6 10.4 C6.2 14.8 17.8 14.8 20.4 10.4" stroke="#E8852C" stroke-width="2.1"/><circle cx="3.9" cy="10.6" r="1.4" stroke="#E8852C" fill="#E8852C" stroke-width="0.5"/></svg> <b>Lines</b>,
+    <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 10.4 C6 13.4 9 14.4 12 14.6 V20.5 A8.5 8.5 0 0 1 3.6 10.4 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1" fill-opacity="0.85"/><circle cx="12" cy="12" r="8.5"/><path d="M3.6 10.4 C6.2 14.8 17.8 14.8 20.4 10.4 M12 14.6 V20.5"/></svg> <b>Zone</b>, <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5 C8 4.5 12.5 10.5 18.5 7.2"/><path d="M3.5 16.5 C8 13.5 12.5 19.5 18.5 16.2"/><path d="M14.9 5.3 L19.2 6.8 L17.4 11 M14.9 14.3 L19.2 15.8 L17.4 20" stroke="#E8852C" stroke-width="2"/></svg> <b>Flow</b> or <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="8.5" cy="8.5" r="1.15" fill="#E8852C" stroke="none"/><circle cx="12" cy="8.5" r="1.15" fill="#E8852C" stroke="none"/><circle cx="15.5" cy="8.5" r="1.15" fill="#E8852C" stroke="none"/><circle cx="8.5" cy="12" r="1.15" fill="#E8852C" stroke="none"/><circle cx="12" cy="12" r="1.15" fill="#E8852C" stroke="none"/><circle cx="15.5" cy="12" r="1.15" fill="#E8852C" stroke="none"/><circle cx="8.5" cy="15.5" r="1.15" fill="#E8852C" stroke="none"/><circle cx="12" cy="15.5" r="1.15" fill="#E8852C" stroke="none"/><circle cx="15.5" cy="15.5" r="1.15" fill="#E8852C" stroke="none"/></svg> <b>Density</b>. They are always there; the
+    Retopology window opens as a tab if it was closed (<i>Retopology › Retopology Window</i> opens it too).</li>
+  <li>Set the resolution: <b>Quads per m²</b>. Model units are meters; the line under it says how wide a quad is and about
+    how many quads the whole model gets. 2,500 per m² is 2 cm quads; 10,000 is 1 cm.</li>
+  <li>The quads appear by themselves (the <b>live preview</b>, drawn faintly), a moment after you pick a retopology tool
+    and after every change. With nothing drawn yet, they already follow the shape, so it is a good first look.</li>
+  <li>Draw zone lines where the result should change, set resolutions, add flow strokes; the preview follows.</li>
+  <li>Click <b>Make quads</b> to keep them: the preview is made the same way, so an up-to-date preview is kept at once
+    (otherwise the quads are made in the background, a few seconds for a model of two million triangles). The quads show
+    over the model as lines, or on their own with <b>Alone</b>.</li>
+</ol>
+<h3 id="retopo-show">Seeing it with any tool: the Retopology preview button</h3>
+<figure><img src="img/retopo_preview.png" alt="The Retopology preview button and its menu over the quads" style="max-width:700px"><figcaption>The
+Retopology preview button is on (copper outline), with the Paint tool chosen. Its arrow opens what it shows.</figcaption></figure>
+<p>The retopology tools show what they set while you use them. To keep the zones and the quads on the model while you do
+something else, turn on <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15.9 5.25 L8.1 9.75 M8.1 5.25 L15.9 9.75 M8.1 9.75 V18.75 M4.2 12 L12 16.5 M15.9 9.75 V18.75 M12 16.5 L19.8 12" stroke="#E8852C" stroke-width="1.5"/><path d="M12 3 L19.8 7.5 V16.5 L12 21 L4.2 16.5 V7.5 Z M4.2 7.5 L12 12 L19.8 7.5 M12 12 V21"/></svg> <b>Retopology preview</b> in the bar over the 3D view. It stays on until you
+turn it off, whatever tool is chosen and whichever panel is in front, and it is kept between sessions.</p>
+<ul>
+  <li><b>The arrow</b> beside it chooses what shows: <b>Zones</b>, <b>Density</b> or <b>Neither</b>, <b>The quads</b>,
+    <b>Alone</b> and <b>Loops</b> (the same settings as the window's <b>Show</b>). It also has <b>Make quads</b> and opens
+    the Retopology window.</li>
+  <li><b>Make quads</b> turns the preview on, so the quads you asked for show.</li>
+  <li>It is also in <i>View › Retopology preview</i>, in the <i>View</i> menu of the 3D view's right-click menu and in the
+    <i>Retopology</i> menu. You can give it a shortcut in <i>Edit › Keyboard shortcuts</i> (<i>Retopology preview on /
+    off</i>).</li>
+  <li>While it is on, the model's own wireframe and seams are hidden so they don't cover the quads.</li>
+</ul>
+<p>Before 0.37 the zones and the quads showed only while the Retopology window was in front. Switching off the
+<i>Retopology preview button</i> feature (<i>Edit › Preferences › Features</i>) brings that back.</p>
+<h3 id="retopo-preview">The live preview</h3>
+<p>While a retopology tool is in use, the Retopology preview is on, or the Retopology window is in front, Patina makes
+the quads again by itself about a
+third of a second after you stop changing something: a line, a stroke, a zone's resolution, the density, the quads per
+m². A change while it is working stops it and starts it again. The preview is made just as <b>Make quads</b> makes the
+quads, so what you see is what you keep; the window says <i>Preview</i> above its numbers until you keep them.
+Untick <b>Live preview</b> to make the quads only when you ask. On a big model the first preview takes longest; after
+that, drawing lines and strokes reuses the work.</p>
+<h3 id="retopo-keep">Keeping the quads away from a change</h3>
+<p>Each change makes only the quads near it again: a few quads round the line or stroke you draw or take away, or round
+where you paint the density or change a zone's resolution (the whole inside of a small new loop too). Everything
+further off stays exactly as it was, so a part that came out clean stays clean while you work on another. A row of faces
+joins the new quads to the kept ones; it can leave a few more poles there than making everything again would.</p>
+<p><b>Remake all</b>, beside <b>Make quads</b>, makes all the quads again at once: the cleanest quads for everything as
+it is now, though any part may come out different. Use it when you have finished drawing, or when a part came out badly.
+Untick <b>Keep quads away from changes</b> (under the zone settings) to make all the quads again after every change, as
+Patina did before 0.23. The setting is kept with the model.</p>
+<p>The window says how many of the vertices have four edges (the rest are poles: three, five or more edges). Without
+lines, most models come out between 95 and 99%. Each line, and each change of resolution, adds a few poles, because an
+edge loop has to start or end somewhere.</p>
+
+<h2 id="retopo-lines">Zone lines</h2>
+<p>The <b>Lines</b> tool draws on the model's surface, wherever the pen goes, like a grease pencil: round the eyes and
+the mouth, along the cranium, round the base of the ears, round the wrists and the neck. Each line becomes an <b>edge
+loop</b> of the quads, running exactly along it. Each stroke is one undo step.</p>
+<ul>
+  <li><b>Lines meet exactly.</b> Start or end a stroke near another line and it starts or ends on that line: a white
+    ring shows where before you press, and while you draw. In tight folds (the lips, between the fingers and toes,
+    the crotch) that can pull a line onto its neighbor: untick <b>Snap line ends</b> in the window and the ends stay
+    where you draw them.</li>
+  <li><b>Closing.</b> End a stroke where it began (a white ring shows at its start) and it closes into a loop.</li>
+  <li><b>Overshooting is fine.</b> Where a line runs on a little past the last line it crosses (less than a quad), the
+    loose end is left out of the quads.</li>
+  <li><kbd>Shift</kbd>+click on an arm, a leg, the neck, the waist or a finger draws a line right round it there,
+    across the way it runs: no need to turn the model round to draw the back. Hold <kbd>Shift</kbd> and rest the pointer to
+    see the line first (a label by the pointer says which kind it is). Where there is no part to go round (a breast,
+    the face, a knee), it draws <b>the cut facing you</b>: where a plane through the point you click, parallel to the
+    screen, cuts the model. Look at a breast from the front and <kbd>Shift</kbd>+click near its base for a ring round
+    it; look at the face from the front and <kbd>Shift</kbd>+click in front of the ear for a line round the face. The
+    deeper the point you click, the wider the line. <kbd>Shift</kbd>+wheel switches between round the part and facing
+    you. With the mirror buttons on, the mirror image comes too. (Noses and lips don't work this way yet: the cut runs on
+    into the forehead.)</li>
+  <li><kbd>Ctrl</kbd>+click on a line takes it away.</li>
+  <li><b>Confirming lines.</b> When a part is done, <b>Confirm lines</b> in the window confirms every line so far:
+    they turn a darker brown and new lines never snap to them, so you can draw right beside them. They still make
+    zones and edge loops. <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+click a line to confirm or unconfirm just that one;
+    <b>Unconfirm all</b> undoes the lot. Where a confirmed line and an unconfirmed one are both under a
+    <kbd>Ctrl</kbd>+click, the unconfirmed one goes.</li>
+</ul>
+<p>A closed line, or lines that meet or cross to close a region, split the model into <b>zones</b>. The model shows the
+zones in color while a retopology tool is in use, and the lines in yellow (flow strokes in blue). <b>Lines behind the
+model</b> in the window says how the parts of lines on the far side are drawn: <b>Darkened</b> (thin and faint, the
+default), <b>Hidden</b>, or <b>Shown</b> as if the model were glass. A line that doesn't close a region still makes an
+edge loop; it just doesn't split off a zone.</p>
+
+<p>While you draw a line (or a flow stroke, or paint density) everything else waits, so the drawing gets the whole
+machine: the 3D view shows its last picture under the line (nothing in it changes), the UV Editor keeps its picture,
+and the live preview stops and starts again when you let go.</p>
+
+<h2 id="retopo-zones">Zones and their resolution</h2>
+<figure><img src="img/retopo_quads.png" alt="The quads over the zones"><figcaption>The quads over the zones: twice as many
+quads per m² in the face, three times in the snout.</figcaption></figure>
+<p>With the <b>Zone</b> tool, click a zone to choose it. The slider above the viewport (and in the window) sets its
+<b>resolution</b>: ×2 gives it twice as many quads per m² as the rest, ×0.5 half. Each drag of the slider is one undo
+step; <b>Reset resolutions</b> sets every zone back to ×1 and clears the density brush (one undo step too). A line drawn
+inside a zone splits it into zones that keep its resolution: give the head ×8 and then draw the eyes, and the eyes are
+×8 too.</p>
+<p>Zones of different resolution are made apart, each at its own size, with its lines as edge loops. Where they meet,
+the coarser side's row of quads along the line is replaced by a row that steps from one count to the other in
+<b>three-to-one steps</b> (three edges on one side, one on the other: four quads and two vertices with three edges).
+When the counts differ by an odd number, one triangle makes up the difference.</p>
+<p>The resolution goes from ×0.25 to ×32: fingers, for instance, need about six quads round them, which on a body at
+4,000 quads per m² means a hand zone at about ×16. A big step between neighboring zones (more than about ×5) is made
+in two or three rows of steps, so it stays all quads.</p>
+<p>A zone smaller than about four of its own quads can't hold the loops its lines ask for: the window names such zones and
+marks them in red. Draw their lines further apart, or give them (or the zone round them) a higher resolution.</p>
+<p>Where three zones of different resolution meet (or a zone line meets an open edge of the model), each stretch of line
+between such points is joined on its own, and the small hole left where they meet is filled with quads. A part of a
+zone too thin or too pinched for its own quads (where two lines almost touch, or the tip of a sharp corner) is given to
+the zone beside it, since there is no room for the joining rows there. If a hole left where zones meet is bigger than a
+few quads, it is still filled, marked in red, and the window says so: moving the lines a little further apart there
+gives cleaner quads. Faces that come out folded (turned over against the surface or the faces round them) are smoothed
+out at the end, so where zones meet there are fewer pinches; a few can stay at sharp creases.</p>
+
+<h2 id="retopo-rings">Rings between two lines</h2>
+<div class="two">
+  <figure><img src="img/retopo_rings_zones.png" alt="Two lines round each eye, the nose and the mouth"><figcaption>Lines a
+  modeler might draw on Suzanne: round each eyeball and round each eye socket, round the tip of the nose and the
+  nose, round the lips and the mouth.</figcaption></figure>
+  <figure><img src="img/retopo_rings_quads.png" alt="Rings of quads between the lines"><figcaption>Between two lines the
+  quads run in rings that follow both; the eyeballs, the tip of the nose and the inside of the lips are closed with
+  grids.</figcaption></figure>
+</div>
+<p>A zone between two lines (round an eye, round a mouth, along an arm between the wrist and the elbow) is filled with
+<b>rings of quads</b> that follow both lines, about a quad apart: as many rows as the narrow side holds. When one line
+is longer than the other, the rings keep one count while their quads stay between about half a quad and one and a
+half quads wide, as hand-made eye loops do; past that the count changes in three-to-one steps spread evenly between
+them. The counts are chosen for a whole chain of rings at once (the socket, the eye, the brow), so the steps go where
+the last ring meets the zone beyond it. A zone inside such a ring (the tip of a nose, the inside of the lips, an
+eyeball) is closed with a <b>grid</b>, as a modeler's grid fill, a ring in from its line: every vertex on the line and
+inside has four edges but the grid's four corners, the poles a disc needs, which sit just inside. Rings that touch share their line, so no joining row is needed there. A ring also takes the edge loop of the zone beside it when that loop runs along its line (a stray point or two is put onto the line), so the rings round an eye or a mouth meet the face without steps. Where three zones meet
+and a gap is left between their rows, it is closed with a grid too (cut in two at its narrowest point when it is
+long).</p>
+<p>Only bands that pay count: a zone with much more surface than its width along its lines (a whole body between two
+wrist lines, say), or a band that would need many steps to get from one count to the other (round an eye socket,
+much longer outside than in), is made with the zone beside it, which turns its flow with a few poles of its own; its
+lines are still edge loops. <b>Rings between two lines</b> in the window turns rings off.</p>
+<p><b>Fewer poles</b> (on by default): after the quads are made, the number of quads along each run of edges is worked
+out again, so that a three-edged and a five-edged pole close together cancel out (a row of quads between them goes,
+or one comes in). The new quads are kept only when they have fewer poles and no more folded faces than the quads as
+first made, so it never makes things worse; on many models it changes nothing. Untick it to compare.</p>
+
+<h2 id="retopo-character">Lines for a character</h2>
+<p>A few lines in the right places do most of the work. These are the ones that pay on a head and a body:</p>
+<ul>
+  <li><b>Eyes.</b> One line along the edge of the eye opening (or round the eyeball) and one round the socket. The eye
+    gets rings that keep their count, and the opening (or the eyeball) is closed with a grid, its poles inside. The band
+    out to the socket line is made with the face round it when it is much longer outside than in, so the steps from one
+    count to the other go where the face can take them; a small opening inside it then goes with the face too.</li>
+  <li><b>Mouth.</b> One line round the lips, one round the mouth: rings round the mouth, a grid inside the lips.</li>
+  <li><b>Nose.</b> One round the tip; one round the whole nose if you want rings there too.</li>
+  <li><b>Arms and legs.</b> A line round the wrist (<b>Zones for thin parts</b> draws it) and one round the top of the arm
+    (or the thigh; <kbd>Shift</kbd>+click there with <b>Lines</b>): the limb between is a band and gets clean rings, with
+    no twist. Without the top line a long limb's
+    rows can wind round it like a thread on a screw (no pole shows it: tick <b>Loops</b> and follow a loop round the
+    arm to check).</li>
+  <li><b>The head.</b> A line round the neck (<kbd>Shift</kbd>+click it) makes the head a zone of its own, so it can have
+    more quads than the body.</li>
+</ul>
+<p>Keep lines a quad or two apart: where two lines nearly touch there is no room for the rows that join their zones, and
+the window marks the spot. Tick <b>Loops</b> to check the result: the poles show as crosses, and the loop under the
+pointer lights up with its count.</p>
+
+<h2 id="retopo-loops">Seeing the flow: loops and poles</h2>
+<figure><img src="img/retopo_loops.png" alt="Poles and one edge loop lit up"><figcaption>With <b>Loops</b> on: the poles
+as small crosses (blue: three edges, orange: five), and the edge loop under the pointer lit up in green, here one
+running over the crown and down the face.</figcaption></figure>
+<p>Tick <b>Loops</b> (next to <b>Alone</b>) to see how the quads flow. Each pole (a vertex with three, five or more
+edges) shows as a small cross: blue with three edges, orange with five, red with more. Point at the quads and the edge
+loop under the pointer lights up all along, to where it ends at a pole or comes back round; the window says how many
+edges it has. Poles gathered along a line you drew show where the flow has to change there; moving the line, or giving
+the zones beside it closer resolutions, moves them.</p>
+
+<h2 id="retopo-flow">Flow strokes</h2>
+<p>The <b>Flow</b> tool draws strokes on the model, the same way, that set which way the quads run where they are drawn:
+across the forehead, down the nose, along a muscle. A stroke that ends where it started closes into a loop.
+<kbd>Ctrl</kbd>+click a stroke to take it away. Each stroke is one undo step.</p>
+<p>Each stroke becomes an <b>edge loop</b> that runs exactly where you drew it, as a zone line does, but it doesn't
+make a zone of its own: the resolution is the same either side of it. Rings drawn round a spot (a nipple, an eye) become
+loops round it. This is <b>Strokes make edge loops</b>, on by default (it shows with the Flow tool, in the window and
+above the viewport; the setting is kept with the mesh).</p>
+<p>Untick it for strokes that only turn the quads:</p>
+<ul>
+  <li>The quads right beside a stroke run along it (and across it), and the turn carries on through the zone until
+    something else holds the quads: a line, another stroke, the zone's edge. One stroke on its own can turn a whole
+    torso.</li>
+  <li>The quads follow its direction, not its exact path, and they keep their size. So a circle of flow round a small
+    spot comes out as a spiral, with poles where the rings need more edges further out.</li>
+  <li>In a zone made as rings between two lines, or a disc closed with a grid, such strokes have no effect: those are
+    laid out from their lines alone.</li>
+</ul>
+
+<h2 id="retopo-density">The density brush</h2>
+<p>The <b>Density</b> brush paints a multiplier on the quads per m² for fine tuning inside a zone: ×2 for more quads
+there, ×0.5 for fewer (the slider above the viewport, or in the window). It paints the surface under it, soft at its
+edge, and only the part it touches (not through to another part behind); the mirror buttons mirror it.
+<kbd>Ctrl</kbd> paints it back to ×1. The change in the quads is gentle: they grow or shrink gradually around what you
+paint, without edge loops of their own. For a clear step, use a zone.</p>
+
+<h2 id="retopo-symmetry">Symmetry</h2>
+<p>With <b>Mirror X</b>, <b>Y</b> or <b>Z</b> on (in the window, or the <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V4.8 M12 7.8 V9.6 M12 12.6 V14.4 M12 17.4 V19.2" stroke-width="1.5"/><path d="M9.4 7.5 V18.5 H3.4 Z"/><path d="M14.6 7.5 V18.5 H20.6 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1.25"/><path d="M3.6 2.8 L7.2 6.8 M7.2 2.8 L3.6 6.8" stroke="#F0525F" stroke-width="1.6"/></svg> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L5.3 18.7 M7.3 16.7 L8.6 15.4 M10.6 13.4 L11.9 12.1 M13.9 10.1 L15.2 8.8" stroke-width="1.5"/><path d="M3 3.5 H11.5 L3 12 Z"/><path d="M21 12 V20.5 H12.5 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1.25"/><path d="M16.2 2.8 L18.2 5.1 L20.2 2.8 M18.2 5.1 V7.4" stroke="#7DC242" stroke-width="1.6"/></svg> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 H4.8 M7.8 12 H9.6 M12.6 12 H14.4 M17.4 12 H19.2" stroke-width="1.5"/><path d="M7.5 9.4 H18.5 V3.4 Z"/><path d="M7.5 14.6 H18.5 V20.6 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1.25"/><path d="M2.9 3 H6.5 L2.9 7 H6.5" stroke="#4A90F0" stroke-width="1.6"/></svg> mirror buttons), zone lines, flow strokes,
+the density brush and zone resolutions are mirrored across the model's middle (the middle of its bounding box), and so
+are the quads: they are made on one side and mirrored onto the other, so both sides match vertex for vertex. The
+halves meet along an edge loop down the middle.</p>
+<ul>
+  <li><b>The side kept</b> is the one with more of your lines on it (the bigger side when there are none), so lines
+    drawn on one side only, with Mirror off, still count.</li>
+  <li><b>The middle's loop.</b> Where the model crosses the middle, an edge loop runs along it. A line you drew within
+    half a quad of the middle is moved onto that loop there, so the two meet rather than leave a strip too narrow for
+    a row of quads; so is the rest of the line that stays within a quad of the middle around that place. A line that
+    runs close to the middle for a while (a breast's outline by the cleavage) then shares the middle's loop and
+    leaves it across it, rather than at a slant that needs a pole where it and its mirror image meet. Zones that touch
+    the middle are made like any other zone, not as rings or grids.</li>
+  <li><b>A model that isn't the same on both sides.</b> Each separate piece of the model is checked: a piece whose mirror
+    image lies on the model (within half a quad, nearly all of it) is mirrored; one that isn't (hair worn to one side, a
+    raised arm) keeps the quads made for it as they are, and the Retopology window says so. When no big piece is the same
+    on both sides, the quads are made on the whole model, as with Mirror off, and the places where the sides differ are
+    marked in red. Hair joined to the body counts as one piece with it.</li>
+  <li>Where the quads can't follow the middle (a crease narrower than a quad), the faces across it are cut along it, so
+    the halves always meet; a triangle or two can come out there. The walls of a crease along the middle narrower than
+    a third of a quad (the cleft of the buttocks, the crotch) are pressed shut: the quads bridge it.</li>
+  <li><b>Middle deadzone.</b> A line that comes within this distance of the middle is taken to meet it there, and joins
+    its mirror image into one line across the middle (like the clipping of Blender's mirror modifier). One whose both
+    ends reach the middle becomes one closed loop with its mirror image. The default is 1% of the model's size.</li>
+  <li>A stroke drawn <b>across</b> the middle keeps its longer side, mirrored, so the result is symmetric rather than two
+    crossing copies. One drawn along the middle is its own mirror image.</li>
+  <li><kbd>Ctrl</kbd>+click on a line takes its mirror images away too.</li>
+</ul>
+
+<h2 id="retopo-big">Big models</h2>
+<p>A model with more than about 200,000 triangles (or far more detail than the quads need) is first made lighter: its
+own surface is simplified to triangles about a third of the quads' size (finer in zones of high resolution), keeping its
+shape, its separate fingers and its gaps; the quads are made on that and put back on the model's own surface. Loose
+specks smaller than about four quads are left out, and the window says how many triangles that was. A coarse model is
+the other way round: its triangles are split where the quads need them smaller.</p>
+<p>Parts thinner than about a quad (fingers, strands of hair) can't be covered by quads that big, so they are left out:
+the window says how much of the surface that is, and red crosses mark where. Give those parts a zone with a higher
+resolution (fingers need about six quads round them), or let Patina do it:</p>
+
+<h3 id="retopo-thin">Zones for thin parts</h3>
+<div class="two">
+  <figure><img src="img/retopo_thin_before.png" alt="Red crosses on the fingers"><figcaption>At 4,000 quads per m², the
+  fingers are too thin for the quads: they are left out, and red crosses mark them.</figcaption></figure>
+  <figure><img src="img/retopo_thin_after.png" alt="A ring at the wrist and fine quads on the hand"><figcaption>After
+  <b>Zones for thin parts</b>: a line round the wrist, and the hand at ×16, so every finger gets its quads.</figcaption></figure>
+</div>
+<p><b>Zones for thin parts</b> (in the window, under the zone tools) finds the parts too thin for the quads as they are
+now: where fewer than about four quads would go round. For each one that is a tube (a finger, a hand, a toe) it draws a
+zone line round it where it meets the rest, a clean ring across the limb (round the wrist, say), and gives that zone a
+resolution for about six quads round it: ×2, ×4, ×8 or ×16. It is one undo step, and the lines and resolutions are
+yours to change like any others.</p>
+<p>It leaves some parts as they are, and the status bar says how many: thin sheets such as locks of hair (wider than
+they are thick, so their quads can be as big as elsewhere), parts that would need more than ×16 (thin strands: give
+them a zone by hand if you want them), and parts with no clean ring round them (between toes, say).</p>
+
+<h2 id="retopo-use">Using the quads</h2>
+<ul>
+  <li><b>Export .obj...</b> writes the quads to a file. The quads leave the retopology facing out, each turned like
+    its neighbors, wherever they go.</li>
+  <li><b>Send to Blender</b> (with a linked object) adds the quads as a new object, <i>name_retopo</i>, in the same place
+    as the linked one. Sending again updates it. This needs the 0.7 add-on.</li>
+  <li><b>Use the quads as the model...</b> saves them next to the high-poly (<i>name_retopo.obj</i>), opens them as the
+    model you paint, with new UVs, and bakes the high-poly onto them (normals and ambient occlusion, as
+    <i>Bake › From a High-poly Mesh</i>). With <i>Bring the layers along</i> (on by default), every layer comes onto
+    the quads: a <a href="texture-set.html#bake-down">bake-down</a>, into a new project, so the high-poly's project
+    stays as it was saved. Off, the layers start afresh.</li>
+</ul>
+<p>The lines, zones, resolutions, strokes and painted density are kept between sessions: open the same high-poly again
+and they are back.</p>
+
+<figure><img src="img/retopo_window.png" alt="The Retopology window"><figcaption>The Retopology window: the resolution,
+the tools, the chosen zone's resolution, symmetry, and the quads (with the live preview on) with their share of
+four-edged vertices.</figcaption></figure>
+
+<h2 id="retopo-commands">From scripts</h2>
+<p>Everything is a command (see <a href="commands.html">Commands</a>): <code>retopo_zone_line</code> (lines from 3D
+points), <code>retopo_zones</code> and <code>retopo_zone</code> (list the zones, set a resolution),
+<code>retopo_stroke</code> (flow strokes), <code>retopo_density</code>, <code>retopo_build</code>, <code>retopo_info</code>,
+<code>retopo_view</code> (with <code>loops</code> and <code>loop_at</code>, and <code>preview</code> for the Retopology
+preview button), <code>retopo_export</code>, <code>retopo_send_to_blender</code>, <code>retopo_use_as_model</code>,
+<code>retopo_symmetry</code> (the deadzone), <code>retopo_rings</code> (rings between two lines, on or off), <code>retopo_fewer_poles</code> (on or off), <code>retopo_flow_loops</code> (strokes make edge loops), <code>retopo_snap</code> (snapping line ends), <code>retopo_confirm_lines</code>, <code>retopo_view</code> <code>lines_behind</code>, <code>retopo_thin_zones</code> (zones for thin parts) and
+<code>retopo_clear</code>; <code>retopo_zone_line</code> and
+<code>retopo_stroke</code> take <code>mirror</code> ("x", "xy"...). The 0.13 commands for painted patches (<code>retopo_patch</code>, <code>retopo_paint</code>,
+<code>retopo_auto_patches</code>, <code>retopo_fill_gaps</code>) still work: painted patches are zones too, and
+<code>retopo_build</code> with <code>method: "patches"</code> fills each patch on its own as 0.13 did.</p>
+
+</article>
+<footer class="pager"><a class="prev" href="uv.html">← UV editing</a><a class="next" href="mesh.html">Mesh check &amp; export →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

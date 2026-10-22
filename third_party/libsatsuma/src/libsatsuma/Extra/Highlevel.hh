@@ -1,0 +1,77 @@
+//  SPDX-FileCopyrightText: 2023 Martin Heistermann <martin.heistermann@unibe.ch>
+//  SPDX-License-Identifier: MIT
+#pragma once
+
+#include <libsatsuma/Problems/BiMDF.hh>
+#include <libsatsuma/Solvers/BiMDFDoubleCover.hh>
+#include <libsatsuma/Solvers/EvenBiMDF.hh>
+#include <libsatsuma/Solvers/Matching.hh>
+#include <libsatsuma/Reductions/BiMDF_to_BiMCF.hh>
+#include <libsatsuma/Reductions/BiMCF_to_MCF.hh>
+#include <libsatsuma/Reductions/BiMCF_to_BMatching.hh>
+#include <libsatsuma/Config/Export.hh>
+#if SATSUMA_HAVE_GUROBI
+#include <libsatsuma/Config/Gurobi.hh>
+#endif
+#include <libTimekeeper/StopWatch.hh>
+
+namespace Satsuma {
+
+struct SATSUMA_EXPORT BiMDFMatchingInfo {
+    BiMDF::CostScalar cost;
+    std::vector<double> cost_changes;
+    int max_refinement_change;
+};
+
+struct SATSUMA_EXPORT BiMDFMatchingResult {
+    BiMDFResult result;
+    BiMDFDoubleCoverInfo double_cover_info;
+    BiMDFMatchingInfo info;
+    Timekeeper::HierarchicalStopWatchResult stopwatch;
+};
+
+struct SATSUMA_EXPORT BiMDFSolverConfig {
+    BiMDFDoubleCoverConfig double_cover;
+    /// matching solver to use for refinement (can theoretically be different from solver used for DC)
+    MatchingSolver matching_solver = MatchingSolver::Default;
+
+    bool refine_with_matching = true;
+    /// Maximum deviation from x0 in primary iterations.
+    /// 1 or 2 are recommended.
+    int refinement_maxdev_min = 2;
+    /// Maximum deviation from x0 in last iteration.
+    /// Note: 2 always suffices for an exact solution.
+    int refinement_maxdev_max = 2;
+    DeviationLimitKind deviation_limit = DeviationLimitKind::Default;
+    int verbosity = 2;
+};
+
+
+SATSUMA_EXPORT
+BiMDFMatchingResult solve_bimdf_matching(
+        const BiMDF &bimdf,
+        BiMDFSolverConfig const& _config = BiMDFSolverConfig());
+
+struct SATSUMA_EXPORT BiMDFperConnectedComponentInfo {
+    size_t n_nodes;
+    size_t n_edges;
+    BiMDFDoubleCoverInfo double_cover;
+    BiMDFMatchingInfo matching;
+};
+
+struct SATSUMA_EXPORT BiMDFFullResult {
+    std::unique_ptr<BiMDF::Solution> solution;
+    BiMDF::CostScalar cost;
+    std::vector<BiMDFperConnectedComponentInfo> cc_info;
+    Timekeeper::HierarchicalStopWatchResult stopwatch;
+
+};
+
+/// Solve BiMDF by solving each connected component separately, applying
+/// simplification on each one
+SATSUMA_EXPORT
+BiMDFFullResult solve_bimdf(const Satsuma::BiMDF &_bimdf,
+                            BiMDFSolverConfig const &_config = BiMDFSolverConfig());
+
+
+} // namespace Satsuma

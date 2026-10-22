@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Materials - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html" class="cur">Materials</a>
+<div class="toc"><a href="#the-patina-default-library">The Patina default library</a><a href="#material-settings">Material settings</a><a href="#your-own-materials">Your own materials</a><a href="#gotchas">Gotchas</a></div>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Materials -->
+<!-- nav: Materials -->
+<h1>Materials</h1>
+<p class="lead">A material is a complete surface: color, roughness, metallic, height (bumps) and emission, all at once.
+Patina paints materials. You don't paint each map on its own.</p>
+
+<figure><img src="img/materials_panel.png" alt="Materials panel"><figcaption>The Materials panel. <span class="badge">P</span> marks materials from the Patina default library.</figcaption></figure>
+
+<h2 id="the-patina-default-library">The Patina default library</h2>
+<p>Patina ships with 270 materials. All of them are made by Patina's own procedural generators, so they tile seamlessly
+at any resolution and carry no third-party licenses. Their ids all start with <code>patina_</code>
+(for example <code>patina_rust_heavy</code>), so they never clash with your own materials.</p>
+<table>
+  <tr><th>Category</th><th>Examples</th></tr>
+  <tr><td>Metal</td><td>iron, brushed steel and aluminum, scratched steel, gold, copper, chrome, brass, rust, diamond plate,
+    hammered copper and steel, corrugated (galvanized / rusty), perforated, cast iron, anodized titanium, gunmetal,
+    bronze verdigris, tarnished silver, galvanized spangle, expanded metal, chain-link fence, woven wire mesh,
+    knurled steel and aluminum, scale armor, heat-tinted steel, verdigris crust, chainmail (steel, rusty), damascus
+    steel (random, ladder)</td></tr>
+  <tr><td>Paint</td><td>chipped paint (red, yellow, green), peeling white, powder coat, car paint (blue, red, pearl),
+    camouflage (woodland, desert, urban), crazed glaze, alligatored white paint, craquelure varnish</td></tr>
+  <tr><td>Stone</td><td>concrete, plaster, granite, cobblestone, bricks (red, old, running bond), brick pavers (herringbone,
+    basket weave), concrete blocks, tiles (white, checker), hexagonal tiles (white, rosette, terracotta), marble
+    (white, nero), terrazzo, slate, sandstone, stucco (knockdown, Mediterranean, skip trowel), grimy bricks, flagstone
+    paths (mortar, grassy), sandstone layers, red canyon rock, stained glass, leaded diamond panes, mosaics (pool, penny
+    tiles, Roman tesserae), ice (clear, frosted), jade</td></tr>
+  <tr><td>Ground</td><td>dirt, dust, sand (desert, beach), asphalt (fresh, cracked), moss, gravel, snow, soot, oily grime,
+    cracked mud, lava, river pebbles, flat beach stones</td></tr>
+  <tr><td>Wood</td><td>oak (and varnished oak), walnut, pine, cherry, ebony, oak and birch bark, wicker, herringbone and
+    basket parquet, floorboards (pine, weathered gray)</td></tr>
+  <tr><td>Fabric</td><td>leather (brown, black), quilted leather, chesterfield, puffer-jacket nylon, denim (plain weave,
+    indigo and black twill), gabardine, linen, basket weave, canvas, wool, velvet (red, black, crushed purple),
+    corduroy, devoré, knits (cream, ribbed stripes, seed stitch), sequins (gold, silver), pink glitter, lace (white,
+    black, ivory), fishnet, tulle, sports mesh, fishing net, chiffon (white, black), fur (brown, long white, sleek
+    black, pink faux fur), rope (manila, braided), a coiled cable</td></tr>
+  <tr><td>Patterns</td><td>prints and woven patterns for clothes and props: Breton stripes, navy pinstripe, chevron,
+    regimental stripes, worn hazard stripes, wavy stripes, gingham (red, blue), buffalo check, houndstooth, argyle,
+    windowpane check, polka dots (navy, red), comic halftone, leopard, cheetah, zebra, tiger, giraffe and cow
+    prints, damask (red and gold, navy and silver), fleur-de-lis wallpaper</td></tr>
+  <tr><td>Paper</td><td>ruled notebook paper, graph paper, kraft card, old parchment</td></tr>
+  <tr><td>Organic</td><td>reptile scales, fish, dragon and snake scales, feathers (brown, hawk, peacock), autumn
+    leaves, a forest floor, a leaf card, ivy</td></tr>
+  <tr><td>Character</td><td>skin (fair, light, medium, brown, deep: pores, fine creases, redness and freckles), stylized
+    skin (anime, toon, hand-painted), hair (black, brown, blonde, ginger, anime pink and navy with a highlight ring),
+    silk satin (red, black, ivory), pleated school-skirt plaid, red tartan, navy uniform wool, hair cards (blonde, brown,
+    black, anime pink)</td></tr>
+  <tr><td>Stylized</td><td>toon cloth (blue, red, white), cel bands, hand-painted grass and leather, hand-painted cobbles,
+    stone and dungeon walls, planks and crate wood, steel plates, gold trim and dark iron, crosshatching (ink,
+    sepia pencil)</td></tr>
+  <tr><td>Plastic, Sci-Fi, Emissive, Basic</td><td>glossy and rough plastics, rubber and rubber tread, rubber grips (dots,
+    checkering), rubber studs, carbon fiber, candle wax, frosted and green glass, piano lacquer, nail polish, hull
+    panels with rivets, honeycomb armor, circuit boards (green, glowing blue), glowing grids, flat colors</td></tr>
+</table>
+<figure><img src="img/materials_new.png" alt="Some of the pattern, character and stylized materials"><figcaption>A few of
+the pattern, Character and Stylized materials. Top: herringbone pavers, rosette hex tiles, Mediterranean stucco,
+herringbone parquet, chain-link, knurled steel, dragon scales, quilted leather. Middle: ribbed knit, denim twill, fair,
+brown and anime skin, brown and anime hair, pleated plaid. Bottom: silk satin, toon cloth, hand-painted grass, cobbles,
+stone wall, planks, steel plates and gold trim.</figcaption></figure>
+<p>Patina renders physically based materials, so the <b>Character</b> and <b>Stylized</b> sets get their look from the
+textures themselves: clean colors, soft or hard-edged tone steps, light and shadow painted into the base color, and
+little or no relief. Hair runs along the V direction: paint it with <i>UV</i> projection on hair cards, or turn the
+material until the strands follow the hair. For a stylized finish on any of them, add the <i>Stylized edge
+highlights</i> <a href="organizing.html#smart-materials">smart material</a> on top.</p>
+<h3 id="surface">Opacity, sheen, clearcoat and subsurface</h3>
+<p>Besides color, roughness, metallic, height and glow, a material has four more properties (Patina 0.26):</p>
+<table>
+  <tr><th>Property</th><th>What it is for</th></tr>
+  <tr><td>Opacity</td><td>1 is solid; lower lets what is behind show through. Lace, fishnet, leaves and hair cards cut
+    holes with it, chiffon and glass are partly see-through.</td></tr>
+  <tr><td>Sheen</td><td>A soft light at grazing angles, the way velvet, satin, fur and peach-skin catch the light.</td></tr>
+  <tr><td>Clearcoat</td><td>A smooth varnish over the surface: car paint, lacquered wood, nail polish, polished stone. It
+    follows the shape, not the bumps under it.</td></tr>
+  <tr><td>Subsurface</td><td>Light that goes into the material and comes out softer and warmer: skin, wax, leaves, jade,
+    marble.</td></tr>
+</table>
+<p>The skin, satin, velvet, car paint, marble and hair materials of the library have them now, and many of the new
+materials use them. You paint them like the other properties: a brush paints them where its material has them, a fill
+layer brings them with its material, and every layer has an <i>Opacity</i>, <i>Sheen</i>, <i>Clearcoat</i> and
+<i>Subsurface</i> channel (see <a href="layers.html">Layers</a>). The base material below all layers has them too. The 3D
+view shows them in the <i>Material</i> view, and the view list has a view of each. Exports write their maps only when the
+texture set uses them (see <a href="texture-set.html#export">Exporting</a>), and Blender gets them through the live
+link.</p>
+<p><b>Cut out holes.</b> Generators with holes (net, lace, leaves, hair cards, velvet's devoré, perforated metal,
+grilles, chainmail) have a <i>Cut out holes</i> tick box in the editor's <i>Surface</i> section: on, the holes are
+see-through; off, they show color C. The library's lace, nets, leaf cards, ivy and hair cards have it on.</p>
+<figure><img src="img/materials_026.png" alt="New materials with opacity, sheen, clearcoat and subsurface"><figcaption>Some
+of the 0.26 materials: black lace and fishnet (see-through), crushed velvet (sheen), blue car paint (clearcoat), peacock
+feathers, red and gold damask, clear ice (subsurface and clearcoat) and ivy (see-through gaps).</figcaption></figure>
+<div class="callout tip"><span class="t">Hair cards and leaf cards</span>These are made to be used with <i>UV</i>
+mapping on cards (flat strips of faces): the strands run down the card with their roots at the top, and one leaf fills
+the card.</div>
+
+<p>Use the search field to search by name, category, description or tag (try <i>weathered</i>, <i>floor</i> or
+<i>hard surface</i>). Click a material to paint with it. Right-click it to paint with it, add it as a fill layer, or
+duplicate it into the editor. Drag it onto a fill layer to give that layer the material, between layers for a new fill
+layer there, or onto the model for a new fill layer above the selected one (see
+<a href="layers.html#drag-and-drop">Drag and drop</a>). The panel's other tabs hold the <i>Smart materials</i> and the
+<i>Smart masks</i>, which drag into the stack the same way.</p>
+<figure><img src="img/material_context.png" alt="Material context menu" style="max-width:340px"></figure>
+
+<h2 id="material-settings">Material settings</h2>
+<p>When you paint, the material is projected onto the model. <i>Properties › Paint material</i> (and the same block in a
+fill layer's settings) controls how:</p>
+<table>
+  <tr><th>Setting</th><th>Meaning</th></tr>
+  <tr><td>Projection</td><td><b>Tri-planar</b> (the default) projects from three directions in object space, so it is seamless and
+    ignores UVs. <b>UV</b> follows the UVs, which suits labels or anything that must follow the layout. <b>Screen</b> projects the
+    image from the camera, like a decal or a stencil.</td></tr>
+  <tr><td>Scale / Rotation</td><td>The pattern size and its angle.</td></tr>
+  <tr><td>Tint</td><td>Multiplies the color. One rust can become many.</td></tr>
+  <tr><td>Rough scale / offset</td><td>Makes the material glossier or duller.</td></tr>
+  <tr><td>Height scale, Normal strength</td><td>How strong the bumps are. Set 0 to paint color without relief.</td></tr>
+</table>
+
+<h2 id="your-own-materials">Your own materials</h2>
+<h3 id="import-a-scanned-material">Import a scanned material</h3>
+<p>Use <i>File › Import Material Folder…</i>, or drop a folder onto the window. Patina recognizes the usual file names from
+ambientCG, Poly Haven, Quixel and Substance exports (<code>*_Color</code>, <code>*_BaseColor</code>, <code>*_Roughness</code>,
+<code>*_Metalness</code>, <code>*_NormalGL</code> / <code>*_NormalDX</code>, <code>*_Displacement</code>, <code>*_AO</code>,
+<code>*_Emission</code>…). The material is copied into your library, so the original folder can be deleted. The status bar
+says how many maps were found, and the Console lists which file each channel came from.</p>
+
+<h3 id="substance">Materials from Substance</h3>
+<p>Textures exported from Substance 3D Designer, Painter or Sampler, and materials downloaded from Substance 3D Assets
+as images, import directly, whichever export preset was used:</p>
+<table>
+  <tr><th>What is in the folder</th><th>What Patina does</th></tr>
+  <tr><td>Separate maps (<i>Document channels</i>, <i>PBR Metallic Roughness</i>)</td><td>Each file feeds its channel.</td></tr>
+  <tr><td><code>*_OcclusionRoughnessMetallic</code> (Unreal preset), <code>*_ORM</code>, <code>*_ARM</code></td><td>Splits the packed
+    file: green is roughness, blue is metallic, red is ambient occlusion.</td></tr>
+  <tr><td><code>*_metallicRoughness</code> (glTF)</td><td>Green is roughness, blue is metallic.</td></tr>
+  <tr><td><code>*_MaskMap</code> (Unity HDRP), <code>*_MetallicSmoothness</code> (Unity URP / Standard)</td><td>Red is metallic, the
+    alpha channel is smoothness (turned into roughness), the mask map's green is occlusion.</td></tr>
+  <tr><td><code>*_BaseMap</code>, <code>*_AlbedoTransparency</code></td><td>Base color.</td></tr>
+  <tr><td>Several texture sets in one folder (<code>Robot_Body_BaseColor.png</code>, <code>Robot_Head_BaseColor.png</code>…)</td><td>One
+    material per texture set, named after it (<i>Robot - Body</i>, <i>Robot - Head</i>).</td></tr>
+  <tr><td>EXR, HDR and 16-bit PNG maps</td><td>Read at full precision. A height map in scene units (an EXR displacement) is fitted
+    into Patina's height range, and linear EXR color is converted to sRGB.</td></tr>
+</table>
+<p><b>Normal maps:</b> a name that says <code>OpenGL</code>, <code>DirectX</code>, <code>GL</code> or <code>DX</code> decides the
+convention. A plain <code>*_Normal</code> next to an <code>OcclusionRoughnessMetallic</code> map comes from Substance's Unreal preset, so
+it is read as DirectX. Anything else is read as OpenGL. If the bumps look like dents, right-click the material ›
+<i>Normal map is DirectX</i>.</p>
+<p><b><code>.sbsar</code> files can't be read.</b> An <code>.sbsar</code> is a compiled Substance Designer graph, and only Adobe's
+Substance engine can render one. Open it in Substance Designer, Sampler or Player, export its outputs as images, and import
+that folder. The same goes for Painter's own files (<code>.spsm</code> smart materials, <code>.spmsk</code> smart masks,
+<code>.spp</code> projects): export the textures, or rebuild the stack with Patina's
+<a href="organizing.html#smart-materials">smart materials</a>. Patina says so when you drop one of those files.</p>
+<h3 id="images-and-decals">Images and decals</h3>
+<p>Drop a single image onto the viewport and it becomes a color-only material with <i>Screen</i> projection. That makes it a
+stencil: aim the view, then paint the logo or photo onto the model. Drop it onto the Brushes panel instead and it becomes
+a brush tip.</p>
+<h3 id="the-material-editor">The material editor</h3>
+<p><b>New procedural…</b>, or <i>Edit / duplicate…</i> on any library material, opens the editor. Pick a generator (there
+are 74, grouped by kind, from rust and wood to diamond plate, sci-fi panels, skin, hand-painted stone, prints and
+stained glass), set its colors and values, and watch the live sphere and tile at the top of the window update.
+<i>Save to library</i> stores it under your user folder.</p>
+<figure><img src="img/material_editor.png" alt="Material editor" style="max-width:420px"></figure>
+<p>Each generator's colors and settings are named for what they do: <i>Brick</i>, <i>Second brick</i> and
+<i>Mortar</i> for bricks, then <i>Joint width</i>, <i>Bond</i>, <i>Wear</i> and <i>Length : height</i>. A color the
+generator doesn't use is hidden. A setting with a choice of styles (a brick bond, a stripe style, an animal) is a
+drop-down. Where 0 stands for a default, the slider says <i>default</i> and the value it uses. Claude reads the same
+descriptions with <code>list_generators</code>.</p>
+<h3 id="wear-and-wobble">Wear and wobble</h3>
+<p>Three settings work with every generator, at the foot of the editor:</p>
+<table>
+  <tr><th>Setting</th><th>Does</th></tr>
+  <tr><td>Grime, Grime color</td><td>Dirt settles in the low parts of the pattern: the grout, the mortar, the gaps
+    between planks, cracks and grooves. They also get rougher, and a thin film covers the rest.</td></tr>
+  <tr><td>Worn edges, Edge color</td><td>The raised edges of the pattern wear to the edge color and get a little
+    smoother: chipped brick arrises, polished tread, rubbed-through paint.</td></tr>
+  <tr><td>Warp, Warp size</td><td>Wobbles the whole pattern: wavy stripes, bricks laid by hand, hand-drawn checks.</td></tr>
+</table>
+<p>All three keep the material seamless. They work from the generator's own height, so a pattern with no relief (a flat
+print) has no grooves to fill and no edges to wear.</p>
+<p>The generators added in 0.24:</p>
+<table>
+  <tr><th>Generator</th><th>Settings</th></tr>
+  <tr><td>Stripes</td><td>stripe width · style: plain, pinstripe, chevron, wavy, three colors · direction: across,
+    along, diagonal · woven (0 a smooth print, 1 woven threads)</td></tr>
+  <tr><td>Checks</td><td>style: checkerboard, gingham, houndstooth, argyle, windowpane · line width · woven · argyle
+    diamond height</td></tr>
+  <tr><td>Dots</td><td>dot size · layout: grid, staggered, scattered, halftone · raised (0 printed, 1 domed studs) ·
+    woven</td></tr>
+  <tr><td>Animal print</td><td>animal: leopard, cheetah, zebra, tiger, giraffe, cow · fur (0 a smooth print, 1 short
+    fur) · mark size</td></tr>
+  <tr><td>Cracked earth</td><td>crack width · finer cracks · curled edges · glowing cracks (the <i>Emissive</i> color,
+    for lava)</td></tr>
+  <tr><td>Flagstones</td><td>joint width · uneven slabs · riven layers · tufts in the joints</td></tr>
+  <tr><td>Pebbles</td><td>gap · size variation · flat stones · gravel between</td></tr>
+  <tr><td>Rock layers</td><td>folding · erosion (hard layers stand out) · cracks · sand grain</td></tr>
+  <tr><td>Crackle</td><td>crack width · style: crazed glaze, alligator paint, craquelure · finer cracks · crack depth</td></tr>
+  <tr><td>Chainmail</td><td>wire · ring size · lean · tarnish (color B)</td></tr>
+  <tr><td>Damascus steel</td><td>folding · pattern: random, ladder, raindrop · etch depth · contrast</td></tr>
+  <tr><td>Circuit board</td><td>trace density · chips · glowing traces (the <i>Emissive</i> color) · trace width</td></tr>
+  <tr><td>Stained glass</td><td>lead width · layout: random pieces, square panes, diamond panes · glow (lit from
+    behind, in the glass's own colors) · rippled glass</td></tr>
+  <tr><td>Mosaic</td><td>grout width · shape: squares, penny rounds, tesserae · color patches · bevel</td></tr>
+  <tr><td>Sequins and glitter</td><td>sequin size · tilt · kind: sequins or glitter · center holes</td></tr>
+  <tr><td>Paper</td><td>crumple · lines: none, ruled, squared, dot grid · fibers · age stains</td></tr>
+</table>
+<p>The generators added in 0.26:</p>
+<table>
+  <tr><th>Generator</th><th>Settings</th></tr>
+  <tr><td>Fur</td><td>hair length · clumping · wave · lighter tips (color B). Color C shows deep between the clumps.</td></tr>
+  <tr><td>Feathers</td><td>length : width · barbs · markings: none, bars, dark tips, eyes (peacock) · ruffle</td></tr>
+  <tr><td>Leaves</td><td>style: fallen leaves, one leaf (a card), foliage · leaf width · veins · color change toward
+    color B (autumn). Color C is the ground, or the gaps (cut out).</td></tr>
+  <tr><td>Rope</td><td>style: twisted, braided, coiled · strands · twist · fuzz. The rope runs along V: use UV mapping on
+    a tube.</td></tr>
+  <tr><td>Damask</td><td>style: medallion, floral trellis, fleur-de-lis · ornament size · outline (color C) · woven</td></tr>
+  <tr><td>Ice</td><td>cracks · bubbles · frost · crack depth</td></tr>
+  <tr><td>Crosshatching</td><td>line width · layers (1 to 4) · contrast · wobble</td></tr>
+  <tr><td>Lace</td><td>motif size · net fineness · style: roses, vines, geometric · cord (color B). Holes cut out.</td></tr>
+  <tr><td>Net and mesh</td><td>thread width · style: fishnet, honeycomb, square mesh, knotted net · knots (color B) ·
+    stretch. Holes cut out.</td></tr>
+  <tr><td>Hair cards</td><td>strands · clumping · short strands (how much shorter they are) · lighter tips. Gaps cut
+    out.</td></tr>
+  <tr><td>Velvet</td><td>style: plain, crushed, corduroy, devoré · pattern size · pile grain · wales (corduroy ribs).
+    Give it sheen.</td></tr>
+</table>
+<p>The settings of the older generators:</p>
+<table>
+  <tr><th>Generator</th><th>Extra x, y, z, w</th></tr>
+  <tr><td>bricks</td><td>joint width (0.1) · bond: 0 running, 1 stack, 2 herringbone, 3 basket weave · wear (chipped
+    edges, pits) · brick length : height (3)</td></tr>
+  <tr><td>parquet</td><td>gap width (0.03) · layout: 0 floorboards, 1 herringbone, 2 basket · plank length : width (5) ·
+    grain contrast (1)</td></tr>
+  <tr><td>hex_tiles</td><td>grout width (0.05) · bevel (0.1) · 1 = every third tile color B (scale a multiple of 3) ·
+    1 = raised walls, sunken cells (honeycomb)</td></tr>
+  <tr><td>scales</td><td>pointiness (0 round fish scales, 1 pointed dragon scales) · rim highlight · central keel ·
+    scale size (0.62)</td></tr>
+  <tr><td>grille</td><td>wire / strand width (0.16) · type: 0 expanded metal, 1 chain-link, 2 woven wire · strand
+    tilt shading (1). The holes take color C.</td></tr>
+  <tr><td>quilted</td><td>stitches (0–1) · 1 = buttons at the crossings · layout: 0 diamond, 1 square, 2 channels
+    (puffer jacket) · leather grain (0 smooth fabric, 1 leather)</td></tr>
+  <tr><td>knit</td><td>ribbing (purl columns every n) · stripes per tile (color B) · fuzz (1) · 1 = seed stitch</td></tr>
+  <tr><td>knurling</td><td>type: 0 diamond, 1 straight, 2 rubber dots, 3 square · worn crests (color B) · flat tops ·
+    groove dirt (color C, 0.5)</td></tr>
+  <tr><td>stucco</td><td>splat coverage (0.5) · trowel flattening · sand grain · orange-peel bumps</td></tr>
+  <tr><td>twill</td><td>weave: 0 2/1 twill, 1 3/1 twill (denim), 2 satin · tartan repeats per tile (colors A, B, C;
+    0 = warp A, weft B) · knife pleats per tile · sheen</td></tr>
+  <tr><td>skin</td><td>pores · freckles (color C) · fine creases · redness (color B)</td></tr>
+  <tr><td>hair</td><td>dark gaps between locks (color C) · highlight band (color B) · cel: 0 soft, 1 two clean tones
+    and a zig-zag highlight ring · waves per tile</td></tr>
+  <tr><td>brush_strokes</td><td>softness (0 hard cel bands, 1 soft gradients) · direction: 0 horizontal, 1 diagonal,
+    2 vertical, 3 other diagonal · stroke length (3) · bristle streaks. Colors: A base, B shade, C light.</td></tr>
+  <tr><td>painted_stone</td><td>outline width (0.05) · layout: 0 cobbles, 1 wall blocks · painted chips · highlight
+    strength (1)</td></tr>
+  <tr><td>painted_wood</td><td>grain lines per plank (3) · knots · light top-edge width (0.12) · 1 = nails</td></tr>
+  <tr><td>painted_metal</td><td>bevel width (0.08) · 1 = rivets · painted scratches · top-to-bottom gradient</td></tr>
+</table>
+<p>A value of 0 means the default shown in brackets. In the hand-painted generators the light comes from the top left of
+the texture, as in most hand-painted game art.</p>
+
+<h2 id="gotchas">Gotchas</h2>
+<div class="callout gotcha"><span class="t">Built-in materials can't be changed in place</span>Editing a
+<span class="badge">P</span> material creates a copy called <code>user_patina_…</code> in the <i>User</i> category, and
+the original stays as it was. That is deliberate: your projects keep working when Patina is updated.</div>
+<div class="callout gotcha"><span class="t">Old projects and the patina_ prefix</span>Projects from Patina 0.1 refer to
+materials without the prefix (<code>rust_heavy</code>). They still open, because the old ids are mapped to the
+<code>patina_…</code> materials automatically.</div>
+<div class="callout warn"><span class="t">Normal maps from other tools</span>Some materials come with DirectX-style normal
+maps (green channel flipped) whose names don't say so. If the bumps of an imported material look inverted, right-click it in
+the Materials panel › <i>Normal map is DirectX</i>. Claude and the API can pass <code>"normal": "directx"</code> to
+<code>import_material_folder</code>.</div>
+<div class="callout gotcha"><span class="t">An imported material has no roughness or metal</span>The packed map has a name
+Patina doesn't know. Check the Console for the list of files it used, and rename the packed file so it ends in
+<code>_ORM</code> (red occlusion, green roughness, blue metallic) or <code>_MaskMap</code>, then import again.</div>
+<div class="callout tip" id="triplanar-seams"><span class="t">Tri-planar on curved shapes</span>Tri-planar projection meets
+in a seam where a surface faces diagonally. Since 0.7.4 the seams are <b>by height</b>: at each point, the projection
+whose surface stands highest wins, so the transition follows the pattern (a raised tread lozenge stays whole) and nothing
+shows through. Older versions cross-faded the projections, which showed two patterns at half strength (ghosting), worst
+with sharp repeating patterns such as diamond plate, tiles or grilles. You can still pick <i>Smooth cross-fade</i> under
+<i>Adjust › Tri-planar seams</i>, which hides seams in noisy materials such as rust or concrete. <i>Tri-planar blend</i>
+sets how far from the diagonal the hand-over starts. For a regular pattern that must run unbroken around a curved part,
+use <i>UV</i> projection on a model with clean UVs, for example an island made with the Island brush.</div>
+
+</article>
+<footer class="pager"><a class="prev" href="painting.html">← Painting</a><a class="next" href="masks-guide.html">Guide: masks &amp; smart materials →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

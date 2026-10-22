@@ -1,0 +1,1 @@
+xatlas (https://github.com/jpcy/xatlas, master, commit f700c7790aaa030e794b52ba7791a05c085faf0c, 2022-07-26): source/xatlas/xatlas.cpp and xatlas.h only.

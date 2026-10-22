@@ -1,0 +1,173 @@
+<!-- title: Gotchas and troubleshooting -->
+<!-- nav: Gotchas & troubleshooting -->
+<h1>Gotchas and troubleshooting</h1>
+<p class="lead">Things that surprise people, why they happen, and what to do about them. The other pages have their own
+gotchas too; this page gathers the important ones in one place.</p>
+
+<h2>Painting</h2>
+<h3 id="overlapping-uvs">Paint shows up in two places</h3>
+<p>Two parts of the model use the same area of the texture. That happens with mirrored halves, with stacked or duplicated
+islands, and with “UV tiles” that were collapsed into one. Each texel can hold only one color, so painting one part also
+paints the other. Patina warns about it when it loads the model.</p>
+<p><b>Fix:</b> give the overlapping parts their own space with <i>UV › Unwrap › Smart UV Project</i>, then <i>Pack Islands</i>.
+Existing paint is carried over. In Patina Web, use <b>Unique UVs</b>. If the mirroring is intentional, for example to
+save texture space, paint symmetrical details only, or paint on a mirrored copy in Blender.</p>
+
+<h3>A stroke stops at a hidden edge or goes through the model</h3>
+<p>Painting respects visibility: only surfaces you can see under the brush get paint. Turn on <i>Paint through</i>
+(<i>Occlusion</i> off) to reach hidden surfaces, and remember to turn it back off. Very thin geometry (cloth, leaves) may
+need paint-through on purpose.</p>
+
+<h3>Strokes are soft or blocky up close</h3>
+<p>That part of the model has too few texels. Raise the resolution, or scale its islands up in the UV editor. The UV
+checker view shows texel density.</p>
+
+<h3>Faint lines along UV seams</h3>
+<p>Seams are where the texture is cut, and filtering can pick up a little color from the other side. Keep <i>Dilate
+seams</i> on (Texture Set), and use resolutions of 2048 and up for final textures. Normal-map seams are smallest when
+islands follow the model's natural edges.</p>
+
+<h2>Materials and layers</h2>
+<h3>The material looks stretched or blurred on one side</h3>
+<p>Tri-planar projection blends three directions. Where a surface faces diagonally, the directions meet. Raise
+<i>Tri-planar blend</i>, rotate the material, or switch to UV projection on a well-unwrapped model.</p>
+<h3>A pattern shows a faint second copy of itself (ghosting)</h3>
+<p>Two causes, both fixed in 0.7.4. Where tri-planar projections met, they were cross-faded, so two patterns showed at
+half strength (see <a href="materials.html#triplanar-seams">tri-planar seams</a>). On a symmetric island, both halves wrote
+their own values into the texels they share, leaving a patchwork of triangles with the left and right half's pattern; now
+the half that is unwrapped decides and the stacked half shows the same texels mirrored. Projects from older versions
+pick both fixes up when opened: fill layers and smart masks are recomputed. Paint strokes keep what they were painted
+with, so repaint strokes from an older version that still look doubled.</p>
+<h3>A smart mask puts wear in odd places</h3>
+<p>The AO / curvature bake is stale (re-bake after mesh or UV changes), or the mesh has no bevels, so all edges are equally
+sharp. Lower <b>Level</b>, add <b>Noise</b>, or paint the mask by hand.</p>
+<h3>A layer or the whole stack seems to have vanished</h3>
+<p>A layer is <b>soloed</b>: look for the yellow <b>Solo: …</b> button above the layer list and click it. Solo is not saved
+in the project, and exports ignore it.</p>
+<h3>Painting on a folder hid everything in it</h3>
+<p>The brush paints a folder's <i>mask</i>, and a new mask starts black, so only the painted spot shows. Undo, then use
+<i>Add white mask</i> on the folder and erase where it should be hidden.</p>
+<h3>Undo went further back than expected</h3>
+<p>Each slider change is its own step, recorded when you let go. A long session of tweaks becomes many small steps. The
+History panel shows them all. Click the step you want instead of pressing <kbd>Ctrl</kbd>+<kbd>Z</kbd> many times.
+Only the last 100 steps (or 1 GB of undo data) are kept.</p>
+<h3>A smart material with paint looks scrambled</h3>
+<p>Painted textures in a smart material follow the UV layout of the mesh they were painted on. Save smart materials
+<i>without</i> paint to use them on other models.</p>
+
+<h2>UVs</h2>
+<h3>After unwrapping, the model shows no paint</h3>
+<p><i>UV › Keep paint on UV edits</i> was off, so the paint stayed where it was in the texture while the UVs moved. Undo
+(<kbd>Ctrl</kbd>+<kbd>Z</kbd>), turn the option on, and unwrap again.</p>
+<h3>The Island brush made several small islands, or the whole layout moved</h3>
+<p>Each connected piece of the painted area becomes its own island; paint across gaps, or grow the selection
+(<kbd>Ctrl</kbd>+Numpad <kbd>+</kbd>). If the new island didn't fit into free space, all islands were repacked at an
+equal density, and the status bar says so. Paint moves with them, so the model looks the same. Undo, and pick a lower
+density in <i>UV › Islands › Texel Density</i> if you want the old layout kept.</p>
+<h3>The texel density heat map is mostly blue or red</h3>
+<p>The heat map compares every face with the target (<i>UV › Islands › Texel Density</i>). A model whose UVs come from a projection
+(like the Suzanne sample) varies a lot from face to face. Islands made with the Island brush, or <i>Pack</i>, even it out.</p>
+<h3>UV tiles / UDIMs</h3>
+<p>A model whose islands each sit inside one unit tile, across several tiles, opens with UDIM tiles: one texture per
+tile (see <a href="texture-set.html#texture-sets">Texture sets and UDIM tiles</a>). Check <i>Texture Set › Texture sets</i>
+if a model opens differently from what you expect.</p>
+<h3>Paint shows up on two parts of the model at once</h3>
+<p>Those parts share UV space. Mirrored halves stacked on purpose do that. If they are different material slots
+(body and clothes each laid out over the whole texture), choose <i>Texture Set › Texture sets › Per material slot</i>.
+Otherwise use <i>UV › Fix Overlapping UVs</i>.</p>
+
+<h2>Exporting</h2>
+<h3>Wrong colors or shading in another program</h3>
+<p>Only base color and emission are sRGB color images. All other maps are data: import them as <i>Non-Color</i> /
+linear. If the normal map makes bumps look like dents, the program expects the other green-channel convention. Use the
+Unreal preset (DirectX) or flip green.</p>
+<h3>The export file names are not what I typed</h3>
+<p>Unknown <code>$tokens</code> stay as typed, and characters that are not allowed in file names (<code>/ \ : * ? " &lt; &gt; |</code>)
+are replaced with <code>_</code>. The example under the template shows the real name before you export.</p>
+<h3>The baked high-poly detail has flat patches</h3>
+<p>Some texels didn't find the sculpt within the cage <i>Distance</i>. Make sure both meshes were exported from the same
+Blender scene with the same transform, then raise <i>Distance</i> in <i>Bake › From a High-poly Mesh</i>. The status bar
+reports how many texels found the sculpt.</p>
+<h3>Export Again is grayed out</h3>
+<p>Nothing has been exported from this project yet. Export once with <kbd>Ctrl</kbd>+<kbd>E</kbd>; after that
+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> repeats it, also after reopening the project. Exports to Blender through the
+bridge don't count.</p>
+<h3>Textures exported but Blender didn't update</h3>
+<p>The bridge isn't linked (see the status bar), or Blender's listener is off. In Blender, check that <i>Live Link</i> is
+running, then press <kbd>Ctrl</kbd>+<kbd>B</kbd> in Patina or <i>Pull Textures</i> in Blender.</p>
+
+<h2>Pen tablets</h2>
+<h3>No pressure from the tablet</h3>
+<p>Open <i>Help › Pen Tablet Test</i>. If it says <i>No pen events yet</i> while you move the pen, the driver hands the pen
+to applications as a mouse: on Windows enable Windows Ink in the Wacom / Huion settings; on Linux check
+<code>sudo libinput debug-tablet</code>. Details in <a href="painting.html#pen-tablets">Pen tablets</a>.</p>
+<h3>The pen's buttons do the wrong thing</h3>
+<p>Set them in <i>Preferences › Pen tablet</i> (right click, middle click, swap colors, undo, nothing). If they still
+send keys or something else, the tablet driver has remapped them; set them to the default (right / middle click) there.</p>
+
+<h2>Substance files and the API</h2>
+<h3>A .sbsar (or .spsm, .spp) won't open</h3>
+<p>Those are Adobe's own formats: an <code>.sbsar</code> needs Adobe's Substance engine to render. Export the material's outputs
+as images from Substance Designer, Sampler or Player, then import that folder (see
+<a href="materials.html#substance">Materials from Substance</a>). Exported texture folders, including packed ORM / MaskMap maps
+and EXR files, import directly.</p>
+<h3>Another machine can't reach the HTTP API</h3>
+<p>Check, in order: Patina was started with <code>--lan</code> (or <i>Local network</i> is ticked in Preferences); the
+firewall lets port 7870 in from your network; the client's address is private (10.x, 172.16–31.x, 192.168.x), otherwise
+add its range with <code>--allow</code>; the client sends the token. The Patina log names every refused address.
+See <a href="api.html#reach">who can connect</a>.</p>
+<h3>The API answers 409 "busy"</h3>
+<p>A job is using the engine. Queue your work as a job too (<code>POST /api/v1/jobs</code>), or wait longer with
+<code>?busy_wait=120</code>.</p>
+
+<h2>Keys and settings</h2>
+<h3>A key stopped doing what it used to</h3>
+<p>In 0.3, <kbd>X</kbd> swaps the paint colors and the X mirror is on <kbd>Shift</kbd>+<kbd>X</kbd>. <kbd>Tab</kbd> hides
+all panels (press it again). Any shortcut can be changed back in <i>Edit › Keyboard shortcuts</i>. Two actions on the same
+key are shown in red there, and only the first one fires.</p>
+<h3>U makes an island instead of selecting Blur</h3>
+<p>Since 0.4, <kbd>U</kbd> in the Blender keymap does what Blender's Unwrap does: it makes an island from the painted faces.
+Blur has no key there; give it one in <i>Edit › Keyboard shortcuts</i>. In the Patina keymap <kbd>U</kbd> is still Blur.</p>
+<h3>Patina asks to recover work, or says the mesh changed</h3>
+<p>“Recover your work?” appears when Patina didn't close properly last time and an autosave exists. “Mesh changed on
+disk” appears when another program saved the <code>.glb</code> / <code>.obj</code> you opened. Updating keeps your
+layers. Both are described in <a href="texture-set.html#projects">Projects</a>.</p>
+<h3>S, F or Tab do something unexpected</h3>
+<p>The Blender keymap is on: <kbd>S</kbd> samples a color, <kbd>F</kbd> resizes the brush and <kbd>Ctrl</kbd>+<kbd>Space</kbd>
+hides the panels. <i>Edit › Preferences</i> shows which keymap is active and switches back to the Patina one. See the
+<a href="shortcuts-blender.html">Blender keymap reference</a>.</p>
+<h3>Patina starts with odd brush settings or a tiny UI</h3>
+<p>Brush, colors, UI scale and other choices are restored from <code>session.json</code> in the settings folder
+(<i>Help › About</i> shows where). Use <i>View › UI scale › 100%</i>, or quit and delete that file to get the defaults back.
+<code>keymap.json</code> next to it holds the shortcuts.</p>
+
+<h2>System and setup</h2>
+<h3>“Could not create an OpenGL 4.5 context”</h3>
+<p>The graphics driver is missing or too old, or you are in a VM or remote session that provides only basic OpenGL.
+Update the GPU driver. On Fedora, <code>sudo dnf install mesa-dri-drivers</code>; for NVIDIA, use the RPM Fusion driver. On
+Windows, install the driver from your GPU vendor, not the generic Microsoft one.</p>
+<h3>Wayland and pen pressure</h3>
+<p>The prebuilt Linux binary runs through XWayland. Tablets work through XInput2, but some desktops report pressure only to
+native Wayland apps. Build from source with <code>SDL3-devel</code> installed for native Wayland.</p>
+<h3>File dialogs don't open (Linux)</h3>
+<p>Patina uses <code>zenity</code> (or <code>kdialog</code>) for file dialogs. Install one with <code>sudo dnf install
+zenity</code>. Dragging and dropping files always works.</p>
+<h3>Windows: “Windows protected your PC”</h3>
+<p>The download isn't code-signed. Choose <i>More info › Run anyway</i>. Install it from a folder you own. Don't use
+<i>Program Files</i>, so Patina can update its files without administrator rights.</p>
+<h3>File names with accents or non-Latin characters</h3>
+<p>These are supported on Linux. On Windows they need Windows 10 1903 or later, because Patina relies on the system's
+UTF-8 support.</p>
+<h3>Port 7860 is already in use</h3>
+<p>Another Patina window (or another program) has the port. The second window still works, but automation talks to the
+first one. Start it with <code>--port 7870</code>, and set the same port in the Blender add-on and the MCP command if you
+want those to use it.</p>
+<h3>The app is slow at 4K / 8K</h3>
+<p>Every stroke updates the whole texture set on the GPU. At 4K and above, with many layers, an integrated GPU will
+struggle. Paint at 2K, then switch the resolution up before exporting. Layers are resampled.</p>
+
+<h2>Windows build status</h2>
+<div class="callout warn"><span class="t">Windows build status</span>The Windows version is cross-compiled from Linux. It is
+built from the same code as the Linux app, which passes its automated tests, but the Windows binaries themselves haven't
+been run on Windows yet. If something behaves differently on Windows, run <code>patina-cli.exe</code> from a terminal: it
+prints the log, including the OpenGL driver it found.</div>

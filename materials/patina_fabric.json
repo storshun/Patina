@@ -1,0 +1,1447 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Fabric",
+ "materials": [
+  {
+   "id": "patina_leather_brown",
+   "name": "Leather Brown",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "leather",
+   "description": "Grained brown leather",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#6e4127",
+    "color_b": "#4f2d1a",
+    "roughness": [
+     0.5,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.2
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_leather_black",
+   "name": "Leather Black",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "leather",
+   "description": "Grained black leather",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#262423",
+    "color_b": "#141313",
+    "roughness": [
+     0.45,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.2
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_fabric_denim",
+   "name": "Denim",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fabric",
+   "description": "Woven denim",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#2c4a78",
+    "color_b": "#c8d0dc",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 4,
+    "height": 0.3,
+    "variation": 0.15,
+    "extra": [
+     0.25,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_fabric_linen",
+   "name": "Linen",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fabric",
+   "description": "Natural linen weave",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d6ccb6",
+    "color_b": "#bfb39a",
+    "roughness": [
+     0.95,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 4,
+    "height": 0.25,
+    "variation": 0.1,
+    "extra": [
+     0.3,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_basket_weave",
+   "name": "Basket Weave Fabric",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "woven",
+   "description": "Coarse basket-weave upholstery",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#6d7280",
+    "color_b": "#5b606c",
+    "color_c": "#2a2c30",
+    "roughness": [
+     0.9,
+     1
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 12,
+    "detail": 6,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     0.5,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_canvas",
+   "name": "Canvas",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fabric",
+   "description": "Unbleached cotton canvas",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#cbbd9e",
+    "color_b": "#bfb08f",
+    "color_c": "#bfb08f",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 12,
+    "detail": 6,
+    "height": 0.3,
+    "variation": 0.1,
+    "extra": [
+     0.2,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_wool_gray",
+   "name": "Wool Gray",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fabric",
+   "description": "Soft heather-gray wool",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#7b7b7d",
+    "color_b": "#5f5f62",
+    "color_c": "#5f5f62",
+    "roughness": [
+     1,
+     1
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 6,
+    "height": 0.4,
+    "variation": 0.3,
+    "extra": [
+     0.4,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_velvet_red",
+   "name": "Velvet Red",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fabric",
+   "description": "Deep red velvet",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#6e0f1a",
+    "color_b": "#4f0a12",
+    "color_c": "#4f0a12",
+    "roughness": [
+     0.95,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 24,
+    "detail": 6,
+    "height": 0.1,
+    "variation": 0.25,
+    "extra": [
+     0.6,
+     0,
+     0,
+     0
+    ],
+    "sheen": 0.85
+   }
+  },
+  {
+   "id": "patina_quilted_leather",
+   "name": "Quilted Leather Black",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "quilted",
+   "description": "Diamond-quilted black leather with stitched seams",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#2a2624",
+    "color_b": "#8a8178",
+    "color_c": "#0d0c0b",
+    "roughness": [
+     0.45,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     1,
+     0,
+     0,
+     0.8
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "upholstery"
+   ]
+  },
+  {
+   "id": "patina_chesterfield",
+   "name": "Chesterfield Oxblood",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "quilted",
+   "description": "Button-tufted oxblood leather",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5a1f17",
+    "color_b": "#5a1f17",
+    "color_c": "#1a0806",
+    "roughness": [
+     0.4,
+     0.65
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.7,
+    "variation": 0.15,
+    "extra": [
+     0,
+     1,
+     0,
+     1
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "upholstery"
+   ]
+  },
+  {
+   "id": "patina_puffer_nylon",
+   "name": "Puffer Jacket Nylon",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "quilted",
+   "description": "Channel-quilted red nylon of a down jacket",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c23b2c",
+    "color_b": "#b33626",
+    "color_c": "#5c1810",
+    "roughness": [
+     0.35,
+     0.55
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.8,
+    "variation": 0.06,
+    "extra": [
+     1,
+     0,
+     2,
+     0
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_knit_wool_cream",
+   "name": "Knit Wool Cream",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "knit",
+   "description": "Chunky cream stockinette knit",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e8dcc6",
+    "color_b": "#a33a2e",
+    "color_c": "#6d6253",
+    "roughness": [
+     0.9,
+     1.0
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 12,
+    "detail": 4,
+    "height": 0.6,
+    "variation": 0.08,
+    "extra": [
+     0,
+     0,
+     1,
+     0
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_knit_rib_stripes",
+   "name": "Knit Rib Navy Stripes",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "knit",
+   "description": "Ribbed knit in navy and cream stripes",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#2b3f6b",
+    "color_b": "#d9d2c1",
+    "color_c": "#141c30",
+    "roughness": [
+     0.9,
+     1.0
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 12,
+    "detail": 4,
+    "height": 0.6,
+    "variation": 0.08,
+    "extra": [
+     2,
+     6,
+     1,
+     0
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_knit_seed_gray",
+   "name": "Knit Seed Stitch Gray",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "knit",
+   "description": "Heather-gray seed-stitch knit",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8d8d8f",
+    "color_b": "#8d8d8f",
+    "color_c": "#3c3c40",
+    "roughness": [
+     0.92,
+     1.0
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 14,
+    "detail": 4,
+    "height": 0.6,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0,
+     1.2,
+     1
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_denim_twill",
+   "name": "Denim Twill Indigo",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Indigo warp over ecru weft: 3/1 twill with slubby threads",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#2b3f63",
+    "color_b": "#8a90a0",
+    "color_c": "#000000",
+    "roughness": [
+     0.8,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 4,
+    "height": 0.3,
+    "variation": 0.25,
+    "extra": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_denim_black",
+   "name": "Denim Black",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Washed black denim",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#2a2a2d",
+    "color_b": "#444447",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 4,
+    "height": 0.3,
+    "variation": 0.2,
+    "extra": [
+     1,
+     0,
+     0,
+     0
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_gabardine_khaki",
+   "name": "Gabardine Khaki",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "twill",
+   "description": "Tight khaki 2/1 twill (chinos, trench coats)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b49f78",
+    "color_b": "#a69070",
+    "color_c": "#000000",
+    "roughness": [
+     0.8,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 4,
+    "height": 0.2,
+    "variation": 0.08,
+    "extra": [
+     0,
+     0,
+     0,
+     0.2
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_sequins_gold",
+   "name": "Sequins Gold",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "sequins",
+   "description": "Overlapping gold sequins",
+   "default_scale": 2.0,
+   "params": {
+    "color_a": "#c8a040",
+    "color_b": "#e8c870",
+    "color_c": "#201810",
+    "roughness": [
+     0.15,
+     0.8
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 12,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.3,
+    "extra": [
+     0,
+     0,
+     0,
+     0.6
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "stage"
+   ]
+  },
+  {
+   "id": "patina_sequins_silver",
+   "name": "Sequins Silver",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "sequins",
+   "description": "Overlapping silver sequins",
+   "default_scale": 2.0,
+   "params": {
+    "color_a": "#c0c4c8",
+    "color_b": "#e8eaec",
+    "color_c": "#141414",
+    "roughness": [
+     0.12,
+     0.8
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 12,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.3,
+    "extra": [
+     0,
+     0.6,
+     0,
+     0.5
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "stage"
+   ]
+  },
+  {
+   "id": "patina_glitter_pink",
+   "name": "Glitter Pink",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "sequins",
+   "description": "Fine pink glitter",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c03070",
+    "color_b": "#f080b0",
+    "color_c": "#201010",
+    "roughness": [
+     0.2,
+     0.8
+    ],
+    "metallic": [
+     1,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.4,
+    "extra": [
+     0,
+     0.6,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "stage"
+   ]
+  },
+  {
+   "id": "patina_lace_white",
+   "name": "Lace White",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "lace",
+   "description": "White floral lace on a fine net; the holes are see-through",
+   "default_scale": 1.0,
+   "tags": [
+    "lace",
+    "see-through",
+    "lingerie"
+   ],
+   "params": {
+    "color_a": "#f3f1ea",
+    "color_b": "#ffffff",
+    "color_c": "#202020",
+    "roughness": [
+     0.7,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     1,
+     10,
+     0,
+     0.02
+    ],
+    "sheen": 0.3,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_lace_black",
+   "name": "Lace Black",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "lace",
+   "description": "Black lace with climbing vines; see-through",
+   "default_scale": 1.0,
+   "tags": [
+    "lace",
+    "see-through",
+    "lingerie"
+   ],
+   "params": {
+    "color_a": "#141414",
+    "color_b": "#2a2a2a",
+    "color_c": "#e0d0c0",
+    "roughness": [
+     0.6,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     1,
+     12,
+     1,
+     0.02
+    ],
+    "sheen": 0.4,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_lace_ivory_geometric",
+   "name": "Lace Ivory Geometric",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "lace",
+   "description": "Ivory lace in diamonds and rings; see-through",
+   "default_scale": 1.0,
+   "tags": [
+    "lace",
+    "see-through"
+   ],
+   "params": {
+    "color_a": "#efe6d2",
+    "color_b": "#fff8ea",
+    "color_c": "#303030",
+    "roughness": [
+     0.7,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     1,
+     10,
+     2,
+     0.025
+    ],
+    "sheen": 0.3,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_fishnet_black",
+   "name": "Fishnet Black",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "net",
+   "description": "Black fishnet; the holes are see-through",
+   "default_scale": 1.0,
+   "tags": [
+    "net",
+    "see-through",
+    "stockings"
+   ],
+   "params": {
+    "color_a": "#0e0e10",
+    "color_b": "#1c1c1f",
+    "color_c": "#d8b8a8",
+    "roughness": [
+     0.55,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     0.12,
+     0,
+     0.4,
+     0.3
+    ],
+    "sheen": 0.3,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_tulle_pink",
+   "name": "Tulle Pink",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "net",
+   "description": "Fine honeycomb tulle, faintly see-through even where the thread is",
+   "default_scale": 1.0,
+   "tags": [
+    "net",
+    "see-through",
+    "dress"
+   ],
+   "params": {
+    "color_a": "#f2b8c8",
+    "color_b": "#f8d0dc",
+    "color_c": "#ffffff",
+    "roughness": [
+     0.6,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 24,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.15,
+    "extra": [
+     0.1,
+     1,
+     0,
+     0
+    ],
+    "opacity": 0.85,
+    "sheen": 0.4,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_sports_mesh_white",
+   "name": "Sports Mesh White",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "net",
+   "description": "Square mesh of a sports jersey; see-through holes",
+   "default_scale": 1.0,
+   "tags": [
+    "net",
+    "see-through",
+    "sport"
+   ],
+   "params": {
+    "color_a": "#ececec",
+    "color_b": "#ffffff",
+    "color_c": "#303030",
+    "roughness": [
+     0.55,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 16,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     0.3,
+     2,
+     0,
+     0
+    ],
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_fishing_net",
+   "name": "Fishing Net",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "net",
+   "description": "Knotted rope net; see-through",
+   "default_scale": 1.0,
+   "tags": [
+    "net",
+    "see-through",
+    "rope"
+   ],
+   "params": {
+    "color_a": "#6b5a3e",
+    "color_b": "#4a3d29",
+    "color_c": "#2a2a2a",
+    "roughness": [
+     0.8,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.15,
+    "extra": [
+     0.1,
+     3,
+     0.6,
+     0.2
+    ],
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_chiffon_white",
+   "name": "Chiffon White",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fabric",
+   "description": "Sheer white chiffon: half see-through, soft sheen",
+   "default_scale": 1.0,
+   "tags": [
+    "sheer",
+    "see-through",
+    "dress"
+   ],
+   "params": {
+    "color_a": "#f4f2ee",
+    "color_b": "#e8e4dc",
+    "color_c": "#e8e4dc",
+    "roughness": [
+     0.7,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 48,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.15,
+    "extra": [
+     0.3,
+     0,
+     0,
+     0
+    ],
+    "opacity": 0.45,
+    "sheen": 0.4
+   }
+  },
+  {
+   "id": "patina_chiffon_black",
+   "name": "Chiffon Black",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fabric",
+   "description": "Sheer black chiffon",
+   "default_scale": 1.0,
+   "tags": [
+    "sheer",
+    "see-through",
+    "dress"
+   ],
+   "params": {
+    "color_a": "#151515",
+    "color_b": "#202020",
+    "color_c": "#202020",
+    "roughness": [
+     0.65,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 48,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.15,
+    "extra": [
+     0.3,
+     0,
+     0,
+     0
+    ],
+    "opacity": 0.4,
+    "sheen": 0.5
+   }
+  },
+  {
+   "id": "patina_velvet_crushed_purple",
+   "name": "Velvet Crushed Purple",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "velvet",
+   "description": "Crushed velvet with shifting light",
+   "default_scale": 1.0,
+   "tags": [
+    "velvet",
+    "sheen"
+   ],
+   "params": {
+    "color_a": "#3a0f4f",
+    "color_b": "#6a2a85",
+    "color_c": "#24082f",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.25,
+    "variation": 0.15,
+    "extra": [
+     1,
+     1,
+     0.4,
+     0
+    ],
+    "sheen": 0.9
+   }
+  },
+  {
+   "id": "patina_velvet_black",
+   "name": "Velvet Black",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "velvet",
+   "description": "Plain black velvet",
+   "default_scale": 1.0,
+   "tags": [
+    "velvet",
+    "sheen"
+   ],
+   "params": {
+    "color_a": "#121014",
+    "color_b": "#2a262c",
+    "color_c": "#08070a",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.15,
+    "variation": 0.15,
+    "extra": [
+     0,
+     1,
+     0.5,
+     0
+    ],
+    "sheen": 0.9
+   }
+  },
+  {
+   "id": "patina_corduroy_brown",
+   "name": "Corduroy Brown",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "velvet",
+   "description": "Brown corduroy with soft ribs",
+   "default_scale": 1.0,
+   "tags": [
+    "corduroy",
+    "sheen"
+   ],
+   "params": {
+    "color_a": "#6b4a2e",
+    "color_b": "#8a6440",
+    "color_c": "#3d2817",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     2,
+     1,
+     0.5,
+     20
+    ],
+    "sheen": 0.6
+   }
+  },
+  {
+   "id": "patina_devore_burgundy",
+   "name": "Devoré Burgundy",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "velvet",
+   "description": "Burnt-out velvet: ornaments of pile on a sheer ground",
+   "default_scale": 1.0,
+   "tags": [
+    "velvet",
+    "sheen",
+    "see-through"
+   ],
+   "params": {
+    "color_a": "#5a0f1e",
+    "color_b": "#7d2236",
+    "color_c": "#3b0a14",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.15,
+    "extra": [
+     3,
+     1,
+     0.4,
+     0
+    ],
+    "sheen": 0.9,
+    "cutout": true
+   }
+  },
+  {
+   "id": "patina_rope_manila",
+   "name": "Rope Manila",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "rope",
+   "description": "Three-strand manila rope (lengthwise along V: use UV mapping on a tube)",
+   "default_scale": 1.0,
+   "tags": [
+    "rope"
+   ],
+   "params": {
+    "color_a": "#9c7f52",
+    "color_b": "#c9ab7a",
+    "color_c": "#3a2c18",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.15,
+    "extra": [
+     0,
+     3,
+     1,
+     0.6
+    ]
+   }
+  },
+  {
+   "id": "patina_rope_braided_blue",
+   "name": "Rope Braided Blue",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "rope",
+   "description": "Braided nylon cord",
+   "default_scale": 1.0,
+   "tags": [
+    "rope"
+   ],
+   "params": {
+    "color_a": "#1f4e8c",
+    "color_b": "#5b8fd0",
+    "color_c": "#0c2140",
+    "roughness": [
+     0.5,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.15,
+    "extra": [
+     1,
+     4,
+     1,
+     0.2
+    ],
+    "sheen": 0.3
+   }
+  },
+  {
+   "id": "patina_cable_coiled_black",
+   "name": "Cable Coiled Black",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "rope",
+   "description": "A coiled black rubber cable",
+   "default_scale": 1.0,
+   "tags": [
+    "cable"
+   ],
+   "params": {
+    "color_a": "#141414",
+    "color_b": "#3a3a3a",
+    "color_c": "#050505",
+    "roughness": [
+     0.45,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.15,
+    "extra": [
+     2,
+     2,
+     1,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_fur_brown",
+   "name": "Fur Brown",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fur",
+   "description": "Short brown animal fur",
+   "default_scale": 1.0,
+   "tags": [
+    "fur",
+    "sheen",
+    "animal"
+   ],
+   "params": {
+    "color_a": "#6e4a2c",
+    "color_b": "#b58c5c",
+    "color_c": "#24150b",
+    "roughness": [
+     0.7,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.15,
+    "extra": [
+     1,
+     0.6,
+     0.3,
+     0.6
+    ],
+    "sheen": 0.5
+   }
+  },
+  {
+   "id": "patina_fur_white_long",
+   "name": "Fur White Long",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fur",
+   "description": "Long white fur in waves",
+   "default_scale": 1.0,
+   "tags": [
+    "fur",
+    "sheen",
+    "animal"
+   ],
+   "params": {
+    "color_a": "#e6e2dc",
+    "color_b": "#ffffff",
+    "color_c": "#8a8580",
+    "roughness": [
+     0.7,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.15,
+    "extra": [
+     2.5,
+     0.8,
+     0.6,
+     0.3
+    ],
+    "sheen": 0.5
+   }
+  },
+  {
+   "id": "patina_fur_black_sleek",
+   "name": "Fur Black Sleek",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fur",
+   "description": "Sleek short black fur with a soft shine",
+   "default_scale": 1.0,
+   "tags": [
+    "fur",
+    "sheen",
+    "animal"
+   ],
+   "params": {
+    "color_a": "#141210",
+    "color_b": "#3a3530",
+    "color_c": "#050403",
+    "roughness": [
+     0.5,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     0.6,
+     0.4,
+     0.1,
+     0.4
+    ],
+    "sheen": 0.7
+   }
+  },
+  {
+   "id": "patina_faux_fur_pink",
+   "name": "Faux Fur Pink",
+   "category": "Fabric",
+   "type": "procedural",
+   "generator": "fur",
+   "description": "Fluffy pink faux fur",
+   "default_scale": 1.0,
+   "tags": [
+    "fur",
+    "sheen"
+   ],
+   "params": {
+    "color_a": "#f0a8c8",
+    "color_b": "#ffd8ea",
+    "color_c": "#a05878",
+    "roughness": [
+     0.8,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.7,
+    "variation": 0.15,
+    "extra": [
+     2,
+     0.9,
+     0.5,
+     0.7
+    ],
+    "sheen": 0.6
+   }
+  }
+ ]
+}

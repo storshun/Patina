@@ -1,0 +1,557 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Ground",
+ "materials": [
+  {
+   "id": "patina_dirt_mud",
+   "name": "Mud",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "dirt",
+   "description": "Wet mud with pebbles",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#4a3a2a",
+    "color_b": "#2f241a",
+    "color_c": "#7a6e62",
+    "roughness": [
+     0.65,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.4,
+    "variation": 0.2
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_dust",
+   "name": "Dust",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "two_tone",
+   "description": "Fine dry dust",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b7a88e",
+    "color_b": "#9a8b73",
+    "roughness": [
+     0.95,
+     1.0
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0.4,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_sand_desert",
+   "name": "Sand Desert",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "sand",
+   "description": "Wind-rippled desert sand",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#d2a86e",
+    "color_b": "#b8884f",
+    "color_c": "#f3e0b5",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 6,
+    "height": 0.6,
+    "variation": 0.4,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_sand_beach",
+   "name": "Sand Beach",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "sand",
+   "description": "Pale beach sand, fine grain",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#e2d2b0",
+    "color_b": "#cdb98f",
+    "color_c": "#ffffff",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 6,
+    "height": 0.3,
+    "variation": 0.5,
+    "extra": [
+     0.4,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_asphalt",
+   "name": "Asphalt",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "asphalt",
+   "description": "Road asphalt with aggregate",
+   "default_scale": 1.0,
+   "tags": [
+    "road"
+   ],
+   "params": {
+    "color_a": "#2b2b2c",
+    "color_b": "#5c5a57",
+    "color_c": "#151515",
+    "roughness": [
+     0.9,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.3,
+    "variation": 0.15,
+    "extra": [
+     0.04,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_asphalt_cracked",
+   "name": "Asphalt Cracked",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "asphalt",
+   "description": "Old asphalt with cracks and tar patches",
+   "default_scale": 1.0,
+   "tags": [
+    "road",
+    "weathered"
+   ],
+   "params": {
+    "color_a": "#3a3937",
+    "color_b": "#6a6762",
+    "color_c": "#121212",
+    "roughness": [
+     0.92,
+     0.55
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.45,
+    "variation": 0.2,
+    "extra": [
+     0.12,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_moss",
+   "name": "Moss",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "moss",
+   "description": "Dense green moss",
+   "default_scale": 1.0,
+   "tags": [
+    "organic"
+   ],
+   "params": {
+    "color_a": "#3d5a1f",
+    "color_b": "#7a9a35",
+    "color_c": "#3a2c1d",
+    "roughness": [
+     0.95,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.7,
+    "variation": 0.3,
+    "extra": [
+     0.3,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_moss_patchy",
+   "name": "Moss Patchy",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "moss",
+   "description": "Moss clumps over damp soil",
+   "default_scale": 1.0,
+   "tags": [
+    "organic"
+   ],
+   "params": {
+    "color_a": "#41601f",
+    "color_b": "#86a83c",
+    "color_c": "#3d2f20",
+    "roughness": [
+     0.95,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.7,
+    "variation": 0.3,
+    "extra": [
+     0.55,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_gravel",
+   "name": "Gravel",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "dirt",
+   "description": "Loose gravel and grit",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#6c655c",
+    "color_b": "#4c4740",
+    "color_c": "#9d968b",
+    "roughness": [
+     0.9,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 6,
+    "height": 0.6,
+    "variation": 0.3,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_snow",
+   "name": "Snow",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "two_tone",
+   "description": "Packed snow with soft drifts",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#f4f7fb",
+    "color_b": "#dfe7f0",
+    "color_c": "#dfe7f0",
+    "roughness": [
+     0.7,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 7,
+    "height": 0.4,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0.3,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_soot",
+   "name": "Soot",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "dirt",
+   "description": "Black, powdery soot",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#141312",
+    "color_b": "#22201e",
+    "color_c": "#0c0b0b",
+    "roughness": [
+     0.95,
+     1.0
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "dirt"
+   ]
+  },
+  {
+   "id": "patina_grime_oily",
+   "name": "Grime Oily",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "dirt",
+   "description": "Dark oily grime",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#2a241c",
+    "color_b": "#3a3226",
+    "color_c": "#15120e",
+    "roughness": [
+     0.55,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "dirt"
+   ]
+  },
+  {
+   "id": "patina_cracked_mud",
+   "name": "Cracked Mud",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "cracked_earth",
+   "description": "Dry mud plates with curled edges and fine cracks",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#9c7a55",
+    "color_b": "#c7a983",
+    "color_c": "#3a2a1c",
+    "roughness": [
+     0.9,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0.6,
+     0.6,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "desert"
+   ]
+  },
+  {
+   "id": "patina_lava",
+   "name": "Lava",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "cracked_earth",
+   "description": "Dark crust over glowing cracks",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#1c1816",
+    "color_b": "#2e2622",
+    "color_c": "#ff6a10",
+    "roughness": [
+     0.85,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     0.08,
+     0.5,
+     0.3,
+     1
+    ],
+    "seed": 1,
+    "emissive": "#ff5a00"
+   },
+   "tags": [
+    "emissive",
+    "fantasy"
+   ]
+  },
+  {
+   "id": "patina_river_pebbles",
+   "name": "River Pebbles",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "pebbles",
+   "description": "Rounded gray pebbles with gravel and sand between",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#8b8478",
+    "color_b": "#5d5a55",
+    "color_c": "#a08a6a",
+    "roughness": [
+     0.6,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0.6,
+     0.2,
+     0.6
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "path"
+   ]
+  },
+  {
+   "id": "patina_beach_stones",
+   "name": "Beach Stones Flat",
+   "category": "Ground",
+   "type": "procedural",
+   "generator": "pebbles",
+   "description": "Smooth flat stones on dark sand",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#6e6a66",
+    "color_b": "#a49e95",
+    "color_c": "#3c3a36",
+    "roughness": [
+     0.45,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     0.2,
+     0.4,
+     0.9,
+     0.3
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "path"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,268 @@
+{
+ "description": "Denim faded on the edges, grime in the folds and mud splashed up from the ground.",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_denim_twill",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Denim",
+   "opacity": 1.0,
+   "parent": 28,
+   "type": "fill",
+   "uid": 29,
+   "visible": true
+  },
+  {
+   "adjust": {
+    "brightness": 1.350000023841858,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": 0.0,
+    "saturation": 0.6000000238418579
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.550000011920929,
+    "invert": false,
+    "level": 0.6000000238418579,
+    "noise": 0.44999998807907104,
+    "noise_scale": 3.0,
+    "type": "edges"
+   },
+   "name": "Faded",
+   "opacity": 1.0,
+   "parent": 28,
+   "type": "adjust",
+   "uid": 30,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.550000011920929,
+    "invert": false,
+    "level": 0.3499999940395355,
+    "noise": 0.4000000059604645,
+    "noise_scale": 2.0,
+    "type": "occlusion"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_dust",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Grime in folds",
+   "opacity": 0.75,
+   "parent": 28,
+   "type": "fill",
+   "uid": 31,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.550000011920929,
+    "invert": true,
+    "level": 0.2199999988079071,
+    "noise": 0.550000011920929,
+    "noise_scale": 3.0,
+    "type": "gradient_y"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_dirt_mud",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Mud from below",
+   "opacity": 1.0,
+   "parent": 28,
+   "type": "fill",
+   "uid": 32,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Dirty fabric",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 28,
+   "visible": true
+  }
+ ],
+ "name": "Dirty fabric",
+ "patina_smart_material": 1
+}

@@ -1,0 +1,1327 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Stone",
+ "materials": [
+  {
+   "id": "patina_concrete",
+   "name": "Concrete",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "concrete",
+   "description": "Cast concrete with pores",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8d8a85",
+    "color_b": "#76736f",
+    "roughness": [
+     0.88,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.25,
+    "variation": 0.2,
+    "extra": [
+     0.12,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_plaster",
+   "name": "Plaster",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "concrete",
+   "description": "Smooth wall plaster",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#dcd7cf",
+    "color_b": "#c9c3b9",
+    "roughness": [
+     0.8,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.1,
+    "variation": 0.08,
+    "extra": [
+     0.05,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_stone_granite",
+   "name": "Granite",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "stone",
+   "description": "Speckled granite",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8c8580",
+    "color_b": "#4f4a47",
+    "color_c": "#2b2826",
+    "roughness": [
+     0.6,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 6,
+    "height": 0.2,
+    "variation": 0.4,
+    "extra": [
+     0.02,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_cobblestone",
+   "name": "Cobblestone",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "stone",
+   "description": "Rounded stones with dark grout",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#7a736b",
+    "color_b": "#5d5852",
+    "color_c": "#2a2622",
+    "roughness": [
+     0.75,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.8,
+    "variation": 0.2,
+    "extra": [
+     0.1,
+     0,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_bricks_red",
+   "name": "Bricks Red",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "tiles",
+   "description": "Red bricks with mortar",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8e3b26",
+    "color_b": "#a6533a",
+    "color_c": "#b8b1a5",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.25,
+    "extra": [
+     0.06,
+     2,
+     1,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_tiles_white",
+   "name": "Tiles White",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "tiles",
+   "description": "Glazed ceramic tiles",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e8e8e4",
+    "color_b": "#dcdcd6",
+    "color_c": "#8b8780",
+    "roughness": [
+     0.15,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.4,
+    "variation": 0.05,
+    "extra": [
+     0.04,
+     1,
+     0,
+     0
+    ]
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_marble_white",
+   "name": "Marble",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "marble",
+   "description": "Veined white marble",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#efede8",
+    "color_b": "#d8d4cc",
+    "color_c": "#5c5a58",
+    "roughness": [
+     0.12,
+     0.25
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.3,
+    "subsurface": 0.25,
+    "coat": 0.3
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_terrazzo_classic",
+   "name": "Terrazzo Classic",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "terrazzo",
+   "description": "White terrazzo with red and gray chips",
+   "default_scale": 1.0,
+   "tags": [
+    "floor"
+   ],
+   "params": {
+    "color_a": "#e8e4dc",
+    "color_b": "#b5533c",
+    "color_c": "#7d8084",
+    "roughness": [
+     0.25,
+     0.2
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.05,
+    "extra": [
+     0.28,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_terrazzo_dark",
+   "name": "Terrazzo Dark",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "terrazzo",
+   "description": "Charcoal terrazzo with white chips",
+   "default_scale": 1.0,
+   "tags": [
+    "floor"
+   ],
+   "params": {
+    "color_a": "#2e2f31",
+    "color_b": "#e9e6df",
+    "color_c": "#9a8f7d",
+    "roughness": [
+     0.2,
+     0.18
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.06,
+    "extra": [
+     0.25,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_slate",
+   "name": "Slate",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "stone",
+   "description": "Dark layered slate slabs",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#3b4045",
+    "color_b": "#4d5359",
+    "color_c": "#1d2023",
+    "roughness": [
+     0.6,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.35,
+    "variation": 0.2,
+    "extra": [
+     0.04,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_sandstone",
+   "name": "Sandstone",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "concrete",
+   "description": "Warm porous sandstone",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#c8a272",
+    "color_b": "#b38a5b",
+    "color_c": "#b38a5b",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.3,
+    "variation": 0.25,
+    "extra": [
+     0.15,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_bricks_old",
+   "name": "Bricks Old",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "tiles",
+   "description": "Weathered brown-red bricks with crumbling mortar",
+   "default_scale": 1.0,
+   "tags": [
+    "wall"
+   ],
+   "params": {
+    "color_a": "#8a4a35",
+    "color_b": "#6b3526",
+    "color_c": "#9c968c",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.5,
+    "variation": 0.35,
+    "extra": [
+     0.09,
+     2,
+     1,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_tiles_checker",
+   "name": "Tiles Checker",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "tiles",
+   "description": "Black and white glazed floor tiles",
+   "default_scale": 1.0,
+   "tags": [
+    "floor"
+   ],
+   "params": {
+    "color_a": "#efefea",
+    "color_b": "#1b1b1c",
+    "color_c": "#8d8a83",
+    "roughness": [
+     0.15,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 6,
+    "height": 0.15,
+    "variation": 0.03,
+    "extra": [
+     0.03,
+     1,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_marble_black",
+   "name": "Marble Nero",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "marble",
+   "description": "Black marble with white veins",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#1a1a1c",
+    "color_b": "#262628",
+    "color_c": "#d9d6cf",
+    "roughness": [
+     0.12,
+     0.2
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.2,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "coat": 0.3
+   }
+  },
+  {
+   "id": "patina_bricks_running_bond",
+   "name": "Bricks Running Bond",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "bricks",
+   "description": "Red clay bricks in running bond with chipped arrises and recessed mortar",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#9a4a33",
+    "color_b": "#7a3426",
+    "color_c": "#a49b8c",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.25,
+    "extra": [
+     0.12,
+     0,
+     0.3,
+     3
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "wall"
+   ]
+  },
+  {
+   "id": "patina_bricks_herringbone",
+   "name": "Brick Pavers Herringbone",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "bricks",
+   "description": "Clay pavers laid in a herringbone, sand in the joints",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#a0573c",
+    "color_b": "#6f3a2b",
+    "color_c": "#8d8679",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.2,
+    "extra": [
+     0.1,
+     2,
+     0.15,
+     2
+    ],
+    "seed": 5
+   },
+   "tags": [
+    "floor",
+    "path"
+   ]
+  },
+  {
+   "id": "patina_bricks_basket_weave",
+   "name": "Brick Pavers Basket Weave",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "bricks",
+   "description": "Pairs of buff pavers alternating direction",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b07a52",
+    "color_b": "#8a5a3c",
+    "color_c": "#9c968a",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.2,
+    "extra": [
+     0.1,
+     3,
+     0.2,
+     2
+    ],
+    "seed": 7
+   },
+   "tags": [
+    "floor",
+    "path"
+   ]
+  },
+  {
+   "id": "patina_concrete_blocks",
+   "name": "Concrete Blocks Stack Bond",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "bricks",
+   "description": "Gray concrete masonry units in stack bond",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#9c9a94",
+    "color_b": "#8a8882",
+    "color_c": "#b2aea4",
+    "roughness": [
+     0.9,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.06,
+    "extra": [
+     0.08,
+     1,
+     0.05,
+     2
+    ],
+    "seed": 9
+   },
+   "tags": [
+    "wall"
+   ]
+  },
+  {
+   "id": "patina_hex_tiles_white",
+   "name": "Hex Tiles White",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "hex_tiles",
+   "description": "White hexagonal mosaic tiles with gray grout",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#ecebe6",
+    "color_b": "#dedcd5",
+    "color_c": "#a5a198",
+    "roughness": [
+     0.12,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 7,
+    "detail": 4,
+    "height": 0.35,
+    "variation": 0.04,
+    "extra": [
+     0.05,
+     0.1,
+     0,
+     0
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "floor",
+    "bathroom"
+   ]
+  },
+  {
+   "id": "patina_hex_tiles_rosette",
+   "name": "Hex Tiles Rosette",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "hex_tiles",
+   "description": "White hexagons with every third tile teal",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e8e4dc",
+    "color_b": "#2f5d6e",
+    "color_c": "#9a958c",
+    "roughness": [
+     0.15,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 9,
+    "detail": 4,
+    "height": 0.35,
+    "variation": 0.06,
+    "extra": [
+     0.06,
+     0.1,
+     1,
+     0
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "floor",
+    "bathroom",
+    "pattern"
+   ]
+  },
+  {
+   "id": "patina_hex_terracotta",
+   "name": "Hex Terracotta",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "hex_tiles",
+   "description": "Large unglazed terracotta hexagons",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b8613e",
+    "color_b": "#9a4c30",
+    "color_c": "#7d7466",
+    "roughness": [
+     0.75,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.18,
+    "extra": [
+     0.07,
+     0.14,
+     0,
+     0
+    ],
+    "seed": 6
+   },
+   "tags": [
+    "floor"
+   ]
+  },
+  {
+   "id": "patina_stucco_knockdown",
+   "name": "Stucco Knockdown",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "stucco",
+   "description": "White knockdown wall texture: trowel-flattened splats over a sandy base",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e9e4da",
+    "color_b": "#f2eee6",
+    "color_c": "#a39a8b",
+    "roughness": [
+     0.9,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.05,
+    "extra": [
+     0.5,
+     0.8,
+     1,
+     0.3
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "wall"
+   ]
+  },
+  {
+   "id": "patina_stucco_mediterranean",
+   "name": "Stucco Mediterranean",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "stucco",
+   "description": "Heavy ocher stucco with rounded splats",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d39d5a",
+    "color_b": "#dcab6c",
+    "color_c": "#8a5f33",
+    "roughness": [
+     0.92,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.7,
+    "variation": 0.12,
+    "extra": [
+     0.6,
+     0.45,
+     1,
+     0.5
+    ],
+    "seed": 8
+   },
+   "tags": [
+    "wall"
+   ]
+  },
+  {
+   "id": "patina_stucco_skip_trowel",
+   "name": "Stucco Skip Trowel",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "stucco",
+   "description": "Cream plaster with sparse flat trowel skips",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#e6dcc8",
+    "color_b": "#efe7d6",
+    "color_c": "#b3a68e",
+    "roughness": [
+     0.88,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.35,
+    "variation": 0.05,
+    "extra": [
+     0.3,
+     1,
+     0.5,
+     0.15
+    ],
+    "seed": 12
+   },
+   "tags": [
+    "wall"
+   ]
+  },
+  {
+   "id": "patina_flagstone_path",
+   "name": "Flagstone Path",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "flagstone",
+   "description": "Irregular riven slabs with mortar joints",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#8a8378",
+    "color_b": "#a39a88",
+    "color_c": "#5a5348",
+    "roughness": [
+     0.8,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0.4,
+     0.6,
+     0
+    ],
+    "seed": 1,
+    "grime": 0.3
+   },
+   "tags": [
+    "floor",
+    "path"
+   ]
+  },
+  {
+   "id": "patina_flagstone_grassy",
+   "name": "Flagstone Grassy",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "flagstone",
+   "description": "Gray slabs with grass growing in the joints",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#7c7f80",
+    "color_b": "#9a8f80",
+    "color_c": "#4d6b2a",
+    "roughness": [
+     0.8,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.5,
+    "variation": 0.1,
+    "extra": [
+     0.12,
+     0.3,
+     0.3,
+     1
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "floor",
+    "path"
+   ]
+  },
+  {
+   "id": "patina_sandstone_layers",
+   "name": "Sandstone Layers",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "strata",
+   "description": "Layered sandstone cliff with eroded soft bands",
+   "default_scale": 0.3,
+   "params": {
+    "color_a": "#c98a55",
+    "color_b": "#e0b07a",
+    "color_c": "#9a5a35",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.7,
+    "variation": 0.1,
+    "extra": [
+     0.3,
+     0.8,
+     0.5,
+     0.6
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "rock",
+    "cliff"
+   ]
+  },
+  {
+   "id": "patina_canyon_rock",
+   "name": "Canyon Rock Red",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "strata",
+   "description": "Red canyon wall in folded layers",
+   "default_scale": 0.3,
+   "params": {
+    "color_a": "#8a3a22",
+    "color_b": "#b8603a",
+    "color_c": "#d8a070",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.7,
+    "variation": 0.1,
+    "extra": [
+     0.6,
+     0.6,
+     0.3,
+     0.4
+    ],
+    "seed": 1,
+    "grime": 0.25,
+    "grime_color": "#3a2014"
+   },
+   "tags": [
+    "rock",
+    "cliff"
+   ]
+  },
+  {
+   "id": "patina_stained_glass",
+   "name": "Stained Glass",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "stained_glass",
+   "description": "Colored glass in lead, glowing as if lit from behind",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c0283a",
+    "color_b": "#2848b8",
+    "color_c": "#e8b830",
+    "roughness": [
+     0.1,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0.3
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0,
+     0.5,
+     0.4
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "window",
+    "fantasy"
+   ]
+  },
+  {
+   "id": "patina_leaded_panes",
+   "name": "Leaded Diamond Panes",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "stained_glass",
+   "description": "Pale rippled glass in a diamond lead lattice",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c8d8d0",
+    "color_b": "#b8ccc4",
+    "color_c": "#d0dcd8",
+    "roughness": [
+     0.1,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.1,
+    "extra": [
+     0.05,
+     2,
+     0,
+     0.6
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "window"
+   ]
+  },
+  {
+   "id": "patina_pool_mosaic",
+   "name": "Pool Mosaic Blue",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "mosaic",
+   "description": "Small glass tiles in blues",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#2a7ab8",
+    "color_b": "#6ac0e0",
+    "color_c": "#e0e0d8",
+    "roughness": [
+     0.1,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 16,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0,
+     0.6,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "tiles",
+    "bathroom"
+   ]
+  },
+  {
+   "id": "patina_penny_tiles",
+   "name": "Penny Tiles Black and White",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "mosaic",
+   "description": "Round penny tiles, mostly white",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#f0f0ec",
+    "color_b": "#202020",
+    "color_c": "#b0b0a8",
+    "roughness": [
+     0.15,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 14,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.05,
+    "extra": [
+     0,
+     1,
+     0,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "tiles",
+    "bathroom"
+   ]
+  },
+  {
+   "id": "patina_roman_mosaic",
+   "name": "Roman Tesserae",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "mosaic",
+   "description": "Irregular terracotta and cream stone tesserae",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#b05a2a",
+    "color_b": "#e0c080",
+    "color_c": "#706860",
+    "roughness": [
+     0.5,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 14,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.1,
+    "extra": [
+     0.1,
+     2,
+     1,
+     0
+    ],
+    "seed": 1,
+    "grime": 0.3
+   },
+   "tags": [
+    "tiles",
+    "floor"
+   ]
+  },
+  {
+   "id": "patina_bricks_grimy",
+   "name": "Bricks Grimy",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "bricks",
+   "description": "Old running-bond bricks with dirt in the mortar and worn arrises",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#8a4430",
+    "color_b": "#a86048",
+    "color_c": "#a8a090",
+    "roughness": [
+     0.85,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0,
+     0.5,
+     0
+    ],
+    "seed": 1,
+    "grime": 0.6,
+    "wear": 0.4,
+    "wear_color": "#c8a890"
+   },
+   "tags": [
+    "wall"
+   ]
+  },
+  {
+   "id": "patina_ice_clear",
+   "name": "Ice Clear",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "ice",
+   "description": "Clear blue ice with cracks and trapped bubbles",
+   "default_scale": 1.0,
+   "tags": [
+    "ice",
+    "winter"
+   ],
+   "params": {
+    "color_a": "#7fb0d0",
+    "color_b": "#e6f2fc",
+    "color_c": "#d0e6f6",
+    "roughness": [
+     0.04,
+     0.5
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     0.8,
+     0.6,
+     0.15,
+     1
+    ],
+    "subsurface": 0.5,
+    "coat": 0.6
+   }
+  },
+  {
+   "id": "patina_ice_frosted",
+   "name": "Ice Frosted",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "ice",
+   "description": "Ice covered in feathery frost",
+   "default_scale": 1.0,
+   "tags": [
+    "ice",
+    "winter",
+    "frost"
+   ],
+   "params": {
+    "color_a": "#9cc4dc",
+    "color_b": "#f4f8fc",
+    "color_c": "#c8dcec",
+    "roughness": [
+     0.1,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.4,
+    "variation": 0.15,
+    "extra": [
+     0.4,
+     0.3,
+     0.9,
+     0.6
+    ],
+    "subsurface": 0.4,
+    "coat": 0.2
+   }
+  },
+  {
+   "id": "patina_jade",
+   "name": "Jade",
+   "category": "Stone",
+   "type": "procedural",
+   "generator": "marble",
+   "description": "Polished green jade: light glows through it",
+   "default_scale": 1.0,
+   "tags": [
+    "jade",
+    "polished"
+   ],
+   "params": {
+    "color_a": "#3c8a5a",
+    "color_b": "#9ad0a8",
+    "color_c": "#1e5a38",
+    "roughness": [
+     0.12,
+     0.2
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.15,
+    "extra": [
+     0.6,
+     0.3,
+     0,
+     0
+    ],
+    "subsurface": 0.6,
+    "coat": 0.4
+   }
+  }
+ ]
+}

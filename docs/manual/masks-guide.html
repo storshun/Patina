@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Masks and smart materials: a beginner&#x27;s guide - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html" class="cur">Guide: masks &amp; smart materials</a>
+<div class="toc"><a href="#the-big-idea-layers-of-material-shaped-by-masks">The big idea: layers of material, shaped by masks</a><a href="#fill-layers-the-layer-type-masks-are-made-for">Fill layers: the layer type masks are made for</a><a href="#the-kinds-of-mask">The kinds of mask</a><a href="#seeing-a-mask">Seeing a mask</a><a href="#walkthrough-a-worn-metal-finish-step-by-step">Walkthrough: a worn metal finish, step by step</a><a href="#smart-materials-saving-the-recipe">Smart materials: saving the recipe</a><a href="#tips-for-good-results">Tips for good results</a><a href="#glossary">Glossary</a></div>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Masks and smart materials: a beginner's guide -->
+<!-- nav: Guide: masks & smart materials -->
+<h1>Masks and smart materials: a beginner's guide</h1>
+<p class="lead">If you have never used Substance Painter or a similar tool, masks and smart materials can be the
+least obvious parts of Patina. They are also what gets you from "a model painted one color" to "a believable, worn
+object" in a few minutes. This page explains what they are and why they work the way they do, then walks through
+a complete example from an empty model to a smart material you can reuse on any other model.</p>
+
+<div class="callout tip"><span class="t">How to read this page</span>The first half explains the ideas, and the second half
+(<a href="#walkthrough-a-worn-metal-finish-step-by-step">the walkthrough</a>) has you build one material. If you prefer
+learning by doing, open <code>samples/Suzanne.glb</code> and jump straight to the walkthrough. The reference pages
+<a href="layers.html">Layers and masks</a> and <a href="organizing.html">Folders, solo and smart materials</a> list
+every setting.</div>
+
+<h2 id="the-big-idea-layers-of-material-shaped-by-masks">The big idea: layers of material, shaped by masks</h2>
+<p>In a 2D paint program you usually paint color directly onto the picture. Texture painters work differently. A
+real worn object is made of <b>several materials on top of each other</b>: steel, a coat of paint over it, dirt
+on the paint, a rust stain here and there. Patina builds a surface the same way, as a <b>stack of layers</b>, each
+holding one material:</p>
+<ul>
+  <li>The bottom layer covers everything, for example blue paint.</li>
+  <li>The next layer up holds a different material, for example bare steel, but it should only show <i>where the paint
+  has worn off</i>.</li>
+  <li>Above that, dirt, but only <i>in the creases</i>.</li>
+</ul>
+<p>The part in italics is the <b>mask</b>. A mask is a black-and-white image, wrapped around the model like the
+textures are, that decides where a layer shows:</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 760 210" role="img" aria-label="A rust material multiplied by a mask, over blue paint, gives rust only where the mask is white">
+  <defs>
+    <linearGradient id="mg" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".35" stop-color="#000"/><stop offset=".65" stop-color="#fff"/><stop offset="1" stop-color="#fff"/></linearGradient>
+    <pattern id="rust" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#9b4a1c"/><circle cx="6" cy="7" r="4" fill="#c4692a"/><circle cx="17" cy="16" r="5" fill="#7a3416"/><circle cx="19" cy="4" r="2" fill="#d17a36"/></pattern>
+    <linearGradient id="rg" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".65" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="1"/></linearGradient>
+    <mask id="rm"><rect x="560" y="30" width="140" height="140" fill="url(#rg2)"/></mask>
+    <linearGradient id="rg2" x1="560" x2="700" y1="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#000"/><stop offset=".35" stop-color="#000"/><stop offset=".65" stop-color="#fff"/><stop offset="1" stop-color="#fff"/></linearGradient>
+  </defs>
+  <g font-family="sans-serif" font-size="14" fill="currentColor" text-anchor="middle">
+    <rect x="20" y="30" width="140" height="140" rx="8" fill="url(#rust)"/>
+    <text x="90" y="194">Layer: rust material</text>
+    <text x="195" y="108" font-size="28">×</text>
+    <rect x="230" y="30" width="140" height="140" rx="8" fill="url(#mg)" stroke="#888" stroke-width="1"/>
+    <text x="300" y="194">Its mask</text>
+    <text x="230" y="22" font-size="12" text-anchor="start">black: hidden</text>
+    <text x="370" y="22" font-size="12" text-anchor="end">white: shown</text>
+    <text x="405" y="108" font-size="28">+</text>
+    <rect x="440" y="30" width="80" height="140" rx="8" fill="#1f4fa8"/>
+    <text x="480" y="194">Layer below</text>
+    <text x="540" y="108" font-size="28">=</text>
+    <rect x="560" y="30" width="140" height="140" rx="8" fill="#1f4fa8"/>
+    <rect x="560" y="30" width="140" height="140" rx="8" fill="url(#rust)" mask="url(#rm)"/>
+    <text x="630" y="194">Result</text>
+  </g>
+</svg>
+<figcaption>White in the mask shows the layer, black hides it and lets the layer below show through, and gray blends
+the two. The soft gray band in the middle is why the rust fades into the paint instead of ending in a hard line.</figcaption>
+</figure>
+
+<p>That is all a mask is. The rest of this page is about the different ways of <b>making</b> that black-and-white
+image: painting it by hand, letting Patina work it out from the shape of the model, or combining both.</p>
+
+<h3 id="why-not-just-paint-the-rust-on-directly">Why not just paint the rust on directly?</h3>
+<p>You can (a paint layer and a rust material will do it). Masks are better for most surface work for three reasons:</p>
+<ul>
+  <li><b>Nothing is destroyed.</b> The paint layer is still complete underneath the rust. Erase some of the mask and
+  the paint comes back exactly as it was. Painted directly, the paint under the rust would be gone.</li>
+  <li><b>You can change your mind about the material later.</b> Swap the rust layer's material for dried mud and the
+  same shape now holds mud. With direct painting you would repaint everything.</li>
+  <li><b>Masks can be calculated.</b> Patina can make a mask from the model's shape: every edge, every crease, every
+  upward-facing surface. That is a lot of careful painting you don't have to do, and it works on any model, which is
+  what makes smart materials possible.</li>
+</ul>
+
+<h2 id="fill-layers-the-layer-type-masks-are-made-for">Fill layers: the layer type masks are made for</h2>
+<p>Most of the layers in a material stack are <b>fill layers</b> (<svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b> in the Layers panel). A fill layer
+covers the whole model with one material, and then its mask cuts it down. Two consequences that confuse people at first:</p>
+<ul>
+  <li>When you add a fill layer, the whole model changes, because a new fill layer has a <b>white</b> mask: it shows
+  everywhere.</li>
+  <li>When you paint on a fill layer, you are painting its <b>mask</b>, not color. Brush strokes paint white and reveal
+  the material, and the eraser paints black and hides it. The material comes from the layer settings, not the brush.</li>
+</ul>
+<p>So there are two ways to start a fill layer, depending on what you want:</p>
+<table>
+  <tr><th>Start with</th><th>How</th><th>Then</th><th>Use it for</th></tr>
+  <tr><td><b>White mask</b> (shown everywhere)</td><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b></td><td>Pick a smart mask, or paint black where it
+    should not be.</td><td>Base materials, and anything a smart mask can place (wear, dirt, dust).</td></tr>
+  <tr><td><b>Black mask</b> (hidden everywhere)</td><td>The arrow next to <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b> ▸ <i>Fill layer with a black mask</i></td>
+    <td>Paint white where the material should appear.</td><td>Hand-placed details: a rust patch, a stain, a colored
+    stripe.</td></tr>
+</table>
+<p>Paint layers and folders can have masks too (<svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="12" cy="12" r="4.2" stroke="#E8852C" fill="#E8852C" stroke-width="1"/></svg> <b>Add mask</b> on the layer's row), and adjustment layers use their
+mask to limit where the adjustment applies. Everything on this page applies to them as well.</p>
+
+<h2 id="the-kinds-of-mask">The kinds of mask</h2>
+<p>Patina has three ways of making a mask, and you will usually mix them.</p>
+
+<h3 id="painted-masks">Painted masks</h3>
+<p>Click the mask thumbnail on the layer's row (or the <b>Mask</b> button) and paint. While you paint a mask, the
+viewport label says <code>[mask]</code>. The Paint tool paints white (or the gray set by <i>Mask value</i> in the
+Properties panel), the Erase tool (<kbd>E</kbd>) paints black, and all the usual brush settings apply (size, hardness,
+flow, pressure, symmetry). To go back to painting the layer
+itself, click the layer's name. A painted mask follows exactly what you did, so it suits details that belong
+to <i>this</i> model only: a scorch mark next to an exhaust, a worn patch where a hand grips a handle.</p>
+<p>You can also make a mask from a selection: select faces, an island or a material slot, then right-click the layer ▸
+<i>Mask from the face selection</i>.</p>
+
+<h3 id="smart-masks">Smart masks</h3>
+<p>A smart mask is worked out from the shape of the model, using maps that Patina <b>bakes</b> (calculates once and
+stores) for it: curvature, ambient occlusion and thickness. Pick one in the layer settings, in the <i>Smart mask</i>
+combo. Patina bakes whatever it needs the first time.</p>
+<table>
+  <tr><th>Smart mask</th><th>Shows the layer on…</th><th>Typical use</th></tr>
+  <tr><td>Edges</td><td>Convex edges and corners: anything that sticks out and gets knocked.</td><td>Paint worn through to metal, polished edges, chipping.</td></tr>
+  <tr><td>Cavity</td><td>Creases, seams and crevices.</td><td>Dirt and grime, dark lines in panel gaps.</td></tr>
+  <tr><td>Occlusion</td><td>Places light reaches poorly: deep corners, under overhangs.</td><td>Soot, moss, dust that collects out of reach.</td></tr>
+  <tr><td>Thin parts</td><td>Thin parts of the model: ears, fins, blades, cloth edges.</td><td>Light shining through skin or leaves, worn-through fabric.</td></tr>
+  <tr><td>Facing direction</td><td>Surfaces facing one way (up, down, front…).</td><td>Snow and dust on top, moss underneath.</td></tr>
+  <tr><td>Height gradient</td><td>The bottom (or top) of the object.</td><td>Mud on the lower half, water lines.</td></tr>
+  <tr><td>Noise</td><td>Random organic patches.</td><td>Stains, color variation.</td></tr>
+  <tr><td>Material slot</td><td>One material slot from Blender or the model file.</td><td>A different material per part, with no painting.</td></tr>
+</table>
+<p>Every smart mask has the same four controls, and they are worth understanding, because tuning them is most of
+the work:</p>
+<ul>
+  <li><b>Level</b> is the threshold: how much of the model passes. For <i>Edges</i>, a higher level keeps only the
+  sharpest edges and a lower level spreads the wear further onto the flat areas.</li>
+  <li><b>Contrast</b> is how sharp the boundary is. Low contrast gives a soft, gradual fade, and high contrast a crisp
+  line, like paint chipped off.</li>
+  <li><b>Noise</b> and <b>Noise scale</b> break up the boundary with organic noise. A smart mask with no noise looks
+  machine-made (every edge worn by exactly the same amount), and a little noise is usually what makes it believable.</li>
+  <li><b>Invert</b> swaps black and white: <i>Edges</i> inverted is "everywhere except the edges".</li>
+</ul>
+
+<h3 id="mask-effect-stacks-combining-masks">Mask effect stacks: combining masks</h3>
+<p>Sometimes one smart mask is not enough: wear on the edges, but only on the top half, softened, with a few spots
+scraped away by hand. A <a href="layers.html#mask-effects">mask effect stack</a> builds a mask from several steps:
+smart masks, painted masks, noise, levels, blur and invert, each with a blend mode such as multiply or add. Choose
+<i>Add a mask effect…</i> in the mask settings to turn a plain mask into a stack. You don't need stacks to get
+started; come back to them when a single smart mask can't do what you want.</p>
+
+<h3 id="smart-and-painted-together">Smart and painted together</h3>
+<p>A layer can have a smart mask <i>and</i> a painted mask at the same time. They multiply: the layer shows where
+both are white. That is the usual way to fix a smart mask that is right almost everywhere: keep the smart mask, then
+paint black on the mask where the wear shouldn't be (the inside of a handle, say).</p>
+
+<h2 id="seeing-a-mask">Seeing a mask</h2>
+<p>A mask is hard to judge from the finished material, so Patina can show you the mask itself:</p>
+<ul>
+  <li><b>The Layer Mask view.</b> Choose <i>Layer Mask</i> in the view combo of the viewport bar. The model shows the
+  selected layer's mask in black and white: the <b>effective</b> mask, meaning the painted mask, the smart mask
+  and any effect stack combined, exactly as the layer uses it. Tune Level and Contrast while you watch it, then switch
+  back to <i>Material</i>.</li>
+  <li><b>Solo.</b> <kbd>Alt</kbd>+click a layer's eye to show only that layer (over the base), so you can see what it
+  adds. <kbd>Alt</kbd>+click again to show everything.</li>
+  <li><b>Toggling.</b> Click a layer's eye to hide it and compare. The <a href="interface.html#compare">compare view</a>
+  shows before and after side by side.</li>
+</ul>
+
+<h2 id="walkthrough-a-worn-metal-finish-step-by-step">Walkthrough: a worn metal finish, step by step</h2>
+<p>This builds a blue painted metal that is worn through on the edges, dirty in the creases and rusty in one spot,
+on Suzanne, and then turns it into a smart material. It takes about ten minutes. Open
+<code>samples/Suzanne.glb</code> (<i>File › Open…</i>).</p>
+
+<figure><img src="img/guide_steps.png" alt="Six images of Suzanne: blue paint, steel edges, steel edges with noise, dirt, a rust patch and its mask">
+<figcaption>The steps below, in order. The last image is the rust layer's mask in the Layer Mask view.</figcaption></figure>
+
+<ol class="steps">
+  <li><b>Make a folder for the material.</b> Click <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 19 H5 A1.5 1.5 0 0 1 3.5 17.5 V6 A1.5 1.5 0 0 1 5 4.5 H9 L11 7 H18.5 A1.5 1.5 0 0 1 20 8.5 V12.5"/><path d="M3.5 10 H20" stroke="#E8852C"/><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Folder</b> and double-click its name to rename it, for example
+    <i>Worn blue metal</i>. Everything else goes inside it, which keeps the stack tidy and lets you save the whole
+    folder as a smart material at the end. New layers go into the selected folder.</li>
+  <li><b>The base: blue paint.</b> With the folder selected, pick <i>Car Paint Blue</i> in the Materials panel and
+    click <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b>. The whole model turns blue. Rename the layer <i>Paint</i>. This layer needs no mask: it
+    is the bottom of the material.</li>
+  <li><b>Bare steel on the edges.</b> Pick <i>Steel Scratched</i> and click <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b> again. The model is now all
+    steel, because the new layer's mask is white. In the layer settings, set <i>Smart mask</i> to <b>Edges</b>. The
+    steel retreats to the edges and corners, and the paint comes back everywhere else. Rename it <i>Bare steel</i>.</li>
+  <li><b>Tune the edge mask.</b> Switch the view to <b>Layer Mask</b>. Move <b>Level</b> up until only the edges you
+    want stay white (around 0.65 here), and set <b>Contrast</b> to taste. It now looks too clean, so add
+    <b>Noise</b> (about 0.5) and try a few <b>Noise scale</b> values: the wear breaks up into irregular patches.
+    Switch back to <b>Material</b> to see the result.</li>
+  <li><b>Dirt in the creases.</b> Pick <i>Mud</i>, <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b>, set the smart mask to <b>Occlusion</b>, lower the
+    Level until the dirt sits only in the deep corners (around 0.2), add a little noise, and lower the layer's
+    <b>Opacity</b> to about 85% so the paint shows through faintly.</li>
+  <li><b>A hand-painted rust patch.</b> Pick <i>Rust Heavy</i>, then the arrow next to <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b> ▸ <i>Fill layer with a
+    black mask</i>. Nothing changes, because the mask is black. Click the layer's mask thumbnail, choose a soft brush
+    and paint where you want rust: the strokes paint white into the mask and reveal it. The Erase tool
+    (<kbd>E</kbd>) takes it back.</li>
+</ol>
+
+<div class="two">
+  <figure><img src="img/guide_masks.png" alt="Three masks in the Layer Mask view"><figcaption>The Layer Mask view for
+  the steel layer without and with noise, and for the dirt layer.</figcaption></figure>
+  <figure><img src="img/guide_layers.png" alt="The Layers panel with the Worn blue metal folder"><figcaption>The finished
+  stack. Upper layers cover lower ones, so the order matters: dirt above steel means the steel edges get dirty too.
+  The rust layer shows its painted mask thumbnail.</figcaption></figure>
+</div>
+
+<div class="callout gotcha"><span class="t">"I painted but nothing changed"</span>You are painting the mask of a fill
+layer whose mask is already white. Painting white on white does nothing. Erase instead (<kbd>E</kbd>), or start the layer with a
+black mask.</div>
+<div class="callout gotcha"><span class="t">"My brush paints the wrong thing"</span>Check the viewport label: <code>[mask]</code>
+means strokes go into the selected layer's mask. Click the layer's name to paint the layer instead, or select a
+different layer. On a fill layer there is nothing to paint but the mask.</div>
+
+<h2 id="smart-materials-saving-the-recipe">Smart materials: saving the recipe</h2>
+<p>Look at what the folder you just built contains: three fill layers with smart masks, plus one painted mask.
+Apart from the rust patch, <b>nothing in it is specific to Suzanne</b>. "Blue paint, steel on the edges with Level
+0.65 and some noise, dirt in the occluded areas at 85%" is a recipe, and the masks are recalculated from whatever
+model it is used on. A <b>smart material</b> is exactly that: a saved folder (or layer) of settings that you can
+apply to any model.</p>
+<h3 id="save-it">Save it</h3>
+<ol class="steps">
+  <li><b>Remove or keep the hand-painted parts.</b> The rust patch was painted for Suzanne, in Suzanne's UV layout.
+    On another model it would land in a random spot, so leave it out of a general-purpose smart material: delete
+    the layer, or move it out of the folder.</li>
+  <li><b>Right-click the folder ▸ <i>Save as smart material…</i></b> and give it a name. Leave <i>Include painted
+    textures and masks</i> off, so only the settings are stored.</li>
+</ol>
+<h3 id="use-it">Use it</h3>
+<p>Open another model, click <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L14.5 9.5"/><path d="M14.5 9.5 L16.5 7.5" stroke="#E8852C" stroke-width="2.5"/><path d="M18 2.8 V5.8 M16.5 4.3 H19.5 M20.2 9.5 V11.5 M19.2 10.5 H21.2 M10.5 3 V5 M9.5 4 H11.5" stroke="#E8852C" stroke-width="1.5"/></svg> <b>Smart materials</b> above the layer list and pick your material. It arrives as one folder, and
+Patina bakes the maps its smart masks need. The edges, cavities and occlusion are those of the new model:</p>
+<figure><img src="img/guide_reuse.png" alt="The worn blue metal smart material on a cube, a torus and a sphere"><figcaption>The
+smart material from the walkthrough, applied unchanged to a cube, a torus and a sphere. The steel lands on the cube's
+edges because the mask is recalculated for each shape.</figcaption></figure>
+<p>A smart material is a starting point, not a finished result. Every model is different, so open the folder and
+adjust: raise an Edges level on a model with many sharp edges, scale materials up on a large object, paint a few
+corrections into a mask.</p>
+
+<h3 id="what-carries-over-and-what-doesn-t">What carries over and what doesn't</h3>
+<table>
+  <tr><th>Carries over to any model</th><th>Stays with the original model</th></tr>
+  <tr><td>Materials and their settings (scale, tint, roughness), layer opacity, blend modes, folder structure,
+    adjustment layers, smart masks and their settings, mask effect stacks (except their painted step).</td>
+    <td>Painted layers and painted masks, which are stored in the model's UV layout. Save with <i>Include painted
+    textures and masks</i> to copy them between projects of the <b>same</b> model.</td></tr>
+</table>
+
+<h3 id="built-in-smart-materials">Built-in smart materials</h3>
+<p>Patina comes with nineteen smart materials (<svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L14.5 9.5"/><path d="M14.5 9.5 L16.5 7.5" stroke="#E8852C" stroke-width="2.5"/><path d="M18 2.8 V5.8 M16.5 4.3 H19.5 M20.2 9.5 V11.5 M19.2 10.5 H21.2 M10.5 3 V5 M9.5 4 H11.5" stroke="#E8852C" stroke-width="1.5"/></svg> <b>Smart materials</b>), listed in <a href="organizing.html#smart-materials">Folders,
+solo and smart materials</a>: worn painted metal, scratched painted steel, rusted iron, aged brass, oxidized copper,
+heat-tinted metal, worn gold trim, worn sci-fi panels, dusty and grimy plastic, worn leather, dirty fabric, weathered and
+mossy wood, mossy stone, living skin, and three overlays that go on top of another material: snow cover, edge wear +
+grime, and stylized edge highlights for toon and hand-painted materials. Open their folders to see how they are built:
+each one is a few fill layers with smart masks, like the walkthrough. <i>Scratched painted steel</i> also shows a mask
+effect stack (paint worn away by an edge mask and by chips from a noise mask), <i>Heat-tinted metal</i> stacks three
+height gradients into color bands, and <i>Living skin</i> uses the <i>Thin parts</i> mask to warm the ears and nose.</p>
+<p>Your own smart materials are files in <code>~/.local/share/patina/user/smart_materials</code> (on Windows,
+<code>%LOCALAPPDATA%\patina\user\smart_materials</code>). Copy one to share it with someone else.</p>
+
+<h2 id="tips-for-good-results">Tips for good results</h2>
+<ul>
+  <li><b>Think in physical order.</b> Stack layers the way the object was made and aged: base metal, primer, paint,
+    then wear, dirt and stains on top. Wear that reveals metal is easiest as a steel layer <i>above</i> the paint with an
+    edge mask.</li>
+  <li><b>Fewer, better layers.</b> Three or four well-tuned fill layers usually look better than ten.</li>
+  <li><b>Always add some noise.</b> Real wear and dirt are never uniform.</li>
+  <li><b>Check the mask, not just the result.</b> The Layer Mask view shows you immediately whether a mask catches
+    the right places.</li>
+  <li><b>Bake again after big mesh or UV changes.</b> Smart masks come from baked maps. If you change the model or
+    its UVs a lot, use <i>Bake › All mesh maps</i> so the masks follow.</li>
+  <li><b>Low-poly models work.</b> The edge mask is measured on the surface at a fixed scale, so a simple box gets
+    clean worn edges, and a smooth sphere is not treated as one big edge.</li>
+</ul>
+
+<h2 id="glossary">Glossary</h2>
+<table>
+  <tr><th>Term</th><th>Meaning</th></tr>
+  <tr><td>Layer</td><td>One step in the stack: paint, a fill (one material everywhere), an adjustment, or a folder of other layers.</td></tr>
+  <tr><td>Mask</td><td>A black-and-white image deciding where a layer shows. White shows, black hides, gray blends.</td></tr>
+  <tr><td>Fill layer</td><td>A layer that covers the model with one material. Painting on it paints its mask.</td></tr>
+  <tr><td>Smart mask (generator)</td><td>A mask calculated from the model's shape: edges, cavities, occlusion, thin parts, direction, height, noise or material slot.</td></tr>
+  <tr><td>Mask effect stack</td><td>A mask built from several steps (smart masks, paint, noise, levels, blur) combined with blend modes.</td></tr>
+  <tr><td>Bake / mesh maps</td><td>Maps Patina calculates once from the model (curvature, ambient occlusion, thickness, position) that smart masks are built from.</td></tr>
+  <tr><td>Curvature</td><td>How convex (edges) or concave (creases) each point of the surface is.</td></tr>
+  <tr><td>Ambient occlusion (AO)</td><td>How much of the surrounding light reaches each point. Low in corners and crevices.</td></tr>
+  <tr><td>Smart material</td><td>A saved folder or layer: materials plus smart masks, reusable on any model.</td></tr>
+  <tr><td>Solo</td><td>Showing one layer on its own (<kbd>Alt</kbd>+click its eye).</td></tr>
+  <tr><td>Non-destructive</td><td>Nothing is painted over permanently: every layer and mask can still be changed or removed.</td></tr>
+</table>
+
+</article>
+<footer class="pager"><a class="prev" href="materials.html">← Materials</a><a class="next" href="layers.html">Layers &amp; masks →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+#pragma once
+#define SATSUMA_VERSION "0.0.2"
+#define SATSUMA_VERSION_MAJOR 0
+#define SATSUMA_VERSION_MINOR 0
+#define SATSUMA_VERSION_PATCH 2

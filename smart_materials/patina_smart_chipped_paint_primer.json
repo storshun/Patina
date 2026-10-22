@@ -1,0 +1,349 @@
+{
+ "description": "Blue-gray paint chipped off the edges, a rim of red-oxide primer round each chip (Grow / shrink), steel in the middle.",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_steel_scratched",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Bare steel",
+   "opacity": 1.0,
+   "parent": 3,
+   "type": "fill",
+   "uid": 4,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "mask_effects": [
+    {
+     "blend": "normal",
+     "enabled": true,
+     "generator": {
+      "contrast": 0.800000011920929,
+      "invert": false,
+      "level": 0.5799999833106995,
+      "noise": 0.550000011920929,
+      "noise_scale": 3.0,
+      "type": "edges"
+     },
+     "opacity": 1.0,
+     "type": "generator"
+    },
+    {
+     "amount": -3.0,
+     "blend": "normal",
+     "enabled": true,
+     "opacity": 1.0,
+     "type": "grow"
+    },
+    {
+     "blend": "normal",
+     "enabled": true,
+     "opacity": 1.0,
+     "type": "invert"
+    }
+   ],
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.5,
+      0.20000000298023224,
+      0.12999999523162842
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.6499999761581421
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Red-oxide primer",
+   "opacity": 1.0,
+   "parent": 3,
+   "type": "fill",
+   "uid": 5,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "mask_effects": [
+    {
+     "blend": "normal",
+     "enabled": true,
+     "generator": {
+      "contrast": 0.800000011920929,
+      "invert": false,
+      "level": 0.5799999833106995,
+      "noise": 0.550000011920929,
+      "noise_scale": 3.0,
+      "type": "edges"
+     },
+     "opacity": 1.0,
+     "type": "generator"
+    },
+    {
+     "blend": "normal",
+     "enabled": true,
+     "opacity": 1.0,
+     "type": "invert"
+    }
+   ],
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.30000001192092896,
+      0.4000000059604645,
+      0.47999998927116394
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.44999998807907104
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Paint",
+   "opacity": 1.0,
+   "parent": 3,
+   "type": "fill",
+   "uid": 6,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.550000011920929,
+    "noise": 0.3499999940395355,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_dirt_mud",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Cavity dirt",
+   "opacity": 0.6000000238418579,
+   "parent": 3,
+   "type": "fill",
+   "uid": 7,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Chipped paint with primer",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 3,
+   "visible": true
+  }
+ ],
+ "name": "Chipped paint with primer",
+ "patina_smart_material": 1
+}

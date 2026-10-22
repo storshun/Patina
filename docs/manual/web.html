@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patina Web (three.js) - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html" class="cur">Patina Web</a>
+<div class="toc"><a href="#opening-it">Opening it</a><a href="#what-it-does">What it does</a><a href="#tools">Tools</a><a href="#smart-masks">Layers and smart masks</a><a href="#projects">Projects</a><a href="#island-brush">Island brush</a><a href="#controls">Controls</a><a href="#compared-with-the-desktop-app">Compared with the desktop app</a><a href="#gotchas">Gotchas</a></div>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Patina Web (three.js) -->
+<!-- nav: Patina Web -->
+<h1>Patina Web</h1>
+<p class="lead">Patina Web is a lightweight version of the painter built with three.js. It runs in any modern browser,
+with nothing to install and no internet connection needed.</p>
+
+<figure><img src="img/web_overview.png" alt="Patina Web with a painted Suzanne"><figcaption>Patina Web: a fill layer of chipped paint, a gold stroke and some rust, on the sample Suzanne.</figcaption></figure>
+
+<h2 id="opening-it">Opening it</h2>
+<ul>
+  <li>From Patina: <i>Help › Patina Web (browser painter)</i>.</li>
+  <li>Directly: open <code>web/index.html</code> from the download (on Linux after <code>install.sh</code>:
+    <code>~/.local/share/patina/web/index.html</code>). Double-clicking the file works, and no web server is needed.</li>
+  <li>To share it, copy the whole <code>web</code> folder to any static web host.</li>
+</ul>
+<p>It needs a browser with WebGL 2: Firefox, Chrome, Edge or Safari 15+.</p>
+
+<h2 id="what-it-does">What it does</h2>
+<ul>
+  <li>Paints the same 270 <code>patina_*</code> library materials, projected in 3D independently of the UVs, just like the
+    desktop app. <b>+ Image</b> in the library turns any photo or texture into a material of your own.</li>
+  <li>Tools: <b>Paint</b>, <b>Erase</b>, <b>Blur</b>, <b>Fill</b> and <b>Pick</b>, plus the Island brush. The brush has
+    size, hardness, flow, spacing, round / square / spray / grunge tips, pen pressure, paint-through, channel toggles
+    (color, rough/metal, height) and <b>Mirror X / Y / Z</b>.</li>
+  <li><b>Layers</b>: paint layers, <b>fill layers</b> and <b>adjustment layers</b>, each with opacity, a blend mode and a
+    mask. Fill and adjustment layers can use a <a href="#smart-masks">smart mask</a>.</li>
+  <li>A <b>texture / UV view</b> that shows the maps with the UV wireframe. You can paint there in texture space.</li>
+  <li>Opens <code>.glb</code>, self-contained <code>.gltf</code>, <code>.obj</code>, <code>.fbx</code> (FBX 7, from 2011 on;
+    the desktop app also reads the older FBX 6), <code>.stl</code> and <code>.3mf</code>. Includes built-in shapes and the
+    Suzanne sample.</li>
+  <li>The <a href="#island-brush">Island brush</a>: paint over a part of the model and it becomes one UV island, with
+    mirroring, orientation, texel density and pinning, plus a right-click menu in the UV view with Relax and shape packing.</li>
+  <li><b>Unique UVs</b>: one click gives a model that has no UVs, or overlapping UVs, a clean per-triangle layout. Your paint is carried over.</li>
+  <li><a href="#projects">Projects</a>: <b>Save project</b> keeps everything in one <code>.patinaweb</code> file.</li>
+  <li>Exports maps up to 4096 pixels for <b>glTF / Blender</b>, <b>Unreal</b> (ORM, DirectX normal) or <b>Unity</b>
+    (metallic-smoothness, OpenGL normal) as a <code>.zip</code>, or a textured <code>.glb</code>.</li>
+</ul>
+<div class="two">
+  <figure><img src="img/web_uvview.png" alt="Patina Web UV view"><figcaption>The texture / UV view (<kbd>U</kbd>).</figcaption></figure>
+  <figure><img src="img/web_sidebar.png" alt="Patina Web sidebar" style="max-height:520px;width:auto"><figcaption>Brush, material and layer settings.</figcaption></figure>
+</div>
+
+<h2 id="tools">Tools</h2>
+<ul>
+  <li><b>Blur</b> (<kbd>R</kbd>) softens what is already painted on the current layer, under the brush. <i>Blur radius</i>
+    sets how far it reaches.</li>
+  <li><b>Fill</b> (<kbd>P</kbd>) fills with a click. <i>Fill</i> chooses how much: one <i>Triangle</i>, its <i>UV
+    island</i>, the <i>Connected part</i> of the mesh, or the <i>Whole model</i>. With Mirror X / Y / Z on, the other side is
+    filled too. On a fill or adjustment layer it fills the mask.</li>
+  <li><b>Pick</b> (<kbd>I</kbd>) reads the color, roughness and metallic under the cursor into the flat color. Hold
+    <kbd>I</kbd> and click to pick without leaving the brush; tap <kbd>I</kbd> to pick once and return.</li>
+  <li><b>Mirror X / Y / Z</b> paints the mirrored position too, across the model's own axes. It works with Paint, Erase,
+    Blur and Fill.</li>
+</ul>
+
+<h2 id="smart-masks">Layers and smart masks</h2>
+<p><b>+ Paint</b>, <b>+ Fill</b> and <b>+ Adj</b> add layers. An <b>adjustment layer</b> changes everything below it:
+hue, saturation, brightness, contrast, and roughness and metallic offsets. Every layer has an opacity and a blend mode:
+normal, multiply, screen, overlay, add, soft light, darken or lighten.</p>
+<p>Fill and adjustment layers can use a <b>smart mask</b>, computed from the shape of the model:</p>
+<figure><img src="img/web_smart_mask.png" alt="A fill layer of rust with a Cavities smart mask"><figcaption>A fill layer of mud with the <i>Cavities</i> smart mask, over brushed steel.</figcaption></figure>
+<table>
+  <tr><th>Mask</th><th>Covers</th></tr>
+  <tr><td>Edges (wear)</td><td>Convex edges and corners, where paint wears first</td></tr>
+  <tr><td>Cavities (dirt)</td><td>Creases and hollows, where dirt gathers</td></tr>
+  <tr><td>Facing up (dust, snow)</td><td>Faces that point up, where dust and snow settle</td></tr>
+  <tr><td>Height gradient</td><td>A fade from the bottom of the model to the top</td></tr>
+  <tr><td>Noise</td><td>Cloudy patches in 3D</td></tr>
+</table>
+<p><i>Amount</i> sets how much it covers, <i>Softness</i> blurs its edge, <i>Breakup</i> roughens the edge with noise and
+<i>Invert</i> flips it. The smart mask is multiplied with the painted one, so erasing on the layer hides
+parts of it and painting brings them back.</p>
+<div class="callout tip"><span class="t">Curvature is per vertex</span>The web version measures edges and cavities on the
+mesh's vertices, so they follow the polygons. A low-polygon model gives broad, soft edges. The desktop app bakes curvature
+and ambient occlusion per texel.</div>
+
+<h2 id="projects">Projects</h2>
+<p><b>Save project</b> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) downloads a <code>.patinaweb</code> file with the model, its UVs,
+the island pins and mirror links, every layer with its settings, and the image materials you added. Open it again with
+<b>Open</b> (<kbd>Ctrl</kbd>+<kbd>O</kbd>) or by dropping it on the window; the layers come back exactly as they were
+saved. The file is a zip, with the layers as PNG files.</p>
+<p>Desktop <code>.patina</code> projects and <code>.patinaweb</code> projects are separate formats. To move work between them,
+export the maps or a GLB.</p>
+
+<h2 id="island-brush">Island brush</h2>
+<p>The Island brush works like the one in the desktop app (see <a href="uv.html#island-brush">UV editing</a>). Pick
+<b>Island</b> (<kbd>L</kbd>), paint over a part of the model, and press <kbd>Enter</kbd> or <b>Make island</b>. The
+painted triangles become one UV island:</p>
+<ul>
+  <li><b>Unwrapped flat</b> (least-squares conformal). A closed part, such as a whole head, is split into pieces first.</li>
+  <li><b>Oriented</b>: <i>Upright</i> turns the model's up direction to the texture's up. <i>Longest side</i> lines it up
+    with the texture's width. <i>Keep</i> leaves it as unwrapped.</li>
+  <li><b>Scaled</b> to a texel density: <i>Automatic</i> or <i>Match the layout</i> gives it the density of the rest of the
+    UVs, <i>Fit the texture</i> makes it as big as the free space allows, and <i>Custom</i> sets texels per unit.</li>
+  <li><b>Placed in free space</b>. If nothing fits, the unpinned islands are packed again around the pinned ones.</li>
+  <li><b>Mirrored</b> with <i>Mirror X / Y / Z</i>: the other half is selected too, and it gets the same UVs, stacked on
+    the first half, so both sides share the texels. The halves stay linked: moving either moves both.</li>
+  <li><b>Pinned</b> (<i>Pin new islands</i>), so later edits leave it where it is. <b>Pin</b> and <b>Unpin</b> under
+    <i>Make island</i> pin or unpin the painted region's islands, and <kbd>Alt</kbd>+<kbd>P</kbd> unpins over the 3D view.
+    While the Island brush is chosen, pinned islands have blue stripes on the model.</li>
+  <li>With <i>Keep paint</i> on, the paint moves with the UVs and nothing changes on the model. It is one undo step.</li>
+</ul>
+<p>Hold <kbd>Ctrl</kbd> while painting to remove triangles. <kbd>A</kbd> selects everything, <kbd>Alt</kbd>+<kbd>A</kbd>
+nothing, and <kbd>Ctrl</kbd>+<kbd>=</kbd> / <kbd>Ctrl</kbd>+<kbd>-</kbd> grow or shrink the region by a ring of
+triangles.</p>
+<div class="two">
+  <figure><img src="img/web_island_brush.png" alt="Island brush selection on both ears"><figcaption>Painting one ear with
+    Mirror X selects both.</figcaption></figure>
+  <figure><img src="img/web_islands.png" alt="A symmetric island in the UV view"><figcaption>The whole head as a mirrored
+    island: <b>x2</b> marks the stacked half, and the pin marks a pinned island.</figcaption></figure>
+</div>
+<h3 id="islands-in-the-uv-view">Islands in the UV view</h3>
+<p>Switch the UV view's mode from <i>Paint</i> to <i>Islands</i>. A click selects an island, <kbd>Shift</kbd> adds and
+<kbd>Ctrl</kbd> removes, and dragging on empty space draws a box. Dragging a selected island moves it, along with its
+mirrored half. Pinned islands don't move: <kbd>P</kbd> pins and <kbd>Alt</kbd>+<kbd>P</kbd> unpins. Right-click for
+everything else: rotate and flip, orient, set the density, move into free space, select the other half, re-stack or unstack
+mirrored halves, select pinned islands, and pack all islands.</p>
+<figure><img src="img/web_uv_menu.png" alt="The UV view's right-click menu" style="max-width:506px"><figcaption>The right-click
+  menu in the UV view.</figcaption></figure>
+
+<h2 id="controls">Controls</h2>
+<table>
+  <tr><th>Action</th><th>Input</th></tr>
+  <tr><td>Paint / erase / blur</td><td>Left mouse · <kbd>B</kbd> / <kbd>E</kbd> / <kbd>R</kbd></td></tr>
+  <tr><td>Fill</td><td><kbd>P</kbd>, then click</td></tr>
+  <tr><td>Pick a color</td><td>Hold <kbd>I</kbd> and click, or tap <kbd>I</kbd> for one pick</td></tr>
+  <tr><td>Orbit</td><td><kbd>Alt</kbd> + left drag, or middle drag</td></tr>
+  <tr><td>Pan / zoom</td><td>Right drag / mouse wheel</td></tr>
+  <tr><td>Look along an axis</td><td>Click X, Y or Z in the axis gizmo (top right corner); the end facing you again for the other side; drag there to orbit</td></tr>
+  <tr><td>Brush size</td><td><kbd>[</kbd> <kbd>]</kbd>, or <kbd>Ctrl</kbd> + wheel</td></tr>
+  <tr><td>Straight line</td><td><kbd>Shift</kbd>+click</td></tr>
+  <tr><td>Undo / redo</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td></tr>
+  <tr><td>Open / save project</td><td><kbd>Ctrl</kbd>+<kbd>O</kbd> / <kbd>Ctrl</kbd>+<kbd>S</kbd></td></tr>
+  <tr><td>UV view / frame</td><td><kbd>U</kbd> / <kbd>F</kbd></td></tr>
+  <tr><td>Island brush / make the island</td><td><kbd>L</kbd> / <kbd>Enter</kbd> (<kbd>Ctrl</kbd> + paint removes)</td></tr>
+  <tr><td>Island brush: all / none / grow / shrink</td><td><kbd>A</kbd> / <kbd>Alt</kbd>+<kbd>A</kbd> / <kbd>Ctrl</kbd>+<kbd>=</kbd> / <kbd>Ctrl</kbd>+<kbd>-</kbd></td></tr>
+  <tr><td>Pin / unpin islands (UV view, Islands mode)</td><td><kbd>P</kbd> / <kbd>Alt</kbd>+<kbd>P</kbd>, right-click for more</td></tr>
+  <tr><td>Unpin the painted islands (3D view, Island brush)</td><td><kbd>Alt</kbd>+<kbd>P</kbd></td></tr>
+</table>
+
+<h2 id="compared-with-the-desktop-app">Compared with the desktop app</h2>
+<p>Patina Web is the lighter of the two. It has the same painting model and most of the everyday tools, in a simpler
+interface.</p>
+<table>
+  <tr><th></th><th>Desktop</th><th>Web</th></tr>
+  <tr><td>Material painting, independent of the UVs</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Paint, fill and adjustment layers, blend modes, painted masks</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Smart masks</td><td>Baked per texel: AO, curvature, thickness</td><td>Per vertex: edges, cavity, up, gradient, noise</td></tr>
+  <tr><td>Blur, polygon fill, color picker, mirror painting</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Clone, smudge</td><td>✓</td><td>–</td></tr>
+  <tr><td>Island brush: mirroring, orientation, density, pinning</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Island brush along the surface (Surface)</td><td>✓</td><td>– (the faces seen in the circle)</td></tr>
+  <tr><td>Relax, shape packing</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Seam brush, unwrap methods (cylinder, sphere, smart project), weld, align, stretch maps</td><td>✓</td><td>–</td></tr>
+  <tr><td>Texture sets per material slot, UDIM tiles</td><td>✓</td><td>–</td></tr>
+  <tr><td>Your own materials</td><td>Material editor, smart materials</td><td>From an image</td></tr>
+  <tr><td>Projects</td><td><code>.patina</code></td><td><code>.patinaweb</code></td></tr>
+  <tr><td>Blender bridge, MCP</td><td>✓</td><td>–</td></tr>
+  <tr><td>Export</td><td>4 presets, up to 8K</td><td>3 presets or GLB, up to 4K</td></tr>
+</table>
+
+<h2 id="gotchas">Gotchas</h2>
+<div class="callout gotcha"><span class="t">Nothing is saved between visits</span>Patina Web keeps everything in memory.
+Reloading the page or closing the tab loses the painting, so use <b>Save project</b> first.</div>
+<div class="callout gotcha"><span class="t">Pins live in the project</span>Island pins and mirror links are saved in the
+<code>.patinaweb</code> file. The exported GLB has the new UVs, but no pins.</div>
+<div class="callout warn"><span class="t">4096 needs memory</span>At 4096 each layer uses about 200 MB of graphics memory.
+On laptops and phones, stay at 2048 unless you need the detail.</div>
+<div class="callout gotcha"><span class="t">Overlapping UVs paint twice</span>A model whose UVs overlap (mirrored halves,
+or a status bar warning about overlap) shares paint between those parts. Click <b>Unique UVs</b> to separate them. The
+exported GLB then uses the new UVs.</div>
+<div class="callout warn"><span class="t">Unique UVs have many seams</span>The automatic layout gives each quad its own
+spot. Paint stays continuous because it is projected in 3D, but at low resolutions you may see faint lines along polygon
+edges, especially in the normal map. Use 2048, or unwrap the model properly in the desktop app or Blender.</div>
+<div class="callout warn"><span class="t">Original textures are ignored</span>Patina Web paints over a neutral base. The
+model's existing textures and materials aren't imported.</div>
+<div class="callout tip"><span class="t">Privacy</span>Everything runs on your computer. Models and textures are never uploaded.</div>
+
+</article>
+<footer class="pager"><a class="prev" href="api.html">← HTTP API &amp; batch mode</a><a class="next" href="gotchas.html">Gotchas &amp; troubleshooting →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

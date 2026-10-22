@@ -1,0 +1,7 @@
+build*/
+.cache/
+*.patina
+dist/
+__pycache__/
+web/dist/
+.claude/

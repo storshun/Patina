@@ -1,0 +1,2 @@
+libTimekeeper (https://github.com/cgg-bern/libTimekeeper, f4f486648faac7c740535678b45b387078e26918), MIT
+licence in LICENSE. Header-only timing, used by libSatsuma. Config/Version.hh written out by hand.

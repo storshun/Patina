@@ -1,0 +1,106 @@
+{
+ "description": "An overlay that lightens worn edges and darkens cavities of whatever is below it.",
+ "layers": [
+  {
+   "adjust": {
+    "brightness": 1.4500000476837158,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": -0.20000000298023224,
+    "saturation": 0.800000011920929
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.75,
+    "invert": false,
+    "level": 0.6200000047683716,
+    "noise": 0.44999998807907104,
+    "noise_scale": 3.0,
+    "type": "edges"
+   },
+   "name": "Worn edges",
+   "opacity": 1.0,
+   "parent": 38,
+   "type": "adjust",
+   "uid": 39,
+   "visible": true
+  },
+  {
+   "adjust": {
+    "brightness": 0.550000011920929,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": 0.25,
+    "saturation": 1.0
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.550000011920929,
+    "noise": 0.30000001192092896,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "name": "Grime",
+   "opacity": 0.8500000238418579,
+   "parent": 38,
+   "type": "adjust",
+   "uid": 40,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Edge wear + grime overlay",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 38,
+   "visible": true
+  }
+ ],
+ "name": "Edge wear + grime overlay",
+ "patina_smart_material": 1
+}

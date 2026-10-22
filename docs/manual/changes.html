@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What&#x27;s new - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html" class="cur">What&#x27;s new</a>
+<div class="toc"><a href="#unreleased">Unreleased</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
+<main>
+<article>
+<!-- title: What's new -->
+<!-- nav: What's new -->
+<h1>What's new</h1>
+<p>What changed in each version of Patina, newest first. The same list comes with Patina as <code>CHANGELOG.md</code>.</p>
+<p>What changed in each version, newest first. The manual (Help › Manual, or <code>docs/manual</code>) explains how to use each feature, and docs/ROADMAP.md lists every feature with the version it came in.</p>
+<h2 id="unreleased">Unreleased</h2>
+<h3 id="changed">Changed</h3>
+<ul><li>
+Patina Web's material library is baked again with every build. The 1.2.0 downloads still carry the library of 0.26, with its British names. The newest library is a download of its own, <code>patina-1.2.0-web-library.7z</code>.
+</li><li>
+The Linux download's <code>INSTALL.txt</code> names what the build needs: its glibc version and SDL 3. <code>install.sh</code> checks for SDL 3, and says so when the system's glibc is too old for the build.
+</li><li>
+The install notes and the manual no longer name version 0.2.0 in their file names.
+</li><li>
+A new README: download, install, your first texture, how-tos, and this change log from 1.0.0 on. The list of every feature moved to <code>docs/FEATURES.md</code>.
+</li></ul>
+<h2 id="1-2-0-2026-10-21">1.2.0 (2026-10-21)</h2>
+<h3 id="new">New</h3>
+<ul><li>
+<b>Objects in a scene.</b> A project can hold several models, each an object with its own layers, texture set and undo history: a body, its clothes, its eyes, its hair. The <b>Objects</b> list over the layers shows them. Click one to paint it, and the layers below, the UV editor and the bakes are that object's.
+</li><li>
+<b>File › Add a Model to the Scene</b> (Ctrl+Shift+I) adds a model file as an object of its own, where the file puts it. Its texture set gets as many texels per meter as the object already open, so small parts like eyes get smaller textures.
+</li><li>
+<b>Files with several meshes</b> (glTF, FBX, OBJ) open as an object each. Files with more than 24 meshes (kits of many small parts) still open as one. The MCP command <code>open_mesh</code> takes <code>separate</code> to choose.
+</li><li>
+<b>The Object tool</b> (W) moves, turns and scales objects with a gizmo in the 3D view. Arrows move along an axis, rings turn, handles scale, and Ctrl snaps. Press W again for the next of the three. Each drag is one undo step in that object's history. A click on another object picks it. <i>On the ground</i> and <i>Where it came in</i> are on the tool's bar.
+</li><li>
+<b>Double-click another object</b> in the 3D view to paint it. A brush stroke that starts on another object does nothing and says which object it is. Objects in front of the one you paint hide it from the brush.
+</li><li>
+<b>Local view</b> (/) shows only the object you paint. Each object can also be hidden from its row in the list.
+</li><li>
+<b>The object's placement</b> (location, rotation, scale) can be typed in under the Objects list. Right-click a row to rename, copy, remove, frame or hide an object.
+</li><li>
+<b>Blender: several objects at once.</b> With add-on 0.14, <i>Send to Patina</i> sends every selected mesh. The active one starts the scene and the others come in beside it. <i>Add to the Patina Scene</i> adds them to what is open. Objects come in where Blender has them (their <code>matrix_world</code>). Updates go to their own object, and <i>Send Textures to Blender</i> sends every linked object's textures.
+</li><li>
+<b>Exports of the whole scene.</b> <i>Export Model</i> writes every object shown into one file. glTF gets a node per object, where it is. OBJ, STL and PLY get the objects' vertices moved into the scene. <i>Export Textures</i> can write every object's maps, each set named after its object.
+</li><li>
+<b>The path tracer renders every object</b>, with each one's own textures, in the Path traced view and in renders.
+</li><li>
+<b>Select faces in batches</b> with the Select tool, in the 3D view and the UV editor:
+<ul><li>
+<b>Alt+click</b> by an edge selects the loop of quads across it (Blender's face loop).
+</li><li>
+<b>Ctrl+Alt+click</b> selects the ring along it. Shift adds to the selection.
+</li><li>
+<b>Connected</b> grows the selection to the whole connected parts.
+</li><li>
+<b>Flat region</b> grows it over the surface where it bends less than an angle you set.
+</li><li>
+Right-click › <b>Select</b> offers all of these, plus the UV island and the material slot, from the face under the pointer.
+</li></ul>
+</li><li>
+<b>Face sets</b>: named, colored groups of faces, kept in the project, like Blender's sculpt face sets. The <b>Face Sets</b> panel (UV › Face Sets) has them:
+<ul><li>
+<b>New from the selection</b>, or a set for each material slot, UV island or connected part.
+</li><li>
+<b>Click</b> a set to select its faces. The <b>eye</b> hides them from the 3D view, the brush and picking (renders and exports keep them).
+</li><li>
+Right-click a set to <b>show it alone</b>, <b>fill</b> it with the paint material, or <b>mask</b> the selected layer with it.
+</li><li>
+The <b>Face set lock</b> keeps a stroke inside the set it starts on. The <b>Face Sets</b> view shows each set in its color, on the model and on the UV layout.
+</li><li>
+Face sets follow their faces through a bake-down, a reduction and a remodeled mesh. Blender's sculpt face sets come in with the model (add-on 0.14).
+</li></ul>
+</li><li>
+<b>Your own brushes.</b> Every image in your brushes folder becomes a brush: PNG, JPEG, TGA, BMP, GIF, PSD or EXR. Each folder inside it is a group in the Brushes panel, at the top. Photoshop brush files (<code>.abr</code>) there give a brush for each of their tips. Patina looks at the folder every few seconds, so a file you add shows up by itself.
+<ul><li>
+<b>Import brushes...</b> on the Brushes panel, or a drop on it, copies files into the folder.
+</li><li>
+Tips are read the right way round: a dark shape on a light ground paints with the shape, as Photoshop, GIMP and Krita tips are made. So do a light shape on a dark ground and an image with transparency.
+</li></ul>
+</li><li>
+<b>MCP:</b> <code>list_objects</code>, <code>add_object</code>, <code>select_object</code>, <code>set_object</code>, <code>remove_object</code>, <code>duplicate_object</code>, <code>isolate_object</code>, <code>frame_object</code>, <code>pick_object</code>, <code>select_loop</code>, <code>select_linked</code>, <code>list_face_sets</code>, <code>make_face_set</code>, <code>edit_face_set</code>, <code>delete_face_set</code>, <code>use_face_set</code>, <code>reload_brushes</code>, <code>import_brushes</code>. <code>export_model</code> and <code>export_textures</code> take <code>objects</code>, <code>send_to_blender</code> takes <code>objects</code>, and <code>set_brush</code> takes <code>lock_face_set</code>. New feature switches: <code>scene_objects</code> and <code>face_sets</code>.
+</li></ul>
+<h3 id="changed-2">Changed</h3>
+<ul><li>
+A project with several objects is saved in one <code>.patina</code> file. Patina 1.1 and older open its first object only.
+</li><li>
+A model dropped on the window while one is open asks whether to add it to the scene or open it instead. Drop it on the Objects list to add it right away.
+</li><li>
+Objects you are not painting free their compositing memory until they are painted or exported again.
+</li><li>
+The status bar names the object you paint when there are several.
+</li><li>
+An image tip drawn small is smoother: its mip levels are made now.
+</li><li>
+An image dropped on the Brushes panel becomes a brush of its own, kept in your brushes folder. It used to change only the current brush's tip.
+</li><li>
+Help › What's New opens this list in the manual.
+</li></ul>
+<h3 id="blender-add-on-0-14-0">Blender add-on 0.14.0</h3>
+<ul><li>
+<i>Send to Patina</i> sends every selected mesh, and the new <i>Add to the Patina Scene</i> adds them beside what Patina has.
+</li><li>
+Each object's placement goes along. The automatic mesh sync only updates objects Patina's scene has.
+</li><li>
+The sculpt face sets go along, for Patina's face sets.
+</li></ul>
+<h2 id="1-1-0-2026-10-21">1.1.0 (2026-10-21)</h2>
+<h3 id="new-2">New</h3>
+<ul><li>
+<b>Bake down from the high-poly.</b> Paint the sculpt, then bake every layer down onto its low-poly version, with <i>Bake › Bake Down to a Low-Poly Model</i> or <i>Use the Quads as the Model</i> after Patina's retopology. The low-poly becomes the model and the whole layer stack comes along.
+<ul><li>
+Paint, masks and fixes are measured at up to 16 points per texel, each looking along the low-poly's normal for the high-poly's surface.
+</li><li>
+Painted normals are turned to fit the new surface. The high-poly's shape goes into the normal map and the ambient occlusion.
+</li></ul>
+</li><li>
+<b>The Bake-Down Check view</b> marks where the transfer had to take the nearest point (amber) or guess (red), and where the low-poly faces away from the high-poly (magenta).
+</li><li>
+<b>The compare view</b> can put the high-poly as it was beside the result.
+</li></ul>
+<h3 id="changed-2-2">Changed</h3>
+<ul><li>
+<i>Bake from a high-poly mesh</i> uses the same rays: 4 points per texel, with the distance measured from the two models.
+</li><li>
+Retopology quads face outward when they are used as the model, sent to Blender or exported.
+</li></ul>
+<h2 id="1-0-0-2026-10-21">1.0.0 (2026-10-21)</h2>
+<p>The first stable release. It has the <b>Guided layout</b> for a first project (Model, UVs, Bake, Paint and Export, each step in its own color) and the <b>Full layout</b> with every panel at once. Projects, presets, keys and layouts from the 0.x versions open as they were.</p>
+<h2 id="before-1-0">Before 1.0</h2>
+<ul><li>
+<b>0.47.0:</b> each step of the Guided layout has its color; the export shows the files it writes.
+</li><li>
+<b>0.46.0:</b> the Guided layout: the work in five steps.
+</li><li>
+<b>0.45.0:</b> Select only what the camera sees (<i>Visible only</i>).
+</li><li>
+<b>0.44.0 to 0.44.2:</b> Blender objects reopen the project they were painted in; UVs survive a send from Edit Mode; fast painting on big texture sets.
+</li><li>
+<b>0.43.0:</b> symmetric islands on nearly symmetric models; the Island brush's Screen and Surface reach.
+</li><li>
+<b>0.42.0:</b> right-click a slider to type its value.
+</li><li>
+<b>0.41.0:</b> baked maps (ambient occlusion, curvature, thickness) are layers you can fix.
+</li><li>
+<b>0.40.0 and 0.40.1:</b> four pie menus; the wireframe and seams stay on the side you can see.
+</li><li>
+<b>0.39.0:</b> the path traced view and renders.
+</li><li>
+<b>0.38.0:</b> side views the Blender way (numpad, axis gizmo).
+</li><li>
+<b>0.37.0 and 0.37.1:</b> the retopology preview button; pin and unpin from the 3D view.
+</li><li>
+<b>0.36.0:</b> icons in the toolbars, right-click menus, the interface in other languages.
+</li><li>
+<b>0.35.1:</b> American English throughout.
+</li></ul>
+<p>The versions before these are in docs/ROADMAP.md, each feature with the version it came in.</p>
+
+</article>
+<footer class="pager"><a class="prev" href="commands.html">← Command reference</a><span></span></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

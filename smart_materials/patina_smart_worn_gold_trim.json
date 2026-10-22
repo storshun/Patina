@@ -1,0 +1,304 @@
+{
+ "description": "Gilded trim, dulled and tarnished in patches, dark grime in the recesses and rubbed bright on the edges.",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_gold_polished",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Gold",
+   "opacity": 1.0,
+   "parent": 52,
+   "type": "fill",
+   "uid": 53,
+   "visible": true
+  },
+  {
+   "adjust": {
+    "brightness": 0.7200000286102295,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": 0.25,
+    "saturation": 0.800000011920929
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.5,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 2.0,
+    "type": "noise"
+   },
+   "name": "Tarnish",
+   "opacity": 1.0,
+   "parent": 52,
+   "type": "adjust",
+   "uid": 54,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6499999761581421,
+    "invert": false,
+    "level": 0.5199999809265137,
+    "noise": 0.30000001192092896,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_grime_oily",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Grime",
+   "opacity": 1.0,
+   "parent": 52,
+   "type": "fill",
+   "uid": 55,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.550000011920929,
+    "invert": false,
+    "level": 0.3499999940395355,
+    "noise": 0.30000001192092896,
+    "noise_scale": 2.0,
+    "type": "occlusion"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_grime_oily",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Dark recesses",
+   "opacity": 0.699999988079071,
+   "parent": 52,
+   "type": "fill",
+   "uid": 56,
+   "visible": true
+  },
+  {
+   "adjust": {
+    "brightness": 1.25,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": -0.20000000298023224,
+    "saturation": 1.0
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.75,
+    "invert": false,
+    "level": 0.6200000047683716,
+    "noise": 0.30000001192092896,
+    "noise_scale": 3.0,
+    "type": "edges"
+   },
+   "name": "Rubbed edges",
+   "opacity": 1.0,
+   "parent": 52,
+   "type": "adjust",
+   "uid": 57,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Worn gold trim",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 52,
+   "visible": true
+  }
+ ],
+ "name": "Worn gold trim",
+ "patina_smart_material": 1
+}

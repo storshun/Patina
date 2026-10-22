@@ -1,0 +1,27 @@
+{
+ "patina_recipe": 1,
+ "id": "patina_web_ar",
+ "name": "Web and AR",
+ "description": "Mended, reduced to a quarter of its triangles, exported as a light GLB with 1K textures.",
+ "steps": [
+  {
+   "cmd": "mesh_fix",
+   "args": {
+    "all": true
+   }
+  },
+  {
+   "cmd": "mesh_reduce",
+   "args": {
+    "ratio": 0.25
+   }
+  },
+  {
+   "cmd": "export_model",
+   "args": {
+    "path": "${out}/${name}.glb",
+    "texture_size": 1024
+   }
+  }
+ ]
+}

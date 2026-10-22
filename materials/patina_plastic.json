@@ -1,0 +1,457 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Plastic",
+ "materials": [
+  {
+   "id": "patina_plastic_glossy_red",
+   "name": "Plastic Glossy Red",
+   "category": "Plastic",
+   "type": "flat",
+   "color": "#c4161c",
+   "roughness": 0.12,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Shiny red plastic",
+   "tags": []
+  },
+  {
+   "id": "patina_plastic_rough_black",
+   "name": "Plastic Rough Black",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "plastic",
+   "description": "Textured black plastic",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1c1c1e",
+    "roughness": [
+     0.6,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.05,
+    "variation": 0.1
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_plastic_white",
+   "name": "Plastic White",
+   "category": "Plastic",
+   "type": "flat",
+   "color": "#e9e9e6",
+   "roughness": 0.35,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Satin white plastic",
+   "tags": []
+  },
+  {
+   "id": "patina_rubber",
+   "name": "Rubber",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "plastic",
+   "description": "Black rubber",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#151515",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 3,
+    "height": 0.03,
+    "variation": 0.05
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_carbon_fiber",
+   "name": "Carbon Fiber",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "carbon_fiber",
+   "description": "Woven carbon fiber under clear coat",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#0d0d0f",
+    "color_b": "#3a3b40",
+    "roughness": [
+     0.2,
+     0.35
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 3,
+    "height": 0.08,
+    "variation": 0.05
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_rubber_tread",
+   "name": "Rubber Tread",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "diamond_plate",
+   "description": "Black rubber mat with raised diamonds",
+   "default_scale": 1.0,
+   "tags": [
+    "floor"
+   ],
+   "params": {
+    "color_a": "#1d1d1e",
+    "color_b": "#262627",
+    "color_c": "#262627",
+    "roughness": [
+     0.85,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 6,
+    "height": 0.6,
+    "variation": 0.05,
+    "extra": [
+     0.4,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_plastic_glossy_blue",
+   "name": "Plastic Glossy Blue",
+   "category": "Plastic",
+   "type": "flat",
+   "description": "Glossy ABS, blue",
+   "color": "#1f5fbf",
+   "roughness": 0.15,
+   "metallic": 0.0,
+   "tags": []
+  },
+  {
+   "id": "patina_plastic_satin_gray",
+   "name": "Plastic Satin Gray",
+   "category": "Plastic",
+   "type": "flat",
+   "description": "Satin gray injection-molded plastic",
+   "color": "#707276",
+   "roughness": 0.4,
+   "metallic": 0.0,
+   "tags": []
+  },
+  {
+   "id": "patina_rubber_grip_dots",
+   "name": "Rubber Grip Dots",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "knurling",
+   "description": "Black rubber with raised grip dots",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1f2022",
+    "color_b": "#3a3c40",
+    "color_c": "#0e0e0f",
+    "roughness": [
+     0.8,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 4,
+    "height": 0.6,
+    "variation": 0.06,
+    "extra": [
+     2,
+     0.4,
+     0,
+     0.3
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "grip"
+   ]
+  },
+  {
+   "id": "patina_rubber_grip_checker",
+   "name": "Rubber Grip Checkering",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "knurling",
+   "description": "Gray rubber handle with flat-topped checkering",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#3b3e42",
+    "color_b": "#55595e",
+    "color_c": "#16171a",
+    "roughness": [
+     0.75,
+     0.65
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 12,
+    "detail": 4,
+    "height": 0.5,
+    "variation": 0.06,
+    "extra": [
+     0,
+     0.3,
+     0.5,
+     0.3
+    ],
+    "seed": 3
+   },
+   "tags": [
+    "grip"
+   ]
+  },
+  {
+   "id": "patina_rubber_studs",
+   "name": "Rubber Studs Black",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "dots",
+   "description": "Black rubber with raised round studs (mats, grips)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1c1c1c",
+    "color_b": "#242424",
+    "color_c": "#000000",
+    "roughness": [
+     0.75,
+     0.65
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 5,
+    "height": 0.6,
+    "variation": 0.05,
+    "extra": [
+     0.3,
+     0,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "rubber"
+   ]
+  },
+  {
+   "id": "patina_wax_candle",
+   "name": "Candle Wax",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "two_tone",
+   "description": "Creamy candle wax: soft light inside",
+   "default_scale": 1.0,
+   "tags": [
+    "wax"
+   ],
+   "params": {
+    "color_a": "#f0e6cc",
+    "color_b": "#e6d8b4",
+    "color_c": "#e6d8b4",
+    "roughness": [
+     0.45,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.1,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0.3,
+     0,
+     0
+    ],
+    "subsurface": 0.75
+   }
+  },
+  {
+   "id": "patina_frosted_glass",
+   "name": "Frosted Glass",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "flat",
+   "description": "Frosted glass: partly see-through",
+   "default_scale": 1.0,
+   "tags": [
+    "glass",
+    "see-through"
+   ],
+   "params": {
+    "color_a": "#e8eef0",
+    "color_b": "#e8eef0",
+    "color_c": "#e8eef0",
+    "roughness": [
+     0.35,
+     0.35
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.15,
+    "extra": [
+     0.1,
+     0,
+     0,
+     0
+    ],
+    "opacity": 0.35
+   }
+  },
+  {
+   "id": "patina_glass_tinted_green",
+   "name": "Glass Tinted Green",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "flat",
+   "description": "Smooth green bottle glass: mostly see-through",
+   "default_scale": 1.0,
+   "tags": [
+    "glass",
+    "see-through"
+   ],
+   "params": {
+    "color_a": "#4a8a5a",
+    "color_b": "#4a8a5a",
+    "color_c": "#4a8a5a",
+    "roughness": [
+     0.04,
+     0.04
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.0,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "opacity": 0.25,
+    "coat": 0.5
+   }
+  },
+  {
+   "id": "patina_piano_lacquer_black",
+   "name": "Piano Lacquer Black",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "plastic",
+   "description": "Deep black under a mirror-smooth lacquer",
+   "default_scale": 1.0,
+   "tags": [
+    "lacquer",
+    "clearcoat"
+   ],
+   "params": {
+    "color_a": "#0a0a0b",
+    "color_b": "#0a0a0b",
+    "color_c": "#0a0a0b",
+    "roughness": [
+     0.25,
+     0.3
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.05,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "coat": 1.0
+   }
+  },
+  {
+   "id": "patina_nail_polish_red",
+   "name": "Nail Polish Red",
+   "category": "Plastic",
+   "type": "procedural",
+   "generator": "plastic",
+   "description": "Glossy red nail polish",
+   "default_scale": 1.0,
+   "tags": [
+    "clearcoat",
+    "character"
+   ],
+   "params": {
+    "color_a": "#b0101e",
+    "color_b": "#b0101e",
+    "color_c": "#b0101e",
+    "roughness": [
+     0.3,
+     0.35
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.03,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "coat": 1.0
+   }
+  }
+ ]
+}

@@ -1,0 +1,242 @@
+#!/usr/bin/env python3
+"""Builds Patina Web (the three.js browser painter) into web/dist/.
+
+    python3 scripts/build_web.py [--maps DIR] [--size 512]
+
+1. Bundles web/src/*.js and the vendored three.js modules into ONE classic
+   script (web/dist/patina-web.js). Browsers refuse ES modules from file://
+   URLs, and this keeps the painter working by double-clicking index.html.
+2. Converts the material maps written by Patina's `export_material_maps`
+   command (default: runs `patina --headless` itself) into WebP and wraps
+   them in small JS files (web/dist/library/*.js). Images loaded from file://
+   cannot be used as WebGL textures, but data: URIs can.
+"""
+import argparse
+import base64
+import io
+import json
+import os
+import re
+import shutil
+import socket
+import subprocess
+import sys
+import tempfile
+import time
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+WEB = os.path.join(ROOT, "web")
+DIST = os.path.join(WEB, "dist")
+
+# --------------------------------------------------------------------------- bundler
+
+MODULES = [  # dependency order
+    ("three", "vendor/three/three.module.js"),
+    ("addons/utils/BufferGeometryUtils.js", "vendor/three/addons/utils/BufferGeometryUtils.js"),
+    ("addons/controls/OrbitControls.js", "vendor/three/addons/controls/OrbitControls.js"),
+    ("addons/loaders/GLTFLoader.js", "vendor/three/addons/loaders/GLTFLoader.js"),
+    ("addons/loaders/OBJLoader.js", "vendor/three/addons/loaders/OBJLoader.js"),
+    ("addons/libs/fflate.module.js", "vendor/three/addons/libs/fflate.module.js"),
+    ("addons/curves/NURBSUtils.js", "vendor/three/addons/curves/NURBSUtils.js"),
+    ("addons/curves/NURBSCurve.js", "vendor/three/addons/curves/NURBSCurve.js"),
+    ("addons/loaders/FBXLoader.js", "vendor/three/addons/loaders/FBXLoader.js"),
+    ("addons/loaders/STLLoader.js", "vendor/three/addons/loaders/STLLoader.js"),
+    ("addons/loaders/3MFLoader.js", "vendor/three/addons/loaders/3MFLoader.js"),
+    ("addons/exporters/GLTFExporter.js", "vendor/three/addons/exporters/GLTFExporter.js"),
+    ("addons/environments/RoomEnvironment.js", "vendor/three/addons/environments/RoomEnvironment.js"),
+    ("src/zip.js", "src/zip.js"),
+    ("src/library.js", "src/library.js"),
+    ("src/geometry.js", "src/geometry.js"),
+    ("src/engine.js", "src/engine.js"),
+    ("src/islands.js", "src/islands.js"),
+    ("src/islandui.js", "src/islandui.js"),
+    ("src/gizmo.js", "src/gizmo.js"),
+    ("src/main.js", "src/main.js"),
+]
+
+IMPORT_RE = re.compile(r"^import\s*(\{[^}]*\}|\*\s+as\s+\w+|\w+)\s*from\s*['\"]([^'\"]+)['\"];?", re.M | re.S)
+EXPORT_LIST_RE = re.compile(r"^export\s*\{([^}]*)\};?", re.M | re.S)
+EXPORT_DECL_RE = re.compile(r"^export\s+(default\s+)?(async\s+function|function\*?|class|const|let|var)\s+(\w+)", re.M)
+
+
+def resolve(spec, importer):
+    if spec == "three":
+        return "three"
+    if spec.startswith("three/addons/"):
+        return "addons/" + spec[len("three/addons/"):]
+    base = os.path.dirname(importer)
+    return os.path.normpath(os.path.join(base, spec)).replace(os.sep, "/")
+
+
+def transform(mid, src):
+    def imp(m):
+        what, spec = m.group(1).strip(), resolve(m.group(2), mid)
+        if what.startswith("{"):
+            names = []
+            for part in what[1:-1].split(","):
+                part = part.strip()
+                if not part:
+                    continue
+                if " as " in part:
+                    a, b = [x.strip() for x in part.split(" as ")]
+                    names.append(f"{a}: {b}")
+                else:
+                    names.append(part)
+            return f"const {{ {', '.join(names)} }} = __m[{json.dumps(spec)}];"
+        if what.startswith("*"):
+            return f"const {what.split()[-1]} = __m[{json.dumps(spec)}];"
+        return f"const {what} = __m[{json.dumps(spec)}].default;"
+
+    src = IMPORT_RE.sub(imp, src)
+    exports = []
+
+    def exl(m):
+        for part in m.group(1).split(","):
+            part = part.strip()
+            if not part:
+                continue
+            if " as " in part:
+                a, b = [x.strip() for x in part.split(" as ")]
+                exports.append((b, a))
+            else:
+                exports.append((part, part))
+        return ""
+
+    src = EXPORT_LIST_RE.sub(exl, src)
+
+    def exd(m):
+        name = m.group(3)
+        exports.append(("default" if m.group(1) else name, name))
+        return m.group(0).replace("export default ", "").replace("export ", "", 1)
+
+    src = EXPORT_DECL_RE.sub(exd, src)
+    if re.search(r"^\s*(import|export)\s", src, re.M):
+        bad = re.search(r"^\s*(import|export)\s.*$", src, re.M).group(0)
+        raise SystemExit(f"{mid}: unsupported import/export form: {bad[:120]}")
+    body = ", ".join(f"{json.dumps(k)}: {v}" for k, v in exports)
+    return f"__m[{json.dumps(mid)}] = (function () {{\n{src}\nreturn {{ {body} }};\n}})();\n"
+
+
+def bundle():
+    out = ["/* Patina Web - bundled build (three.js r170, MIT). Generated by scripts/build_web.py. */",
+           "(function () {", "'use strict';", "const __m = {};"]
+    for mid, path in MODULES:
+        with open(os.path.join(WEB, path), encoding="utf-8") as f:
+            out.append(transform(mid, f.read()))
+    out.append("})();")
+    os.makedirs(DIST, exist_ok=True)
+    with open(os.path.join(DIST, "patina-web.js"), "w", encoding="utf-8") as f:
+        f.write("\n".join(out))
+    print("bundle:", os.path.getsize(os.path.join(DIST, "patina-web.js")) // 1024, "KiB")
+
+
+# --------------------------------------------------------------------------- material library
+
+def export_maps(patina, size, outdir):
+    port = 7980 + os.getpid() % 15
+    proc = subprocess.Popen([patina, "--headless", "--port", str(port)], stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL)
+    try:
+        for _ in range(100):
+            try:
+                s = socket.create_connection(("127.0.0.1", port), timeout=600)
+                break
+            except OSError:
+                time.sleep(0.2)
+        else:
+            raise SystemExit("patina --headless did not start")
+        f = s.makefile("rwb")
+        f.write((json.dumps({"id": 1, "cmd": "export_material_maps",
+                             "args": {"directory": outdir, "size": size}}) + "\n").encode())
+        f.flush()
+        r = json.loads(f.readline())
+        if not r.get("ok"):
+            raise SystemExit(f"export_material_maps failed: {r}")
+    finally:
+        proc.terminate()
+        proc.wait(10)
+
+
+def webp_uri(path, quality, size=None, mode="RGB"):
+    from PIL import Image
+    im = Image.open(path).convert(mode)
+    if size and im.width != size:
+        im = im.resize((size, size), Image.LANCZOS)
+    buf = io.BytesIO()
+    im.save(buf, "WEBP", quality=quality, method=6)
+    return "data:image/webp;base64," + base64.b64encode(buf.getvalue()).decode()
+
+
+def to_hex(c):
+    if isinstance(c, str):
+        return c
+    if isinstance(c, (int, float)):
+        c = [c, c, c]
+    return "#" + "".join("%02x" % max(0, min(255, round(float(v) * 255))) for v in c[:3])
+
+
+def build_library(maps_dir):
+    man = json.load(open(os.path.join(maps_dir, "manifest.json")))["materials"]
+    lib = os.path.join(DIST, "library")
+    shutil.rmtree(lib, ignore_errors=True)
+    os.makedirs(lib)
+    entries = []
+    total = 0
+    for m in man:
+        mid = m["id"]
+        p = m.get("params", {})
+        entry = {"id": mid, "name": m["name"], "category": m["category"], "description": m.get("description", ""),
+                 "type": m.get("type", "procedural"), "scale": m.get("default_scale", 1.0), "tags": m.get("tags", [])}
+        if m.get("type") == "flat":
+            entry["flat"] = {"color": to_hex(m.get("color", "#808080")), "roughness": m.get("roughness", 0.5),
+                             "metallic": m.get("metallic", 0.0), "emissive": to_hex(m.get("emissive", "#000000"))}
+        if "thumbnail" in m:
+            entry["thumb"] = webp_uri(os.path.join(maps_dir, m["thumbnail"]), 80, 96, "RGBA")
+        entries.append(entry)
+        if m.get("type") != "flat":
+            data = {"color": webp_uri(os.path.join(maps_dir, m["maps"]["color"]), 88),
+                    "rmh": webp_uri(os.path.join(maps_dir, m["maps"]["rmh"]), 92)}
+            js = f"PatinaLibrary.maps[{json.dumps(mid)}] = {json.dumps(data)};\n"
+            with open(os.path.join(lib, mid + ".js"), "w") as f:
+                f.write(js)
+            total += len(js)
+    with open(os.path.join(lib, "index.js"), "w") as f:
+        f.write("window.PatinaLibrary = window.PatinaLibrary || { maps: {} };\n")
+        f.write(f"PatinaLibrary.materials = {json.dumps(entries)};\n")
+    print(f"library: {len(entries)} materials, {total // 1024 // 1024} MiB of maps")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--maps", help="folder written by export_material_maps (default: run patina)")
+    ap.add_argument("--patina", default=os.path.join(ROOT, "build-nogui", "patina"))
+    ap.add_argument("--size", type=int, default=512)
+    ap.add_argument("--bundle-only", action="store_true")
+    a = ap.parse_args()
+    bundle()
+    for f in ("index.html", "style.css", "icon.png"):
+        shutil.copy(os.path.join(WEB, f), os.path.join(DIST, f))
+    shutil.copy(os.path.join(WEB, "vendor", "three", "LICENSE"), os.path.join(DIST, "THREE_LICENSE.txt"))
+    samples = os.path.join(DIST, "samples")
+    os.makedirs(samples, exist_ok=True)
+    for f in sorted(os.listdir(os.path.join(ROOT, "samples"))):
+        if f.endswith(".glb"):
+            data = base64.b64encode(open(os.path.join(ROOT, "samples", f), "rb").read()).decode()
+            with open(os.path.join(samples, f[:-4] + ".js"), "w") as out:
+                out.write("window.PatinaSamples = window.PatinaSamples || {};\n")
+                out.write(f"PatinaSamples[{json.dumps(f[:-4])}] = \"data:model/gltf-binary;base64,{data}\";\n")
+    if a.bundle_only:
+        return
+    maps = a.maps
+    tmp = None
+    if not maps:
+        tmp = tempfile.mkdtemp(prefix="patina_maps_")
+        export_maps(a.patina, a.size, tmp)
+        maps = tmp
+    build_library(maps)
+    if tmp:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+if __name__ == "__main__":
+    main()

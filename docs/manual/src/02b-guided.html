@@ -1,0 +1,129 @@
+<!-- title: The Guided layout: your first texture -->
+<!-- nav: Guided layout -->
+<h1>The Guided layout: your first texture</h1>
+<p class="lead">The Guided layout splits the work into five steps along the top: <b>Model</b>, <b>UVs</b>, <b>Bake</b>,
+<b>Paint</b> and <b>Export</b>. Each step is a screen with what that step needs and nothing else. A new Patina starts in
+it. The <a href="interface.html">Full layout</a> shows every panel at once, docked the way you arrange it. Switch between
+them at any time with <b>Guided</b> and <b>Full</b> at the right of the menu bar. Both work on the same project with the
+same tools, so nothing is lost when you switch.</p>
+
+<figure><img src="img/guided_start.png" alt="The Guided layout at the start: the Model step"></figure>
+
+<h2 id="steps">The step bar</h2>
+<figure><img src="img/guided_bar.png" alt="The step bar"></figure>
+<p>The steps are folder tabs, each in a color of its own: <b>Model</b> blue, <b>UVs</b> teal, <b>Bake</b> violet,
+<b>Paint</b> copper and <b>Export</b> green. Click a tab to go to that step. It comes to the front, a little higher than the
+others and joined to the strip under them, and the whole window takes on a tint of its color, so you can tell at a
+glance which step you are in. The steps are in the order the work usually goes, but you can jump between them in any
+order. The same colors mark the tools, panels and menus of each step in the <a href="interface.html#step-colors">Full
+layout</a>.</p>
+<p>The mark beside each step's name shows where it stands:</p>
+<table>
+  <tr><th>Mark</th><th>Means</th></tr>
+  <tr><td>Check mark</td><td>Done: a model is open, the UVs are clean, the maps are baked, something is painted, the
+    textures are exported.</td></tr>
+  <tr><td>Amber warning sign</td><td>Needs a look: overlapping UVs, faces with no UV area, a bake older than the UVs, a
+    partial bake. Rest the pointer on the step to see why.</td></tr>
+  <tr><td>Empty circle</td><td>Not done yet.</td></tr>
+</table>
+<p>The button at the bottom of each step names the next one (<i>Next: bake the mesh maps</i>) and has that step's
+color. <b>Search
+everything</b> at the right of the bar finds any action, panel, material, brush, layer or file by name. It also
+finds the things the Full layout has and a step leaves out. Its keys are Ctrl+Shift+P and F3
+(F3 and Ctrl+K in the Blender keymap).</p>
+
+<h2 id="model">1. Model</h2>
+<p>With nothing open, the Model step offers a file to open, the sample (Suzanne), a shape to try things on, and your
+recent files. You can also drop a file anywhere on the window. To texture a Blender object, send it from Blender with the
+Patina Bridge add-on (<i>N panel › Patina › Send to Patina</i>; see <a href="blender.html">Blender</a>).</p>
+<p>With a model open, the step shows what it is made of and what the mesh check found wrong with it (holes, flipped
+faces, open seams...). <i>Show them on the model</i> marks the problems, and <i>Fix everything that can be fixed</i> mends
+them; your paint moves with the faces. <b>Textures</b> sets the texture size and how the model's faces share textures:
+one texture, one per Blender material slot, or UDIM tiles. <b>More mesh tools</b> has the size and origin, polygon
+reduction, lightmap UVs and collision shapes. Retopology has tools and a panel of its own, so it opens in the Full
+layout.</p>
+<p>In the Model, Bake and Export steps the 3D view is for looking at the model. A left drag turns it, Shift moves it and
+Ctrl zooms, and no tool acts. Your usual navigation keys work too.</p>
+
+<h2 id="uvs">2. UVs</h2>
+<figure><img src="img/guided_uvs.png" alt="The UVs step"></figure>
+<p>Patina paints across the surface, so most models paint well whatever their UVs. The textures you export do need clean
+UVs, though. The step checks them for you and marks only what needs fixing:</p>
+<ul>
+  <li><b>Overlapping islands</b>: paint shows twice there. <i>Fix</i> moves them apart.</li>
+  <li><b>Faces with no UV area</b>: they get no paint. <i>Unwrap them</i> gives them UVs of their own.</li>
+  <li><b>No UVs at all</b>: unwrap the model.</li>
+</ul>
+<p><i>Unwrap automatically</i> cuts the model where it bends sharply, which suits hard-surface models. <i>Unwrap along the
+seams</i> flattens the pieces your seams cut out, which suits characters and cloth. Both work on the selected faces,
+or on the whole model when nothing is selected. <i>Pack the islands</i> arranges them to fill the texture. With <i>Keep the
+paint when the UVs change</i> on, the paint moves to the new UVs.</p>
+<p>The tool strip has the UV tools: <b>Select</b> (with <a href="uv.html#select-visible">Visible only</a>), <b>Seams</b> and
+the <a href="uv.html#island-brush">Island brush</a>. The UV editor beside the view works as described in
+<a href="uv.html">UV editing</a>. Its right-click menu and the <i>UV</i> menu have every UV tool. <i>Checker pattern on
+the model</i> shows stretch: squares that stay square mean good UVs.</p>
+
+<h2 id="bake">3. Bake</h2>
+<figure><img src="img/guided_bake.png" alt="The Bake step"></figure>
+<p>Baking measures the model's shape once. Ambient occlusion is what is tucked in, curvature is the edges and
+creases, and thickness is the thin parts. Smart materials and smart masks use these maps to put dirt in the creases and
+wear on the edges. Tick the maps you want and press <b>Bake</b>. <i>Quality</i> sets how smooth the ambient occlusion is;
+64 is good. <i>Show</i> puts a map on the model. When the UVs change after a bake, the step says the maps are out
+of date and <b>Bake again</b> brings them up to date. Each baked map is a layer at the bottom of the layer stack, where you
+can <a href="texture-set.html#baked-layers">paint fixes onto it</a>. To bake sculpted detail into the normal map, use
+<i>Bake from a high-poly model</i>. If you painted a high-poly model, <i>Bake down to a low-poly model</i> moves every
+layer onto its low-poly version (see <a href="texture-set.html#bake-down">Baking down</a>).</p>
+
+<h2 id="paint">4. Paint</h2>
+<figure><img src="img/guided_paint.png" alt="The Paint step"></figure>
+<p>This is where the texturing happens. The layers are at the right, and the library shelf is under the view: materials,
+smart materials and smart masks, with the brushes beside them. The tool strip has the paint tools and symmetry. While
+nothing is painted, a note at the top says where to start: drag a smart material from the shelf onto the model, or paint
+with the brush (B). On a new Patina the brush paints a red color; pick another in <b>Colors</b>, or a material from the
+shelf.</p>
+<p>Under the layers are four tabs. <b>Brush</b> has the brush and the paint material, <b>Colors</b> the color picker and
+swatches, and <b>History</b> every undo step. <b>Scene</b> has the base material under every layer and the lighting. All
+of it works as the rest of this manual describes: <a href="painting.html">Painting</a>,
+<a href="materials.html">Materials</a>, <a href="layers.html">Layers</a>.</p>
+<div class="callout tip"><span class="t">Why isn't it painting?</span>When a stroke would paint nothing you can see, a
+line in the corner of the 3D view says why. The selected layer may be hidden, or inside a hidden folder, or its opacity
+may be 0. Or every paint channel may be switched off, or no layer is selected.</div>
+
+<h2 id="export">5. Export</h2>
+<figure><img src="img/guided_export.png" alt="The Export step"></figure>
+<p>For a model from Blender, <b>Send the textures to Blender</b> sends the textures back to the object, with its UV edits.
+<i>Send them after every change</i> keeps Blender up to date as you paint. To write image files instead, choose what
+they are <b>for</b>, their size and the folder, then press <b>Export the textures</b>. The preset sets which maps are
+written and how they are packed: Blender, glTF, Unreal (ORM and DirectX normals) or Unity (MaskMap). Above the button,
+the step lists every file it will write: its name, what its channels hold (<i>R occlusion, G roughness, B
+metallic</i>), its bits, and whether it is a color map (<b>sRGB</b>) or a data map (<b>Non-Color</b>, as Blender's image
+nodes call it). Files with the same name are replaced. <i>Every export
+option</i> opens the full <a href="texture-set.html#export">Export Textures</a> window. It has the file names, layered PSD
+files, and one layer or its mask. Save the project too: the exported images are flat, and only the project keeps every
+layer.</p>
+
+<h2 id="choices">First start</h2>
+<p>The first time Patina starts, the welcome window asks three things. <b>You come from</b> picks the keys and the way the
+view turns: Blender (the middle button orbits, F3 searches), Maya (Alt with the left, middle and right buttons), or
+something else (Patina's own keys, Alt or the middle button). <b>Your textures go to</b> picks the export preset.
+<b>Layout</b> picks Guided or Full. All three can be changed later: the keys in <i>Edit › Preferences</i>, the layout at
+the right of the menu bar. In the Guided layout the welcome window appears only that first time, because the Model step
+does its job from then on. <i>Help › Welcome Window</i> brings it back.</p>
+
+<h2 id="full">The Full layout</h2>
+<figure><img src="img/layout_switch.png" alt="Guided and Full at the right of the menu bar" style="max-width:520px"></figure>
+<p>The Full layout shows every panel at once and keeps the arrangement you give it. It is the layout to work in once you
+know your way around, or when you want two things side by side that the steps keep apart. An existing Patina keeps the
+layout it had: a Patina used before 0.46 opens in the Full layout. See <a href="interface.html">The interface</a>.</p>
+
+<h2 id="unsaved">Unsaved work</h2>
+<p>Patina asks before anything replaces a project with unsaved changes: <i>File › New</i>, <i>Open</i>, <i>Open
+Recent</i>, the autosave, the sample, the welcome window's buttons and a dropped file. <b>Save</b> saves first. For a
+project that was never saved, it asks where to save and then goes on. <b>Don't save</b> drops the changes, and
+<b>Cancel</b> keeps working.</p>
+
+<h2 id="agents">For agents</h2>
+<p>The <code>layout</code> command reports the layout and each step's state (<code>done</code>, <code>look</code>,
+<code>todo</code>, and why), and switches the layout (<code>mode</code>) or the step (<code>step</code>). It works only
+with the window open. The <i>Guided layout</i> feature switch (<i>Edit › Preferences › Features</i>) turns the whole thing
+off.</p>

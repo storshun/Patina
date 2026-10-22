@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Blender bridge - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html" class="cur">Blender bridge</a>
+<div class="toc"><a href="#setting-up">Setting up</a><a href="#the-round-trip">The round trip</a><a href="#scene">Several objects</a><a href="#auto-update">Auto Update Mesh</a><a href="#reopen">After a restart</a><a href="#symmetry">Select Asymmetric Vertices</a><a href="#texture-sets">Texture sets and UDIM tiles</a><a href="#surface">Opacity, sheen, clearcoat and subsurface</a><a href="#uv-edits-go-back">UV edits go back</a><a href="#retopology">Retopology goes back as a new object</a><a href="#materials">Patina's materials in Blender</a><a href="#model-to-blender">The model back to Blender</a><a href="#without-the-add-on">Without the add-on</a><a href="#gotchas">Gotchas</a></div>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: The Blender bridge -->
+<!-- nav: Blender bridge -->
+<h1>The Blender bridge</h1>
+<p class="lead">You model in Blender and paint in Patina. With the bridge, the textures appear on the Blender model by
+themselves, and UV changes made in Patina go back too.</p>
+
+<svg class="fig" viewBox="0 0 860 230" role="img" aria-label="Round trip between Blender and Patina">
+  <style>.b{fill:var(--panel);stroke:var(--line);stroke-width:2}.t{font:600 15px system-ui,sans-serif;fill:var(--fg)}.s{font:13px system-ui,sans-serif;fill:var(--dim)}.a{stroke:var(--accent);stroke-width:2.5;fill:none;marker-end:url(#ar2)}</style>
+  <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="var(--accent)"/></marker></defs>
+  <rect class="b" x="20" y="40" width="250" height="150" rx="12"/><text class="t" x="40" y="70">Blender</text>
+  <text class="s" x="40" y="96">sidebar (N) › Patina tab</text><text class="s" x="40" y="118">Send to Patina · Pull Textures</text><text class="s" x="40" y="140">Update Mesh · Live Link</text>
+  <text class="s" x="40" y="168">material “Patina_&lt;object&gt;”</text>
+  <rect class="b" x="590" y="40" width="250" height="150" rx="12"/><text class="t" x="610" y="70">Patina</text>
+  <text class="s" x="610" y="96">paints, edits UVs and seams</text><text class="s" x="610" y="118">Ctrl+B or auto-send</text><text class="s" x="610" y="140">keeps layers on mesh updates</text>
+  <path class="a" d="M272 85 C 400 40, 470 40, 586 85"/><text class="s" x="350" y="45">mesh + UVs + seams (.ptmesh)</text>
+  <path class="a" d="M586 150 C 470 200, 400 200, 272 150"/><text class="s" x="340" y="214">textures (PNG) + edited UVs (.ptuv)</text>
+</svg>
+
+<h2 id="setting-up">Setting up</h2>
+<ol class="steps">
+  <li>Install <code>patina_bridge.zip</code> in Blender (see <a href="install.html#the-blender-add-on">Install</a>).</li>
+  <li>Open the 3D view sidebar (<kbd>N</kbd>) and find the <b>Patina</b> tab.</li>
+  <li>Click <b>Launch Patina</b>, or start Patina yourself. The add-on finds it on port 7860.</li>
+</ol>
+<p>If Blender can't find the program, set <i>Patina Executable</i> in the add-on preferences to the full path, for example
+<code>/home/you/.local/bin/patina</code> or <code>C:\Users\you\AppData\Local\Programs\Patina\patina.exe</code>.</p>
+
+<h2 id="the-round-trip">The round trip</h2>
+<ol class="steps">
+  <li><b>Send to Patina</b> with a mesh selected. Patina opens it with the exact face-corner order, UVs and seams. If
+    its materials show textures or colors, Patina starts from them, as the layer <i>From the model</i> (add-on 0.13).
+    A color attribute (vertex paint, add-on 0.10) comes in too, where a slot has no image on Base Color. One that is
+    a single flat color is skipped, unless a material shows it. If you painted the object before and saved
+    the project, Patina opens that project instead (see <a href="#reopen">After a restart</a>).</li>
+  <li><b>Paint.</b> Press <kbd>Ctrl</kbd>+<kbd>B</kbd> in Patina, use <i>Blender › Send textures to Blender</i>, or turn on
+    <i>Auto-send after changes</i> to keep Blender up to date as you paint.</li>
+  <li>Blender reloads the images <code>Patina_&lt;object&gt;_&lt;map&gt;</code> and builds or updates a material
+    <code>Patina_&lt;object&gt;</code>. It contains a Principled BSDF with base color, roughness, metallic, normal, emission
+    and AO, and optionally displacement. Base color and emission are sRGB; everything else is Non-Color.</li>
+  <li><b>Keep modeling</b> in Blender, then click <b>Update Mesh in Patina</b>. Patina keeps your layers. If only the UVs
+    changed, the paint is moved to the new UVs. If the topology changed (added loops, extrusions, sculpting), the paint is
+    transferred through 3D onto the nearest point of the new surface.</li>
+</ol>
+<figure><img src="img/blender_panel.png" alt="Blender Link panel in Patina" style="max-width:420px"><figcaption>Patina's <i>Blender Link</i> panel shows whether a Blender object is linked.</figcaption></figure>
+
+<h2 id="scene">Several objects</h2>
+<p>Select several meshes in Blender (a character's body, clothes, eyes and hair) and press <b>Send to Patina</b>. The
+active one starts the scene and the others come in beside it, each an object with its own layers (Patina 1.2 and the
+add-on 0.14). <b>Add to the Patina Scene</b> adds the selected meshes to what Patina has open. Each comes in where
+Blender has it (its <code>matrix_world</code>), and its sculpt face sets come along as face sets.</p>
+<p>An update goes to its own object, and the one you paint stays the one painted. <b>Send Textures to Blender</b>
+sends every linked object's textures. <i>Auto Update Mesh</i> only updates the objects Patina's scene has: an object you
+removed from the scene stays out. See <a href="scene.html">Scenes</a>.</p>
+
+<h2 id="auto-update">Auto Update Mesh</h2>
+<p>Turn on <b>Auto Update Mesh</b> under <i>Update Mesh in Patina</i> and you don't have to click it any more: after you
+change a mesh that was sent to Patina (modeling, sculpting, UV edits in Blender), the add-on sends it again by itself
+once you pause for the <b>Settle Time</b> (1.5 s by default; sculpting waits three times as long). Patina keeps the layers
+and moves the paint, as with the button. Only objects already sent are watched, nothing is sent while Patina is still
+busy with the last one, and UVs that Patina sends back don't trigger a send of their own. It is off by default; the
+setting is also in the add-on preferences.</p>
+
+<h2 id="reopen">After a restart</h2>
+<p>Your layers live in Patina's project, not in Blender. Blender only gets the finished textures. So save the project
+(<kbd>Ctrl</kbd>+<kbd>S</kbd>) after you paint.</p>
+<p>When Blender sends an object that Patina doesn't have open, for example after you closed or restarted Patina, Patina
+looks for the project it was painted in (0.44). That is the last project saved or opened for that object, or a project
+in your recent files that is linked to it. Patina opens it and keeps its layers. If the mesh changed since, the paint
+moves across, as with <b>Update Mesh in Patina</b>. The status bar names the project it opened.</p>
+<p>Patina leaves a project alone when the object is another model with the same name: other faces, in another place,
+at another size. It also starts a new project when you send with <i>Keep Layers</i> off. The switch is
+<i>Blender: reopen an object's project</i> in Preferences › Features.</p>
+<p>With no saved project, the object starts from what its Blender materials show (add-on 0.13). For each material
+slot, Patina reads the Principled BSDF's colors and values and the images behind Base Color, Roughness, Metallic,
+Normal (through a Normal Map or Bump node), Emission, Alpha, Coat and Sheen. They come in as the layer <i>From the
+model</i>. After a push, those images are Patina's own textures, so the look comes back as one layer. Patina skips
+images that exist only in Blender (packed or generated) and UDIM images. Save them to files first. The switch is
+<i>Blender: start from Blender's materials</i>.</p>
+
+<h2 id="symmetry">Select Asymmetric Vertices</h2>
+<p>With a mesh sent to Patina, <b>Select Asymmetric Vertices</b> runs Patina's
+<a href="tools.html#symmetry">symmetry check</a> and selects the vertices whose mirror image misses the other side by
+more than the tolerance (and those with no other side at all), in Object or Edit Mode. The Patina panel shows the verdict
+and the worst distance. Fix them with Blender's own tools (Symmetrize, snapping, the shape key and weight tools) so the
+rig and shape keys stay in step, then <i>Update Mesh in Patina</i> and check again.</p>
+
+<h2 id="texture-sets">Texture sets and UDIM tiles</h2>
+<p>The add-on sends the names of the object's material slots, and Patina names its
+<a href="texture-set.html#texture-sets">texture sets</a> after them. When Patina paints a texture set per material slot,
+Blender gets a material per slot, <code>Patina_&lt;object&gt;_&lt;set&gt;</code>, each with its own images, and each slot
+shows its own material. With UDIM tiles, every map becomes one <b>tiled image</b> (Blender's UDIM images) that reads
+<code>Patina_&lt;object&gt;_basecolor.&lt;UDIM&gt;.png</code> and so on, with a tile for each of Patina's tiles. The
+replaced materials are kept, and <b>Restore Materials</b> puts them back, as with a single texture set.</p>
+
+<h2 id="surface">Opacity, sheen, clearcoat and subsurface</h2>
+<p>When the texture set uses them (see <a href="materials.html#surface">Materials</a>), Patina sends their maps too, and
+the add-on (0.8) connects them to the Principled BSDF's <i>Alpha</i>, <i>Sheen Weight</i>, <i>Coat Weight</i> and
+<i>Subsurface Weight</i>. With an opacity map the material is set to <i>Dithered</i>, which shows lace and cut-outs
+without sorting problems. When the texture set stops using them, the links go again.</p>
+
+<h2 id="uv-edits-go-back">UV edits go back</h2>
+<p>If you unwrap or move UVs in Patina, the next export also sends the UVs and seams. Blender writes them into the active
+UV map, through BMesh if the object is in Edit Mode, so you don't have to leave it. Blender does this only when the mesh
+still has the same face corners as the one that was sent.</p>
+
+<h2 id="retopology">Retopology goes back as a new object</h2>
+<p>With a linked object, <i>Retopology › Send the Quads to Blender</i> (or <b>Send to Blender</b> in the Retopology
+window) adds the quads made over it as a new object, <i>name_retopo</i>, in the same collections and the same place.
+Sending again replaces its mesh, so you can repaint the patches in Patina and send once more. This needs the 0.7 add-on.
+See <a href="retopology.html">Retopology</a>.</p>
+
+<h2 id="materials">Patina's materials in Blender</h2>
+<p>All of Patina's materials can sit in Blender's <b>Asset Browser</b>, ready to drag onto any object. In Blender, open
+the <b>Material Library</b> part of the Patina tab and click <b>Add Patina Materials to Blender</b> (or, in Patina, the
+<b>Add Patina's materials to Blender</b> button in the Blender Link window). Choose:</p>
+<ul>
+<li><b>Map size</b>: 512, 1024 or 2048 pixels. 1024 needs about 300 MB for all of them.</li>
+<li><b>Mapping</b>: <i>Box (like Patina)</i> projects the material from the sides, top and front, as Patina does, so
+it needs no UVs and is the same size on every object (the <i>Scale</i> node is in tiles per meter). <i>UV</i> follows
+the object's UV map and uses Patina's normal maps.</li>
+<li><b>Materials</b>: Patina's own, or Patina's and yours (the materials you made in Patina's material editor or from
+your images).</li>
+</ul>
+<p>Patina bakes every material (a hidden Patina does it when Patina isn't running), and Blender builds the library in
+the background, which takes about a minute. It goes into <code>Documents/Patina Materials</code> (change it with
+<i>Material Library Folder</i> in the add-on's preferences) and is added to <i>Preferences › File Paths › Asset
+Libraries</i> as <b>Patina Materials</b>. In the Asset Browser the materials are in Patina's categories, with
+Patina's previews, under <i>Patina</i>; yours are under <i>Patina › My materials</i>.</p>
+<p>Patina's materials are procedural, and Blender can't run Patina's generators, so in Blender each material is a
+Principled BSDF over the maps Patina baked: color, roughness and metallic, height (as a bump, for box mapping) or the
+normal map (for UV mapping), glow, and the opacity of see-through materials (lace, nets, leaf and hair cards). Sheen,
+clearcoat and subsurface become the Principled BSDF's values. Click the button again whenever you want the library brought up to date, for
+example after making new materials. Materials you already used in a file use the same map files, so they update too.</p>
+<figure><img src="img/blender_material_library.png" alt="Patina's materials in Blender's Asset Browser"><figcaption>Patina's
+materials in Blender's Asset Browser. Tartan Red, dragged onto the cube, is box mapped like in Patina.</figcaption></figure>
+
+<h2 id="model-to-blender">The model back to Blender</h2>
+<p><i>Blender › Send Model to Blender as a New Object</i> sends the model as it is in Patina (mended in the
+<a href="mesh.html">Mesh Check</a>, say) to Blender as a new object with its textures, and Patina links to it. See
+<a href="mesh.html#to-blender">Sending the model to Blender</a>. This needs the 0.9 add-on.</p>
+
+<h2 id="without-the-add-on">Without the add-on</h2>
+<p>If you prefer exporting files, Patina still keeps up with Blender: export the model as <code>.glb</code> or
+<code>.obj</code>, open it in Patina, and when you export over the same file after a change in Blender, Patina offers to
+update the mesh with your layers kept (see <a href="texture-set.html#projects">Projects</a>). For game assets, export the
+sculpt from the same scene and bake it with <i>Bake › From a High-poly Mesh</i>
+(<a href="texture-set.html#high-poly">high-poly baking</a>). Material slots come along in both cases.</p>
+
+<h2 id="gotchas">Gotchas</h2>
+<div class="callout gotcha"><span class="t">“UVs not applied: … loops”</span>The mesh changed in Blender after you sent it,
+for example faces were added or deleted, or the mesh was sorted. Click <b>Update Mesh in Patina</b>, then pull again.</div>
+<div class="callout gotcha"><span class="t">Modifiers</span><i>Apply Modifiers When Sending</i> sends what you see.
+Modifiers that only move vertices, such as Armature, Shrinkwrap or shape keys, keep every face, so edited UVs still come
+back. Modifiers that add or remove faces, such as Subdivision Surface or Mirror, give a mesh that no longer matches the
+object: UVs edited in Patina can't be written back then, and neither can textures painted on them. Paint on the final
+mesh, or apply those modifiers in Blender first.</div>
+<div class="callout gotcha"><span class="t">“… not updated: Patina changed its UVs”</span>Textures painted on Patina's
+UV layout only fit that layout. When those UVs can't be written into Blender (the mesh changed, the UVs were edited in
+Blender after sending, or faces were added by modifiers), the add-on leaves the old textures in place rather than show the
+new ones scrambled. The message says why (in Blender's status bar). Usually <b>Update Mesh in Patina</b>, then pushing
+again, fixes it.</div>
+<div class="callout gotcha"><span class="t">“Blender's UVs kept as UV map 'UVMap before Patina'”</span>An object sent
+to Patina without UVs gets Patina's UVs with every push: Patina made them, and its textures only fit them. If the object
+has other UVs by then (an undo, a mesh swapped in, another add-on), they are kept in the UV map <i>UVMap before
+Patina</i> and Patina's go into the active map, so nothing is lost and the textures keep coming. (Before add-on 0.12 such
+a push was refused as “UVs changed in Blender”, and nothing updated until the mesh was sent again.) An object sent
+<i>with</i> UVs that you then edited in Blender still keeps your UVs: send it again to bring them to Patina.</div>
+<div class="callout gotcha"><span class="t">UV islands broken into many small ones</span>Blender 5 keeps a mesh's UVs
+out of reach of add-ons while the object is in Edit Mode. Until add-on 0.13.1, an object sent from Edit Mode went to
+Patina as “no UVs”, and Patina unwrapped it again: your islands kept their outlines but broke into many jagged pieces.
+Now the add-on reads the UVs in Edit Mode too. And when an object Patina already has comes back without UVs, Patina
+keeps its own UVs on it, face by face, also after faces were added or deleted (0.44.1). The status bar then says
+<i>without its UVs: kept Patina's</i>.</div>
+<div class="callout gotcha"><span class="t">The model comes in all black</span>The object has a color attribute that
+is black everywhere, often left by an importer, and no material shows it. Until 0.44, Patina started from it as the
+layer <i>From the model</i>, which turned the whole model black. Now a color attribute from Blender that is one
+flat color is skipped, unless a material shows it (a Color Attribute node into Base Color, add-on 0.13).</div>
+<div class="callout gotcha"><span class="t">Port already in use</span>Only one Blender instance can listen on port 7861.
+If you run two, change <i>Blender Listen Port</i> in one of them. Patina is told the port on every send.</div>
+<div class="callout warn"><span class="t">Patina's material goes on every slot</span>With one texture set for the
+whole object, the <code>Patina_…</code> material replaces the material in each of the object's slots (with a texture set
+per slot, each slot gets its own). Faces keep their
+slot assignments. The old materials stay in the file, and <b>Restore Materials</b> in the Patina panel puts them back.
+With <i>Show on Every Slot</i> off in the add-on's settings, the material is added as a new slot instead, and you assign
+faces to it yourself. (Until Patina 0.8.1 this was the only behavior: on a character with its own skin material, the
+old texture then showed through Patina's new UVs.)</div>
+<div class="callout gotcha"><span class="t">“Blender is not listening on port 7861”</span>Patina's button asks Blender
+to build the library through the live link. Turn on <b>Live Link</b> in Blender's Patina tab, or click <b>Add Patina
+Materials to Blender</b> in Blender itself. The button needs the 0.8 add-on.</div>
+<div class="callout tip"><span class="t">Where messages go</span>The add-on prints everything to Blender's system console
+with the prefix <code>[Patina]</code>. Start Blender from a terminal (on Windows, <i>Window › Toggle System
+Console</i>) to read them.</div>
+
+</article>
+<footer class="pager"><a class="prev" href="texture-set.html">← Texture set &amp; export</a><a class="next" href="automation.html">Claude &amp; automation →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

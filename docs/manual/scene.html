@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scenes: several objects - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html" class="cur">Scenes</a>
+<div class="toc"><a href="#objects-list">The Objects list</a><a href="#adding">Adding models</a><a href="#painting">Painting the objects</a><a href="#object-tool">The Object tool</a><a href="#saving">The project file</a><a href="#exporting">Exporting a scene</a><a href="#agents">For agents</a><a href="#gotchas">Gotchas</a></div>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Scenes: several objects -->
+<!-- nav: Scenes -->
+<h1>Scenes: several objects</h1>
+<p class="lead">A project can hold several models at once (new in 1.2): a character's body, its clothes, its eyes and
+its hair, or a prop and its stand. Each one is an <b>object</b> with its own layers, texture set and undo history.
+Patina places them in one scene and paints them where they are. It is not a modeler, but it builds a scene out.</p>
+
+<figure><img src="img/scene_objects.png" alt="A character's parts as objects in the Objects list, the Object tool's gizmo on the hat">
+<figcaption>Three objects from one file. The hat is the one painted, so the layers below the list are its layers. The
+Object tool's gizmo is on it.</figcaption></figure>
+
+<h2 id="objects-list">The Objects list</h2>
+<p>The <b>Objects</b> list sits at the top of the Layers panel. Click a row to paint that object. From then on the
+layers below the list, the UV editor, the bakes and the texture set are that object's. Its own undo history comes with
+it.</p>
+<ul>
+  <li>The <b>check box</b> shows or hides an object in the 3D view, renders and exports.</li>
+  <li><b>Double-click</b> a name to rename it.</li>
+  <li><b>Right-click</b> a row to frame it, show only it, hide the others, put it on the ground, move it back to where
+    it came in, copy it or remove it.</li>
+  <li>Under the list, <b>Placement</b> has the object's location, rotation and scale, to type in or drag.</li>
+</ul>
+<p>With one object, the list is a single line with its name and the button to add a model.</p>
+
+<h2 id="adding">Adding models</h2>
+<ul>
+  <li><b>A file with several meshes</b> (glTF, FBX or OBJ) opens as an object for each. A file with more than 24
+    meshes, like a kit of many small parts, opens as one.</li>
+  <li><b>File › Add a Model to the Scene</b> (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>), or the button at the
+    right of the Objects list, adds a file beside what is there. A model added to the sphere Patina starts with takes
+    its place.</li>
+  <li><b>A model dropped on the window</b> while one is open: Patina asks whether to add it or open it instead. Dropped
+    on the Objects list, it is added right away.</li>
+  <li><b>From Blender</b>, select several meshes and press <i>Send to Patina</i> (see <a href="blender.html#scene">Several
+    objects</a>).</li>
+</ul>
+<p>Each object comes in where its file puts it, so clothes exported from the same scene fit the body. Its texture set
+gets as many texels per meter as the object already open, at most its size. Small parts like eyes get smaller
+textures, and the detail stays the same across the parts.</p>
+
+<h2 id="painting">Painting the objects</h2>
+<p>The brush paints the active object. The others are drawn with their own textures, and those in front hide what is
+behind them from the brush. A stroke that starts on another object does nothing, and the status line says which object
+it is.</p>
+<ul>
+  <li><b>Double-click</b> another object in the 3D view to paint it, or right-click it and choose <i>Paint ...</i>.</li>
+  <li><b>Local view</b> (<kbd>/</kbd>) shows only the active object. Press it again to show them all.</li>
+</ul>
+
+<h2 id="object-tool">The Object tool</h2>
+<p>The <b>Object</b> tool <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 V21.5 M2.5 12 H21.5"/><path d="M9 5.5 L12 2.5 L15 5.5 M9 18.5 L12 21.5 L15 18.5 M5.5 9 L2.5 12 L5.5 15 M18.5 9 L21.5 12 L18.5 15"/><rect x="9.5" y="9.5" width="5" height="5" rx="1" stroke="#E8852C" stroke-width="2"/></svg> (<kbd>W</kbd>) moves, turns and scales objects. A click on an object picks it.
+Its gizmo sits in the middle of the active one:</p>
+<table>
+  <tr><th>Mode</th><th>What you drag</th></tr>
+  <tr><td>Move</td><td>An <b>arrow</b> moves it along that axis. The <b>middle square</b> moves it in the view's plane.</td></tr>
+  <tr><td>Turn</td><td>A <b>ring</b> turns it about that axis. The <b>outer ring</b> turns it about the line of sight.</td></tr>
+  <tr><td>Scale</td><td>A <b>handle</b> scales it along its own axis. The <b>middle square</b> scales it evenly.</td></tr>
+</table>
+<p>Press <kbd>W</kbd> again for the next mode, or choose it on the tool's bar. Hold <kbd>Ctrl</kbd> to snap: moves go
+in round steps, turns in 15 degrees and scales in tenths. <kbd>Esc</kbd> or a right-click while
+dragging cancels. Each drag is one undo step in that object's history. The bar also has <b>On the ground</b>, which puts
+the lowest point at height 0, and <b>Where it came in</b>.</p>
+<p>An object turns and scales about its middle. Its texture-space positions don't change when it moves, so fills and
+procedural masks stay where they are on it.</p>
+
+<h2 id="saving">The project file</h2>
+<p>Every object is saved in the one <code>.patina</code> file, with its layers, its place and which one was active.
+Patina 1.1 and older open such a file as its first object only.</p>
+
+<h2 id="exporting">Exporting a scene</h2>
+<ul>
+  <li><b>File › Export Model</b> writes every object shown into one file. glTF gets a node for each, where it is, with
+    its own materials and textures. OBJ, STL and PLY get the vertices moved into the scene. <i>Only ...</i> exports
+    the active one.</li>
+  <li><b>Export Textures</b> writes the active object's maps, or every object's, each set named after its object
+    (<code>$mesh</code> is the object's name).</li>
+  <li><b>Renders</b> and the <a href="interface.html#path-traced">path traced</a> view include every object shown.</li>
+</ul>
+
+<h2 id="agents">For agents</h2>
+<p><code>list_objects</code>, <code>add_object</code>, <code>select_object</code>, <code>set_object</code> (name, shown,
+location, rotation, scale, reset, on the ground), <code>remove_object</code>, <code>duplicate_object</code>,
+<code>isolate_object</code>, <code>frame_object</code> and <code>pick_object</code>. <code>open_mesh</code> takes
+<code>separate</code>. <code>export_model</code> and <code>export_textures</code> take <code>objects</code>. Every
+other command works on the active object. The switch is <i>Objects in a scene</i> in Preferences › Features.</p>
+
+<h2 id="gotchas">Gotchas</h2>
+<ul>
+  <li>Each object has a texture set of its own, and that takes graphics memory. Objects you are not painting free
+    their compositing textures until they are painted again.</li>
+  <li>Removing an object can't be undone: its history goes with it. Patina asks first.</li>
+  <li>Retopology, the bake-down and the mesh tools work on the active object.</li>
+</ul>
+
+</article>
+<footer class="pager"><a class="prev" href="organizing.html">← Folders &amp; smart materials</a><a class="next" href="uv.html">UV editing →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

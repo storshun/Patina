@@ -1,0 +1,99 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Emissive",
+ "materials": [
+  {
+   "id": "patina_glow_cyan",
+   "name": "Glow Cyan",
+   "category": "Emissive",
+   "type": "flat",
+   "color": "#0a1a1e",
+   "roughness": 0.4,
+   "metallic": 0.0,
+   "height": 0.5,
+   "description": "Self-lit cyan",
+   "emissive": "#29e6ff",
+   "tags": []
+  },
+  {
+   "id": "patina_emissive_panel",
+   "name": "Emissive Panel",
+   "category": "Emissive",
+   "type": "procedural",
+   "generator": "emissive_grid",
+   "description": "Glowing grid panel",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1a1d22",
+    "color_b": "#2a3038",
+    "roughness": [
+     0.4,
+     0.3
+    ],
+    "metallic": [
+     0.2,
+     0
+    ],
+    "scale": 6,
+    "detail": 3,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     0.03,
+     0,
+     0,
+     0
+    ],
+    "emissive": "#ff8c2a"
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_emissive_grid_orange",
+   "name": "Emissive Grid Orange",
+   "category": "Emissive",
+   "type": "procedural",
+   "generator": "emissive_grid",
+   "description": "Dark panel with glowing orange grid",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#151515",
+    "color_b": "#ff8a2a",
+    "color_c": "#ff8a2a",
+    "roughness": [
+     0.5,
+     0.3
+    ],
+    "metallic": [
+     0.5,
+     0
+    ],
+    "scale": 8,
+    "detail": 6,
+    "height": 0.1,
+    "variation": 0.15,
+    "extra": [
+     0.025,
+     0,
+     0,
+     0
+    ],
+    "emissive": "#ff7a1a"
+   }
+  },
+  {
+   "id": "patina_glow_magenta",
+   "name": "Glow Magenta",
+   "category": "Emissive",
+   "type": "flat",
+   "description": "Pure magenta glow",
+   "color": "#200010",
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "tags": [],
+   "emissive": "#ff2bd6"
+  }
+ ]
+}

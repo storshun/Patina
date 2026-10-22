@@ -1,0 +1,20 @@
+{
+ "patina_recipe": 1,
+ "id": "patina_cleanup",
+ "name": "Clean up",
+ "description": "Holes, flipped faces, open seams, specks and the rest mended; exported as a GLB.",
+ "steps": [
+  {
+   "cmd": "mesh_fix",
+   "args": {
+    "all": true
+   }
+  },
+  {
+   "cmd": "export_model",
+   "args": {
+    "path": "${out}/${name}.glb"
+   }
+  }
+ ]
+}

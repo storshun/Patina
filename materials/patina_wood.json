@@ -1,0 +1,431 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Wood",
+ "materials": [
+  {
+   "id": "patina_wood_oak",
+   "name": "Wood Oak",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "wood",
+   "description": "Oak with visible rings",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#a87a4a",
+    "color_b": "#7a5230",
+    "roughness": [
+     0.55,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 5,
+    "height": 0.15,
+    "variation": 0.15
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_wood_walnut",
+   "name": "Wood Walnut",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "wood",
+   "description": "Dark walnut",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#6b4329",
+    "color_b": "#3e2516",
+    "roughness": [
+     0.45,
+     0.65
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 12,
+    "detail": 5,
+    "height": 0.12,
+    "variation": 0.15
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_wood_pine",
+   "name": "Wood Pine",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "wood",
+   "description": "Light pine",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d9b47e",
+    "color_b": "#b8864e",
+    "roughness": [
+     0.6,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.12,
+    "variation": 0.12
+   },
+   "tags": []
+  },
+  {
+   "id": "patina_bark_oak",
+   "name": "Bark Oak",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "bark",
+   "description": "Deeply furrowed oak bark",
+   "default_scale": 1.0,
+   "tags": [
+    "organic"
+   ],
+   "params": {
+    "color_a": "#5a4632",
+    "color_b": "#7d8a52",
+    "color_c": "#1f1710",
+    "roughness": [
+     0.9,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.8,
+    "variation": 0.25,
+    "extra": [
+     0.6,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_bark_birch",
+   "name": "Bark Birch",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "bark",
+   "description": "White birch bark with dark fissures",
+   "default_scale": 1.0,
+   "tags": [
+    "organic"
+   ],
+   "params": {
+    "color_a": "#e3ded2",
+    "color_b": "#8a8a7a",
+    "color_c": "#2a2622",
+    "roughness": [
+     0.7,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.3,
+    "variation": 0.1,
+    "extra": [
+     0.3,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_wood_cherry",
+   "name": "Wood Cherry",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "wood",
+   "description": "Reddish cherry wood",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#8a4a2e",
+    "color_b": "#6b3420",
+    "color_c": "#6b3420",
+    "roughness": [
+     0.45,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 6,
+    "height": 0.1,
+    "variation": 0.2,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_wood_ebony",
+   "name": "Wood Ebony",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "wood",
+   "description": "Near-black ebony",
+   "default_scale": 1.0,
+   "tags": [],
+   "params": {
+    "color_a": "#2a201b",
+    "color_b": "#120d0b",
+    "color_c": "#120d0b",
+    "roughness": [
+     0.35,
+     0.45
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 6,
+    "height": 0.05,
+    "variation": 0.15,
+    "extra": [
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_wicker",
+   "name": "Wicker",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "woven",
+   "description": "Woven wicker / rattan",
+   "default_scale": 1.0,
+   "tags": [
+    "organic"
+   ],
+   "params": {
+    "color_a": "#b58a52",
+    "color_b": "#9c7240",
+    "color_c": "#2a1d10",
+    "roughness": [
+     0.6,
+     0.95
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 6,
+    "height": 0.7,
+    "variation": 0.25,
+    "extra": [
+     0.4,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_parquet_herringbone",
+   "name": "Parquet Herringbone",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "parquet",
+   "description": "Lacquered oak blocks in a herringbone",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b88a5a",
+    "color_b": "#8a5f38",
+    "color_c": "#2a1d14",
+    "roughness": [
+     0.3,
+     0.45
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 16,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.15,
+    "extra": [
+     0.03,
+     1,
+     5,
+     1
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "floor"
+   ]
+  },
+  {
+   "id": "patina_parquet_basket",
+   "name": "Parquet Basket Walnut",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "parquet",
+   "description": "Walnut parquet squares alternating direction",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#7a5236",
+    "color_b": "#4f3220",
+    "color_c": "#1a110b",
+    "roughness": [
+     0.3,
+     0.45
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 16,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.15,
+    "extra": [
+     0.03,
+     2,
+     4,
+     1
+    ],
+    "seed": 4
+   },
+   "tags": [
+    "floor"
+   ]
+  },
+  {
+   "id": "patina_floorboards",
+   "name": "Floorboards Pine",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "parquet",
+   "description": "Pine floorboards of random lengths",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c9a172",
+    "color_b": "#9c6f43",
+    "color_c": "#2a1d14",
+    "roughness": [
+     0.45,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.15,
+    "extra": [
+     0.03,
+     0,
+     6,
+     1
+    ],
+    "seed": 6
+   },
+   "tags": [
+    "floor"
+   ]
+  },
+  {
+   "id": "patina_floorboards_weathered",
+   "name": "Floorboards Weathered Gray",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "parquet",
+   "description": "Sun-bleached gray boards with wide gaps",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#9b968b",
+    "color_b": "#6f695f",
+    "color_c": "#1f1c19",
+    "roughness": [
+     0.75,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 7,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.2,
+    "extra": [
+     0.06,
+     0,
+     5,
+     1.4
+    ],
+    "seed": 8
+   },
+   "tags": [
+    "floor",
+    "weathered"
+   ]
+  },
+  {
+   "id": "patina_wood_oak_varnished",
+   "name": "Oak Varnished",
+   "category": "Wood",
+   "type": "procedural",
+   "generator": "wood",
+   "description": "Oak under a glossy varnish",
+   "default_scale": 1.0,
+   "tags": [
+    "wood",
+    "clearcoat"
+   ],
+   "params": {
+    "color_a": "#a87a4a",
+    "color_b": "#7a5230",
+    "roughness": [
+     0.35,
+     0.45
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 5,
+    "height": 0.15,
+    "variation": 0.15,
+    "coat": 0.8
+   }
+  }
+ ]
+}

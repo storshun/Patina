@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layers and masks - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html">Painting</a>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html" class="cur">Layers &amp; masks</a>
+<div class="toc"><a href="#layer-types">Layer types</a><a href="#drag-and-drop">Drag and drop</a><a href="#masks">Masks</a><a href="#smart-masks">Smart masks</a><a href="#develop">Developing the textures</a><a href="#mask-effects">Mask effect stacks</a><a href="#instances">Instances</a><a href="#a-typical-stack">A typical stack</a><a href="#undo">Undo</a><a href="#gotchas">Gotchas</a></div>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Layers and masks -->
+<!-- nav: Layers & masks -->
+<h1>Layers and masks</h1>
+<p class="lead">Each layer adds something on top of the layers below it. Fill and adjustment layers are shaped by masks,
+including smart masks that find edges and cavities on their own. They let you build a worn, believable surface without
+painting every scratch by hand.</p>
+<div class="callout tip"><span class="t">New to masks?</span>Start with <a href="masks-guide.html">the beginner's guide to
+masks and smart materials</a>, which explains what masks are for and builds a worn metal material step by step. This
+page is the reference.</div>
+
+<div class="two">
+  <figure><img src="img/layers_thumbs.png" alt="Layer stack with thumbnails"><figcaption>The stack: paint (<b>P</b>), fill (<b>F</b>), adjustment (<b>A</b>) and instance (<b>I</b>) layers, and folders, each with a thumbnail of its content and, when it has one, of its mask (<b>fx</b>: an effect stack). The top of the list is the top of the stack.</figcaption></figure>
+  <figure><img src="img/smart_mask.png" alt="Fill layer settings with a smart mask"><figcaption>A fill layer's material and mask settings.</figcaption></figure>
+</div>
+
+<h2 id="layer-types">Layer types</h2>
+<table>
+  <tr><th>Type</th><th>Holds</th><th>Painting on it…</th></tr>
+  <tr><td><b>Paint</b> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3.5 L12.7 8.8"/><path d="M9.9 9.9 C8.2 10.7 7.5 11.9 7.2 13.3 C6.9 14.9 5.9 16.4 3.9 17.8 C6.2 17.8 8.2 16.8 9.4 15.6 C10.8 14.2 11.5 13.1 11.9 11.9 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1.1"/><path d="M13.7 9.8 L11.9 8 L9.9 9.9 L11.9 11.9 Z"/><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg></td><td>Your strokes, with every channel.</td><td>adds or erases paint.</td></tr>
+  <tr><td><b>Fill</b> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg></td><td>One material over the whole model.</td><td>edits the layer's <b>mask</b>. White shows the material and black hides it.</td></tr>
+  <tr><td><b>Adjust</b> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7"/><path d="M10.5 3.5 A7 7 0 0 1 10.5 17.5 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg></td><td>Develops everything below, the way you would a photo: white balance, exposure, highlights and shadows, vibrance, saturation, hue, De-light, and roughness / metallic / height offsets (see <a href="#develop">Developing the textures</a>).</td><td>edits the mask, which limits where the adjustment applies.</td></tr>
+  <tr><td><b>Folder</b> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 19 H5 A1.5 1.5 0 0 1 3.5 17.5 V6 A1.5 1.5 0 0 1 5 4.5 H9 L11 7 H18.5 A1.5 1.5 0 0 1 20 8.5 V12.5"/><path d="M3.5 10 H20" stroke="#E8852C"/><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg></td><td>Other layers. Its opacity, blend mode and mask apply to all of them (see <a href="organizing.html">Folders, solo and smart materials</a>).</td><td>edits the folder's mask.</td></tr>
+  <tr><td><b>Baked map</b></td><td>A baked map (ambient occlusion, curvature or thickness) with your fixes and
+    adjustments, in the <i>Baked maps</i> section under the stack. It makes the map smart masks, the 3D view and exports
+    read (see <a href="texture-set.html#baked-layers">Fixing a bake</a>). Its check switches the map off in the 3D view
+    and exports.</td><td>paints fixes over the bake; Erase brings
+    the bake back.</td></tr>
+</table>
+<p>Each layer has an opacity, a <b>blend mode</b> (normal, multiply, screen, overlay, add, subtract, darken, lighten,
+add signed, soft light) and a per-channel switch with its own opacity. Drag layers to reorder them or to drop them into a
+folder (<kbd>Ctrl</kbd>: a copy), or use <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19.5 V5 M6 11 L12 5 L18 11" stroke="#E8852C" stroke-width="2"/></svg> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 V19 M6 13 L12 19 L18 13" stroke="#E8852C" stroke-width="2"/></svg>; see <a href="#drag-and-drop">Drag and drop</a>. <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5 V5.5 A2 2 0 0 0 13.5 3.5 H5.5 A2 2 0 0 0 3.5 5.5 V13.5 A2 2 0 0 0 5.5 15.5 H8.5"/><path d="M14.5 12 V17 M12 14.5 H17" stroke="#E8852C"/></svg> <b>Duplicate</b> (<kbd>Ctrl</kbd>+<kbd>D</kbd>) duplicates the selected layer and <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.5 H20.5 M9 6.5 V4.5 A1 1 0 0 1 10 3.5 H14 A1 1 0 0 1 15 4.5 V6.5"/><path d="M5.5 6.5 L6.5 19 A1.8 1.8 0 0 0 8.3 20.6 H15.7 A1.8 1.8 0 0 0 17.5 19 L18.5 6.5"/><path d="M10 10.5 V16.5 M14 10.5 V16.5" stroke="#E8852C"/></svg> <b>Delete</b>
+(<kbd>Delete</kbd>) deletes it. Double-click a name to rename it. Right-click a layer for everything else: grouping, solo,
+color tags, masks, copying settings, saving it as a smart material and exporting it.</p>
+<p>Each row shows a <b>thumbnail</b> of what the layer holds: the painted color, the fill material, or the adjustment.
+A second thumbnail shows the mask; click it to paint the mask.</p>
+<p>The arrow next to <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0 -1)"><path d="M2.6 12.4 H16.95 L10.8 18.7 A1.9 1.9 0 0 1 8.1 18.7 L3.1 13.7 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1"/><path d="M18.7 10.6 L11.1 3 L3.1 11 A1.9 1.9 0 0 0 3.1 13.7 L8.1 18.7 A1.9 1.9 0 0 0 10.8 18.7 Z"/><path d="M5.6 2.6 L9.9 6.9"/></g><path d="M18.5 15 V22 M15 18.5 H22" stroke="currentColor" stroke-width="2"/></svg> <b>Fill layer</b> adds a fill layer with a black mask, which is the quickest way to paint a material onto
+part of the model: add it, then paint.</p>
+
+<h2 id="drag-and-drop">Drag and drop</h2>
+<p>Most things go into the stack by dragging them to where you want them. While you drag, the tooltip says what will
+happen where the pointer is, and an orange line or box shows the spot. Every drop is one undo step.</p>
+<table>
+  <tr><th>Drag</th><th>Onto</th><th>What happens</th></tr>
+  <tr><td>A material (<a href="materials.html">Materials</a> tab)</td><td>The middle of a fill layer's row</td><td>The layer takes the material. Its mask, smart mask, mask effects,
+  projection, scale and tint stay. A layer named after its old material takes the new one's name.</td></tr>
+  <tr><td></td><td>The top or bottom edge of a row, or any other layer</td><td>A new fill layer above or below it.</td></tr>
+  <tr><td></td><td>The middle of a folder's row</td><td>A new fill layer at the top of the folder.</td></tr>
+  <tr><td></td><td>The <i>Fill material</i> box in the layer's settings</td><td>The same as dropping it on the layer.</td></tr>
+  <tr><td></td><td>The model in the viewport</td><td>A new fill layer above the selected layer.</td></tr>
+  <tr><td></td><td>The <i>Add a mask effect…</i> box in a layer's mask settings</td><td>A <a href="#mask-effects">Pattern</a>
+  effect from that material on top of the layer's mask, multiplied: the layer shows only where the pattern is.</td></tr>
+  <tr><td></td><td>A Pattern effect's <i>Material</i> box</td><td>The effect takes that material's pattern.</td></tr>
+  <tr><td>A fill layer's thumbnail</td><td>Another fill layer, or between layers</td><td>Its material, with all its settings (tint, scale, projection), goes there.</td></tr>
+  <tr><td>A smart material (<i>Smart materials</i> tab)</td><td>Between layers, or the middle of a folder</td><td>It goes in there. Dropped on the model, above the selected layer.</td></tr>
+  <tr><td>A smart mask (<i>Smart masks</i> tab)</td><td>A layer, or its <i>Smart mask</i> settings</td><td>The layer gets that smart mask. With a mask effect stack it is added to the top of the stack.</td></tr>
+  <tr><td>A layer's mask thumbnail (or <b>Mask</b> button)</td><td>Another layer</td><td>The mask is copied there: the painted mask, the smart mask and the mask effects.</td></tr>
+  <tr><td>A layer's name</td><td>Between layers, or the middle of a folder</td><td>The layer moves there. Hold <kbd>Ctrl</kbd> when you let go to put a copy there instead.</td></tr>
+</table>
+<p>The space under the last row is the bottom of the stack. In a long stack, hold the pointer near the top or bottom
+edge of the list while you drag and it scrolls.</p>
+
+<h2 id="masks">Masks</h2>
+<p>A paint layer can also have a mask. Click <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="12" cy="12" r="4.2" stroke="#E8852C" fill="#E8852C" stroke-width="1"/></svg> <b>Add mask</b> on its row, then the same button (<b>Mask</b>) to paint the mask rather than the
+layer. The viewport label shows <code>[mask]</code> while you are painting a mask. <i>Add white mask</i> and <i>Add
+black mask</i> set the starting state. Black hides the whole layer, so you can then reveal it with the brush.</p>
+<p><b>From selection</b> (in the mask settings, or right-click ▸ <i>Mask from the face selection</i>) makes the mask
+white on the selected faces and black everywhere else. Select an island, a material slot or a painted region (the
+<a href="uv.html#island-brush">Island brush</a> selects too), and the layer shows only there. It is one undo step, and
+you can keep painting the mask afterward.</p>
+
+<h2 id="smart-masks">Smart masks</h2>
+<p>A smart mask is a procedural mask worked out from the model's shape. Pick one in the layer's <i>Smart mask</i> combo,
+or drag one from the <i>Smart masks</i> tab of the Materials panel onto the layer.
+Patina bakes the mesh maps it needs (ambient occlusion, curvature or thickness) the first time you choose it.
+The <b>Layer Mask</b> view mode shows the selected layer's effective mask: the painted mask, the smart mask and any
+effect stack combined.</p>
+<table>
+  <tr><th>Smart mask</th><th>Picks out</th><th>Typical use</th></tr>
+  <tr><td>Edges (curvature)</td><td>Convex edges and corners</td><td>Paint wearing off, rust and polish on edges</td></tr>
+  <tr><td>Cavity</td><td>Creases and crevices</td><td>Dirt, grime, dust in corners</td></tr>
+  <tr><td>Occlusion</td><td>Areas that light reaches poorly</td><td>Soot, moss, darkening</td></tr>
+  <tr><td>Height gradient</td><td>Bottom to top of the object</td><td>Mud on the lower parts, water lines</td></tr>
+  <tr><td>Noise</td><td>3D noise of a kind: clouds, cells (round spots), cracks (a network of lines), ridges (thin
+    veins) or streaks (running down)</td><td>Patchy variation, stains, spots, crazing, rain marks</td></tr>
+  <tr><td>Facing direction</td><td>Surfaces that face a direction (up, down, front…)</td><td>Snow and dust on top, drips and moss underneath, sun bleaching on one side</td></tr>
+  <tr><td>Material slot</td><td>The faces of one Blender material slot</td><td>One material per part of the model, without painting a mask</td></tr>
+  <tr><td>Thin parts (thickness)</td><td>Thin parts: ears, fins, blades, the edges of cloth (from the <a href="texture-set.html#thickness">thickness bake</a>)</td><td>Light shining through skin or leaves, worn-through fabric, translucency maps</td></tr>
+  <tr><td>Gradient</td><td>Dark to light across the model, the way you choose (up, down, left, right, front, back or
+    toward the camera)</td><td>Fades, two-tone parts, sun bleaching from one side</td></tr>
+  <tr><td>Drips</td><td>Thin streaks running down the sides from random starts, fading as they go (never on top
+    surfaces). <i>Noise scale</i> sets their size.</td><td>Rain marks, rust runs, leaks under rivets and pipes</td></tr>
+</table>
+<p><b>Level</b> moves the threshold and <b>Contrast</b> sets how sharp the transition is. <b>Noise</b> and <b>Noise
+scale</b> break up the edge so it looks natural, and <b>Invert</b> flips the mask. Smart masks combine with painted masks,
+so you can paint extra wear on top or erase it where it doesn't belong.</p>
+<div class="two">
+  <figure><img src="img/smart_mask_view.png" alt="Rust on edges only"><figcaption>The <i>Edge rust</i> layer alone. Rust appears only on the convex edges.</figcaption></figure>
+  <figure><img src="img/adjust_view.png" alt="Hue shifted model"><figcaption>An adjustment layer shifting the hue of everything below.</figcaption></figure>
+</div>
+<figure><img src="img/adjust_layer.png" alt="Adjustment layer settings" style="max-width:420px"></figure>
+<figure><img src="img/facing_mask.png" alt="Snow on the upward-facing surfaces" style="max-width:460px"><figcaption>A
+<i>Snow</i> fill layer with the <i>Facing direction</i> mask set to up, with some noise. Unlike the height gradient, it
+also catches the top of the brows and ears.</figcaption></figure>
+
+<h2 id="develop">Developing the textures</h2>
+<p>An adjustment layer works on the finished look of everything below it, the way the basic adjustments in a photo editor work on a
+photo. It is the place to fix textures that came with a model (see <a href="index.html#model-textures">models that
+come with textures</a>): too dark, too blue, too dull, or with shadows baked in. Nothing below is changed, so you can
+turn it off, lower its opacity, or paint its mask to develop only part of the model.</p>
+<div class="two">
+  <figure><img src="img/develop_before_after.png" alt="A model before and after developing"><figcaption>Before and
+  after: warmer, a little brighter, the shadows lifted, more color, and the baked shadow in the crevices taken
+  out.</figcaption></figure>
+  <figure><img src="img/develop_panel.png" alt="The develop settings of an adjustment layer" style="max-width:396px">
+  </figure>
+</div>
+<table>
+  <tr><th>Setting</th><th>What it does</th></tr>
+  <tr><td><b>Temperature</b>, <b>Tint</b></td><td>White balance: cooler (blue) to warmer (yellow), and greener to more
+    magenta. The brightness stays.</td></tr>
+  <tr><td><b>Exposure</b></td><td>In stops, as on a camera: +1 is twice the light, −1 half.</td></tr>
+  <tr><td><b>Contrast</b>, <b>Brightness</b></td><td>As before 0.33.</td></tr>
+  <tr><td><b>Highlights</b>, <b>Shadows</b></td><td>The bright parts and the dark parts on their own: lift the shadows
+    of a dark scan without washing out the rest, or bring back a sky-lit top that came out too bright.</td></tr>
+  <tr><td><b>Vibrance</b></td><td>More (or less) color, mostly in the dull colors, so colors that are already strong
+    and skin do not go garish. <b>Saturation</b> changes all colors alike.</td></tr>
+  <tr><td><b>De-light</b></td><td>Takes the shadows baked into the color out: scans and generated models carry the
+    light they were made in, so their crevices are dark in the texture itself, and they go darker again under your
+    lights. De-light brightens what the ambient occlusion darkens. It bakes the ambient occlusion the first time.</td></tr>
+</table>
+<p>Exposure, white balance, highlights, shadows and De-light work in linear light, as a camera's raw developer does;
+the other settings follow, in that order. An adjustment layer at its defaults changes nothing.</p>
+<p>The <b>PBR Range</b> view mode checks the result (see <a href="interface.html#view-modes">View modes</a>).</p>
+
+<h2 id="mask-effects">Mask effect stacks</h2>
+<p>One smart mask is often not enough: rust on the edges, but broken up by noise, a bit softer, and scraped away by hand
+in places. A <b>mask effect stack</b> builds a mask from several steps. Pick one in <i>Add a mask effect…</i> under the
+mask settings: the painted mask and the smart mask become the first two effects, and the new one goes on top. The stack
+starts white, and the effects apply from the bottom of the list up.</p>
+<div class="two">
+  <figure><img src="img/mask_stack.png" alt="A mask effect stack"><figcaption>The painted mask, the edges smart mask, noise
+  multiplied in, then levels and a blur. The last effect is at the top of the list.</figcaption></figure>
+  <div>
+  <table>
+    <tr><th>Effect</th><th>Does</th></tr>
+    <tr><td>Paint</td><td>The mask you paint (one per stack).</td></tr>
+    <tr><td>Smart mask</td><td>Any of the smart masks above, with its own settings.</td></tr>
+    <tr><td>Fill</td><td>A flat value.</td></tr>
+    <tr><td>Noise</td><td>3D noise with scale, seed and contrast.</td></tr>
+    <tr><td>Levels</td><td>Remaps the stack so far: input range, gamma, output range.</td></tr>
+    <tr><td>Blur</td><td>Softens the stack so far (in texels), staying on the surface.</td></tr>
+    <tr><td>Invert</td><td>Flips the stack so far.</td></tr>
+    <tr><td>Grow / shrink</td><td>Spreads the white of the stack so far out (amount above 0) or pulls it in (below 0),
+      in texels, staying on the surface.</td></tr>
+    <tr><td>Edges</td><td>Keeps only the edges of what the stack covers so far, as a band of the width you set: a pale
+      rim round chips, a dark line round a patch.</td></tr>
+    <tr><td>Pattern</td><td>Any library material as a mask: its height, brightness, roughness or metal, projected like a
+      fill layer's material, with a level, a contrast and invert. Bricks, scratches, stripes, cracks, a circuit… Drag a
+      material onto <i>Add a mask effect…</i> to add one.</td></tr>
+  </table>
+  </div>
+</div>
+<p>Each effect has an on/off switch, an <b>opacity</b> and, for the ones that make a mask (paint, smart mask, fill, noise),
+a <b>blend mode</b>: normal, multiply, add, subtract, lighten, darken or screen. <b>^</b> / <b>v</b> move an effect, <b>x</b>
+removes it, <i>Remove the stack</i> goes back to a plain mask. Everything is one undo step per change, and Claude can
+build stacks with <code>add_mask_effect</code> and <code>update_layer</code> (<code>mask_effects</code>).</p>
+
+<h2 id="instances">Instances</h2>
+<p>An <b>instance</b> (right-click › <i>Make an instance</i>, <kbd>Alt</kbd>+<kbd>D</kbd>) is a linked copy of a layer: it
+shows the same paint or fill as its source, everywhere the source changes, but has its own mask, opacity, blend mode
+and place in the stack. Use one to repeat a decal layer in a second folder with another mask, or to put the same dirt
+pass at two strengths. Painting on an instance paints its source. <i>Select the source</i> jumps to it, and <i>Make
+independent</i> turns the instance into an ordinary copy. Deleting the source hands its content to the first instance.</p>
+
+<h2 id="a-typical-stack">A typical stack</h2>
+<ol class="steps">
+  <li><b>Base:</b> a fill layer with the main material, for example <i>Painted Metal Chipped</i>.</li>
+  <li><b>Wear:</b> a fill layer of <i>Rust Heavy</i> with the <i>Edges</i> smart mask, Level about 0.65 and some Noise.</li>
+  <li><b>Dirt:</b> a fill layer of <i>Mud</i> with the <i>Occlusion</i> or <i>Cavity</i> mask at 60–80% opacity.</li>
+  <li><b>Details:</b> a paint layer on top for decals, trims and hand-placed scratches.</li>
+  <li><b>Color grade:</b> an adjustment layer at the very top to try out color variations without repainting.</li>
+</ol>
+<p>Steps 1–3 are exactly what the built-in <a href="organizing.html#smart-materials">smart materials</a> contain. Add
+<i>Smart… ▸ Worn painted metal</i> and adjust it, rather than building the stack from scratch.</p>
+
+<h2 id="undo">Undo</h2>
+<p><kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes everything: strokes, fills, layer changes, every slider in the layer settings, masks
+and UV edits. The <a href="organizing.html#history">History panel</a> lists the steps and lets you jump back to any of
+them. Patina stores only the parts of the textures that changed, so long sessions don't use up memory.</p>
+
+<h2 id="gotchas">Gotchas</h2>
+<div class="callout tip"><span class="t">Comparing settings</span>Every slider change is one undo step, so you can try a
+value and press <kbd>Ctrl</kbd>+<kbd>Z</kbd>. To see what a single layer contributes, <kbd>Alt</kbd>+click its eye
+(<a href="organizing.html#solo-see-what-one-layer-does">solo</a>).</div>
+<div class="callout gotcha"><span class="t">“I painted but nothing changed”</span>The selected layer is a fill or adjustment
+layer whose mask is already white, so painting white changes nothing. Use <i>Add black mask</i> first, or erase.</div>
+<div class="callout warn"><span class="t">Smart masks after a mesh change</span>AO and curvature are baked for the current
+mesh and UVs. After you change the topology or the UVs a lot, re-bake them with <i>Bake › All mesh maps</i>. Otherwise
+edge masks land in the wrong places.</div>
+<div class="callout tip"><span class="t">Height blends</span>Height in non-normal blend modes is added as an offset
+around mid-gray (0.5). <i>Darken</i> and <i>Lighten</i> keep the lower or higher surface. That makes stacked dents and
+scratches add up the way you'd expect.</div>
+
+</article>
+<footer class="pager"><a class="prev" href="masks-guide.html">← Guide: masks &amp; smart materials</a><a class="next" href="organizing.html">Folders &amp; smart materials →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+LEMON graph library: cgg-bern's copy (https://github.com/cgg-bern/lemon, branch cgg,
+3c6aa54c62a9b524bb9502872fa172776c1f8244): 1.3.1 with later upstream fixes. Boost Software License 1.0 (LICENSE).
+Used by QuadriFlow (network flow) and libSatsuma.
+
+Local changes: only lemon/ is kept, without the LP solver back ends (CBC, CLP, CPLEX, GLPK, SoPlex) and the
+build files; config.h and export.h written out by hand (no LP / MIP solvers); network_simplex.h's MAX
+renamed MAX_VALUE, as in Blender's copy (a MAX(a, b) macro from system headers broke it).

@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painting - Patina manual</title>
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="stylesheet" href="manual.css">
+</head>
+<body>
+<header class="top">
+  <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.0 manual</span></a>
+  <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
+  <div id="results" hidden></div>
+</header>
+<nav class="side"><a href="index.html">Welcome &amp; quick start</a>
+<a href="install.html">Install</a>
+<a href="guided.html">Guided layout</a>
+<a href="interface.html">The interface</a>
+<a href="tools.html">Search, checks &amp; macros</a>
+<a href="assistant.html">Assistant</a>
+<a href="painting.html" class="cur">Painting</a>
+<div class="toc"><a href="#how-painting-works">How painting works</a><a href="#tools">Tools</a><a href="#brush-settings">Brush settings</a><a href="#your-brushes">Your own brushes</a><a href="#projection-modes">Projection modes</a><a href="#smudge">Smudge and seams</a><a href="#stencils">Stencils, decals and text</a><a href="#stroke-locks">Topology lock and island lock</a><a href="#colors">Colors</a><a href="#lines-symmetry-and-pressure">Lines, symmetry and pressure</a><a href="#pen-tablets">Pen tablets</a><a href="#channels">Channels</a><a href="#gotchas">Gotchas</a></div>
+<a href="materials.html">Materials</a>
+<a href="masks-guide.html">Guide: masks &amp; smart materials</a>
+<a href="layers.html">Layers &amp; masks</a>
+<a href="organizing.html">Folders &amp; smart materials</a>
+<a href="scene.html">Scenes</a>
+<a href="uv.html">UV editing</a>
+<a href="retopology.html">Retopology</a>
+<a href="mesh.html">Mesh check &amp; export</a>
+<a href="batch.html">Recipes &amp; batches</a>
+<a href="texture-set.html">Texture set &amp; export</a>
+<a href="blender.html">Blender bridge</a>
+<a href="automation.html">Claude &amp; automation</a>
+<a href="api.html">HTTP API &amp; batch mode</a>
+<a href="web.html">Patina Web</a>
+<a href="gotchas.html">Gotchas &amp; troubleshooting</a>
+<a href="shortcuts.html">Shortcuts (Patina keymap)</a>
+<a href="shortcuts-blender.html">Shortcuts (Blender keymap)</a>
+<a href="translating.html">Translating Patina</a>
+<a href="commands.html">Command reference</a>
+<a href="changes.html">What&#x27;s new</a></nav>
+<main>
+<article>
+<!-- title: Painting -->
+<!-- nav: Painting -->
+<h1>Painting</h1>
+<p class="lead">Choose a layer, a material and a brush, then paint on the model. This page explains what happens under
+the brush, so the results are predictable.</p>
+
+<figure><img src="img/painting_stroke.png" alt="A stroke in progress with the brush cursor"><figcaption>A soft rust stroke in progress. The circle is the brush footprint on screen.</figcaption></figure>
+
+<h2 id="how-painting-works">How painting works</h2>
+<p>Most painters stamp the brush into the texture image, so the stroke follows the UV layout and breaks at every seam.
+Patina works the other way round. For every texel (texture pixel) of the model it knows the point on the surface the
+texel belongs to. Each brush dab asks every texel the same question: <i>is your surface point under the brush, and is it
+visible?</i></p>
+<svg class="fig" viewBox="0 0 860 210" role="img" aria-label="Diagram: texels are projected from UV space to the 3D surface, through the camera, and depth tested">
+  <style>.b{fill:var(--panel);stroke:var(--line);stroke-width:2}.t{font:600 14px system-ui,sans-serif;fill:var(--fg)}.s{font:12.5px system-ui,sans-serif;fill:var(--dim)}.a{stroke:var(--accent);stroke-width:2.5;fill:none;marker-end:url(#ar)}</style>
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="var(--accent)"/></marker></defs>
+  <rect class="b" x="10" y="30" width="180" height="150" rx="10"/><text class="t" x="24" y="56">1 · Texel in UV space</text>
+  <text class="s" x="24" y="80">every texel of the texture</text><text class="s" x="24" y="98">set knows its 3D point</text><text class="s" x="24" y="116">and normal (baked once)</text>
+  <rect class="b" x="230" y="30" width="180" height="150" rx="10"/><text class="t" x="244" y="56">2 · Project to screen</text>
+  <text class="s" x="244" y="80">through the camera, the</text><text class="s" x="244" y="98">same way the model is drawn</text>
+  <rect class="b" x="450" y="30" width="180" height="150" rx="10"/><text class="t" x="464" y="56">3 · Visible? Under brush?</text>
+  <text class="s" x="464" y="80">depth test vs. the view,</text><text class="s" x="464" y="98">facing test, brush falloff</text><text class="s" x="464" y="116">→ stroke mask</text>
+  <rect class="b" x="670" y="30" width="180" height="150" rx="10"/><text class="t" x="684" y="56">4 · Mix the material</text>
+  <text class="s" x="684" y="80">material sampled at the 3D</text><text class="s" x="684" y="98">point (tri-planar), blended</text><text class="s" x="684" y="116">into the layer by the mask</text>
+  <path class="a" d="M190 105h36"/><path class="a" d="M410 105h36"/><path class="a" d="M630 105h36"/>
+</svg>
+<p>The result is that a stroke covers exactly what you see under the cursor, wherever the texels live in the texture.
+Seams don't break it, islands at different scales don't stretch it, and rotated or mirrored islands don't twist it.
+Materials are sampled in 3D as well, using <b>tri-planar</b> projection, so a wood grain or tile pattern lines up across
+seams too.</p>
+
+<h2 id="tools">Tools</h2>
+<table>
+  <tr><th>Tool</th><th>Key</th><th>What it does</th></tr>
+  <tr><td>Paint</td><td><kbd>B</kbd></td><td>Paints the current material onto the selected layer, or onto its mask if you are editing the mask.</td></tr>
+  <tr><td>Erase</td><td><kbd>E</kbd></td><td>Removes paint from the layer, so the layers underneath show through.</td></tr>
+  <tr><td>Blur</td><td><kbd>U</kbd></td><td>Softens paint under the brush. <i>Blur radius</i> in Properties sets the strength. It carries on across UV seams (see <a href="#smudge">Smudge and seams</a>).</td></tr>
+  <tr><td>Smudge</td><td><kbd>J</kbd></td><td>Drags the paint under the brush along the stroke, like a finger through wet paint. Flow and pen pressure set how much it carries.</td></tr>
+  <tr><td>Clone</td><td><kbd>C</kbd></td><td>Copies paint from a source point. <kbd>Ctrl</kbd>+click sets the source, on the model or in the UV editor's paint mode. With <i>Aligned clone</i> on, the source keeps its offset from one stroke to the next.</td></tr>
+  <tr><td>Fill</td><td><kbd>P</kbd></td><td>Polygon fill. Fills a face, a UV island, the connected part of the mesh, the whole mesh, the face selection, or every face of the clicked <b>material slot</b> (the Blender material). Pick which in the viewport bar. <kbd>Alt</kbd>+click erases the same faces instead.</td></tr>
+  <tr><td>Pick</td><td><kbd>I</kbd></td><td>Picks the color, roughness and metallic under the cursor, and switches the brush to those flat values. <b>Hold</b> <kbd>I</kbd> while painting for a quick pick: click, release <kbd>I</kbd>, and you are back on your previous tool. <kbd>Alt</kbd>+right-click picks with any tool.</td></tr>
+  <tr><td>Select</td><td><kbd>S</kbd></td><td>Selects faces or islands on the model, for the UV tools and for <i>Fill › Selection</i>.</td></tr>
+  <tr><td>Seams</td><td><kbd>M</kbd></td><td>Click edges to mark or clear UV seams (see <a href="uv.html#seams">UV editing</a>).</td></tr>
+  <tr><td>Island</td><td><kbd>L</kbd></td><td>Paint over a part of the model, press <kbd>Enter</kbd>, and it becomes one UV island at the right texel density (see <a href="uv.html#island-brush">the Island brush</a>). <kbd>Ctrl</kbd> removes.</td></tr>
+  <tr><td>Note</td><td><kbd>N</kbd></td><td>Pins a comment to the model. Click a pin to edit it (see <a href="interface.html#notes">Notes</a>).</td></tr>
+</table>
+
+<div class="two">
+  <figure><img src="img/clone_tool.png" alt="Clone tool"><figcaption>Clone: the green cross is the source, the green ring is the brush.</figcaption></figure>
+  <figure><img src="img/seams_tool.png" alt="Seams tool with wireframe"><figcaption>Seams tool with the wireframe and seam overlays on.</figcaption></figure>
+</div>
+
+<h2 id="brush-settings">Brush settings</h2>
+<p>The viewport bar holds the settings you change most: size, hardness, flow, opacity, spacing, projection mode and the
+<a href="#stroke-locks">topology and island locks</a>. When the viewport is narrow, the bar continues on a second row. The
+<b>Properties</b> panel has all of them.</p>
+<figure><img src="img/properties_panel.png" alt="Brush properties" style="max-width:420px"></figure>
+<table>
+  <tr><th>Setting</th><th>Meaning</th></tr>
+  <tr><td>Size</td><td>Diameter in screen pixels, which is what you see. In <i>Surface 3D</i> mode it is a size in object units.</td></tr>
+  <tr><td>Hardness</td><td>0 gives a soft, feathered edge. 1 gives a crisp edge.</td></tr>
+  <tr><td>Flow</td><td>How much each dab adds. Low flow builds up gradually, like an airbrush.</td></tr>
+  <tr><td>Opacity</td><td>The ceiling for a whole stroke. No matter how often you go over an area within one stroke, it never exceeds this.</td></tr>
+  <tr><td>Spacing</td><td>The distance between dabs as a fraction of the diameter. Use small values for smooth lines and large values for stamps.</td></tr>
+  <tr><td>Tip</td><td>The brush shape. There are 16 procedural tips (round, square, star, splatter, chalk, scratches, grunge, cracks…), or <b>Image tip…</b> loads any grayscale image.</td></tr>
+  <tr><td>Angle / Roundness</td><td>Rotation and squash of the tip. <i>Follow path</i> (under Dynamics) turns the tip along the stroke.</td></tr>
+  <tr><td>Dynamics</td><td>Size, angle and flow jitter, scatter, <b>lazy mouse</b> (the brush trails behind the cursor for smooth lines), and what pen pressure controls.</td></tr>
+</table>
+<p>The <b>Brushes</b> tab has 27 presets in six groups: Basic, Artistic, Weathering, Stamps, Projection and Utility. <i>Save preset</i> in Properties stores the current settings as your own preset.</p>
+<figure><img src="img/brushes_panel.png" alt="Brush presets"></figure>
+
+<h2 id="your-brushes">Your own brushes</h2>
+<p>Every image in your <b>brushes folder</b> is a brush (1.2): PNG, JPEG, TGA, BMP, GIF, PSD or EXR. Each folder inside
+it is a group of its own in the Brushes panel, and your groups come first. A Photoshop brush file (<code>.abr</code>) there gives a brush for each of
+its tips. Patina looks at the folder every few seconds, so a file you add shows up by itself, and one you remove goes.</p>
+<figure><img src="img/brushes_yours.png" alt="Brushes of your own at the top of the Brushes panel"><figcaption>Three
+images in the brushes folder, one of them in a folder of its own: they are the first groups of the Brushes panel. The
+leaf was drawn dark on white, and paints with the leaf.</figcaption></figure>
+<ul>
+  <li><b>Import brushes...</b> at the top of the Brushes panel copies images or <code>.abr</code> files into the
+    folder. So does dropping them on the panel.</li>
+  <li><b>Open the folder</b> beside it opens the folder itself. It is <code>~/.local/share/patina/user/brushes</code> on
+    Linux and <code>%LOCALAPPDATA%\Patina\user\brushes</code> on Windows.</li>
+</ul>
+<p>Patina reads a tip the way it was made. A dark shape on a light ground paints with the dark part, as Photoshop, GIMP
+and Krita tips are made. A light shape on a dark ground paints with the light part. An image with transparency paints
+with its opaque part. A brush's tip and size can be changed and saved as a preset like any other. Agents use
+<code>import_brushes</code> and <code>reload_brushes</code>.</p>
+
+<h2 id="projection-modes">Projection modes</h2>
+<table>
+  <tr><th>Mode</th><th>Use it for</th></tr>
+  <tr><td><b>Screen</b> (default)</td><td>Projects the brush from the view, like Substance Painter. You get what you see, which suits most work.</td></tr>
+  <tr><td><b>Surface 3D</b></td><td>A sphere brush that sits on the surface. Its size is set in object space, so it stays the same however you zoom, and it wraps around corners.</td></tr>
+  <tr><td><b>UV</b></td><td>Dabs are placed in texture space. Use this for decals that should follow the UV layout.</td></tr>
+</table>
+<p>Under <i>Projection</i> you also find <b>Occlusion</b>. With it off (or with the <i>paint_through</i> preset), the brush
+also reaches surfaces hidden behind others. <b>Backface culling</b> and <b>Angle falloff</b> fade the paint out on
+surfaces that turn away from you.</p>
+
+<h2 id="smudge">Smudge and seams</h2>
+<p><b>Smudge</b> (<kbd>J</kbd>) picks up the paint under the brush and drags it along the stroke. It works in 3D like the
+other tools: the drag follows the surface, so it isn't stretched by the UV layout, and it runs on into the next island
+across a seam. Every channel the brush paints is smudged, so height and roughness move with the color. <b>Flow</b> sets
+how much paint each step carries (about 0.5 smears, 1 pushes the paint along with the brush), and pen pressure can
+control it under <i>Dynamics</i>. Symmetry copies each smudge their own way.</p>
+<figure><img src="img/smudge.png" alt="Four stripes before and after four smudge strokes"></figure>
+<p><b>Blur</b> and <b>smudge</b> carry on across UV seams: where an island ends at a seam, they read the matching texels of
+the neighboring island, or of the other edge of the texture when an island wraps around (a cylinder, the sphere's
+seam). So a blur along a seam leaves no hard line. <i>Across UV seams</i> in Properties turns this off. Patina works out
+the seams once per UV layout (in well under a second at 2K).</p>
+<figure><img src="img/seam_blur.png" alt="Blurring red paint that ends at a seam, without and with the seams" style="max-width:620px"><figcaption>Red
+paint up to the sphere's seam (the red line). Left: the blur stops at the seam. Right: it carries on.</figcaption></figure>
+
+<h2 id="stencils">Stencils, decals and text</h2>
+<p>A <b>stencil</b> is a picture laid over the 3D view. It stays where it is on the screen while you turn the model, so
+you can line it up, and then the brush paints through it. Load one under <i>Properties › Stencil &amp; text</i>
+(<i>Image…</i>), or make one from text.</p>
+<div class="two">
+  <figure><img src="img/stencil_overlay.png" alt="A text stencil over the model"><figcaption>A text stencil, shown
+  over the view, lined up on the head.</figcaption></figure>
+  <figure><img src="img/stencil_projected.png" alt="The text painted onto the model"><figcaption>After <i>Project onto
+  the model</i>. It follows the curved surface.</figcaption></figure>
+</div>
+<table>
+  <tr><th>Setting</th><th>What it does</th></tr>
+  <tr><td><b>Mode: Mask</b></td><td>The stencil only shapes the paint: white and opaque parts let it through, black or
+    transparent parts block it. You paint the brush material through it, like spray paint through a cut-out.</td></tr>
+  <tr><td><b>Mode: Decal</b></td><td>The stencil's own colors are painted, with roughness, metallic and the other
+    channels from the brush material. Use it for logos, labels and photos.</td></tr>
+  <tr><td>Invert · Tile</td><td>Paint where the stencil is dark instead · repeat it across the whole view (patterns, mesh,
+    perforations).</td></tr>
+  <tr><td>Position · Scale · Rotation</td><td>Or hold <kbd>T</kbd> in the view: drag to move it, <kbd>Shift</kbd>+drag to
+    rotate it, the wheel to scale it. <i>Fit</i> centers it.</td></tr>
+  <tr><td>Overlay · Show</td><td>How strongly the stencil is drawn over the view. Hiding it doesn't switch it off.</td></tr>
+  <tr><td><b>Project onto the model</b></td><td>Paints the whole stencil in one step onto everything the camera sees,
+    with the brush's occlusion, backface and angle settings. <i>Erase through it</i> erases instead. One undo step.</td></tr>
+</table>
+<p>Painting through a stencil works with Paint and Erase, in the 3D view, in all three projection modes.
+<kbd>Shift</kbd>+<kbd>T</kbd> turns the stencil on and off.</p>
+<h3 id="text">Text</h3>
+<p>Under <i>Stencil &amp; text › Text</i>, type one or more lines and press <i>Make text stencil</i>. Patina renders the
+text into a stencil image (decal mode when the color isn't white), which you place and paint like any other stencil. With
+<i>Live</i> on, edits to the text update the stencil straight away.</p>
+<ul>
+  <li><b>Fonts:</b> four are included (DejaVu Sans, Sans Bold, Serif and Sans Mono), and the list also shows the fonts
+  installed on the computer. <i>File…</i> uses any <code>.ttf</code> or <code>.otf</code> file.</li>
+  <li><b>Size, color, outline</b> (width and color), <b>alignment</b>, letter and line spacing.</li>
+  <li><i>Save image…</i> writes the stencil as a PNG, for example to use the text as an image material or brush tip.</li>
+  <li>Claude sets all of this with <code>set_stencil</code> (<code>text</code>, <code>font</code>, <code>font_size</code>,
+  <code>outline</code>…) and paints it with <code>project_stencil</code>; <code>list_fonts</code> lists the fonts.</li>
+</ul>
+
+<h2 id="stroke-locks">Topology lock and island lock</h2>
+<p>Two toggles on the viewport bar keep a stroke where it started. They work with the Paint, Erase, Blur, Smudge and Clone
+tools, in every projection mode, and in the UV editor's paint mode.</p>
+<figure><img src="img/lock_bar.png" alt="Topology lock and Island lock on the viewport bar" style="max-width:656px"></figure>
+<table>
+  <tr><th>Toggle</th><th>Key</th><th>A stroke only paints…</th></tr>
+  <tr><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3.5 H13.5 V13.5 H3 Z M8.25 3.5 V13.5 M3 8.5 H13.5 M3 3.5 L13.5 13.5"/><path d="M16 15.5 V14 A2 2 0 0 1 20 14 V15.5" stroke="#E8852C" stroke-width="1.5"/><rect x="14.25" y="15.5" width="7.5" height="5.75" rx="1.2" stroke="#E8852C" fill="#E8852C" stroke-width="1"/></svg> <b>Topology lock</b></td><td><kbd>Alt</kbd>+<kbd>T</kbd></td><td>the connected piece of mesh it starts on.
+    Pieces that are separate in the mesh (eyes, buttons, straps, a separate lid) stay clean, even where they touch or
+    overlap on screen.</td></tr>
+  <tr><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4 C7 3.2 8.6 4.6 10.4 4.1 C12.6 3.5 13.9 5.6 13 7.6 C12.3 9.1 13.3 11 11.8 12.4 C10.4 13.7 8.6 12.7 6.6 13.2 C4.4 13.7 3.1 11.5 4 9.6 C4.7 8.2 3 5 5 4 Z"/><path d="M16 15.5 V14 A2 2 0 0 1 20 14 V15.5" stroke="#E8852C" stroke-width="1.5"/><rect x="14.25" y="15.5" width="7.5" height="5.75" rx="1.2" stroke="#E8852C" fill="#E8852C" stroke-width="1"/></svg> <b>Island lock</b></td><td><kbd>Alt</kbd>+<kbd>L</kbd></td><td>the UV island it starts on. The stroke stops at
+    the island's seams, so you can paint one panel of a hard-surface model, or one side of a box, right up to the edge.</td></tr>
+  <tr><td><b>Set lock</b></td><td>(none)</td><td>the <a href="tools.html#texture-set-tools">texture set</a> it starts on,
+    or, with a single texture, its material slot: the skin, not the collar next to it. Shown when the model has
+    several sets or slots.</td></tr>
+</table>
+<figure><img src="img/lock_topology.png" alt="A stroke across Suzanne's eye with and without the topology lock"></figure>
+<figure><img src="img/lock_island.png" alt="A stroke across a cube edge with and without the island lock"></figure>
+<p>The region is chosen by the first dab that lands on the model, so you can start a stroke beside the model and drag
+onto it. With symmetry on, the mirrored part is unlocked as well, so both sides get painted. With both toggles on, the
+island lock decides (an island never spans two separate pieces of mesh). The toggles are remembered between sessions,
+and Claude can set them with <code>set_brush</code> (<code>lock_topology</code>, <code>lock_island</code>,
+<code>lock_set</code>).</p>
+
+<h2 id="colors">Colors</h2>
+<p>When the brush paints a flat color (no library material selected), the <b>Colors</b> panel next to Properties is
+the place to choose it.</p>
+<div class="two">
+  <figure><img src="img/colors_panel.png" alt="Colors panel"></figure>
+  <div>
+  <ul>
+    <li><b>Primary and secondary:</b> the large square is the color you paint with. <kbd>X</kbd> (or <i>Swap</i>) swaps it
+    with the secondary color, like the foreground and background colors in an image editor.</li>
+    <li><b>Picker:</b> a full color picker with a hex field. Choosing a color here switches the brush from a library
+    material to flat color.</li>
+    <li><b>Recent:</b> the last 16 colors you painted with or picked from the model.</li>
+    <li><b>Swatches:</b> your own palette. <b>+</b> adds the primary color. Right-click a swatch to replace it, use it as
+    the secondary color or remove it.</li>
+  </ul>
+  <p>Swatches, recent colors and the secondary color are kept between sessions, together with the brush, the material,
+  the tool and the symmetry settings.</p>
+  </div>
+</div>
+
+<h2 id="lines-symmetry-and-pressure">Lines, symmetry and pressure</h2>
+<ul>
+  <li><b>Straight lines:</b> paint once, then <kbd>Shift</kbd>+click somewhere else. Patina draws a line from the end of the last stroke.</li>
+  <li><b>Mirror symmetry:</b> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V4.8 M12 7.8 V9.6 M12 12.6 V14.4 M12 17.4 V19.2" stroke-width="1.5"/><path d="M9.4 7.5 V18.5 H3.4 Z"/><path d="M14.6 7.5 V18.5 H20.6 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1.25"/><path d="M3.6 2.8 L7.2 6.8 M7.2 2.8 L3.6 6.8" stroke="#F0525F" stroke-width="1.6"/></svg> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L5.3 18.7 M7.3 16.7 L8.6 15.4 M10.6 13.4 L11.9 12.1 M13.9 10.1 L15.2 8.8" stroke-width="1.5"/><path d="M3 3.5 H11.5 L3 12 Z"/><path d="M21 12 V20.5 H12.5 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1.25"/><path d="M16.2 2.8 L18.2 5.1 L20.2 2.8 M18.2 5.1 V7.4" stroke="#7DC242" stroke-width="1.6"/></svg> <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 H4.8 M7.8 12 H9.6 M12.6 12 H14.4 M17.4 12 H19.2" stroke-width="1.5"/><path d="M7.5 9.4 H18.5 V3.4 Z"/><path d="M7.5 14.6 H18.5 V20.6 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1.25"/><path d="M2.9 3 H6.5 L2.9 7 H6.5" stroke="#4A90F0" stroke-width="1.6"/></svg> <i>Mirror X / Y / Z</i> in the tool strip mirror every dab across the object's axes. They
+  combine: X and Z together paint four copies, all three paint eight. <kbd>Shift</kbd>+<kbd>X</kbd> toggles X.</li>
+  <li><b>Radial symmetry:</b> <i>Radial</i> in the tool strip repeats every dab 2–32 times around the X, Y or Z axis, for
+  wheels, rosettes, bolts around a flange and so on. It works together with the mirrors. All copies go through the
+  object's origin, so the model should be centered on it.</li>
+  <li><b>Pen pressure:</b> works with drawing tablets on Wayland, X11 and Windows. By default pressure controls size;
+  flow and opacity are optional under Dynamics. See <a href="#pen-tablets">Pen tablets</a>.</li>
+</ul>
+
+<figure><img src="img/radial_symmetry.png" alt="Radial symmetry" style="max-width:460px"><figcaption>Two strokes with radial symmetry, 8 copies around Y.</figcaption></figure>
+
+<h2 id="pen-tablets">Pen tablets</h2>
+<p>Patina reads drawing tablets (Wacom, Huion, XP-Pen and others) directly. It uses every sample the tablet sends,
+typically 130 to 266 per second, so fast strokes keep their shape and their pressure, independent of the frame rate.</p>
+<table>
+  <tr><th>Feature</th><th>What it does</th></tr>
+  <tr><td>Pressure</td><td>Size, flow and/or opacity, chosen per brush under <i>Properties › Dynamics</i>. Mouse strokes always
+    paint at full pressure, even right after using the pen.</td></tr>
+  <tr><td>Pressure curve</td><td><b>Feel</b> (softer: light touches already paint strongly; firmer: press harder), <b>Ignore
+    below</b> (pressure that counts as none, for pens that register when they only rest on the tablet) and <b>Full pressure
+    at</b> (so a light hand still reaches full size). In <i>Edit › Preferences › Pen tablet</i> and the test window.</td></tr>
+  <tr><td>Eraser end</td><td>Turn the pen around and it erases, whatever the tool. Switch it off with <i>The eraser end
+    erases</i>.</td></tr>
+  <tr><td>Barrel buttons</td><td>Each button can be a right click, a middle click (which orbits or pans, depending on the
+    <a href="interface.html#navigating-the-view">navigation preset</a>), swap colors, undo, or nothing. The defaults are
+    right click (lower button) and middle click (upper button).</td></tr>
+  <tr><td>Tilt</td><td><i>Pen tilt turns the tip</i> (under Dynamics) points non-round tips the way the pen leans. Needs a pen
+    with tilt (Wacom Pro Pen, most Huion and XP-Pen pens; the standard Intuos pen has none).</td></tr>
+</table>
+
+<h3 id="checking-a-tablet">Checking a tablet</h3>
+<figure><img src="img/pen_test.png" alt="Pen tablet test window" style="max-width:824px"><figcaption><i>Help › Pen Tablet Test</i>
+with four strokes whose pressure rises, falls, swells and pulses.</figcaption></figure>
+<ol class="steps">
+  <li>Open <i>Help › Pen Tablet Test…</i> (also <i>Pen tablet settings…</i> under Dynamics, and <i>Test the pen…</i> in
+  Preferences).</li>
+  <li>Hover over the window: the status line should say <b>Pen: hovering</b>. Draw in the pad, pressing lightly, then
+  hard. The bars show the raw pressure and the pressure after the curve, and the graph shows the last four seconds.</li>
+  <li>Check the numbers: the <b>Range seen</b> should go from about 0 to close to 1. <b>Samples per second</b> while you
+  move the pen should be about 100 or more. Turn the pen round to see <b>Eraser seen</b>, lean it to see the tilt.</li>
+  <li>Set <b>Feel</b> until light and hard strokes feel right in the pad. The settings are kept between sessions.</li>
+  <li>If something is off, <b>Copy report</b> puts a description of what Patina receives on the clipboard (the system,
+  the event counts, the pressure range, the findings) for a bug report. Claude can read the same with the
+  <code>pen_info</code> command.</li>
+</ol>
+
+<h3 id="setting-up-the-driver">Setting up the driver</h3>
+<p><b>Linux.</b> Wacom tablets work through the kernel's <code>wacom</code> driver and libinput, with nothing to install. Huion
+tablets work through the kernel's <code>hid-uclogic</code> driver: most models get pressure on a current kernel such as
+Fedora's. GNOME (<i>Settings › Wacom Tablet</i>) and KDE (<i>System Settings › Drawing Tablet</i>) set the tablet area,
+the pen buttons and the pressure feel for the whole desktop; Patina's curve comes on top of that. To check what the system
+sees, install <code>libinput-utils</code> and run <code>sudo libinput list-devices</code> (the tablet should list the
+<i>tablet</i> capability) and <code>sudo libinput debug-tablet</code> (shows the pressure while you press).</p>
+<p><b>Windows.</b> Patina reads tablets through Windows Ink, so it must be enabled in the tablet driver: in <i>Wacom Tablet
+Properties</i>, the <i>Mapping</i> tab, tick <i>Use Windows Ink</i>; in the <i>Huion Tablet</i> app, under <i>Digital Pen</i>,
+tick <i>Enable Windows Ink</i>. Restart Patina after changing it. Patina doesn't use the older Wintab interface.</p>
+
+<h2 id="channels">Channels</h2>
+<p>A paint stroke writes several channels at once: base color, roughness, metallic, height, normal and emissive, and
+opacity, sheen, clearcoat and subsurface when the brush's material has them (or the layer already has them, so the
+eraser, blur, smudge and clone reach them). A plain brush leaves those four alone. In the Brush panel's <i>Paint
+channels</i> you choose which channels strokes write. Unticking a channel in the layer's <i>Channels</i> row stops that
+layer affecting it. For example, a varnish layer might
+change only roughness. Each channel also has its own opacity under <i>Channel opacity</i>.</p>
+
+<h2 id="gotchas">Gotchas</h2>
+<div class="callout gotcha"><span class="t">Paint appears in two places at once</span>Two parts of the model share the
+same part of the texture. This is common with mirrored halves and with stacked islands, as in the DamagedHelmet sample.
+Painting one copy paints the other. To fix it, give the mesh unique UVs: <i>UV › Unwrap › Smart UV Project</i>, then
+<i>Pack Islands</i>. <a href="gotchas.html#overlapping-uvs">More…</a></div>
+<div class="callout gotcha"><span class="t">“Nothing to paint”</span>The selected layer is hidden, all its channels are
+unticked, or no layer is selected. Fill and adjustment layers paint their <i>mask</i>, which is invisible if the layer
+itself shows nothing yet.</div>
+<div class="callout gotcha"><span class="t">Strokes look blocky</span>The texture resolution is too low for how close
+you're working, or that part of the UVs is small (check with the UV checker view). Raise the resolution in
+<i>Texture Set</i>. Your layers are resampled, not lost.</div>
+<div class="callout gotcha"><span class="t"><kbd>X</kbd> no longer toggles symmetry</span>Since 0.3, <kbd>X</kbd> swaps
+the primary and secondary color. The X mirror moved to <kbd>Shift</kbd>+<kbd>X</kbd>. To get the old key back, change it in
+<i>Edit › Keyboard shortcuts</i>.</div>
+<div class="callout gotcha"><span class="t">Quick pick stays on the picker</span>A short <i>tap</i> of <kbd>I</kbd> without
+clicking selects the Pick tool and stays there (the old behavior). Only holding <kbd>I</kbd>, or clicking while it is held,
+returns to the previous tool when you let go.</div>
+<div class="callout gotcha"><span class="t">“My stroke stops for no reason”</span>The topology or island lock is on (the
+button is orange on the viewport bar). Check the status bar after <kbd>Alt</kbd>+<kbd>T</kbd> / <kbd>Alt</kbd>+<kbd>L</kbd>,
+or turn the <i>Seams</i> overlay on to see where islands end. If the topology lock stops at a place that looks connected,
+the mesh is split there (for example, vertices that were not merged in Blender).</div>
+<div class="callout gotcha"><span class="t">The pen moves the cursor but there is no pressure</span>The tablet driver
+delivers the pen as a plain mouse. The pen test window then says <i>No pen events yet</i> or shows no pressure range.
+On Windows, turn on Windows Ink in the tablet driver (see <a href="#pen-tablets">Pen tablets</a>). On Linux, check with
+<code>sudo libinput debug-tablet</code>. If that shows no pressure either, the kernel driver doesn't support the model yet.
+For Huion tablets that is usually fixed by a newer kernel, the DIGImend kernel drivers or OpenTabletDriver; use only one
+of them at a time, and quit Huion's own Linux driver if it is running.</div>
+<div class="callout gotcha"><span class="t">Strokes start with a blob or a thin tail</span>Adjust the curve: raise
+<i>Ignore below</i> if the pen paints while it barely touches, or set <i>Feel</i> firmer. The desktop's own pressure curve
+(GNOME / KDE / the Wacom or Huion settings) also applies, so set one of the two and leave the other linear.</div>
+<div class="callout gotcha"><span class="t">Nothing gets painted with a stencil on</span>In mask mode only the white,
+opaque parts of the stencil let paint through, and nothing gets through outside the stencil (unless <i>Tile</i> or
+<i>Invert</i> is on). A black-on-transparent logo needs <i>Invert</i> or decal mode. Check that the stencil is over the
+part you are painting: it stays fixed on the screen when you turn the model.</div>
+<div class="callout gotcha"><span class="t">Smudge pushes everything away</span>At flow 1 the brush carries all the paint
+it touches to the end of the stroke. Lower the flow to about 0.5 for a smear that leaves a trail.</div>
+<div class="callout warn"><span class="t">Painting through thin parts</span>With <i>Occlusion</i> off, paint goes all
+the way through: ears, fingers and both sides of a thin plate get painted. Use it on purpose, then turn it back on.</div>
+
+</article>
+<footer class="pager"><a class="prev" href="assistant.html">← Assistant</a><a class="next" href="materials.html">Materials →</a></footer>
+</main>
+<script src="search-index.js"></script>
+<script src="manual.js"></script>
+</body>
+</html>

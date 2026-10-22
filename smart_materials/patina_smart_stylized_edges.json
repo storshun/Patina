@@ -1,0 +1,142 @@
+{
+ "description": "A hand-painted overlay: crisp light edges, dark painted cavities and light from above. Put it on top of a toon or hand-painted material.",
+ "layers": [
+  {
+   "adjust": {
+    "brightness": 1.1200000047683716,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": 0.0,
+    "saturation": 1.0
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.3499999940395355,
+    "invert": false,
+    "level": 0.6000000238418579,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "gradient_y"
+   },
+   "name": "Top light",
+   "opacity": 1.0,
+   "parent": 3,
+   "type": "adjust",
+   "uid": 4,
+   "visible": true
+  },
+  {
+   "adjust": {
+    "brightness": 0.6000000238418579,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": 0.0,
+    "saturation": 1.149999976158142
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.8999999761581421,
+    "invert": false,
+    "level": 0.550000011920929,
+    "noise": 0.10000000149011612,
+    "noise_scale": 1.0,
+    "type": "cavity"
+   },
+   "name": "Painted shadow",
+   "opacity": 1.0,
+   "parent": 3,
+   "type": "adjust",
+   "uid": 5,
+   "visible": true
+  },
+  {
+   "adjust": {
+    "brightness": 1.399999976158142,
+    "contrast": 1.0,
+    "height": 0.0,
+    "hue": 0.0,
+    "metallic": 0.0,
+    "roughness": 0.0,
+    "saturation": 0.8500000238418579
+   },
+   "blend": "normal",
+   "channel_mask": 15,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.9200000166893005,
+    "invert": false,
+    "level": 0.6200000047683716,
+    "noise": 0.15000000596046448,
+    "noise_scale": 2.0,
+    "type": "edges"
+   },
+   "name": "Edge highlight",
+   "opacity": 1.0,
+   "parent": 3,
+   "type": "adjust",
+   "uid": 6,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Stylized edge highlights",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 3,
+   "visible": true
+  }
+ ],
+ "name": "Stylized edge highlights",
+ "patina_smart_material": 1
+}

@@ -1,0 +1,48 @@
+{
+ "patina_recipe": 1,
+ "id": "patina_game_asset",
+ "name": "Game asset",
+ "description": "Mended, mesh maps baked, convex collision pieces and lightmap UVs, exported as a GLB with three levels of detail (2K textures) and the collision named for Unreal.",
+ "steps": [
+  {
+   "cmd": "mesh_fix",
+   "args": {
+    "all": true
+   }
+  },
+  {
+   "cmd": "bake_mesh_maps",
+   "args": {
+    "ao": true,
+    "curvature": true
+   }
+  },
+  {
+   "cmd": "mesh_collision",
+   "args": {
+    "mode": "pieces",
+    "max_shapes": 16
+   }
+  },
+  {
+   "cmd": "mesh_lightmap_uvs",
+   "args": {
+    "lightmap_size": 512,
+    "padding": 4
+   }
+  },
+  {
+   "cmd": "export_model",
+   "args": {
+    "path": "${out}/${name}.glb",
+    "texture_size": 2048,
+    "lods": [
+     0.5,
+     0.25,
+     0.125
+    ],
+    "collision": "unreal"
+   }
+  }
+ ]
+}

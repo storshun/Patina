@@ -1,0 +1,32 @@
+QuadriFlow (https://github.com/hjwdzh/QuadriFlow, upstream 810b7a0967c35b0dc85b4464e3835e26a756c967),
+licence in LICENSE.txt (BSD-3 style). Patina uses it to make the quads of its retopology.
+
+Local changes, as in Blender's copy (extern/quadriflow, MIT): patches/blender.patch from Blender
+applied (no Boost: src/flow.hpp and patches/boykov_kolmogorov_max_flow.hpp from Blender, MIT;
+fixes in hierarchy, loader, parametrizer, subdivide, optimizer, field-math and LEMON). main.cpp and
+post-solver.cpp are left out. localsat.cpp no longer runs an external minisat (system()).
+Patina's own additions are marked "Patina:" (among them a cancel check, patina_check_cancel(), in the long
+loops; Hierarchy::FixFlipSat no longer runs shell commands) (also: the Windows compare-and-swap in dedge.cpp is
+MSVC only, so MinGW builds use the __sync builtins; CMake defines WIN32 for LEMON on Windows).
+
+Bundled: pcg32 (Apache 2.0),
+parallel_stable_sort (Intel, BSD-3). Eigen 3.4.0 is in third_party/eigen (MPL2, built with
+EIGEN_MPL2_ONLY). LEMON is in third_party/lemon (since 0.21: the newer version libSatsuma needs, shared; its
+network simplex keeps Blender's MAX_VALUE name; the results here are the same).
+- parametrizer-flip.cpp: QuadEnergy (filling a hole's quads by exhaustive search) keeps the best filling
+  of each sub-polygon it meets (thread_local memo, cleared per hole): the same quads, but a big hole no
+  longer takes seconds, and parallel runs no longer choke on its allocations.
+- parametrizer.cpp/.hpp: ComputeIndexMap records the seconds of its steps in patina_times (for --verbose).
+- hierarchy.cpp, parametrizer-sing.cpp, optimizer.cpp: the exit() calls on inconsistent states (and on
+  NaN equations) throw std::runtime_error instead, so a failed try is dropped rather than closing Patina.
+- optimizer.cpp: the sparse solves skip an empty system (Eigen's SparseLU divides by zero on one): a
+  long thin zone on a stretched ball crashed the build.
+- optimizer.cpp: after each sparse factorisation the solver's info() is checked: on a singular system the
+  position solves keep the positions they had and the scale solve drops the try (solving with a failed
+  factorisation segfaulted in SparseLU's solveInPlace, while the live preview was being rebuilt).
+- parametrizer.cpp (ComputeIndexMap): a sharp edge's offset across it is always set to 0, not only when
+  both its offsets are non-zero, and which way is across comes from the edge itself (upstream used the
+  position field's difference and compared qy.d without abs): a row's jump across a drawn line was left
+  in, and the quads crossed the line in steps.
+  (0.20.1: only for the drawn lines' edges, Parametrizer::patina_line_edges; open edges, also sharp, keep
+  upstream's rule: a zigzag open edge held that way collapsed whole parts.)

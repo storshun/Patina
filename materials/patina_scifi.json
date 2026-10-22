@@ -1,0 +1,222 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Sci-Fi",
+ "materials": [
+  {
+   "id": "patina_panels_hull",
+   "name": "Panels Hull Gray",
+   "category": "Sci-Fi",
+   "type": "procedural",
+   "generator": "panels",
+   "description": "Spaceship hull plating with grooves and rivets",
+   "default_scale": 1.0,
+   "tags": [
+    "hard surface"
+   ],
+   "params": {
+    "color_a": "#8b9097",
+    "color_b": "#9aa0a8",
+    "color_c": "#25282c",
+    "roughness": [
+     0.4,
+     0.8
+    ],
+    "metallic": [
+     0.8,
+     0.8
+    ],
+    "scale": 4,
+    "detail": 6,
+    "height": 0.6,
+    "variation": 0.15,
+    "extra": [
+     0.012,
+     1,
+     1,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_panels_white",
+   "name": "Panels Clean White",
+   "category": "Sci-Fi",
+   "type": "procedural",
+   "generator": "panels",
+   "description": "Clean white paneling (no rivets)",
+   "default_scale": 1.0,
+   "tags": [
+    "hard surface"
+   ],
+   "params": {
+    "color_a": "#e6e8ea",
+    "color_b": "#d6d9dd",
+    "color_c": "#4a4e54",
+    "roughness": [
+     0.3,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 6,
+    "height": 0.5,
+    "variation": 0.08,
+    "extra": [
+     0.01,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_panels_dark",
+   "name": "Panels Dark Riveted",
+   "category": "Sci-Fi",
+   "type": "procedural",
+   "generator": "panels",
+   "description": "Dark armor plates with rivets",
+   "default_scale": 1.0,
+   "tags": [
+    "hard surface"
+   ],
+   "params": {
+    "color_a": "#2e3136",
+    "color_b": "#383c42",
+    "color_c": "#0c0d0e",
+    "roughness": [
+     0.5,
+     0.85
+    ],
+    "metallic": [
+     0.9,
+     0.9
+    ],
+    "scale": 5,
+    "detail": 6,
+    "height": 0.7,
+    "variation": 0.2,
+    "extra": [
+     0.015,
+     1,
+     1,
+     0
+    ]
+   }
+  },
+  {
+   "id": "patina_honeycomb_armor",
+   "name": "Honeycomb Armor",
+   "category": "Sci-Fi",
+   "type": "procedural",
+   "generator": "hex_tiles",
+   "description": "Dark hex cells with raised gunmetal walls",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1b1d20",
+    "color_b": "#25282c",
+    "color_c": "#8d9399",
+    "roughness": [
+     0.7,
+     0.35
+    ],
+    "metallic": [
+     0.2,
+     1
+    ],
+    "scale": 6,
+    "detail": 4,
+    "height": 0.7,
+    "variation": 0.1,
+    "extra": [
+     0.12,
+     0.15,
+     0,
+     1
+    ],
+    "seed": 2
+   },
+   "tags": [
+    "hard surface"
+   ]
+  },
+  {
+   "id": "patina_circuit_green",
+   "name": "Circuit Board Green",
+   "category": "Sci-Fi",
+   "type": "procedural",
+   "generator": "circuit",
+   "description": "Green solder mask with gold traces, pads and chips",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1f5a2e",
+    "color_b": "#c8a050",
+    "color_c": "#141414",
+    "roughness": [
+     0.4,
+     0.3
+    ],
+    "metallic": [
+     0,
+     1
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.1,
+    "extra": [
+     0.5,
+     0.5,
+     0,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "tech"
+   ]
+  },
+  {
+   "id": "patina_circuit_glow",
+   "name": "Circuit Glowing Blue",
+   "category": "Sci-Fi",
+   "type": "procedural",
+   "generator": "circuit",
+   "description": "Dark board with glowing blue traces",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#0c1018",
+    "color_b": "#30c8ff",
+    "color_c": "#101010",
+    "roughness": [
+     0.4,
+     0.3
+    ],
+    "metallic": [
+     0.2,
+     0.6
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.1,
+    "extra": [
+     0.45,
+     0.3,
+     1,
+     0.12
+    ],
+    "seed": 1,
+    "emissive": "#20c0ff"
+   },
+   "tags": [
+    "tech",
+    "emissive"
+   ]
+  }
+ ]
+}

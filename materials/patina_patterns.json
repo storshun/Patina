@@ -1,0 +1,894 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Patterns",
+ "materials": [
+  {
+   "id": "patina_breton_stripes",
+   "name": "Breton Stripes",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "stripes",
+   "description": "Navy stripes on cream cotton (sailor tops)",
+   "default_scale": 1.5,
+   "params": {
+    "color_a": "#efe9dc",
+    "color_b": "#1d2f5c",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.25,
+    "variation": 0.1,
+    "extra": [
+     0.4,
+     0,
+     0,
+     0.6
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "print"
+   ]
+  },
+  {
+   "id": "patina_pinstripe_navy",
+   "name": "Pinstripe Suit Navy",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "stripes",
+   "description": "Navy worsted with fine chalk pinstripes",
+   "default_scale": 1.5,
+   "params": {
+    "color_a": "#1c2433",
+    "color_b": "#1c2433",
+    "color_c": "#aab0bc",
+    "roughness": [
+     0.8,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 12,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.05,
+    "extra": [
+     0.05,
+     1,
+     1,
+     0.8
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_chevron_teal",
+   "name": "Chevron Teal",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "stripes",
+   "description": "Zig-zag chevron print",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#ece4d4",
+    "color_b": "#2f6d64",
+    "color_c": "#000000",
+    "roughness": [
+     0.7,
+     0.7
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.1,
+    "variation": 0.1,
+    "extra": [
+     0,
+     2,
+     0,
+     0.3
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "print"
+   ]
+  },
+  {
+   "id": "patina_regimental_stripes",
+   "name": "Regimental Stripes",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "stripes",
+   "description": "Diagonal three-color stripes (ties, scarves)",
+   "default_scale": 1.5,
+   "params": {
+    "color_a": "#14213d",
+    "color_b": "#e0b43c",
+    "color_c": "#9a1c22",
+    "roughness": [
+     0.55,
+     0.55
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.15,
+    "variation": 0.1,
+    "extra": [
+     0.4,
+     4,
+     2,
+     0.5
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "print"
+   ]
+  },
+  {
+   "id": "patina_hazard_stripes",
+   "name": "Hazard Stripes Worn",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "stripes",
+   "description": "Yellow and black warning stripes, worn at the edges and grimy",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#e8b818",
+    "color_b": "#161616",
+    "color_c": "#000000",
+    "roughness": [
+     0.45,
+     0.5
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.25,
+    "variation": 0.15,
+    "extra": [
+     0.5,
+     0,
+     2,
+     0
+    ],
+    "seed": 1,
+    "grime": 0.35,
+    "wear": 0.45,
+    "wear_color": "#9a9a98",
+    "warp": 0.04,
+    "warp_scale": 8
+   },
+   "tags": [
+    "industrial",
+    "paint"
+   ]
+  },
+  {
+   "id": "patina_wavy_stripes",
+   "name": "Wavy Stripes",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "stripes",
+   "description": "Soft wavy stripes, a little wobbly",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#f3e6d8",
+    "color_b": "#d86a5a",
+    "color_c": "#000000",
+    "roughness": [
+     0.75,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.1,
+    "variation": 0.1,
+    "extra": [
+     0.45,
+     3,
+     0,
+     0.4
+    ],
+    "seed": 1,
+    "warp": 0.25,
+    "warp_scale": 3
+   },
+   "tags": [
+    "print"
+   ]
+  },
+  {
+   "id": "patina_gingham_red",
+   "name": "Gingham Red",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "checks",
+   "description": "Red and white gingham cotton (picnic cloths, dresses)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#f6f2ea",
+    "color_b": "#c0282d",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 10,
+    "detail": 5,
+    "height": 0.25,
+    "variation": 0.1,
+    "extra": [
+     1,
+     0,
+     0.7,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "print"
+   ]
+  },
+  {
+   "id": "patina_gingham_blue",
+   "name": "Gingham Blue",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "checks",
+   "description": "Blue and white gingham cotton",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#f6f4ee",
+    "color_b": "#3b5fa8",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 14,
+    "detail": 5,
+    "height": 0.25,
+    "variation": 0.1,
+    "extra": [
+     1,
+     0,
+     0.7,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "print"
+   ]
+  },
+  {
+   "id": "patina_buffalo_check",
+   "name": "Buffalo Check",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "checks",
+   "description": "Big red and black checks (flannel shirts)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#b01e22",
+    "color_b": "#161414",
+    "color_c": "#000000",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.35,
+    "variation": 0.12,
+    "extra": [
+     1,
+     0,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_houndstooth",
+   "name": "Houndstooth",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "checks",
+   "description": "Black and white houndstooth wool (jackets, skirts)",
+   "default_scale": 1.5,
+   "params": {
+    "color_a": "#e9e4d8",
+    "color_b": "#1b1b1b",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.25,
+    "variation": 0.1,
+    "extra": [
+     2,
+     0,
+     0.7,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_argyle",
+   "name": "Argyle Navy and Burgundy",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "checks",
+   "description": "Argyle diamonds with cream lines (socks, sweaters)",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#24406e",
+    "color_b": "#6e2434",
+    "color_c": "#e0d6bc",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.1,
+    "extra": [
+     3,
+     0.04,
+     0.6,
+     1.5
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_windowpane_gray",
+   "name": "Windowpane Check Gray",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "checks",
+   "description": "Gray suiting with a fine tan windowpane check",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#5a5f66",
+    "color_b": "#c8bc98",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.05,
+    "extra": [
+     4,
+     0.03,
+     0.8,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing"
+   ]
+  },
+  {
+   "id": "patina_polka_dots_navy",
+   "name": "Polka Dots Navy",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "dots",
+   "description": "White polka dots on navy",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#1a2a5c",
+    "color_b": "#f5f0e0",
+    "color_c": "#000000",
+    "roughness": [
+     0.75,
+     0.75
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 8,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     0.25,
+     1,
+     0,
+     0.5
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "print"
+   ]
+  },
+  {
+   "id": "patina_polka_dots_red",
+   "name": "Polka Dots Red",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "dots",
+   "description": "Big white dots on red",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#c8202a",
+    "color_b": "#fbf7ef",
+    "color_c": "#000000",
+    "roughness": [
+     0.6,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.15,
+    "variation": 0.1,
+    "extra": [
+     0.3,
+     1,
+     0,
+     0.3
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "print"
+   ]
+  },
+  {
+   "id": "patina_halftone_red",
+   "name": "Halftone Comic Red",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "dots",
+   "description": "Comic-book halftone dots",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#fbf8f0",
+    "color_b": "#e0303a",
+    "color_c": "#000000",
+    "roughness": [
+     0.6,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 24,
+    "detail": 5,
+    "height": 0.0,
+    "variation": 0.1,
+    "extra": [
+     0.3,
+     3,
+     0,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "stylized",
+    "print"
+   ]
+  },
+  {
+   "id": "patina_leopard",
+   "name": "Leopard Print",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "animal_print",
+   "description": "Leopard rosettes on a short-haired coat",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d9a65c",
+    "color_b": "#1e140c",
+    "color_c": "#a8692e",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     0,
+     0.6,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "creature"
+   ]
+  },
+  {
+   "id": "patina_cheetah",
+   "name": "Cheetah Print",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "animal_print",
+   "description": "Solid black spots on tan",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d8ad62",
+    "color_b": "#1a120a",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 5,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     1,
+     0.5,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "creature"
+   ]
+  },
+  {
+   "id": "patina_zebra",
+   "name": "Zebra Print",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "animal_print",
+   "description": "Black and white zebra stripes",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#f2efe8",
+    "color_b": "#111111",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     2,
+     0.4,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "creature"
+   ]
+  },
+  {
+   "id": "patina_tiger",
+   "name": "Tiger Print",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "animal_print",
+   "description": "Broken black stripes on orange",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#d9782a",
+    "color_b": "#140c08",
+    "color_c": "#f0e0c8",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 6,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     3,
+     0.6,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "creature"
+   ]
+  },
+  {
+   "id": "patina_giraffe",
+   "name": "Giraffe Print",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "animal_print",
+   "description": "Brown patches with cream borders",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#efe2c4",
+    "color_b": "#8a4f22",
+    "color_c": "#5c3214",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     4,
+     0.3,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "creature"
+   ]
+  },
+  {
+   "id": "patina_cow",
+   "name": "Cow Print",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "animal_print",
+   "description": "Black patches on white",
+   "default_scale": 1.0,
+   "params": {
+    "color_a": "#f4f1ea",
+    "color_b": "#141414",
+    "color_c": "#000000",
+    "roughness": [
+     0.85,
+     0.85
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     5,
+     0.5,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "clothing",
+    "creature"
+   ]
+  },
+  {
+   "id": "patina_damask_red_gold",
+   "name": "Damask Red and Gold",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "damask",
+   "description": "Gold damask medallions on deep red cloth",
+   "default_scale": 1.0,
+   "tags": [
+    "damask",
+    "wallpaper",
+    "brocade"
+   ],
+   "params": {
+    "color_a": "#5a0c14",
+    "color_b": "#c8a050",
+    "color_c": "#3a060c",
+    "roughness": [
+     0.75,
+     0.35
+    ],
+    "metallic": [
+     0,
+     0.6
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.15,
+    "extra": [
+     0,
+     1,
+     0.012,
+     0.5
+    ],
+    "sheen": 0.3
+   }
+  },
+  {
+   "id": "patina_damask_navy_silver",
+   "name": "Damask Navy and Silver",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "damask",
+   "description": "Silver floral trellis on navy",
+   "default_scale": 1.0,
+   "tags": [
+    "damask",
+    "wallpaper"
+   ],
+   "params": {
+    "color_a": "#14213d",
+    "color_b": "#b8bcc4",
+    "color_c": "#0a1224",
+    "roughness": [
+     0.7,
+     0.35
+    ],
+    "metallic": [
+     0,
+     0.5
+    ],
+    "scale": 2,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.15,
+    "extra": [
+     1,
+     1,
+     0.012,
+     0.4
+    ],
+    "sheen": 0.3
+   }
+  },
+  {
+   "id": "patina_wallpaper_fleur_green",
+   "name": "Wallpaper Fleur-de-lis Green",
+   "category": "Patterns",
+   "type": "procedural",
+   "generator": "damask",
+   "description": "Pale fleur-de-lis on a green wallpaper",
+   "default_scale": 1.0,
+   "tags": [
+    "wallpaper"
+   ],
+   "params": {
+    "color_a": "#2f5b45",
+    "color_b": "#d8cfae",
+    "color_c": "#1d3a2b",
+    "roughness": [
+     0.8,
+     0.6
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.15,
+    "variation": 0.15,
+    "extra": [
+     2,
+     1,
+     0.01,
+     0
+    ]
+   }
+  }
+ ]
+}

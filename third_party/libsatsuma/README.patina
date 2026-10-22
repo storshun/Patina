@@ -1,0 +1,10 @@
+libSatsuma (https://github.com/cgg-bern/libSatsuma, 4e96979ecb11bbfe8d9c05e8f8be1ecb992ca5fd), MIT licence in
+LICENSE. Min-deviation flow in bidirected graphs (Heistermann, Warnett, Bommes, SIGGRAPH 2023): Patina's quad
+layouts solve their patches' counts with it (src/core/RetopoQuadLayout.cpp).
+
+Local changes: only src/libsatsuma is kept; the Gurobi solvers (BiMCFGurobi, BiMDFGurobi) are left out; the
+headers CMake generates (Config/Version.hh, Gurobi.hh, Blossom5.hh, Export.hh) are written out by hand
+(no Gurobi, no Blossom V: its licence isn't free). Needs third_party/lemon (cgg-bern's LEMON),
+third_party/libtimekeeper and nlohmann/json.
+Reductions/BiMDF_Simplification.cc: three progress lines on stdout commented out (marked "Patina"): Patina's server
+may speak MCP on stdout. Patina sets the solver's verbosity to 0.

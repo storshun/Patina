@@ -1,0 +1,152 @@
+{
+ "library": "Patina default library",
+ "version": 1,
+ "category": "Paper",
+ "materials": [
+  {
+   "id": "patina_notebook_paper",
+   "name": "Notebook Paper",
+   "category": "Paper",
+   "type": "procedural",
+   "generator": "paper",
+   "description": "Ruled paper, a little crumpled",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#f4f1e8",
+    "color_b": "#c8b890",
+    "color_c": "#5a78c0",
+    "roughness": [
+     0.85,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.05,
+    "extra": [
+     0.6,
+     1,
+     0.2,
+     0.15
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "prop"
+   ]
+  },
+  {
+   "id": "patina_graph_paper",
+   "name": "Graph Paper",
+   "category": "Paper",
+   "type": "procedural",
+   "generator": "paper",
+   "description": "Squared paper with blue lines",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#f6f6f0",
+    "color_b": "#c8c0a8",
+    "color_c": "#7a9ac8",
+    "roughness": [
+     0.85,
+     0.8
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.04,
+    "extra": [
+     0.2,
+     2,
+     0.1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "prop"
+   ]
+  },
+  {
+   "id": "patina_kraft_card",
+   "name": "Kraft Card",
+   "category": "Paper",
+   "type": "procedural",
+   "generator": "paper",
+   "description": "Brown card with coarse fibers (boxes, tags)",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#a8865a",
+    "color_b": "#6a5030",
+    "color_c": "#202020",
+    "roughness": [
+     0.9,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 4,
+    "detail": 5,
+    "height": 0.2,
+    "variation": 0.1,
+    "extra": [
+     0.1,
+     0,
+     1,
+     0
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "prop"
+   ]
+  },
+  {
+   "id": "patina_old_parchment",
+   "name": "Old Parchment",
+   "category": "Paper",
+   "type": "procedural",
+   "generator": "paper",
+   "description": "Yellowed parchment with stains and foxing",
+   "default_scale": 0.5,
+   "params": {
+    "color_a": "#e8d8b0",
+    "color_b": "#9a7040",
+    "color_c": "#303030",
+    "roughness": [
+     0.85,
+     0.9
+    ],
+    "metallic": [
+     0,
+     0
+    ],
+    "scale": 3,
+    "detail": 5,
+    "height": 0.3,
+    "variation": 0.1,
+    "extra": [
+     0.3,
+     0,
+     0.4,
+     1
+    ],
+    "seed": 1
+   },
+   "tags": [
+    "prop",
+    "fantasy"
+   ]
+  }
+ ]
+}

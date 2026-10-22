@@ -1,0 +1,255 @@
+{
+ "description": "Cream paint with rust on the edges and runs of rust streaking down from them (Drips).",
+ "layers": [
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.7799999713897705,
+      0.7400000095367432,
+      0.6200000047683716
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Cream paint",
+   "opacity": 1.0,
+   "parent": 3,
+   "type": "fill",
+   "uid": 4,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.699999988079071,
+    "invert": false,
+    "level": 0.6200000047683716,
+    "noise": 0.5,
+    "noise_scale": 2.5,
+    "type": "edges"
+   },
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.800000011920929,
+      0.800000011920929,
+      0.800000011920929
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.5
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "patina_rust_heavy",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Edge rust",
+   "opacity": 1.0,
+   "parent": 3,
+   "type": "fill",
+   "uid": 5,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 7,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "mask_effects": [
+    {
+     "blend": "normal",
+     "enabled": true,
+     "generator": {
+      "contrast": 0.6000000238418579,
+      "invert": false,
+      "level": 0.25,
+      "noise": 0.0,
+      "noise_scale": 1.0,
+      "type": "drips"
+     },
+     "opacity": 1.0,
+     "type": "generator"
+    },
+    {
+     "blend": "normal",
+     "enabled": true,
+     "opacity": 1.0,
+     "radius": 1.5,
+     "type": "blur"
+    }
+   ],
+   "material": {
+    "emissive_strength": 1.0,
+    "flat": {
+     "color": [
+      0.41999998688697815,
+      0.18000000715255737,
+      0.07000000029802322
+     ],
+     "emissive": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "height": 0.5,
+     "metallic": 0.0,
+     "roughness": 0.8500000238418579
+    },
+    "height_offset": 0.0,
+    "height_scale": 1.0,
+    "id": "",
+    "mapping": 0,
+    "metallic_override": -1.0,
+    "normal_strength": 1.0,
+    "offset": [
+     0.0,
+     0.0
+    ],
+    "rotation": 0.0,
+    "roughness_offset": 0.0,
+    "roughness_scale": 1.0,
+    "scale": 1.0,
+    "tint": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "triplanar_blend": "height",
+    "triplanar_sharpness": 4.0
+   },
+   "name": "Runs of rust",
+   "opacity": 0.8500000238418579,
+   "parent": 3,
+   "type": "fill",
+   "uid": 6,
+   "visible": true
+  },
+  {
+   "blend": "normal",
+   "channel_mask": 63,
+   "channel_opacity": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color_tag": 0,
+   "generator": {
+    "contrast": 0.6000000238418579,
+    "invert": false,
+    "level": 0.5,
+    "noise": 0.0,
+    "noise_scale": 1.0,
+    "type": "none"
+   },
+   "name": "Rust runs",
+   "opacity": 1.0,
+   "parent": 0,
+   "type": "folder",
+   "uid": 3,
+   "visible": true
+  }
+ ],
+ "name": "Rust runs",
+ "patina_smart_material": 1
+}

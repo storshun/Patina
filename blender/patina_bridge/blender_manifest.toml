@@ -1,0 +1,25 @@
+schema_version = "1.0.0"
+
+id = "patina_bridge"
+version = "0.14.0"
+name = "Patina Bridge"
+tagline = "Live link to the Patina texture painter"
+maintainer = "Patina contributors"
+type = "add-on"
+
+tags = ["Import-Export", "Material", "Paint"]
+
+blender_version_min = "4.2.0"
+
+license = ["SPDX:GPL-3.0-or-later"]
+
+[permissions]
+network = "Live link to the Patina texture painter on localhost"
+files = "Exchange meshes and textures with Patina"
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  "/.git/",
+  "*.zip",
+]

@@ -1,0 +1,83 @@
+<!-- title: Installing Patina -->
+<!-- nav: Install -->
+<h1>Installing Patina</h1>
+<p class="lead">Patina comes as a prebuilt download for Linux (x86-64) and Windows 10/11 (x64), or as source code
+you build yourself. It needs an OpenGL 4.5 graphics driver; any GPU from roughly the last ten years has one.</p>
+
+<h2>Fedora (and other Linux)</h2>
+<h3>Prebuilt</h3>
+<pre><code>tar xf patina-*-linux-x86_64.tar.gz     # the version you downloaded, for example 1.2.0
+cd patina-*-linux-x86_64
+./install.sh                       # installs to ~/.local; no root needed
+# PREFIX=/opt/patina ./install.sh  # or somewhere else
+</code></pre>
+<p>This installs <code>~/.local/bin/patina</code>, a <b>Patina</b> entry in your application menu, the material library, this
+manual and Patina Web. <code>./install.sh --uninstall</code> removes it all again. Your own materials, brushes and settings are
+left in place.</p>
+<p>The prebuilt download is made on a current Fedora. It needs that glibc or a newer one, and SDL 3:
+<code>INSTALL.txt</code> in the download names the exact glibc version. A Fedora Workstation of that release already has
+the other libraries. If <code>install.sh</code> reports that some are missing:</p>
+<pre><code>sudo dnf install SDL3 mesa-dri-drivers libglvnd-egl libglvnd-glx libX11 libXi zenity</code></pre>
+<p>On an older system, or a distribution with an older glibc, <code>install.sh</code> says so. Build from source
+instead, as described below.</p>
+
+<div class="callout warn"><span class="t">Wayland</span>The prebuilt binary uses X11, so on a Wayland desktop it runs
+through XWayland, which GNOME and KDE enable by default. Pen pressure still works. For a native Wayland build, build from
+source as described below. With <code>SDL3-devel</code> installed, Wayland support is built in automatically.</div>
+
+<h3>From source</h3>
+<pre><code>tar xf patina-*-src.tar.gz &amp;&amp; cd patina-*/
+./scripts/build-fedora.sh          # installs build deps with dnf, builds, runs the tests, installs to ~/.local</code></pre>
+<p>Manual build: <code>sudo dnf install gcc-c++ cmake ninja-build SDL3-devel mesa-libGL-devel mesa-libEGL-devel zenity</code>,
+then <code>cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release &amp;&amp; cmake --build build</code>. All other
+libraries are included in the source.</p>
+
+<h2>Windows 10 / 11</h2>
+<ol class="steps">
+  <li>Unzip <code>patina-&lt;version&gt;-windows-x64.zip</code> anywhere, for example your Downloads folder.</li>
+  <li>Right-click <code>install.ps1</code> and choose <b>Run with PowerShell</b>. It copies Patina to
+    <code>%LOCALAPPDATA%\Programs\Patina</code> and adds a Start-menu shortcut. It can optionally add Patina to your
+    <code>PATH</code>. No administrator rights are needed.</li>
+  <li>Alternatively, run <code>patina.exe</code> straight from the unzipped folder. The folder is portable.</li>
+</ol>
+<p>There are two programs in the folder. <code>patina.exe</code> is the normal windowed app.
+<code>patina-cli.exe</code> is the same program as a console app. Use it for <code>--mcp</code> and
+<code>--headless</code>, because those modes talk over standard input and output.</p>
+<div class="callout gotcha"><span class="t">Gotcha: SmartScreen</span>The download isn't code-signed, so Windows may
+show “Windows protected your PC”. Click <i>More info › Run anyway</i>. PowerShell may also refuse to run
+<code>install.ps1</code>. If it does, run <code>powershell -ExecutionPolicy Bypass -File install.ps1</code>.</div>
+<div class="callout gotcha"><span class="t">Gotcha: remote desktop and virtual machines</span>Patina needs a real
+OpenGL 4.5 driver. Inside a VM or over Remote Desktop, Windows often provides only OpenGL 1.1, and Patina then reports
+that it can't create a context. Run Patina on the physical machine, or give the VM GPU pass-through.</div>
+
+<h2>The Blender add-on</h2>
+<p>The add-on is the <code>patina_bridge.zip</code> next to the installer.</p>
+<ul>
+  <li><b>Blender 4.2 and newer:</b> <i>Edit › Preferences › Get Extensions</i>, then the <b>⌄</b> menu at the top
+    right, then <b>Install from Disk…</b>, and pick the zip.</li>
+  <li><b>Blender 3.6 – 4.1:</b> <i>Edit › Preferences › Add-ons › Install…</i>, pick the zip, and enable
+    <i>Import-Export: Patina Bridge</i>.</li>
+</ul>
+<p>Then open the <b>Patina</b> tab in the 3D view's sidebar (<kbd>N</kbd>). <a href="blender.html">The Blender bridge</a>
+explains the round trip.</p>
+
+<h2>Connecting Claude</h2>
+<p><b>The Claude desktop app:</b> click <i>Connect to Claude app</i> in Patina's <b>Blender Link</b> panel, or run
+<code>patina --setup-claude</code> (Windows: <code>patina-cli.exe --setup-claude</code>). Then restart the Claude app.
+<b>Claude Code:</b></p>
+<pre><code># Linux
+claude mcp add patina -- ~/.local/bin/patina --mcp
+# Windows (PowerShell)
+claude mcp add patina -- "$env:LOCALAPPDATA\Programs\Patina\patina-cli.exe" --mcp</code></pre>
+<p>Other MCP clients take the same command and arguments in their JSON configuration.
+<a href="automation.html">Claude &amp; automation</a> covers the details.</p>
+
+<h2>Where Patina keeps files</h2>
+<table>
+  <tr><th></th><th>Linux</th><th>Windows</th></tr>
+  <tr><td>Your materials &amp; brushes</td><td><code>~/.local/share/patina/user</code></td><td><code>%LOCALAPPDATA%\Patina\user</code></td></tr>
+  <tr><td>Settings &amp; window layout</td><td><code>~/.config/patina</code></td><td><code>%APPDATA%\Patina</code></td></tr>
+  <tr><td>Autosave, Blender exchange, bake cache</td><td><code>~/.cache/patina</code></td><td><code>%LOCALAPPDATA%\Patina\cache</code></td></tr>
+  <tr><td>Built-in library (read-only)</td><td><code>~/.local/share/patina/materials</code></td><td><code>materials\</code> next to <code>patina.exe</code></td></tr>
+</table>
+<p><i>Help › About Patina</i> shows the exact paths on your machine.</p>

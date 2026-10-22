@@ -977,11 +977,20 @@ void App::drawLayers() {
       l->channelMask = on ? l->channelMask | (1 << c) : l->channelMask & ~(1 << c);
       changed = true;
     }
+    // (1.2.2) two things are called opacity here: the layer's, and the see-through channel's
+    if (c == (int)Channel::Opacity && ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", T_("The see-through channel (alpha): 0 is see-through, 1 is solid. Hair cards, lace and "
+                                 "leaves use it; a model's color texture with alpha brings it in. The Opacity slider "
+                                 "above is how strongly the whole layer shows."));
   }
   if (ImGui::TreeNode(L_("Channel opacity"))) {
     for (int c = 0; c < kChannelCount; ++c)
-      if (!isExtraChannel(c) || moreChannels)
+      if (!isExtraChannel(c) || moreChannels) {
         changed |= ImGui::SliderFloat(L_((std::string(channelInfo((Channel)c).label) + "##cho").c_str()), &l->channelOpacity[c], 0.f, 1.f);
+        if (c == (int)Channel::Opacity && ImGui::IsItemHovered())
+          ImGui::SetTooltip("%s", T_("How strongly this layer's see-through values apply: 1 as they are, 0 not at all "
+                                     "(the layers below show through as before)"));
+      }
     ImGui::TreePop();
   }
   if (l->isFolder()) {

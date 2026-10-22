@@ -74,7 +74,7 @@ void Renderer::renderViewport(Document& doc, const Environment& env, const Camer
   glDisable(GL_CULL_FACE);
   // (1.2) the scene's other objects, with their own textures
   if (sceneObjects && opt.mode != ViewMode::PathTraced)
-    sceneObjects([&](const Document& d) { drawSceneObject(d, env, cam, aspect, opt); });
+    sceneObjects([&](const Document& d) { drawSceneObject(d, env, cam, aspect, opt, false); });
   if (!doc.hasMesh() || doc.objectHidden) {
     glDisable(GL_DEPTH_TEST);
     ++frames;
@@ -237,17 +237,12 @@ void Renderer::renderViewport(Document& doc, const Environment& env, const Camer
       if (see) s.set("uAlphaPass", 1);
       const GpuMesh& g = opt.meshOverride ? *opt.meshOverride : doc.gpu;
       g.drawTriangles();
-      if (see) {
-        s.set("uAlphaPass", 2);
-        glEnable(GL_BLEND);
-        glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        glDepthMask(GL_FALSE);
-        g.drawTriangles();
-        glDepthMask(GL_TRUE);
-        glDisable(GL_BLEND);
-        s.set("uAlphaPass", 0);
-      }
+      if (see) drawSeeThrough(s, g);
     }
+    // (1.2.2) the other objects' see-through parts, over every object's opaque parts (hair over the body it hangs on,
+    // whichever of them is painted)
+    if (sceneObjects && opt.mode != ViewMode::PathTraced)
+      sceneObjects([&](const Document& d) { drawSceneObject(d, env, cam, aspect, opt, true); });
     // (0.39) the path tracer's picture over the raster one, whose depth stays for the lines drawn next
     if (opt.mode == ViewMode::PathTraced) {
       uint64_t key = 1469598103934665603ull;
@@ -507,10 +502,40 @@ std::vector<const Document*> Renderer::shownObjects(const Document& active) cons
   return v;
 }
 
+// (1.2.2) A model's see-through parts, after every opaque part is drawn: first the depth of the parts at least half
+// opaque, so the nearest layer of hair cards (or leaves, or lace) hides the layers behind it whatever order the faces
+// come in, then their colors blended over what is there. (Blending alone let back cards land on front ones.)
+void Renderer::drawSeeThrough(Shader& s, const GpuMesh& g) {
+  s.set("uAlphaPass", 3);
+  s.use();
+  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+  g.drawTriangles();
+  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+  s.set("uAlphaPass", 2);
+  s.use();
+  glDepthFunc(GL_LEQUAL);
+  glEnable(GL_BLEND);
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  glDepthMask(GL_FALSE);
+  g.drawTriangles();
+  glDepthMask(GL_TRUE);
+  glDisable(GL_BLEND);
+  glDepthFunc(GL_LESS);
+  s.set("uAlphaPass", 0);
+}
+
 void Renderer::drawSceneObject(const Document& doc, const Environment& env, const Camera& cam, float aspect,
-                               const ViewportOptions& opt) {
+                               const ViewportOptions& opt, bool seeThrough) {
   if (!doc.hasMesh() || !doc.gpu.valid()) return;
   const TextureSet& t = doc.tex;
+  // (1.2.2) two calls: the opaque parts, then (seeThrough) the see-through parts once every object's opaque parts
+  // are drawn
+  ViewMode vm = opt.mode;
+  if (vm == ViewMode::TexelDensity || vm == ViewMode::UVStretch || vm == ViewMode::Symmetry || vm == ViewMode::MeshCheck ||
+      vm == ViewMode::LayerMask || vm == ViewMode::BakeCheck || vm == ViewMode::FaceSets)
+    vm = ViewMode::Solid;
+  bool see = vm == ViewMode::Material && (t.extraUsed & 64);
+  if (seeThrough && !see) return;
   Shader& s = ShaderCache::get("mesh.vs.glsl", "pbr.fs.glsl");
   s.set("uModel", doc.toWorld());
   s.set("uViewProj", cam.viewProj(aspect));
@@ -546,22 +571,14 @@ void Renderer::drawSceneObject(const Document& doc, const Environment& env, cons
   s.tex("uBakeCheck", 14, t.white.id());
   s.set("uHasBakeCheck", 0);
   s.set("uRetopoView", 0);
-  s.set("uAlphaPass", 0);
-  bool see = m == ViewMode::Material && (t.extraUsed & 64);
-  if (see) s.set("uAlphaPass", 1);
+  if (seeThrough) {
+    drawSeeThrough(s, doc.gpu);
+    return;
+  }
+  s.set("uAlphaPass", see ? 1 : 0);
   s.use();
   doc.gpu.drawTriangles();
-  if (see) {
-    s.set("uAlphaPass", 2);
-    s.use();
-    glEnable(GL_BLEND);
-    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    glDepthMask(GL_FALSE);
-    doc.gpu.drawTriangles();
-    glDepthMask(GL_TRUE);
-    glDisable(GL_BLEND);
-    s.set("uAlphaPass", 0);
-  }
+  s.set("uAlphaPass", 0);
 }
 
 mat4 Renderer::uvViewMatrix(const UVViewOptions& o) {

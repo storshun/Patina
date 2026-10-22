@@ -278,6 +278,7 @@ static bool loadObjMaterials(const std::string& path, ModelMaterials& out, std::
     m.emissiveMap = objMap(t.emissive_texname, t.emissive_texopt, path);
     m.opacityMap = objMap(t.alpha_texname, t.alpha_texopt, path);
     if (m.opacityMap.valid() && m.alphaMode == 0) m.alphaMode = 2;
+    m.colorAlphaMayBeOpacity = m.alphaMode == 0 && m.baseColorMap.valid();
     m.sheenMap = objMap(t.sheen_texname, t.sheen_texopt, path);
     out.slots.push_back(std::move(m));
   }
@@ -362,6 +363,7 @@ static bool loadFbxMaterials(const std::string& path, ModelMaterials& out, std::
       m.opacityMap.alphaOnly = true;
     }
     if (m.opacityMap.valid() && m.alphaMode == 0) m.alphaMode = 2;
+    m.colorAlphaMayBeOpacity = m.alphaMode == 0 && m.baseColorMap.valid();
     m.occlusionMap = fbxMap(p.ambient_occlusion.texture, path, notes);
     if (p.coat_factor.has_value) m.coat = std::clamp((float)p.coat_factor.value_real, 0.f, 1.f);
     if (p.sheen_factor.has_value) m.sheen = std::clamp((float)p.sheen_factor.value_real, 0.f, 1.f);

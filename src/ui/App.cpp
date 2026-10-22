@@ -61,6 +61,8 @@ void App::noteModelTextures() {
                       : F_("Brought in the model's materials (%s, %s) as the layer %s", sl, tx, "From the model");
   if (r.value("resolution", 0) != r.value("resolution_before", 0))
     s = F_("%s; the texture set is now %d to match them", s.c_str(), r.value("resolution", 0));
+  if (r.value("opacity_from_color_alpha", false))
+    s = F_("%s; the color texture's alpha is its Opacity channel (see-through)", s.c_str());
   deferredStatus = s;
   std::string lost;
   for (auto* key : {"missing", "unreadable"})

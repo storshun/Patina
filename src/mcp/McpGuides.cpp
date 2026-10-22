@@ -15,7 +15,9 @@ collision, exported. Every step is a tool, and every tool returns numbers you ca
 ## 1. Open
 - `open_file {path}`: .glb .gltf .obj .fbx .stl .3mf .ply or a .patina project. A textured or vertex-colored model
   comes in with its own look as the paint layer *From the model* at the bottom of the stack; `get_state` →
-  `mesh.model_textures` says what came in and names any texture that was not found.
+  `mesh.model_textures` says what came in and names any texture that was not found. An OBJ or FBX color texture's
+  alpha becomes the opacity channel when it cuts out (`opacity_from_color_alpha`: hair cards, leaves, lace); when it
+  should not (gloss in the alpha) or should, `import_model_textures {color_alpha: "ignore" | "opacity"}` reads it again.
 - Or the user sends an object from Blender (Patina Bridge add-on).
 - `render_view {width: 800, height: 600, camera: {view: "front", frame: true}}`; views: front back left right top
   bottom persp; `mode` shows one channel or a check (see `set_view`).

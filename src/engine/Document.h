@@ -171,9 +171,11 @@ class Document {
   // .fbx) as a paint layer at the bottom of the stack, one undo step. `automatic`: right after opening it, only
   // when the materials are more than a plain gray (the texture set may grow to the textures' size, up to 4K).
   // Returns false with `err` empty when there was nothing to bring in. (0.44) A .ptmesh from Blender: its slots
-  // as the add-on describes them (blenderMaterials), and flat vertex colors are left out.
+  // as the add-on describes them (blenderMaterials), and flat vertex colors are left out. (1.2.2) `colorAlpha`: an
+  // OBJ / FBX color texture's alpha, when the file says nothing about opacity: 0 the opacity when it cuts out (hair
+  // cards, leaves), 1 the opacity whenever the image has alpha, 2 left out.
   bool importModelTextures(const std::string& path, bool automatic, json* report, std::string* err,
-                           bool growResolution = true);
+                           bool growResolution = true, int colorAlpha = 0);
   bool uvsGenerated = false;  // the model came without UVs (Patina made them)
   float uvsCarried = -1.f;    // (0.44) the last setMesh came without UVs and kept these (share of faces matched)
   bool blenderMaterials = true;  // (0.44) a .ptmesh's material slots count (feature bridge_materials)

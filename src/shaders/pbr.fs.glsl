@@ -16,7 +16,8 @@ uniform sampler2D uRMHTex;       // rough, metal, height, ao
 uniform sampler2D uNormalTex;    // signed tangent normal (final)
 uniform sampler2D uEmissiveTex;  // sRGB
 uniform sampler2D uExtraTex;     // opacity, sheen, clearcoat, subsurface (0.26)
-uniform int uAlphaPass;          // 0 all opaque, 1 only the opaque parts, 2 only the see-through parts (blended)
+uniform int uAlphaPass;          // 0 all opaque, 1 only the opaque parts, 2 only the see-through parts (blended),
+                                 // 3 (1.2.2) the depth of the see-through parts at least half opaque
 uniform sampler2D uAOMap;
 uniform sampler2D uCurvMap;
 uniform sampler2D uMaskTex;      // selected layer mask
@@ -264,5 +265,6 @@ void main() {
     outc = vec3(0.16, 0.17, 0.19) + 0.08 * max(dot(Ng, V), 0.0);
   if (uAlphaPass == 1 && alpha < 0.995) discard;
   if (uAlphaPass == 2 && (alpha >= 0.995 || alpha < 0.004)) discard;
+  if (uAlphaPass == 3 && (alpha >= 0.995 || alpha < 0.5)) discard;
   oColor = vec4(outc, uAlphaPass == 2 ? alpha : 1.0);
 }

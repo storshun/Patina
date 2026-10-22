@@ -12,6 +12,7 @@ namespace patina {
 class Document;
 class Environment;
 class GpuMesh;
+class Shader;
 struct Mesh;
 
 enum class ViewMode {
@@ -116,7 +117,8 @@ class Renderer {
 
  private:
   void drawSceneObject(const Document& d, const Environment& env, const Camera& cam, float aspect,
-                       const ViewportOptions& opt);
+                       const ViewportOptions& opt, bool seeThrough);
+  void drawSeeThrough(Shader& s, const GpuMesh& g);
   PathTracer pathView_, pathRender_;
   uint64_t faceDataKey_ = 0;
   uint64_t uvAuxKey_ = 0, uvAuxSerial_ = 0;  // (1.2) what the GPU mesh's aux holds for the UV editor (face set colors)

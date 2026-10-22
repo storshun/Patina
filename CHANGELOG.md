@@ -3,12 +3,41 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
-## Unreleased
+## 1.2.2 (2026-10-22)
+
+### Fixed
+
+- **Hair cards, leaves and lace from OBJ and FBX files came in solid.** Many game assets keep their cut-outs only in
+  the color texture's alpha, and their file says nothing about opacity. Patina now makes that alpha the Opacity
+  channel of the layer *From the model* when it has see-through and solid parts, and the status line says so. An
+  alpha that is even all over is left out, because some assets keep gloss there. For a model you already brought in,
+  select it and use *File › Bring In the Model's Textures* again.
+- **See-through parts drew in the wrong order.** Back layers of hair cards could land on top of front ones, and an
+  object that was not the one you paint lost its see-through parts in front of the one you do. Every object's opaque
+  parts are drawn first now, then the see-through parts, and the nearest layer of cards hides the ones behind it.
 
 ### Changed
 
-- Patina Web's material library is baked again with every build. The 1.2.0 downloads still carry the library of
-  0.26, with its British names. The newest library is a download of its own, `patina-1.2.0-web-library.7z`.
+- The layer's *Opacity* channel box and its *Channel opacity › Opacity* slider explain themselves: the see-through
+  channel and its strength, not the slider that says how strongly the whole layer shows.
+- `import_model_textures` takes `color_alpha`: `"opacity"` always uses the color texture's alpha, `"ignore"` never.
+
+## 1.2.1 (2026-10-22)
+
+### Fixed
+
+- **Saving could close Patina.** A paint layer with clearcoat (painted with car paint, lacquer or another material
+  that has it) made every save and every autosave stop the app.
+- **Paint in the opacity, sheen and subsurface channels was lost on saving.** Since 0.26, a save wrote those channels
+  of paint layers as empty images, so they were gone when the project was opened again ("could not restore channel
+  sheen"). They are saved now. Paint saved that way before 1.2.1 can't come back; fill layers keep theirs, because
+  they come from their material.
+- A save that fails says why instead of closing Patina, and the autosave tries again later.
+
+### Changed
+
+- Patina Web's material library is baked again with every build. 1.2.0's downloads had the library of 0.26, with its
+  British names; 1.2.1's has the current one.
 - The Linux download's `INSTALL.txt` names what the build needs: its glibc version and SDL 3. `install.sh` checks for
   SDL 3, and says so when the system's glibc is too old for the build.
 - The install notes and the manual no longer name version 0.2.0 in their file names.

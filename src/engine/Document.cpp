@@ -15,6 +15,8 @@
 #include <functional>
 #include <set>
 #include <filesystem>
+#include <mutex>
+#include <stdexcept>
 #include <thread>
 
 #include "core/Container.h"
@@ -2133,13 +2135,26 @@ bool Document::SaveJob::write(std::string* err) {
       return false;
     }
   // compress the images in parallel (stb's single-threaded PNG writer took ~14 s for a 4K set)
+  std::mutex failMutex;
+  std::string failure;
   parallelFor(items.size(), [&](size_t i) {
     Item& it = items[i];
     if (!it.bits) return;
-    std::vector<uint8_t> samples = convertSamples(it);
-    it.bytes = encodePngSamples(samples.data(), it.w, it.h, it.channels, it.bits, true);
-    it.bits = 0;
+    // (1.2.1) an exception that leaves a worker thread ends the program: a save that fails says so instead
+    try {
+      if (it.channels < 1 || it.channels > 4) throw std::runtime_error("bad channel count " + std::to_string(it.channels));
+      std::vector<uint8_t> samples = convertSamples(it);
+      it.bytes = encodePngSamples(samples.data(), it.w, it.h, it.channels, it.bits, true);
+      it.bits = 0;
+    } catch (const std::exception& e) {
+      std::lock_guard<std::mutex> lock(failMutex);
+      if (failure.empty()) failure = it.name + ": " + e.what();
+    }
   });
+  if (!failure.empty()) {
+    if (err) *err = "could not compress " + failure;
+    return false;
+  }
   std::vector<container::Block> blocks;
   blocks.reserve(items.size());
   for (auto& it : items) blocks.push_back(container::Block::raw(it.name, std::move(it.bytes)));
@@ -2185,14 +2200,17 @@ json Document::appendToSave(SaveJob& sj, const std::string& prefix) {
   std::string meshBytes = encodePtMesh(mesh, false);
   ready("mesh", std::vector<uint8_t>(meshBytes.begin(), meshBytes.end()));
   json layerArr = json::array();
-  static const int chans[] = {4, 2, 2, 2, 4, 4};
+  // (1.2.1) the samples each channel's layer texture holds: color and coverage (RGBA8) or value and coverage (RG8,
+  // RG16F). A table of the first six channels stood here: the four of 0.26 read past its end, so opacity, sheen and
+  // subsurface were saved as images of no channels (lost when opened) and clearcoat as millions of them (a crash).
+  auto layerSamples = [](int c) { return channelInfo((Channel)c).layerFormat == GL_RGBA8 ? 4 : 2; };
   for (auto& l : layers) {
     json lj = l->toJson();
     json stored = json::array();
     for (int c = 0; c < kChannelCount; ++c) {
       if (!l->hasChannel(c)) continue;
       std::string name = "L" + std::to_string(l->uid) + "_" + channelInfo((Channel)c).key;
-      job->items.push_back(readBack(name, *l->channels[c], chans[c], c == (int)Channel::Height ? 16 : 8));
+      job->items.push_back(readBack(name, *l->channels[c], layerSamples(c), c == (int)Channel::Height ? 16 : 8));
       stored.push_back(channelInfo((Channel)c).key);
     }
     // (a baked map layer's fixes: the value and how much of it covers the bake)

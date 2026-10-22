@@ -2,6 +2,7 @@
 """A model's own textures (0.31) against a real headless Patina: opening a textured .gltf and .obj brings each
 material slot's maps and colors in as the paint layer "From the model" (color, roughness and metallic from glTF's
 packed map, normal, glow, cut-out opacity), in the right places; one undo takes it away; the command does it again;
+an OBJ's color texture alpha is the opacity when it cuts out (1.2.2);
 missing textures are reported; plain gray models and the feature switched off bring nothing; big textures grow the
 texture set.
 
@@ -185,6 +186,18 @@ def make_obj(d):
     open(os.path.join(d, "gray.mtl"), "w").write("newmtl Painted\nKd 0.8 0.8 0.8\nNs 250\n")
 
 
+def make_alpha_models(d):
+    """(1.2.2) OBJ files whose only opacity is the color texture's alpha: a cut-out (see-through left quarter, as
+    hair cards and leaves have), and an even 0.3 all over (gloss kept in the alpha, as some Unity assets do)."""
+    S = 64
+    write_png(os.path.join(d, "tex_cut.png"), S, S, lambda x, y: (200, 160, 90, 0 if x < S // 4 else 255))
+    write_png(os.path.join(d, "tex_gloss.png"), S, S, lambda x, y: (90, 160, 200, 77))
+    quad = "v -1 0 -1\nv 1 0 -1\nv 1 0 1\nv -1 0 1\nvt 0 0\nvt 1 0\nvt 1 1\nvt 0 1\nusemtl M\nf 1/1 4/4 3/3 2/2\n"
+    for name in ("cut", "gloss"):
+        open(os.path.join(d, name + ".obj"), "w").write("mtllib %s.mtl\n" % name + quad)
+        open(os.path.join(d, name + ".mtl"), "w").write("newmtl M\nKd 0.8 0.8 0.8\nmap_Kd tex_%s.png\n" % name)
+
+
 def make_vertex_color_models(d):
     """Two separate quads, red and blue, per vertex: ASCII PLY (Z up, no UVs), binary PLY (float colors, MeshLab's
     per-face texcoord: red over u 0-0.45, blue over 0.55-1), OBJ "v x y z r g b" (UVs), and a glTF with COLOR_0 and a
@@ -275,6 +288,7 @@ def main():
     write_png(os.path.join(m, "tex_big.png"), 4096, 4, lambda x, y: (200, 120, 40, 255))
     make_gltf(m, "big.gltf", big=True)
     make_obj(m)
+    make_alpha_models(m)
     make_vertex_color_models(m)
     port = free_port()
     proc = subprocess.Popen([exe, "--headless", "--port", str(port)], env=env, stdout=subprocess.DEVNULL,
@@ -346,6 +360,26 @@ def main():
         check(texel(metal, *B)[0] > 0.94 and texel(metal, *A)[0] < 0.06, "OBJ: Pm per slot")
         op = tex("opacity")
         check(texel(op, 0.05, 0.5)[0] < 0.1 and texel(op, 0.4, 0.5)[0] > 0.9, "OBJ: map_d, a gray mask")
+
+        # --- (1.2.2) OBJ / FBX: the color texture's alpha is the opacity when it cuts out, and nothing else says so
+        c.request("open_file", {"path": os.path.join(m, "cut.obj")})
+        r = c.request("get_state", {})["mesh"].get("model_textures") or {}
+        check("opacity" in r.get("channels", []) and r.get("opacity_from_color_alpha") is True,
+              "cut.obj: the color texture's alpha brings an opacity channel (%s)" % r)
+        op = tex("opacity")
+        check(texel(op, 0.1, 0.5)[0] < 0.1 and texel(op, 0.6, 0.5)[0] > 0.9,
+              "see-through where the alpha is 0, solid where it is 1 (%s, %s)" % (texel(op, 0.1, 0.5), texel(op, 0.6, 0.5)))
+        r2 = c.request("import_model_textures", {"color_alpha": "ignore"})
+        check("opacity" not in r2.get("channels", []) and r2.get("opacity_from_color_alpha") is False,
+              "color_alpha ignore leaves it out (%s)" % r2.get("channels"))
+        c.request("open_file", {"path": os.path.join(m, "gloss.obj")})
+        r = c.request("get_state", {})["mesh"].get("model_textures") or {}
+        check("opacity" not in r.get("channels", []) and r.get("opacity_from_color_alpha") is False,
+              "gloss.obj: an even alpha with nothing see-through is not opacity (%s)" % r.get("channels"))
+        r2 = c.request("import_model_textures", {"color_alpha": "opacity"})
+        op = tex("opacity")
+        check("opacity" in r2.get("channels", []) and abs(texel(op, 0.5, 0.5)[0] - 0.3) < 0.04,
+              "color_alpha opacity takes it anyway (%s, %s)" % (r2.get("channels"), texel(op, 0.5, 0.5)))
 
         # --- plain gray: nothing; the feature off: nothing
         c.request("open_file", {"path": os.path.join(m, "gray.obj")})

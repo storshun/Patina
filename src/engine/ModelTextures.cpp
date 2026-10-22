@@ -39,6 +39,7 @@ struct Job {
   float cutoff = 0.5f;
   bool bump = false;    // OBJ / FBX bump: a normal map or a height map, decided when it is read
   bool ownOpacityMap = false;  // OBJ / FBX: an opacity map of its own (its alpha, or gray without one)
+  int colorAlpha = -1;  // (1.2.2) the color texture's alpha as the opacity: 0 when it cuts out, 1 when it has alpha
 };
 
 struct Decoded {
@@ -47,6 +48,7 @@ struct Decoded {
   bool ok = false;
   bool looksNormal = false;  // bluish and centered: a tangent-space normal map
   bool black = false;        // every sample black (a glow map with no glow)
+  bool cutsOut = false;      // (1.2.2) alpha both see-through and solid in places: a cut-out (not a gloss map)
 };
 
 bool decodeMap(const ModelMap& m, Decoded& d) {
@@ -70,16 +72,19 @@ bool decodeMap(const ModelMap& m, Decoded& d) {
   if (!decodeSamples(bytes, len, 4, true, px, d.w, d.h, bits)) return false;
   // the average color of a few thousand samples tells a normal map from a height map
   size_t n = size_t(d.w) * d.h, step = std::max<size_t>(1, n / 4096);
-  double r = 0, g = 0, b = 0, cnt = 0;
+  double r = 0, g = 0, b = 0, cnt = 0, clear = 0, solid = 0;
   float hi = 0.f;
   for (size_t i = 0; i < n; i += step) {
-    float v[3];
-    for (int k = 0; k < 3; ++k)
+    float v[4];
+    for (int k = 0; k < 4; ++k)
       v[k] = bits == 16 ? ((const uint16_t*)px.data())[i * 4 + k] / 65535.f : px[i * 4 + k] / 255.f;
     r += v[0], g += v[1], b += v[2], cnt += 1;
     hi = std::max({hi, v[0], v[1], v[2]});
+    clear += v[3] < 0.05f, solid += v[3] > 0.95f;
   }
   d.black = hi < 1.5f / 255.f;
+  // a cut-out has see-through and solid parts; smoothness or gloss in the alpha (Unity's albedo alpha) rarely does
+  d.cutsOut = (ch == 2 || ch == 4) && clear >= 0.02 * cnt && solid >= 0.02 * cnt;
   r /= cnt, g /= cnt, b /= cnt;
   d.looksNormal = b > 0.7 && std::abs(r - 0.5) < 0.15 && std::abs(g - 0.5) < 0.15;
   int levels = 1 + (int)std::floor(std::log2((double)std::max(d.w, d.h)));
@@ -94,7 +99,7 @@ bool decodeMap(const ModelMap& m, Decoded& d) {
 }  // namespace
 
 bool Document::importModelTextures(const std::string& path, bool automatic, json* report, std::string* err,
-                                   bool growResolution) {
+                                   bool growResolution, int colorAlpha) {
   auto fail = [&](const std::string& m) {
     if (err) *err = m;
     return false;
@@ -211,6 +216,13 @@ bool Document::importModelTextures(const std::string& path, bool automatic, json
       }
       jobs.push_back(j);
       j.alphaMode = 0, j.component = 0, j.ownOpacityMap = false;
+    } else if (m.colorAlphaMayBeOpacity && colorAlpha != 2) {
+      // (1.2.2) the color texture's alpha, when it cuts out (or whenever it has alpha, if asked)
+      j.channel = (int)Channel::Opacity, j.mode = ModeOpacity, j.alphaMode = 2;
+      j.map = usable(m.baseColorMap), j.value = vec4(1.f), j.component = 3, j.valueWithMap = true;
+      j.colorAlpha = colorAlpha;
+      if (j.map) jobs.push_back(j);
+      j.alphaMode = 0, j.component = 0, j.colorAlpha = -1, j.valueWithMap = wm;
     }
     if (m.coat > 0.f || m.coatMap.valid()) {
       j.channel = (int)Channel::Coat, j.mode = ModeValue, j.map = usable(m.coatMap), j.value = vec4(m.coat);
@@ -304,6 +316,7 @@ bool Document::importModelTextures(const std::string& path, bool automatic, json
   white.clear(vec4(1.f));
 
   int mapsRead = 0, drawn = 0;  // channels written (bits)
+  bool opacityFromColor = false;
   std::vector<std::string> unreadable;
   auto draw = [&](const Job& jb, const Decoded* d) {
     Texture2D& target = *layer.channels[jb.channel];
@@ -319,6 +332,11 @@ bool Document::importModelTextures(const std::string& path, bool automatic, json
     if (hasMap && !jb.valueWithMap) f = vec4(1.f);
     // a black glow map: no glow (Patina's own exports and many others always write one)
     if (jb.mode == ModeEmissive && hasMap && d->black) return;
+    // the color texture's alpha: only one that cuts out (or any alpha, if asked)
+    if (jb.colorAlpha >= 0 && (!hasMap || !(d->fileChannels == 2 || d->fileChannels == 4) ||
+                               (jb.colorAlpha == 0 && !d->cutsOut)))
+      return;
+    if (jb.colorAlpha >= 0) opacityFromColor = true;
     // an opacity map read from alpha only, without alpha: nothing to say (left out)
     if (jb.mode == ModeOpacity && hasMap && jb.ownOpacityMap && jb.map->alphaOnly &&
         (d->fileChannels == 1 || d->fileChannels == 3))
@@ -403,8 +421,9 @@ bool Document::importModelTextures(const std::string& path, bool automatic, json
   std::vector<std::string> chans;
   for (int c = 0; c < kChannelCount; ++c)
     if (layer.hasChannel(c)) chans.push_back(channelInfo((Channel)c).key);
-  PLOG_I("Brought in the model's materials: %d slot(s), %d texture(s)%s%s", usedSlots, mapsRead,
-         hasVC ? ", vertex colors" : "", missing.empty() ? "" : " (some textures not found)");
+  PLOG_I("Brought in the model's materials: %d slot(s), %d texture(s)%s%s%s", usedSlots, mapsRead,
+         hasVC ? ", vertex colors" : "", opacityFromColor ? ", the color texture's alpha as the opacity" : "",
+         missing.empty() ? "" : " (some textures not found)");
   if (report) {
     std::sort(notes.begin(), notes.end());
     notes.erase(std::unique(notes.begin(), notes.end()), notes.end());
@@ -419,6 +438,7 @@ bool Document::importModelTextures(const std::string& path, bool automatic, json
                {"resolution", tileRes()},
                {"resolution_before", oldRes},
                {"uvs", haveUVs},
+               {"opacity_from_color_alpha", opacityFromColor},
                {"vertex_colors", hasVC}, {"vertex_colours", hasVC}};  // vertex_colours: the 0.32 to 0.35 name
   }
   return true;

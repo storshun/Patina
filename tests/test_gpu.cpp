@@ -3649,6 +3649,32 @@ float extraAt(Engine& e, vec2 uv, int c) {
 }
 }  // namespace
 
+// (1.2.1) the four channels of 0.26 survive a save: the save's table of samples per channel had only the first six,
+// so opacity, sheen and subsurface came back empty and clearcoat crashed the save (and every autosave) outright
+TEST(gpu, extra_channels_saved_121) {
+  Engine* e = engine();
+  if (!e) return;
+  freshSphere(*e);
+  run("add_layer", {{"type", "paint"}});
+  RayHit h = e->pick({256, 256});
+  CHECK(h.hit);
+  run("set_paint_material", {{"opacity", 0.2}, {"sheen", 0.7}, {"coat", 1.0}, {"subsurface", 0.5}});
+  run("paint_stroke", {{"points", {{0.5, 0.5}}}});
+  Layer* L = e->doc.selectedLayer();
+  CHECK(L && L->hasChannel((int)Channel::Opacity) && L->hasChannel((int)Channel::Sheen) &&
+        L->hasChannel((int)Channel::Coat) && L->hasChannel((int)Channel::Subsurface));
+  std::string path = (fs::temp_directory_path() / "patina_extra_saved_test.patina").string();
+  run("save_project", {{"path", path}});
+  run("set_paint_material", {{"opacity", 1.0}, {"sheen", 0.0}, {"coat", 0.0}, {"subsurface", 0.0}});
+  run("open_file", {{"path", path}});
+  L = e->doc.layers.empty() ? nullptr : e->doc.layers.back().get();
+  CHECK(L && L->hasChannel((int)Channel::Coat) && L->hasChannel((int)Channel::Sheen));
+  CHECK(std::abs(extraAt(*e, h.uv, 0) - 0.2f) < 0.03f && std::abs(extraAt(*e, h.uv, 1) - 0.7f) < 0.03f);
+  CHECK(std::abs(extraAt(*e, h.uv, 2) - 1.f) < 0.03f && std::abs(extraAt(*e, h.uv, 3) - 0.5f) < 0.03f);
+  std::error_code ec;
+  fs::remove(path, ec);
+}
+
 TEST(gpu, extra_channels_026) {
   Engine* e = engine();
   if (!e) return;

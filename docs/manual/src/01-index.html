@@ -164,6 +164,14 @@ layer <i>From the model</i>; the status line says what came in.</figcaption></fi
   <li><b>FBX</b>: the textures (embedded or as files) and colors of each material, including the transparency maps
     Blender and other programs write.</li>
 </ul>
+<p><b>Alpha in the color texture.</b> Hair cards, leaves and lace from game assets often keep their cut-outs only in
+the color texture's alpha, and their OBJ or FBX file says nothing about opacity. When that alpha has see-through and
+solid parts, Patina makes it the layer's <b>Opacity</b> channel, and the status line says so. An alpha that is even all
+over is left out: some assets keep gloss there. To turn it off or weaken it, select the layer <i>From the model</i>:
+the <i>Opacity</i> box under <i>Channels</i> switches the see-through on or off, and <i>Channel opacity › Opacity</i>
+sets its strength. (The <i>Opacity</i> slider at the top is how strongly the whole layer shows.) The
+<code>import_model_textures</code> command takes <code>color_alpha: "opacity"</code> or <code>"ignore"</code> to decide
+it yourself.</p>
 <p><b>Vertex colors</b> come in the same way: from glTF (multiplied by the material's color, as glTF says), OBJ
 (<code>v x y z r g b</code>), FBX, PLY and Blender objects sent with the add-on. Where a slot has a color texture, OBJ,
 FBX and PLY files show the texture, as Blender does. Many generated models and scans carry their color this way.</p>

@@ -375,8 +375,13 @@ void Engine::registerCommands() {
          "Brings in the model's own materials (textures and colors of each material slot, and vertex colors, from "
          "a .glb, .gltf, .obj with its .mtl, .fbx or .ply) as a paint layer, From the model, at the bottom of the "
          "stack (one undo step). Opening a model does this by itself when it has textures, vertex colors or "
-         "materials that are more than plain gray.",
-         schema({{"path", prop("string", "The model file (default: the open model's file)")}}),
+         "materials that are more than plain gray. (1.2.2) An OBJ or FBX color texture's alpha becomes the opacity "
+         "channel when the file says nothing about opacity and the alpha cuts out (hair cards, leaves, lace).",
+         schema({{"path", prop("string", "The model file (default: the open model's file)")},
+                 {"color_alpha", propEnum({"auto", "opacity", "ignore"},
+                                          "OBJ / FBX: the color texture's alpha as the opacity. auto (default): when it "
+                                          "has see-through and solid parts (a cut-out); opacity: whenever the image has "
+                                          "alpha; ignore: never (alpha that holds gloss, as in some Unity assets)")}}),
          [](CommandContext& c, const json& a) {
            Engine& e = c.engine;
            if (!e.features.on("model_textures")) throw CommandError("the model's textures are switched off (features)");
@@ -384,7 +389,10 @@ void Engine::registerCommands() {
            if (path.empty()) throw CommandError("The model has no file to read its materials from");
            std::string err;
            json r;
-           if (!e.doc.importModelTextures(path, false, &r, &err)) throw CommandError(err.empty() ? "Nothing to bring in" : err);
+           std::string ca = a.value("color_alpha", std::string("auto"));
+           int colorAlpha = ca == "opacity" ? 1 : ca == "ignore" ? 2 : 0;
+           if (!e.doc.importModelTextures(path, false, &r, &err, true, colorAlpha))
+             throw CommandError(err.empty() ? "Nothing to bring in" : err);
            if (path == e.doc.meshPath) e.modelTextures = r, e.modelTextures["path"] = path;
            return r;
          }});

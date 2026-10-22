@@ -35,6 +35,9 @@ struct ModelMaterial {
   float opacity = 1.f;   // OBJ "d", FBX opacity (alpha of baseColor for glTF)
   int alphaMode = 0;     // 0 opaque, 1 cut-out at alphaCutoff, 2 blended
   float alphaCutoff = 0.5f;
+  // (1.2.2) OBJ / FBX that say nothing about opacity: the color texture's alpha may be it (hair cards, leaves, lace
+  // from game assets). Used when the image has alpha that cuts out (decided when it is read).
+  bool colorAlphaMayBeOpacity = false;
   float sheen = 0.f, coat = 0.f;
   bool mapReplacesValue = false;
   int vertexColors = -1;  // Blender: 1 a Color Attribute into Base Color, 0 not (-1: other formats)

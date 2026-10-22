@@ -164,6 +164,11 @@ void App::initKeymap(KeymapPreset preset) {
       {"blender.send", N_("Send textures to Blender"), N_("Blender"), C | ImGuiKey_B, C | ImGuiKey_B, 0, 0},
       {"file.add_model", N_("Add a model to the scene (an object with its own layers)"), N_("File"), C | S | ImGuiKey_I, C | S | ImGuiKey_I, 0, 0},
       {"tool.object", N_("Object tool: pick, move, turn and scale the scene's objects (again: the next of the three)"), N_("Tools"), ImGuiKey_W, ImGuiKey_W, 0, 0},
+      // (1.2.3) in the Object tool, as in Blender's Object Mode: the mouse moves, turns or scales the object (these keys
+      // come before the same keys' other uses there)
+      {"object.move", N_("Object tool: move the object with the mouse (X, Y, Z: one axis; click: keep it)"), N_("Tools"), ImGuiKey_G, ImGuiKey_G, 0, 0},
+      {"object.turn", N_("Object tool: turn the object about the line of sight (X, Y, Z: an axis; click: keep it)"), N_("Tools"), ImGuiKey_R, ImGuiKey_R, 0, 0},
+      {"object.scale", N_("Object tool: scale the object evenly (X, Y, Z: along one axis; click: keep it)"), N_("Tools"), ImGuiKey_S, ImGuiKey_S, 0, 0},
       {"view.local", N_("Only the active object (Local view) on / off"), N_("View"), ImGuiKey_Slash, ImGuiKey_Slash, 0, 0},
   };
   keymapPreset = preset;
@@ -226,14 +231,24 @@ void App::saveKeymap() {
     setStatus(T_("Could not save keymap.json"));
 }
 
+// (1.2.3) the keys that work in the Object tool only: there they come before the same keys' other uses (S selects
+// faces, X swaps colors...), and elsewhere they do nothing
+static bool objectToolKey(const char* id) { return !std::strncmp(id, "object.", 7); }
+
 bool App::keyPressed(const char* id, bool repeat) const {
   if (!forcedAction.empty() && forcedAction == id) {
     forcedAction.clear();  // once
     return true;
   }
+  if (objectModal >= 0) return false;  // (1.2.3) G, R or S under way: its own keys (X, Y, Z, numbers, Enter, Esc)
+  const bool objectKeys = tool == ViewportTool::Object && engine.features.on("object_keys");
   for (auto& a : keymap)
     if (!std::strcmp(a.id, id)) {
       if (!a.chord) return false;
+      if (objectToolKey(id) && !objectKeys) return false;
+      if (objectKeys && !objectToolKey(id))
+        for (auto& b : keymap)
+          if (objectToolKey(b.id) && b.chord == a.chord) return false;
       ImGuiKey k = (ImGuiKey)(a.chord & ~ImGuiMod_Mask_);
       ImGuiKeyChord mods = a.chord & ImGuiMod_Mask_;
       return ImGui::IsKeyPressed(k, repeat) && (ImGuiKeyChord)ImGui::GetIO().KeyMods == mods;
@@ -331,7 +346,8 @@ void App::drawKeymapEditor() {
       ImGui::TableSetColumnIndex(1);
       // conflicts: the same chord on two actions
       bool clash = false;
-      for (auto& b : keymap) clash |= &b != &a && b.chord && b.chord == a.chord;
+      // ((1.2.3) the Object tool's own keys don't clash with the keys of other tools)
+      for (auto& b : keymap) clash |= &b != &a && b.chord && b.chord == a.chord && objectToolKey(a.id) == objectToolKey(b.id);
       if (keymapScrollTo && keymapCapture == a.id) ImGui::SetScrollHereY(0.3f), keymapScrollTo = false;  // (asked from a toolbar button)
       std::string label = keymapCapture == a.id ? T_("press a key...") : a.chord ? chordName(a.chord, true) : T_("(none)");
       if (clash) ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0.55f, 0.4f, 1));
@@ -437,6 +453,8 @@ void App::loadSession() {
     islandDensityMode = std::clamp(j.value("island_density_mode", islandDensityMode), 0, 4);
     islandCustomDensity = j.value("island_custom_density", islandCustomDensity);
     renderW = j.value("render_width", renderW);
+    materialList = j.value("materials_list", materialList);
+    materialTile = std::clamp(j.value("materials_tile", materialTile), 48.f, 192.f);
     renderH = j.value("render_height", renderH);
     renderTransparent = j.value("render_transparent", renderTransparent);
     renderSS = j.value("render_supersample", renderSS);
@@ -547,6 +565,8 @@ void App::saveSession(bool force) {
             {"island_density_mode", islandDensityMode},
             {"island_custom_density", islandCustomDensity},
             {"render_width", renderW},
+            {"materials_list", materialList},
+            {"materials_tile", materialTile},
             {"render_height", renderH},
             {"render_transparent", renderTransparent},
             {"render_supersample", renderSS},

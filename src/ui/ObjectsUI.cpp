@@ -220,7 +220,7 @@ void App::objectPopups() {
 }
 
 bool App::modelDropped(const std::string& path) {
-  if (!engine.features.on("scene_objects") || !engine.doc.hasMesh() || engine.doc.startupScene) return false;
+  if (!engine.features.on("scene_objects") || !engine.doc.hasMesh() || engine.doc.untouchedStartup()) return false;
   // dropped on the Objects list: added; elsewhere: asked
   auto it = engine.uiRects.find("objects.list");
   ImVec2 m = ImGui::GetIO().MousePos;

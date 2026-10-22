@@ -60,6 +60,22 @@ Its gizmo sits in the middle of the active one:</p>
 in round steps, turns in 15 degrees and scales in tenths. <kbd>Esc</kbd> or a right-click while
 dragging cancels. Each drag is one undo step in that object's history. The bar also has <b>On the ground</b>, which puts
 the lowest point at height 0, and <b>Where it came in</b>.</p>
+<h3 id="object-keys">G, R and S</h3>
+<p>As in Blender's Object Mode, you don't have to hit a handle. With the Object tool on and the pointer over the 3D
+view, press:</p>
+<table>
+  <tr><th>Key</th><th>What the mouse does</th></tr>
+  <tr><td><kbd>G</kbd></td><td>Moves the object in the view's plane.</td></tr>
+  <tr><td><kbd>R</kbd></td><td>Turns it about the line of sight as the pointer goes round its middle.</td></tr>
+  <tr><td><kbd>S</kbd></td><td>Scales it evenly. Away from its middle is bigger, toward it smaller.</td></tr>
+</table>
+<p>Then press <kbd>X</kbd>, <kbd>Y</kbd> or <kbd>Z</kbd> to keep to one axis. Press it again to go back to free.
+Type a number for an exact amount: <kbd>S</kbd> <kbd>0</kbd><kbd>.</kbd><kbd>5</kbd> halves the object,
+<kbd>R</kbd> <kbd>Z</kbd> <kbd>9</kbd><kbd>0</kbd> turns it a quarter about Z, and <kbd>G</kbd> <kbd>X</kbd>
+<kbd>2</kbd> moves it 2 along X. <kbd>Backspace</kbd> takes a digit back, and <kbd>Ctrl</kbd> snaps. A click or
+<kbd>Enter</kbd> keeps the change as one undo step. A right-click or <kbd>Esc</kbd> puts the object back. In the Object
+tool these keys come first: <kbd>S</kbd> doesn't pick the Select tool there, and <kbd>X</kbd> doesn't swap the colors.
+They are in <i>Edit › Keyboard Shortcuts</i> with your other shortcuts, in both the Patina and the Blender keymap.</p>
 <p>An object turns and scales about its middle. Its texture-space positions don't change when it moves, so fills and
 procedural masks stay where they are on it.</p>
 

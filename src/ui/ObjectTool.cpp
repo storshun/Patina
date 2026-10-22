@@ -1,7 +1,10 @@
 // (1.2) The Object tool in the 3D view: a click picks the object to paint; the gizmo moves it (arrows, and the
 // middle square in the view's plane), turns it (rings, and the outer ring about the line of sight) or scales it (the
 // handles along its own axes, the middle square evenly). Ctrl snaps. One undo step in the object's history per drag.
+// (1.2.3) G, R and S do the same with the mouse anywhere, as in Blender's Object Mode.
 #include <imgui.h>
+
+#include <cstdlib>
 
 #include <glm/gtx/euler_angles.hpp>
 
@@ -71,11 +74,146 @@ void App::objectToolUI(ImVec2 origin, ImVec2 size, bool hovered, vec2 local) {
     for (int k = 0; k < 3; ++k) ring(axis[k], worldLen * 0.9f, rings[k]);
     ring(-cam.forward(), worldLen * 1.12f, rings[3]);
   }
-  // ---- which handle is under the pointer
   ImVec2 m = io.MousePos;
+  // ---- (1.2.3) G, R and S (object.move / turn / scale in the keymap), as in Blender: the mouse moves the object in
+  // the view's plane, turns it about the line of sight or scales it evenly, wherever the pointer is (the gizmo's middle
+  // square was hard to hit). X, Y or Z keeps to one axis (again: free), a typed number sets the amount, Ctrl snaps; a
+  // click or Enter keeps it (one undo step), a right-click or Esc puts it back.
+  if (objectModal < 0 && gizmoDrag < 0 && hovered && !io.WantTextInput && engine.features.on("object_keys")) {
+    int start = keyPressed("object.move") ? 0 : keyPressed("object.turn") ? 1 : keyPressed("object.scale") ? 2 : -1;
+    if (start >= 0) {
+      objectModal = start, objectModalAxis = -1, objectModalTyped.clear();
+      objectModalStart = d.placement;
+      objectModalMouse0 = m;
+      objectModalAngle = 0.f;
+      objectModalPrevAngle = std::atan2(m.y - pc.y, m.x - pc.x);
+      setStatus(T_("Move the mouse. X, Y or Z: one axis. Type a number for an exact amount. Ctrl snaps. "
+                   "Click or Enter: keep it. Right-click or Esc: put it back."));
+    }
+  }
+  const bool modal = objectModal >= 0;
+  if (modal) {
+    const vec3 world[3] = {vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1)};
+    for (int k = 0; k < 3; ++k)
+      if (ImGui::IsKeyPressed((ImGuiKey)(ImGuiKey_X + k), false)) objectModalAxis = objectModalAxis == k ? -1 : k;
+    // (the keys themselves: SDL sends typed characters only while a text field is active)
+    for (int k = 0; k < 10; ++k)
+      if (ImGui::IsKeyPressed((ImGuiKey)(ImGuiKey_0 + k)) || ImGui::IsKeyPressed((ImGuiKey)(ImGuiKey_Keypad0 + k)))
+        objectModalTyped += char('0' + k);
+    if (ImGui::IsKeyPressed(ImGuiKey_Period) || ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal) || ImGui::IsKeyPressed(ImGuiKey_Comma))
+      objectModalTyped += '.';
+    if ((ImGui::IsKeyPressed(ImGuiKey_Minus) || ImGui::IsKeyPressed(ImGuiKey_KeypadSubtract)) && objectModalTyped.empty())
+      objectModalTyped += '-';
+    if (ImGui::IsKeyPressed(ImGuiKey_Backspace) && !objectModalTyped.empty()) objectModalTyped.pop_back();
+    char* end = nullptr;
+    double typed = objectModalTyped.empty() ? 0.0 : std::strtod(objectModalTyped.c_str(), &end);
+    const bool hasTyped = !objectModalTyped.empty() && end && *end == '\0';
+    const int ax = objectModalAxis;
+    const Document::Placement& S0 = objectModalStart;
+    Document::Placement p = S0;
+    const bool ctrl = io.KeyCtrl;
+    ImVec2 dm(m.x - objectModalMouse0.x, m.y - objectModalMouse0.y);
+    std::string what;
+    char buf[96];
+    if (objectModal == 0) {
+      // move: in the view's plane, or along a world axis as it lies on screen; a number: that far along the axis (X)
+      vec3 dw(0.f);
+      if (hasTyped) {
+        dw = world[ax < 0 ? 0 : ax] * (float)typed;
+      } else if (ax < 0) {
+        mat4 v = cam.view();
+        vec3 right(v[0][0], v[1][0], v[2][0]), up(v[0][1], v[1][1], v[2][1]);
+        float sc = worldLen / L;
+        dw = right * dm.x * sc - up * dm.y * sc;
+      } else {
+        ImVec2 tipA;
+        if (toScreen(center + world[ax] * worldLen, tipA)) {
+          ImVec2 sa(tipA.x - pc.x, tipA.y - pc.y);
+          float al = std::max(std::hypot(sa.x, sa.y), 1e-3f);
+          dw = world[ax] * ((dm.x * sa.x + dm.y * sa.y) / (al * al) * worldLen);
+        }
+      }
+      float objSize = d.mesh.bounds.valid() ? glm::length(d.mesh.bounds.size()) * std::max({S0.scale.x, S0.scale.y, S0.scale.z}) : 1.f;
+      float step = std::pow(10.f, std::floor(std::log10(std::max(objSize, 1e-6f)))) * 0.1f;
+      if (ctrl && !hasTyped) dw = glm::round(dw / step) * step;
+      p.location = S0.location + dw;
+      std::snprintf(buf, sizeof buf, "%.3f, %.3f, %.3f", dw.x, dw.y, dw.z);
+      what = F_("Move %s", buf);
+    } else if (objectModal == 1) {
+      // turn: about the line of sight, or a world axis; the angle the pointer went round the object's middle
+      float a1 = std::atan2(m.y - pc.y, m.x - pc.x);
+      float da = a1 - objectModalPrevAngle;
+      while (da > kPi) da -= 2.f * kPi;
+      while (da < -kPi) da += 2.f * kPi;
+      objectModalAngle += da, objectModalPrevAngle = a1;
+      vec3 n = ax < 0 ? -cam.forward() : world[ax];
+      float deg = glm::degrees(objectModalAngle);
+      if (glm::dot(n, cam.forward()) < 0.f) deg = -deg;  // (as the gizmo's rings: clockwise on screen about an axis toward you is negative)
+      if (hasTyped) deg = (float)typed;
+      else if (ctrl) deg = std::round(deg / 15.f) * 15.f;
+      mat4 R0 = glm::eulerAngleZYX(glm::radians(S0.rotation.z), glm::radians(S0.rotation.y), glm::radians(S0.rotation.x));
+      mat4 R1 = glm::rotate(mat4(1), glm::radians(deg), n) * R0;
+      float z, y, x;
+      glm::extractEulerAngleZYX(R1, z, y, x);
+      p.rotation = glm::degrees(vec3(x, y, z));
+      what = F_("Turn %.1f°", deg);
+    } else {
+      // scale: the pointer's distance from the middle against where it started (1 there); along the object's own axis
+      float r0 = std::hypot(objectModalMouse0.x - pc.x, objectModalMouse0.y - pc.y);
+      float r = std::hypot(m.x - pc.x, m.y - pc.y);
+      float f = 1.f + (r - r0) / std::max(r0, 60.f * uiScale);  // (r / r0 when the pointer started well away)
+      if (hasTyped) f = (float)typed;
+      else if (ctrl) f = std::round(f * 10.f) / 10.f;
+      f = std::max(std::abs(f), 0.01f);
+      if (ax < 0) p.scale = S0.scale * f;
+      else p.scale[ax] = S0.scale[ax] * f;
+      what = F_("Scale %.3f", f);
+    }
+    if (ax >= 0) what += std::string("  ") + "XYZ"[ax];
+    if (!objectModalTyped.empty()) what += "  [" + objectModalTyped + "|]";
+    d.placement = p;  // (live)
+    d.dirty = true;
+    // the axis held to, across the view
+    if (ax >= 0) {
+      ImVec2 a0, a1;
+      float far = worldLen * 40.f;
+      if (toScreen(center - world[ax] * far, a0) && toScreen(center + world[ax] * far, a1)) dl->AddLine(a0, a1, kAxisCol[ax], 1.5f * uiScale);
+    }
+    if (objectModal != 0) {  // a dashed line from the middle to the pointer, as Blender draws
+      ImVec2 dv(m.x - pc.x, m.y - pc.y);
+      float len = std::hypot(dv.x, dv.y);
+      for (float t = 0.f; t < len; t += 12.f * uiScale)
+        dl->AddLine(ImVec2(pc.x + dv.x * t / len, pc.y + dv.y * t / len),
+                    ImVec2(pc.x + dv.x * std::min(t + 6.f * uiScale, len) / len, pc.y + dv.y * std::min(t + 6.f * uiScale, len) / len),
+                    IM_COL32(240, 240, 240, 200), 1.f);
+    }
+    ImVec2 ts = ImGui::CalcTextSize(what.c_str());
+    ImVec2 tp(m.x + 16.f * uiScale, m.y - ts.y - 10.f * uiScale);
+    dl->AddRectFilled(ImVec2(tp.x - 5.f * uiScale, tp.y - 2.f * uiScale), ImVec2(tp.x + ts.x + 5.f * uiScale, tp.y + ts.y + 2.f * uiScale),
+                      IM_COL32(20, 20, 22, 200), 4.f * uiScale);
+    dl->AddText(tp, IM_COL32(255, 255, 255, 240), what.c_str());
+    const bool keep = ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsKeyPressed(ImGuiKey_Enter) ||
+                      ImGui::IsKeyPressed(ImGuiKey_KeypadEnter);
+    const bool back = ImGui::IsMouseClicked(ImGuiMouseButton_Right) || ImGui::IsKeyPressed(ImGuiKey_Escape);
+    if (back) {
+      d.placement = S0;
+      setStatus(T_("Cancelled"));
+    } else if (keep) {
+      Document::Placement now = d.placement;
+      d.placement = S0;
+      d.setPlacement(now, objectModal == 0 ? T_("Move the object") : objectModal == 1 ? T_("Turn the object") : T_("Scale the object"));
+      setStatus(what);
+      if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) lmbBlocked = true;  // (holding the click afterward does nothing)
+    }
+    if (keep || back) {
+      objectModal = -1;
+      objectModalEndFrame = ImGui::GetFrameCount();
+    }
+  }
+  // ---- which handle is under the pointer
   const float grab = 7.f * uiScale;
   int hot = -1;
-  if (gizmoDrag < 0 && hovered) {
+  if (gizmoDrag < 0 && hovered && !modal) {
     float best = grab;
     if (std::abs(m.x - pc.x) < grab * 1.3f && std::abs(m.y - pc.y) < grab * 1.3f && gizmoMode != 1) hot = 3, best = 0;
     for (int k = 0; k < 3 && hot != 3; ++k) {
@@ -95,7 +233,9 @@ void App::objectToolUI(ImVec2 origin, ImVec2 size, bool hovered, vec2 local) {
   }
   // ---- a drag
   const bool ctrl = io.KeyCtrl;
-  if (gizmoDrag < 0 && hot >= 0 && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !io.KeyAlt) {
+  if (modal) {
+    // (the keys above have the mouse)
+  } else if (gizmoDrag < 0 && hot >= 0 && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !io.KeyAlt) {
     gizmoDrag = hot;
     gizmoStart = d.placement;
     gizmoMouse0 = m;
@@ -188,7 +328,9 @@ void App::objectToolUI(ImVec2 origin, ImVec2 size, bool hovered, vec2 local) {
       for (auto& s : e) dl->AddLine(c[s[0]], c[s[1]], IM_COL32(232, 133, 44, 150), 1.f);
     }
   }
-  if (gizmoMode == 1) {
+  if (modal) {
+    // (no gizmo while the keys move it)
+  } else if (gizmoMode == 1) {
     dl->AddPolyline(rings[3].data(), (int)rings[3].size(), lit == 3 ? kHot : IM_COL32(230, 230, 230, 170), 0, th * 0.8f);
     for (int k = 0; k < 3; ++k) dl->AddPolyline(rings[k].data(), (int)rings[k].size(), lit == k ? kHot : kAxisCol[k], 0, th);
     if (gizmoDrag >= 0) {

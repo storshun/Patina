@@ -2,7 +2,8 @@
 """(1.2) Several objects in one project, against a real headless Patina: a file with several meshes opens as an object
 each (their texture sets matched to the first one's texel density); each object has its own layers; one moved,
 turned and scaled is still painted where the brush aims; the project keeps every object, its layers and its place,
-and the one active; a model added to the startup sphere's scene takes its place; the model export puts them all in
+and the one active; a model added to the startup sphere's scene takes its place (not to a project opened, or a sphere
+changed: 1.2.3); the model export puts them all in
 one file (glTF: a node each with its matrix), the texture export each object's maps; Blender sends several objects
 (the first starts a scene, the others are added beside it, an update goes to its own object, the automatic sync
 leaves out an object the scene doesn't have), with Blender's placement; copies, removals and the Local view.
@@ -231,6 +232,32 @@ def main():
             check([o["name"] for o in lo["objects"]] == ["Body", "Hat", "Eye"], "the sphere Patina starts with gave way (%s)" % [o["name"] for o in lo["objects"]])
             r = p("add_object", path=model, separate=False)
             check(p("list_objects")["objects"][-1]["name"] == "character", "a file added as one object (%s)" % r)
+        finally:
+            p.stop()
+
+        # ---- (1.2.3) a project opened from the startup sphere is not the sphere: a model added to it comes in beside
+        # its object (it took that object's place before); a sphere painted on stays too
+        one = os.path.join(tmp, "one.patina")
+        p = Patina(exe, env)
+        try:
+            p("add_object", path=model, separate=False)
+            p("save_project", path=one)
+        finally:
+            p.stop()
+        p = Patina(exe, env)
+        try:
+            p("open_file", path=one)
+            p("add_object", path=model, separate=False)
+            names = [o["name"] for o in p("list_objects")["objects"]]
+            check(names == ["character", "character.001"], "a one-object project opened first keeps its object (%s)" % names)
+        finally:
+            p.stop()
+        p = Patina(exe, env)
+        try:
+            p("add_layer", type="paint")
+            p("add_object", path=model, separate=False)
+            check(len(p("list_objects")["objects"]) == 2, "the startup sphere with a change on it stays (%s)" %
+                  [o["name"] for o in p("list_objects")["objects"]])
         finally:
             p.stop()
 

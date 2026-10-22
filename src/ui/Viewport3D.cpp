@@ -430,6 +430,7 @@ void App::drawViewport(bool fullscreen) {
   if (viewOnly && hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) lmbBlocked = true;  // (0.46) no tool acts
   if (lmbBlocked && !ImGui::IsMouseDown(ImGuiMouseButton_Left)) lmbBlocked = false;
   if (lmbBlocked) swallowClick = true;
+  if (objectModal >= 0) swallowClick = true;  // (1.2.3) G, R or S: its click keeps it, its right-click opens no menu
   if (hovered && alt && !ctrl && ImGui::IsMouseReleased(ImGuiMouseButton_Right) &&
       glm::length(vec2(ImGui::GetMouseDragDelta(ImGuiMouseButton_Right, 0.f).x, ImGui::GetMouseDragDelta(ImGuiMouseButton_Right, 0.f).y)) < 3.f)
     quickPick();
@@ -854,10 +855,11 @@ void App::drawViewport(bool fullscreen) {
       float y, p;
       if (Camera::viewAngles(name, y, p)) gizmo.turning = false, snapToView(y, p);
     };
-    if (ImGui::IsKeyPressed(ImGuiKey_Keypad1)) numpadView(ctrl ? "back" : "front");
-    if (ImGui::IsKeyPressed(ImGuiKey_Keypad3)) numpadView(ctrl ? "left" : "right");
-    if (ImGui::IsKeyPressed(ImGuiKey_Keypad7)) numpadView(ctrl ? "bottom" : "top");
-    if (ImGui::IsKeyPressed(ImGuiKey_Keypad5)) cam.ortho = !cam.ortho, engine.viewMemory.orthoBySnap = false;
+    const bool numpad = objectModal < 0;  // (1.2.3) G, R or S under way: the numpad types its number
+    if (numpad && ImGui::IsKeyPressed(ImGuiKey_Keypad1)) numpadView(ctrl ? "back" : "front");
+    if (numpad && ImGui::IsKeyPressed(ImGuiKey_Keypad3)) numpadView(ctrl ? "left" : "right");
+    if (numpad && ImGui::IsKeyPressed(ImGuiKey_Keypad7)) numpadView(ctrl ? "bottom" : "top");
+    if (numpad && ImGui::IsKeyPressed(ImGuiKey_Keypad5)) cam.ortho = !cam.ortho, engine.viewMemory.orthoBySnap = false;
     if (keyPressed("view.back")) goBackView();
   }
   viewportContextMenu(origin, avail);

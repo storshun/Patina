@@ -379,6 +379,8 @@ class App {
   int focusDefaultTabs = 0;
   std::string materialFilter;
   std::string materialCategory;
+  bool materialList = false;   // (1.2.3) materials and smart materials as a list with small pictures (else tiles)
+  float materialTile = 84.f;   // (1.2.3) the tiles' picture size, at UI scale 1
   std::string dropHint;  // (0.22.5) what the thing dragged would do where it is (said by the drag's tooltip)
   std::string consoleInput;
   std::string statusText;
@@ -721,12 +723,22 @@ class App {
   // the middle or the outer ring; -1 none)
   void objectToolUI(ImVec2 origin, ImVec2 size, bool hovered, vec2 local);
   int gizmoMode = 0, gizmoDrag = -1;
+  // (1.2.3) G, R and S in the Object tool: objectModal 0 move, 1 turn, 2 scale (-1 none), on one axis (-1 free), by a
+  // number typed or the mouse
+  int objectModal = -1, objectModalAxis = -1;
+  std::string objectModalTyped;
+  Document::Placement objectModalStart;
+  ImVec2 objectModalMouse0{0, 0};
+  float objectModalAngle = 0.f, objectModalPrevAngle = 0.f;
+  int objectModalEndFrame = -1;  // (the Esc that put it back closes no window that frame)
   Document::Placement gizmoStart;
   ImVec2 gizmoMouse0{0, 0}, gizmoCenter0{0, 0};
   float gizmoAngle = 0.f;
   void drawProperties();
   void drawMaterials();
   void drawSmartMaterialTiles();  // (0.22.5)
+  void materialViewControls();    // (1.2.3) tiles or list, and the tiles' size
+  void materialTileZoom();        // (1.2.3) Ctrl+mouse wheel over the tiles: their size
   void drawSmartMaskTiles();
   void drawBrushes();
   void drawTextureSet();

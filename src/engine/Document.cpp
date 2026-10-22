@@ -2369,6 +2369,9 @@ bool Document::loadFrom(const container::File& f, const json& h, const std::stri
   layers.clear();
   soloUid = 0;
   clearBakeDown();
+  // (1.2.3) a project is not the sphere Patina starts with: before, opening one kept that mark, and a model added to a
+  // one-object project then took its object's place (a model dropped on any project opened instead of being added)
+  startupScene = false;
   mesh = std::move(m);
   gpu.upload(mesh);
   bvh.build(mesh);

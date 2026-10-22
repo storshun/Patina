@@ -190,7 +190,11 @@ class Document {
   // Called before the mesh is replaced (a load, a project): work still reading it finishes first.
   std::function<void()> beforeMeshChange;
   void setMesh(Mesh&& m, int resolution, bool keepLayers);
-  bool startupScene = false;  // (0.46) the sphere Patina starts with, nothing opened or made since (any setMesh clears it)
+  bool startupScene = false;  // (0.46) the sphere Patina starts with, nothing opened or made since (any setMesh and,
+                              // since 1.2.3, opening a project clear it)
+  // (1.2.3) The sphere Patina starts with, and nothing painted or changed on it (nothing to undo): a model added or
+  // dropped takes its place. Anything else stays, and the model comes in beside it.
+  bool untouchedStartup() const { return startupScene && !undo.canUndo(); }
   void newTextureSet(int resolution);  // clears layers; resolution per tile
   void changeResolution(int resolution);  // resamples layer textures; resolution per tile
 

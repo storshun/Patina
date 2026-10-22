@@ -178,7 +178,7 @@ int Engine::addObjectsFromFile(const std::string& path, int resolution, bool one
     }
   }
   // a texture set to match the model already open (as many texels per meter), at most the resolution asked for
-  const bool startup = doc.startupScene && objectCount() == 1;
+  const bool startup = doc.untouchedStartup() && objectCount() == 1;
   double area0 = 0;
   if (!startup)
     for (uint32_t f = 0; f < doc.mesh.faceCount(); ++f) area0 += doc.mesh.faceArea3D(f);

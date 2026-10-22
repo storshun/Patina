@@ -133,6 +133,11 @@ bool opaqueAt(uint t, vec2 bc) {
 
 vec3 invDir(vec3 d) { return 1.0 / mix(d, vec3(1e-20) * sign(d + 1e-30), lessThan(abs(d), vec3(1e-20))); }
 
+// (1.2.3) the triangle a ray leaves from, left out of its tests: the ray starts on the smooth surface its normals
+// describe (Mat.off), which can lie a little above that flat triangle
+const uint NO_TRI = 0xFFFFFFFFu;
+uint gSkip = NO_TRI;
+
 // the nearest hit (anyHit: any hit, for shadow rays)
 bool trace(vec3 o, vec3 d, float tmax, bool anyHit, out uint ht, out vec2 hb, out float tt) {
   vec3 inv = invDir(d);
@@ -148,6 +153,7 @@ bool trace(vec3 o, vec3 d, float tmax, bool anyHit, out uint ht, out vec2 hb, ou
       uint first = nodes[n * 8u + 6u];
       for (uint i = 0u; i < cnt; ++i) {
         uint t = triIdx[first + i];
+        if (t == gSkip) continue;
         float th;
         vec2 bc;
         if (hitTri(t, o, d, tt, th, bc) && opaqueAt(t, bc)) {
@@ -226,7 +232,21 @@ struct Mat {
   vec3 emis;
   float sheen, coat, sss;
   vec3 N, Ng;  // shading normal (normal map), geometric normal; both on the side the ray came from
+  vec3 Ns;     // (1.2.3) the smooth normal (the vertex normals, before the normal map)
+  vec3 off;    // (1.2.3) from the flat triangle out to the smooth surface: where rays leave from
 };
+
+// (1.2.3) The shadow terminator. A smooth-shaded model is still made of flat triangles: light cut off at each
+// triangle's own horizon, and shadow rays leaving from the flat triangle into its neighbors, shade a curved part (a
+// nose, a cheek) in triangle-shaped steps where light grazes it. Here light fades at the smooth normal's horizon
+// (Chiang et al. 2019, also for a normal map bending N away from Ns), and rays leave from the smooth surface: each
+// vertex's tangent plane, mixed by the barycentrics, as Cycles does (Hanika 2021, "Hacking the shadow terminator").
+float shadowTerm(vec3 N, vec3 Ns, vec3 L) {
+  float ngl = dot(Ns, L);
+  if (ngl <= 0.0) return 0.0;
+  float g = min(1.0, ngl / max(dot(N, L) * dot(N, Ns), 1e-6));
+  return -g * g * g + g * g + g;
+}
 
 void onb(vec3 n, out vec3 t, out vec3 b) {
   float s = n.z >= 0.0 ? 1.0 : -1.0;
@@ -280,7 +300,7 @@ vec3 evalBsdf(Mat m, vec3 V, vec3 L, out float pdf) {
   float nv = max(dot(N, V), 1e-4), nl = dot(N, L);
   vec4 p = lobes(m, nv);
   pdf = 0.0;
-  if (nl > 0.0 && dot(m.Ng, L) > 0.0) {
+  if (nl > 0.0 && dot(m.Ns, L) > 0.0) {
     vec3 H = normalize(V + L);
     float nh = max(dot(N, H), 0.0), vh = max(dot(V, H), 0.0);
     float a = max(m.rough * m.rough, 1e-3), a2 = a * a;  // (the same as sampleBsdf's)
@@ -300,7 +320,7 @@ vec3 evalBsdf(Mat m, vec3 V, vec3 L, out float pdf) {
       f = f * (1.0 - m.coat * (0.04 + 0.96 * pow(1.0 - nv, 5.0))) + vec3(m.coat * coat);
       pdf += p.z * g1(nv, ca2) * dGGX(nh, ca2) / (4.0 * nv);
     }
-    return f * nl;
+    return f * nl * shadowTerm(N, m.Ns, L);
   }
   if (nl < 0.0 && m.sss > 0.001) {
     // subsurface: light through thin parts (ears, leaves), warmer
@@ -326,13 +346,20 @@ Mat material(uint t, vec2 bc, vec3 d) {
   vec3 w = vec3(1.0 - bc.x - bc.y, bc.x, bc.y);
   vec3 p0 = vPos(l0), p1 = vPos(l1), p2 = vPos(l2);
   vec3 Ng = normalize(cross(p1 - p0, p2 - p0));
-  vec3 Ns = normalize(vNrm(l0) * w.x + vNrm(l1) * w.y + vNrm(l2) * w.z);
+  vec3 n0 = vNrm(l0), n1 = vNrm(l1), n2 = vNrm(l2);
+  vec3 Ns = normalize(n0 * w.x + n1 * w.y + n2 * w.z);
   vec4 t0 = vTan(l0);
   vec3 T = t0.xyz * w.x + vTan(l1).xyz * w.y + vTan(l2).xyz * w.z;
   vec2 uv = vUV(l0) * w.x + vUV(l1) * w.y + vUV(l2) * w.z;
   // two-sided: the side the ray came from
   if (dot(Ng, d) > 0.0) Ng = -Ng;
-  if (dot(Ns, Ng) < 0.0) Ns = -Ns;
+  float side = dot(Ns, Ng) < 0.0 ? -1.0 : 1.0;
+  Ns *= side;
+  // (1.2.3) the smooth surface over this point: only ever outward, so a hollow gets none
+  vec3 P = p0 * w.x + p1 * w.y + p2 * w.z;
+  n0 *= side, n1 *= side, n2 *= side;
+  vec3 off = -(n0 * (w.x * min(0.0, dot(P - p0, n0))) + n1 * (w.y * min(0.0, dot(P - p1, n1))) +
+               n2 * (w.z * min(0.0, dot(P - p2, n2))));
   T = normalize(T - Ns * dot(Ns, T) + vec3(1e-6, 0.0, 0.0));
   vec3 B = cross(Ns, T) * (t0.w < 0.0 ? -1.0 : 1.0);
   vec3 tn = normalize(TEX(uNormal, uv, t).xyz);
@@ -349,7 +376,7 @@ Mat material(uint t, vec2 bc, vec3 d) {
   m.emis = srgbToLinear(TEX(uEmissive, uv, t).rgb) * 4.0;
   vec4 xt = TEX(uExtra, uv, t);
   m.sheen = xt.g, m.coat = xt.b, m.sss = xt.a;
-  m.N = N, m.Ng = Ng;
+  m.N = N, m.Ng = Ng, m.Ns = Ns, m.off = dot(off, Ng) > 0.0 ? off : vec3(0.0);
   return m;
 }
 
@@ -398,6 +425,9 @@ void main() {
       vec3 P = o + d * th;
       vec3 V = -d;
       Lsum += thr * m.emis;
+      // (1.2.3) rays out leave from the smooth surface (and pass their own triangle), rays in from just under it
+      vec3 Pout = P + m.off + m.Ng * uEps, Pin = P - m.Ng * uEps;
+      uint here = t;
       // the environment's light straight from where it is brightest
       if (uEnvTotal > 0.0) {
         float pe;
@@ -405,11 +435,14 @@ void main() {
         float pb;
         vec3 fc = evalBsdf(m, V, wl, pb);
         if (pe > 0.0 && (fc.x + fc.y + fc.z) > 0.0) {
-          vec3 oo = P + m.Ng * (dot(wl, m.Ng) > 0.0 ? uEps : -uEps);
+          bool leaves = dot(wl, m.Ns) > 0.0;
           uint t2;
           vec2 b2;
           float t3;
-          if (!trace(oo, wl, 1e30, true, t2, b2, t3)) {
+          gSkip = leaves ? here : NO_TRI;
+          bool shadowed = trace(leaves ? Pout : Pin, wl, 1e30, true, t2, b2, t3);
+          gSkip = NO_TRI;
+          if (!shadowed) {
             vec3 c = thr * fc * envLight(wl) * (pe / (pe * pe + pb * pb));
             Lsum += bounce > 0 ? clampLight(c) : c;
           }
@@ -427,9 +460,13 @@ void main() {
         if (rnd() > q) break;
         thr /= q;
       }
-      o = P + m.Ng * (dot(L, m.Ng) > 0.0 ? uEps : -uEps);
+      bool leaves = dot(L, m.Ns) > 0.0;
+      o = leaves ? Pout : Pin;
       d = L;
-      if (!trace(o, d, 1e30, false, t, bc, th)) {
+      gSkip = leaves ? here : NO_TRI;
+      bool more = trace(o, d, 1e30, false, t, bc, th);
+      gSkip = NO_TRI;
+      if (!more) {
         float pe = envPdf(d);
         vec3 c = thr * envLight(d) * (lastPdf * lastPdf / (lastPdf * lastPdf + pe * pe));
         Lsum += clampLight(c);

@@ -93,7 +93,7 @@ void App::buildPaletteEntries() {
   // actions that act on what is under the mouse in a view can't run from here
   static const char* underMouse[] = {"color.sample", "brush.radius", "brush.strength", "brush.flow", "brush.hardness",
                                      "brush.angle", "stencil.toggle", "stencil.edit", "view.pie", "view.pie_channels",
-                                     "tool.pie", "app.favorites"};
+                                     "tool.pie", "app.favorites", "object.move", "object.turn", "object.scale"};
   for (auto& a : keymap) {
     std::string id = a.id;
     if (std::find_if(std::begin(underMouse), std::end(underMouse), [&](const char* s) { return id == s; }) !=

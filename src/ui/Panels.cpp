@@ -28,6 +28,53 @@ static void helpMarker(const char* text) {
 
 static bool colorEdit(const char* label, vec3& c) { return ImGui::ColorEdit3(label, &c.x, ImGuiColorEditFlags_NoInputs); }
 
+// (1.2.3) Tiles that fit the panel: as many columns as the width inside the scrolling child really holds. A tile is its
+// picture with the button's frame padding on both sides, and tiles have the item spacing between them. (The panels
+// counted 8 pixels for both, and the width outside the child's scrollbar, so the last column could run off the side.)
+static int tileColumns(float tileW) {
+  const float gap = ImGui::GetStyle().ItemSpacing.x;
+  return std::max(1, int((ImGui::GetContentRegionAvail().x + gap) / (tileW + gap)));
+}
+
+// (1.2.3) the rects kept for tests under `prefix`, dropped before a list draws them again: only this frame's stay
+static void forgetRects(std::map<std::string, std::array<float, 4>>& rects, const std::string& prefix) {
+  auto it = rects.lower_bound(prefix);
+  while (it != rects.end() && it->first.compare(0, prefix.size(), prefix) == 0) it = rects.erase(it);
+}
+
+// `s` cut to `w` pixels, with "..." when it doesn't fit
+static std::string fitText(const std::string& s, float w) {
+  if (ImGui::CalcTextSize(s.c_str()).x <= w) return s;
+  std::string t = s;
+  while (!t.empty() && ImGui::CalcTextSize((t + "...").c_str()).x > w) {
+    do t.pop_back();
+    while (!t.empty() && ((unsigned char)t.back() & 0xC0) == 0x80);  // (a whole UTF-8 letter)
+  }
+  return t + "...";
+}
+
+// (1.2.3) A name under a tile: its words on at most `maxLines` lines as wide as the tile, the rest cut with "...". (A
+// word longer than the tile made it wider and pushed the row off the side.)
+static void tileName(const std::string& name, float width, int maxLines = 2) {
+  std::vector<std::string> lines;
+  std::string cur;
+  size_t i = 0;
+  while (i < name.size()) {
+    size_t j = name.find(' ', i);
+    if (j == std::string::npos) j = name.size();
+    std::string word = name.substr(i, j - i);
+    i = j + 1;
+    if (word.empty()) continue;
+    std::string wider = cur.empty() ? word : cur + " " + word;
+    if (cur.empty() || ImGui::CalcTextSize(wider.c_str()).x <= width || (int)lines.size() + 1 >= maxLines)
+      cur = wider;  // (the last line takes the rest, cut below)
+    else
+      lines.push_back(cur), cur = word;
+  }
+  if (!cur.empty()) lines.push_back(cur);
+  for (auto& l : lines) ImGui::TextUnformatted(fitText(l, width).c_str());
+}
+
 // ------------------------------------------------------------------ menus
 
 // a menu of the menu bar; where it is goes in uiRects as menu.<key> (tests and the manual's screenshots)
@@ -487,7 +534,7 @@ void App::handleShortcuts() {
   for (const char* id : {"view.lit", "view.solid", "view.unlit", "view.path_traced", "view.wireframe", "view.seams"})
     if (keyPressed(id)) runPieItem(id);
   // Escape closes the floating windows (help, about, export) unless a text field has focus
-  if (ImGui::IsKeyPressed(ImGuiKey_Escape) && !uvXform.active &&
+  if (ImGui::IsKeyPressed(ImGuiKey_Escape) && !uvXform.active && objectModal < 0 && objectModalEndFrame != ImGui::GetFrameCount() &&
       (showHelp || showAbout || showExport || showKeymap || showMaterialEditor || showPreferences || showDensity || showSymmetry || showAutoTexture || showMacros ||
        showRender || showHighPoly || showWelcome || showPenTest || showBakeDown) && !radialEdit) {
     showHelp = showAbout = showExport = showKeymap = showMaterialEditor = showPreferences = false;
@@ -815,12 +862,19 @@ void App::drawMaterials() {
     editMaterialDirty = true;
     showMaterialEditor = true;
   }
+  materialViewControls();
   ImGui::Separator();
-  float cell = 84.f * uiScale;
-  int cols = std::max(1, int(ImGui::GetContentRegionAvail().x / (cell + 8)));
-  ImGui::BeginChild("##matgrid");
+  const bool list = materialList;
+  const float cell = std::round(materialTile * uiScale), tileW = cell + 2.f * ImGui::GetStyle().FramePadding.x;
+  ImGui::BeginChild("##matgrid", ImVec2(0, 0), ImGuiChildFlags_None,
+                    ImGui::GetIO().KeyCtrl && !list ? ImGuiWindowFlags_NoScrollWithMouse : ImGuiWindowFlags_None);
+  materialTileZoom();
+  forgetRects(engine.uiRects, "materials.tile:");
+  const int cols = tileColumns(tileW);
+  const float rowH = std::round(34.f * uiScale);  // (the list's small pictures)
   int i = 0;
   int bakesThisFrame = 0;
+  std::string removeId;
   std::string filter = materialFilter;
   std::transform(filter.begin(), filter.end(), filter.begin(), ::tolower);
   for (auto& ep : engine.materials.entries()) {
@@ -833,18 +887,37 @@ void App::drawMaterials() {
       std::transform(n.begin(), n.end(), n.begin(), ::tolower);
       if (n.find(filter) == std::string::npos) continue;
     }
-    if (i % cols) ImGui::SameLine();
+    if (!list && i % cols) ImGui::SameLine();
     ImGui::PushID(e.def.id.c_str());
-    ImGui::BeginGroup();
+    // (only the pictures on screen are baked; two a frame)
+    const bool onScreen = ImGui::IsRectVisible(ImVec2(tileW, list ? rowH : tileW));
     GLuint t = e.gpu.thumbnail.id();
-    if (!t && bakesThisFrame < 2) {  // spread procedural bakes over frames
+    if (!t && onScreen && bakesThisFrame < 2) {  // spread procedural bakes over frames
       t = engine.materials.thumbnail(e, engine.env);
       ++bakesThisFrame;
     }
     bool sel = engine.painter.material.id == e.def.id;
-    if (sel) ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.78f, 0.44f, 0.14f, 1));
-    if (ImGui::ImageButton("##t", texId(t), ImVec2(cell, cell))) engine.selectMaterial(e.def.id);
-    if (sel) ImGui::PopStyleColor();
+    if (list) {
+      // (1.2.3) the list: a small picture, the name, and its category and library under it
+      ImVec2 p0 = ImGui::GetCursorScreenPos();
+      if (ImGui::Selectable("##row", sel, ImGuiSelectableFlags_None, ImVec2(0, rowH))) engine.selectMaterial(e.def.id);
+      ImDrawList* dl = ImGui::GetWindowDrawList();
+      float pic = rowH - 2.f * uiScale;
+      ImVec2 a = p0 + ImVec2(2.f * uiScale, (rowH - pic) * 0.5f);
+      if (t) dl->AddImage(texId(t), a, a + ImVec2(pic, pic));
+      else dl->AddRectFilled(a, a + ImVec2(pic, pic), ImGui::GetColorU32(ImGuiCol_FrameBg), 3.f * uiScale);
+      float tx = a.x + pic + 8.f * uiScale, room = ImGui::GetItemRectMax().x - tx - 4.f * uiScale;
+      float lh = ImGui::GetTextLineHeight();
+      ImVec2 top(tx, p0.y + rowH * 0.5f - lh);
+      dl->AddText(top, ImGui::GetColorU32(ImGuiCol_Text), fitText(e.def.name, room).c_str());
+      std::string sub = e.def.category + "  |  " + (e.def.builtin ? T_("Patina default library") : T_("your library"));
+      dl->AddText(top + ImVec2(0, lh), ImGui::GetColorU32(ImGuiCol_TextDisabled), fitText(sub, room).c_str());
+    } else {
+      ImGui::BeginGroup();
+      if (sel) ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.78f, 0.44f, 0.14f, 1));
+      if (ImGui::ImageButton("##t", texId(t), ImVec2(cell, cell))) engine.selectMaterial(e.def.id);
+      if (sel) ImGui::PopStyleColor();
+    }
     if (ImGui::IsItemVisible()) {
       ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
       engine.uiRects["materials.tile:" + e.def.id] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
@@ -862,7 +935,7 @@ void App::drawMaterials() {
       dropHint.clear();
       ImGui::EndDragDropSource();
     }
-    if (e.def.builtin) {
+    if (e.def.builtin && !list) {
       // "P" badge: part of the shipped Patina default library (ids patina_*)
       ImVec2 a = ImGui::GetItemRectMin() + ImVec2(5, 5) * uiScale;
       ImVec2 sz = ImGui::CalcTextSize("P") + ImVec2(6, 2) * uiScale;
@@ -912,22 +985,18 @@ void App::drawMaterials() {
         if (ImGui::IsItemHovered())
           ImGui::SetTooltip("%s", T_("Tick when bumps look like dents. Unreal and DirectX exports use this convention."));
       }
-      if (!e.def.builtin && ImGui::MenuItem(L_("Delete from library"))) {
-        engine.materials.removeUserMaterial(e.def.id);
-        ImGui::EndPopup();
-        ImGui::EndGroup();
-        ImGui::PopID();
-        break;
-      }
+      if (!e.def.builtin && ImGui::MenuItem(L_("Delete from library"))) removeId = e.def.id;
       ImGui::EndPopup();
     }
-    ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + cell);
-    ImGui::TextUnformatted(e.def.name.c_str());
-    ImGui::PopTextWrapPos();
-    ImGui::EndGroup();
+    if (!list) {
+      tileName(e.def.name, tileW);
+      ImGui::EndGroup();
+    }
     ImGui::PopID();
     ++i;
   }
+  // (after the loop: the list it walks stays whole)
+  if (!removeId.empty()) engine.materials.removeUserMaterial(removeId);
   if (contextMenus() && ImGui::BeginPopupContextWindow("##matsctx", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
     materialsEmptyMenu(), ImGui::EndPopup();
   ImGui::EndChild();
@@ -953,12 +1022,18 @@ void App::drawSmartMaterialTiles() {
   ImGui::InputTextWithHint("##smartsearch", T_("search"), &materialFilter);
   ImGui::SameLine();
   ImGui::TextDisabled("%s", T_("Click to add one above the selected layer, or drag it to where you want it in the stack."));
+  materialViewControls();
   ImGui::Separator();
   std::string filter = materialFilter;
   std::transform(filter.begin(), filter.end(), filter.begin(), ::tolower);
-  float cell = 84.f * uiScale;
-  int cols = std::max(1, int(ImGui::GetContentRegionAvail().x / (cell + 8)));
-  ImGui::BeginChild("##smartgrid");
+  const bool list = materialList;
+  const float cell = std::round(materialTile * uiScale), tileW = cell + 2.f * ImGui::GetStyle().FramePadding.x;
+  const float rowH = std::round(34.f * uiScale);
+  ImGui::BeginChild("##smartgrid", ImVec2(0, 0), ImGuiChildFlags_None,
+                    ImGui::GetIO().KeyCtrl && !list ? ImGuiWindowFlags_NoScrollWithMouse : ImGuiWindowFlags_None);
+  materialTileZoom();
+  forgetRects(engine.uiRects, "smart.tile:");
+  const int cols = tileColumns(tileW);
   int i = 0, bakes = 0;
   // (the files read again now and then: one saved shows up)
   if (nowSeconds() - smartListAt > 4.0) smartList = listSmartMaterials(), smartListAt = nowSeconds();
@@ -968,20 +1043,39 @@ void App::drawSmartMaterialTiles() {
       std::transform(n.begin(), n.end(), n.begin(), ::tolower);
       if (n.find(filter) == std::string::npos) continue;
     }
+    if (!list && i % cols) ImGui::SameLine();
     GLuint t = 0;
     if (auto* e = m.tileMaterial.empty() ? nullptr : engine.materials.find(m.tileMaterial)) {
       t = e->gpu.thumbnail.id();
-      if (!t && bakes < 2) t = engine.materials.thumbnail(*e, engine.env), ++bakes;
+      if (!t && bakes < 2 && ImGui::IsRectVisible(ImVec2(tileW, list ? rowH : tileW)))
+        t = engine.materials.thumbnail(*e, engine.env), ++bakes;
     }
-    if (i % cols) ImGui::SameLine();
     ImGui::PushID(m.path.c_str());
-    ImGui::BeginGroup();
-    bool clicked = t ? ImGui::ImageButton("##t", texId(t), ImVec2(cell, cell)) : ImGui::Button("##t", ImVec2(cell, cell) + ImGui::GetStyle().FramePadding * 2);
+    bool clicked = false;
+    if (list) {
+      // (1.2.3) the list: a small picture, the name, and where it comes from
+      ImVec2 p0 = ImGui::GetCursorScreenPos();
+      clicked = ImGui::Selectable("##row", false, ImGuiSelectableFlags_None, ImVec2(0, rowH));
+      ImDrawList* dl = ImGui::GetWindowDrawList();
+      float pic = rowH - 2.f * uiScale;
+      ImVec2 a = p0 + ImVec2(2.f * uiScale, (rowH - pic) * 0.5f);
+      if (t) dl->AddImage(texId(t), a, a + ImVec2(pic, pic));
+      else dl->AddRectFilled(a, a + ImVec2(pic, pic), ImGui::GetColorU32(ImGuiCol_FrameBg), 3.f * uiScale);
+      float tx = a.x + pic + 8.f * uiScale, room = ImGui::GetItemRectMax().x - tx - 4.f * uiScale;
+      float lh = ImGui::GetTextLineHeight();
+      ImVec2 top(tx, p0.y + rowH * 0.5f - lh);
+      dl->AddText(top, ImGui::GetColorU32(ImGuiCol_Text), fitText(m.name, room).c_str());
+      dl->AddText(top + ImVec2(0, lh), ImGui::GetColorU32(ImGuiCol_TextDisabled),
+                  fitText(m.builtin ? T_("Patina default library") : T_("your library"), room).c_str());
+    } else {
+      ImGui::BeginGroup();
+      clicked = t ? ImGui::ImageButton("##t", texId(t), ImVec2(cell, cell)) : ImGui::Button("##t", ImVec2(tileW, cell + 2.f * ImGui::GetStyle().FramePadding.y));
+    }
     if (ImGui::IsItemVisible()) {
       ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
       engine.uiRects["smart.tile:" + m.id] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
     }
-    {
+    if (!list) {
       ImVec2 a = ImGui::GetItemRectMin() + ImVec2(5, 5) * uiScale;
       ImVec2 sz = ImGui::CalcTextSize("S") + ImVec2(6, 2) * uiScale;
       ImDrawList* dl = ImGui::GetWindowDrawList();
@@ -1022,10 +1116,10 @@ void App::drawSmartMaterialTiles() {
     if (ImGui::IsItemHovered() && !ImGui::GetDragDropPayload())
       ImGui::SetTooltip(T_("%s\n%s%s\n\nClick to add it above the selected layer, or drag it into the layer stack."), m.name.c_str(),
                         m.description.c_str(), m.hasPaint ? T_("\n(includes painted textures)") : "");
-    ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + cell);
-    ImGui::TextUnformatted(m.name.c_str());
-    ImGui::PopTextWrapPos();
-    ImGui::EndGroup();
+    if (!list) {
+      tileName(m.name, tileW);
+      ImGui::EndGroup();
+    }
     ImGui::PopID();
     ++i;
   }
@@ -1066,8 +1160,8 @@ void App::drawSmartMaskTiles() {
                                 : T_("Drag a smart mask onto a layer."));
   ImGui::Separator();
   float w = 150.f * uiScale, h = 58.f * uiScale;
-  int cols = std::max(1, int(ImGui::GetContentRegionAvail().x / (w + 8)));
   ImGui::BeginChild("##maskgrid");
+  const int cols = tileColumns(w);
   for (int t = 1, i = 0; t < shown; ++t, ++i) {
     if (i % cols) ImGui::SameLine();
     ImGui::PushID(t);
@@ -1098,6 +1192,36 @@ void App::drawSmartMaskTiles() {
     ImGui::PopID();
   }
   ImGui::EndChild();
+}
+
+// (1.2.3) How the materials (and smart materials) show: tiles, as big as the slider says, or a list of names with a small
+// picture each
+void App::materialViewControls() {
+  const float h = ImGui::GetFrameHeight();
+  using ui::IconState;
+  if (iconButton("materials.view_tiles", "view_grid", T_("Tiles"), materialList ? IconState::Normal : IconState::Chosen, h,
+                 T_("Pictures in a grid")))
+    materialList = false;
+  ImGui::SameLine(0, 2.f * uiScale);
+  if (iconButton("materials.view_list", "view_list", T_("List"), materialList ? IconState::Chosen : IconState::Normal, h,
+                 T_("Names in a list, each with a small picture")))
+    materialList = true;
+  if (!materialList) {
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(150 * uiScale);
+    ImGui::SliderFloat("##tilesize", &materialTile, 48.f, 192.f, T_("Size %.0f"));
+    {
+      ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
+      engine.uiRects["materials.tile_size"] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
+    }
+    ImGui::SetItemTooltip("%s", T_("How big the pictures are (Ctrl+mouse wheel over them does it too)"));
+  }
+}
+
+void App::materialTileZoom() {
+  ImGuiIO& io = ImGui::GetIO();
+  if (!materialList && io.KeyCtrl && io.MouseWheel != 0.f && ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows))
+    materialTile = std::clamp(std::round(materialTile * (io.MouseWheel > 0.f ? 1.12f : 1.f / 1.12f)), 48.f, 192.f);
 }
 
 // the material editor's live sphere and tile, through a temporary library entry
@@ -1288,8 +1412,8 @@ void App::drawBrushes() {
   ImGui::SameLine();
   if (ImGui::SmallButton(L_("Open the folder"))) openFolder(paths::ensureDir(BrushLibrary::userDir()));
   ImGui::SetItemTooltip("%s", T_("Images and .abr files put in it, or in folders inside it (a group each), become brushes by themselves"));
-  float cell = 64.f * uiScale;
-  int cols = std::max(1, int(ImGui::GetContentRegionAvail().x / (cell + 10)));
+  float cell = 64.f * uiScale, tileW = cell + 2.f * ImGui::GetStyle().FramePadding.x;
+  int cols = tileColumns(tileW);
   std::string lastCat;
   int i = 0;
   for (auto& p : engine.brushes.presets()) {
@@ -1315,9 +1439,7 @@ void App::drawBrushes() {
       brushesEmptyMenu();
       ImGui::EndPopup();
     }
-    ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + cell);
-    ImGui::TextUnformatted(p.name.c_str());
-    ImGui::PopTextWrapPos();
+    tileName(p.name, tileW);
     ImGui::EndGroup();
     ImGui::PopID();
     ++i;
@@ -1861,6 +1983,10 @@ void App::drawHelp() {
                       keyLabel("tool.pie") ? keyLabel("tool.pie") : "-", keyLabel("app.favorites") ? keyLabel("app.favorites") : "-");
   ImGui::BulletText(T_("Notes (%s): click the model to pin a note, click a pin to edit it"),
                     keyLabel("tool.note") ? keyLabel("tool.note") : "-");
+  if (engine.features.on("scene_objects") && engine.features.on("object_keys"))  // (1.2.3)
+    ImGui::BulletText(T_("Object tool (%s): %s moves, %s turns, %s scales the object with the mouse; X / Y / Z one axis, "
+                         "a number for an exact amount, a click keeps it"),
+                      keyLabel("tool.object"), keyLabel("object.move"), keyLabel("object.turn"), keyLabel("object.scale"));
   if (keymapPreset == KeymapPreset::Blender)
     ImGui::BulletText("%s", T_("S samples the color under the cursor. F / Shift+F: move the mouse to set brush size / opacity, "
                                "G / Shift+G flow / hardness, Ctrl+F the angle; click to confirm"));

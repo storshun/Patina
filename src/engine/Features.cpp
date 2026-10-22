@@ -191,6 +191,11 @@ const std::vector<FeatureInfo>& Features::all() {
           "object each, the Object tool to move, turn and scale them, and several objects sent from Blender. Off: one "
           "model per project, a file's meshes opened as one."),
        true, "1.2"},
+      {"object_keys", N_("Move, turn and scale objects with G, R and S"),
+       N_("In the Object tool, G moves the object with the mouse, R turns it about the line of sight and S scales it "
+          "evenly, as in Blender: X, Y or Z keeps to one axis, a typed number sets the amount, Ctrl snaps, a click or "
+          "Enter keeps it and a right-click or Esc puts it back. The keys are in the keymap. Off: the gizmo only."),
+       true, "1.2.3"},
       {"face_sets", N_("Face sets"),
        N_("Named, colored groups of faces kept in the project (the Face Sets panel): one click selects, hides, shows "
           "alone, fills or masks one, the Face set lock keeps strokes inside one, the Face sets view shows them, and "

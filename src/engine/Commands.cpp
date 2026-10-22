@@ -3343,7 +3343,7 @@ void Engine::registerCommands() {
       return json{{"skipped", "Patina's scene doesn't have " + object}};
     const int wasActive = e.activeObject();
     if (inScene >= 0 && inScene != wasActive && sceneMode != "replace") e.activateObject(inScene);
-    const bool adding = scenes && inScene < 0 && sceneMode == "add" && e.doc.hasMesh() && !e.doc.startupScene;
+    const bool adding = scenes && inScene < 0 && sceneMode == "add" && e.doc.hasMesh() && !e.doc.untouchedStartup();
     // Blender's placement of the object (matrix_world, column by column, Z up): its place in the scene
     bool placed = a.contains("matrix") && a["matrix"].is_array() && a["matrix"].size() == 16;
     mat4 base(1);

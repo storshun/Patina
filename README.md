@@ -266,7 +266,46 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.2 (2026-10-22)
+### 1.2.4 (2026-10-22)
+
+#### Fixed
+
+- **The path tracer showed the triangles of smooth models where light grazes them.** Under a hard light, the line
+  between light and shadow on a nose, a cheek or a shoulder ran in triangle-shaped steps, though the Lit view and
+  Blender's viewport were smooth. This is the "shadow terminator" problem. Light was cut off at each flat triangle's
+  own horizon, and shadow rays leaving the flat triangles hit their neighbors. Now light fades out at the smooth
+  surface's horizon, and rays leave from the smooth surface the normals describe, as Blender's Cycles does. A normal
+  map's light fades out smoothly too. Renders under soft light don't change.
+
+<details>
+<summary><b>1.2.3 (2026-10-22)</b></summary>
+
+#### New
+
+- **G, R and S in the Object tool**, as in Blender's Object Mode. With the pointer over the 3D view, G moves the
+  object, R turns it about the line of sight and S scales it evenly. There's no handle to hit. X, Y or Z keeps to
+  one axis, a typed number sets the amount (S 0.5 halves it), and Ctrl snaps. A click or Enter keeps the change as
+  one undo step, and a right-click or Esc puts it back. The keys are in *Edit › Keyboard Shortcuts* for both keymaps.
+  In the Object tool they come first: S doesn't pick the Select tool there.
+- **A list view for materials**: a small picture, the name, and the category and library of each, in the
+  Materials and Smart materials tabs.
+- **A size slider for the material tiles** (Ctrl+mouse wheel over them does it too). Patina remembers the view and
+  the size.
+
+#### Fixed
+
+- **Adding a model could replace the one you had.** After you opened a project, Patina still took it for the sphere
+  it starts with. *Add a Model to the Scene* then put the new model in place of a one-object project, and a model
+  dropped on the window opened instead of asking. Blender's *Add to the Patina Scene* replaced the scene too. Now
+  only the untouched starting sphere gives way.
+- **Material tiles ran off the side of the panel.** The panel didn't count the space around each tile or the
+  scrollbar, so at some widths the last column was cut off. A long name could also widen its tile. The tiles fit now,
+  and long names end with "...". The same fix applies to the smart materials, smart masks and brushes.
+
+</details>
+
+<details>
+<summary><b>1.2.2 (2026-10-22)</b></summary>
 
 #### Fixed
 
@@ -284,6 +323,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
 - The layer's *Opacity* channel box and its *Channel opacity › Opacity* slider explain themselves: the see-through
   channel and its strength, not the slider that says how strongly the whole layer shows.
 - `import_model_textures` takes `color_alpha`: `"opacity"` always uses the color texture's alpha, `"ignore"` never.
+
+</details>
 
 <details>
 <summary><b>1.2.1 (2026-10-22)</b></summary>

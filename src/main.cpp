@@ -552,6 +552,23 @@ static int runMcp(Args a) {
       }
       return {{"ok", false}, {"error", "Patina window not reachable on port " + std::to_string(port) + ": " + err}};
     }
+    // (1.2.5) a Patina window opened since: from now on the tools drive it (checked at most every 2 s)
+    std::chrono::steady_clock::time_point lastProbe{};
+    bool probe() {
+      std::lock_guard<std::mutex> lk(m);
+      if (active) return true;
+      auto now = std::chrono::steady_clock::now();
+      if (now - lastProbe < std::chrono::seconds(2)) return false;
+      lastProbe = now;
+      std::string err;
+      json r;
+      if (client.connect("127.0.0.1", port, 300, &err) && client.call("ping", json::object(), r, 3000, &err) &&
+          r.value("ok", false)) {
+        active = true;
+        PLOG_I("MCP: a Patina window is running on port %d now: the tools drive it (live mode)", port);
+      }
+      return active;
+    }
   };
   auto proxy = std::make_shared<Proxy>();
   proxy->port = a.port;
@@ -564,11 +581,11 @@ static int runMcp(Args a) {
   }
   auto makeServer = [&](McpServer::Backend localBackend, std::function<json()> localLister) {
     auto backend = [proxy, localBackend](const std::string& cmd, const json& args) -> json {
-      if (proxy->active) return proxy->call(cmd, args);
+      if (proxy->active || proxy->probe()) return proxy->call(cmd, args);
       return localBackend(cmd, args);
     };
     auto lister = [proxy, localLister]() -> json {
-      if (proxy->active) {
+      if (proxy->active || proxy->probe()) {
         json r = proxy->call("list_commands", json::object());
         if (r.value("ok", false)) {
           json out = json::array();
@@ -605,7 +622,11 @@ static int runMcp(Args a) {
   Engine* enginePtr = nullptr;
   std::thread mcpThread;
   std::atomic<bool> ready{false};
-  int rc = runHeadless(a, [&](Engine& engine) {
+  // (1.2.5) without the command server: it talks over stdio only. On the port it kept a Patina window opened
+  // later off it (that window moved to 7861, Blender's port), and Blender's add-on reached this hidden engine.
+  Args local = a;
+  local.server = false;
+  int rc = runHeadless(local, [&](Engine& engine) {
     enginePtr = &engine;
     ready = true;
     mcpThread = std::thread([&engine, proxy, makeServer, a]() mutable {

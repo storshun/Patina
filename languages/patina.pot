@@ -7,7 +7,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Patina 1.2.5\n"
+"Project-Id-Version: Patina 1.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
@@ -2117,54 +2117,54 @@ msgstr ""
 msgid "Could not open %s: %s"
 msgstr ""
 
-#: src/ui/App.cpp:620
+#: src/ui/App.cpp:621
 #, c-format
 msgid "Port %d busy - command server on %d"
 msgstr ""
 
-#: src/ui/App.cpp:624
+#: src/ui/App.cpp:625
 #, c-format
 msgid "Command server could not start: %s"
 msgstr ""
 
-#: src/ui/App.cpp:643
+#: src/ui/App.cpp:644
 #, c-format
 msgid "Received '%s' from Blender without its UVs: kept Patina's"
 msgstr ""
 
-#: src/ui/App.cpp:644
+#: src/ui/App.cpp:645
 #, c-format
 msgid "Received '%s' from Blender"
 msgstr ""
 
-#: src/ui/App.cpp:647
+#: src/ui/App.cpp:648
 #, c-format
 msgid "Received '%s' from Blender: opened its project %s"
 msgstr ""
 
-#: src/ui/App.cpp:733 src/ui/Guided.cpp:1044 src/ui/Panels.cpp:2050
+#: src/ui/App.cpp:734 src/ui/Guided.cpp:1044 src/ui/Panels.cpp:2050
 msgid "untitled"
 msgstr ""
 
-#: src/ui/App.cpp:904 src/ui/Guided.cpp:1040
+#: src/ui/App.cpp:905 src/ui/Guided.cpp:1040
 msgid "Unsaved changes"
 msgstr ""
 
-#: src/ui/App.cpp:905
+#: src/ui/App.cpp:906
 msgid "The project has unsaved changes."
 msgstr ""
 
-#: src/ui/App.cpp:906 src/ui/AssistantPanel.cpp:515 src/ui/Guided.cpp:1052
+#: src/ui/App.cpp:907 src/ui/AssistantPanel.cpp:515 src/ui/Guided.cpp:1052
 #: src/ui/LayersPanel.cpp:933 src/ui/NotesUI.cpp:159 src/ui/Panels.cpp:158
 #: src/ui/Prefs.cpp:90 src/ui/Tools010.cpp:278
 msgid "Save"
 msgstr ""
 
-#: src/ui/App.cpp:916
+#: src/ui/App.cpp:917
 msgid "Quit without saving"
 msgstr ""
 
-#: src/ui/App.cpp:918 src/ui/AssistantPanel.cpp:358
+#: src/ui/App.cpp:919 src/ui/AssistantPanel.cpp:358
 #: src/ui/AssistantPanel.cpp:495 src/ui/Guided.cpp:1076
 #: src/ui/LayersPanel.cpp:942 src/ui/ObjectsUI.cpp:216
 #: src/ui/ObjectsUI.cpp:267 src/ui/RetopoUI.cpp:1068 src/ui/Tools010.cpp:202

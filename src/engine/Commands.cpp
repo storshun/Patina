@@ -3483,6 +3483,11 @@ void Engine::registerCommands() {
            std::string object = a.value("object", std::string());
            for (int i = 0; !object.empty() && i < c.engine.objectCount(); ++i)
              if (c.engine.object(i).bridge.active && c.engine.object(i).bridge.object == object) which = &c.engine.object(i);
+           // (1.2.5) never another object's textures and UVs: a Patina without it (another one running, the
+           // startup sphere) answered with its own, and the add-on got UVs that didn't fit
+           if (!which && !object.empty() && !c.engine.doc.bridge.active)
+             throw CommandError("This Patina has no object linked to '" + object + "'. Is another Patina running? "
+                                "Send it to Patina again from Blender, or close the other Patina.");
            json r = c.engine.exportForBlender(&err, which);
            if (r.is_null()) throw CommandError(err);
            return r;

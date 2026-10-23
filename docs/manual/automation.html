@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.5 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.6 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -154,8 +154,12 @@ of its own: <code>screenshot_window</code>, <code>pen_info</code> (what the pen 
 <div class="callout gotcha"><span class="t">Windows: use patina-cli.exe</span>MCP clients talk to the server over standard
 input and output, which only console programs have. Point the client at <code>patina-cli.exe</code>, not at <code>patina.exe</code>.</div>
 <div class="callout gotcha"><span class="t">Two windows, one port</span>A second Patina window can't open port 7860 while
-the first one has it. It still works, but Claude and Blender talk to the first window. Start the second window with
-<code>--port 7861</code> if you need both.</div>
+the first one has it. It takes the next free port instead (never 7861, which is the Blender add-on's), but Claude and
+Blender talk to the first window. Start the second window with <code>--port 7862</code> if you want to choose.</div>
+<div class="callout tip"><span class="t">The MCP server and your window</span>When Claude starts <code>patina --mcp</code>
+and no Patina window is open, it works on a hidden Patina of its own. That hidden Patina leaves port 7860 free, so a
+window you open afterward gets it, and from then on Claude's tools drive that window. (Until 1.2.6 the hidden Patina
+kept the port: the window moved to 7861, and Blender's add-on got the hidden Patina's sphere.)</div>
 <div class="callout warn"><span class="t">Headless needs a GPU driver too</span>Headless mode renders off-screen with the
 same OpenGL 4.5 code. Linux uses EGL, so no display server is needed. Windows uses a hidden window, so it needs a
 normal desktop session with a GPU driver.</div>

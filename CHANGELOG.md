@@ -3,6 +3,21 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.6 (2026-10-23)
+
+### Fixed
+
+- **Blender got another model's UVs, and textures sent from Patina never arrived.** When Claude Desktop (or another
+  MCP client) started `patina --mcp` before any Patina window was open, that hidden Patina took port 7860. A Patina
+  window opened afterward moved to 7861, which is the port Blender's add-on listens on. So Blender's requests went to
+  the hidden Patina, which answered with its startup sphere: "Patina sent 8064 loops but ... has 60993". And the
+  window's "Send to Blender" reached itself: "unknown command 'patina_textures_updated'". Now:
+  - the hidden Patina of `patina --mcp` leaves the port free, and its tools switch to a Patina window as soon as one
+    is open;
+  - a window that finds its port busy never takes 7861;
+  - a Patina asked for an object it has no link to says so, instead of sending its own object's textures and UVs.
+- The manual's tip for two windows suggested `--port 7861`, Blender's port. It says `--port 7862` now.
+
 ## 1.2.5 (2026-10-23)
 
 ### Fixed

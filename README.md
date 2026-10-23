@@ -266,7 +266,23 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.5 (2026-10-23)
+### 1.2.6 (2026-10-23)
+
+#### Fixed
+
+- **Blender got another model's UVs, and textures sent from Patina never arrived.** When Claude Desktop (or another
+  MCP client) started `patina --mcp` before any Patina window was open, that hidden Patina took port 7860. A Patina
+  window opened afterward moved to 7861, which is the port Blender's add-on listens on. So Blender's requests went to
+  the hidden Patina, which answered with its startup sphere: "Patina sent 8064 loops but ... has 60993". And the
+  window's "Send to Blender" reached itself: "unknown command 'patina_textures_updated'". Now:
+  - the hidden Patina of `patina --mcp` leaves the port free, and its tools switch to a Patina window as soon as one
+    is open;
+  - a window that finds its port busy never takes 7861;
+  - a Patina asked for an object it has no link to says so, instead of sending its own object's textures and UVs.
+- The manual's tip for two windows suggested `--port 7861`, Blender's port. It says `--port 7862` now.
+
+<details>
+<summary><b>1.2.5 (2026-10-23)</b></summary>
 
 #### Fixed
 
@@ -280,6 +296,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
   eyelid's copy on the nose. Those copies now go straight onto the model's surface, so the mirror follows the model,
   not the view.
 - "Nothing to paint" no longer shows after a stroke that did paint with a library material.
+
+</details>
 
 <details>
 <summary><b>1.2.4 (2026-10-22)</b></summary>

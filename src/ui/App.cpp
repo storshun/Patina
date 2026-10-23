@@ -614,6 +614,7 @@ int App::run(const Args& args) {
       return f.get();
     };
     for (int p = args.port; p < args.port + 10; ++p) {
+      if (p == 7861 && args.port != 7861) continue;  // (1.2.5) the Blender add-on's port: never take it as a fallback
       if (server.start(p, handler, &err)) {
         serverPort = server.port();
         engine.serverPort = serverPort;

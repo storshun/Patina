@@ -224,7 +224,8 @@ const char* kPainting = R"MD(# Painting and layers, briefly
 
 - Materials: `list_materials` (optionally one `category`), `set_paint_material {id}`; brushes: `list_brushes`,
   `set_brush`. `paint_stroke {points: [[x, y], ...]}` uses viewport coordinates 0..1 from the top left; aim with
-  `set_camera` presets and `render_view`.
+  `set_camera` presets and `render_view`. With `set_symmetry {x: true}` the mirrored copies paint the other side
+  even where the camera can't see it (1.2.5: Screen and UV brushes put those copies on the surface).
 - Layers: `list_layers` (index 0 = bottom), `add_layer {type: paint | fill | adjust | folder}`, `update_layer`,
   `select_layer`, `move_layer`, `remove_layer`. A fill layer covers the model with a material; its `generator`
   (smart mask) limits it: edges, cavity, occlusion, gradient_y, noise, facing, material (a material slot), thin, drips.

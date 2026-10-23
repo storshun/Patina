@@ -7,7 +7,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Patina 1.2.4\n"
+"Project-Id-Version: Patina 1.2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
@@ -2713,7 +2713,7 @@ msgstr ""
 msgid "Fill with the paint material"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:110 src/ui/Viewport3D.cpp:565
+#: src/ui/ContextMenus.cpp:110 src/ui/Viewport3D.cpp:566
 #, c-format
 msgid "Filled %zu faces"
 msgstr ""
@@ -2726,7 +2726,7 @@ msgstr ""
 msgid "Erase this UV island"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:119 src/ui/Viewport3D.cpp:565
+#: src/ui/ContextMenus.cpp:119 src/ui/Viewport3D.cpp:566
 #, c-format
 msgid "Erased %zu faces"
 msgstr ""
@@ -13035,70 +13035,70 @@ msgstr ""
 msgid "Clone source set at UV %.3f, %.3f"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:542
+#: src/ui/Viewport3D.cpp:543
 msgid "Clone: Ctrl+click on the model to set a source first"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:543
+#: src/ui/Viewport3D.cpp:544
 msgid "Nothing to paint: select a layer and enable at least one channel"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:788
+#: src/ui/Viewport3D.cpp:789
 #, c-format
 msgid "[fixes: paint %.2f]"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:790
+#: src/ui/Viewport3D.cpp:791
 msgid "(no layer)"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:790
+#: src/ui/Viewport3D.cpp:791
 msgid "[mask]"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:791
+#: src/ui/Viewport3D.cpp:792
 msgid "flat color"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:810
+#: src/ui/Viewport3D.cpp:811
 msgid "No layer is selected: pick one in Layers, or add a paint layer"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:811
+#: src/ui/Viewport3D.cpp:812
 msgid "A folder is selected: strokes paint its mask"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:812
+#: src/ui/Viewport3D.cpp:813
 msgid "The selected layer is hidden: strokes on it don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:813
+#: src/ui/Viewport3D.cpp:814
 msgid "The selected layer's folder is hidden: strokes don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:814
+#: src/ui/Viewport3D.cpp:815
 msgid "The selected layer's opacity is 0: strokes don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:815
+#: src/ui/Viewport3D.cpp:816
 msgid "No channel is on: switch some on in Paint channels (Properties)"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:830
+#: src/ui/Viewport3D.cpp:831
 #, c-format
 msgid "Path traced: %d samples"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:830
+#: src/ui/Viewport3D.cpp:831
 #, c-format
 msgid "Path traced: %d / %d samples"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:836
+#: src/ui/Viewport3D.cpp:837
 #, c-format
 msgid "Panels hidden - press %s to bring them back"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:843
+#: src/ui/Viewport3D.cpp:844
 msgid "Drop a mesh (.obj .gltf .glb .fbx .stl .3mf .ply) or a .patina project here, or File > Open"
 msgstr ""

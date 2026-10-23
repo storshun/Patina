@@ -538,8 +538,9 @@ void App::drawViewport(bool fullscreen) {
       if (ok && startIdx >= 0) feedStroke(P, startIdx + 1, toLocalV);
       if (ok) strokeOwner = 1;
       if (!ok && strokeUsesSecondary) std::swap(P.material.flat.color, secondaryColor), strokeUsesSecondary = false;
-      if (ok && P.tool == PaintTool::Paint && P.material.id.empty() && !engine.doc.editMask) noteColorUsed(P.material.flat.color);
-      else if (tool == ViewportTool::Clone && !P.hasCloneSource) setStatus(T_("Clone: Ctrl+click on the model to set a source first"));
+      if (ok) {
+        if (P.tool == PaintTool::Paint && P.material.id.empty() && !engine.doc.editMask) noteColorUsed(P.material.flat.color);
+      } else if (tool == ViewportTool::Clone && !P.hasCloneSource) setStatus(T_("Clone: Ctrl+click on the model to set a source first"));
       else setStatus(T_("Nothing to paint: select a layer and enable at least one channel"));
     }
   }

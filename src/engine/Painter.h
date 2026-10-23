@@ -114,6 +114,7 @@ class Painter {
     int chain = 0;     // which symmetry copy (smudge follows each copy's own path)
     bool hit = true;   // smudge: the dab landed on the surface (c3 valid)
     float worldR = 0;  // smudge: radius on the surface (object units), for the texture-space bounds
+    bool onSurface = false;  // (1.2.5) a screen brush's mirror copy the camera can't see: stamped on the surface
   };
   void emitAlong(vec2 from, vec2 to, float p0, float p1);
   void emitDab(vec2 pos, float pressure, vec2 dir);

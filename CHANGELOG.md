@@ -3,6 +3,21 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.5 (2026-10-23)
+
+### Fixed
+
+- **A brush set to UV projection could stop painting.** After a few strokes, or after the camera moved, strokes
+  in the 3D view put nothing on the layer, and the status line said "Nothing to paint". A fill or a Screen stroke
+  made it work again until the next camera move. Such a brush checks which spots the camera sees, but Patina drew
+  the picture of the view it checks against only for Screen brushes, so it used an old one. It draws it for these
+  brushes too now.
+- **Symmetry needed the camera to see both sides.** With a Screen or UV brush, a mirrored copy the camera couldn't
+  see (facing away, or off screen) was left out, or it landed on whatever the view showed at that spot, like an
+  eyelid's copy on the nose. Those copies now go straight onto the model's surface, so the mirror follows the model,
+  not the view.
+- "Nothing to paint" no longer shows after a stroke that did paint with a library material.
+
 ## 1.2.4 (2026-10-22)
 
 ### Fixed

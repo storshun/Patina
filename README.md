@@ -266,7 +266,23 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.4 (2026-10-22)
+### 1.2.5 (2026-10-23)
+
+#### Fixed
+
+- **A brush set to UV projection could stop painting.** After a few strokes, or after the camera moved, strokes
+  in the 3D view put nothing on the layer, and the status line said "Nothing to paint". A fill or a Screen stroke
+  made it work again until the next camera move. Such a brush checks which spots the camera sees, but Patina drew
+  the picture of the view it checks against only for Screen brushes, so it used an old one. It draws it for these
+  brushes too now.
+- **Symmetry needed the camera to see both sides.** With a Screen or UV brush, a mirrored copy the camera couldn't
+  see (facing away, or off screen) was left out, or it landed on whatever the view showed at that spot, like an
+  eyelid's copy on the nose. Those copies now go straight onto the model's surface, so the mirror follows the model,
+  not the view.
+- "Nothing to paint" no longer shows after a stroke that did paint with a library material.
+
+<details>
+<summary><b>1.2.4 (2026-10-22)</b></summary>
 
 #### Fixed
 
@@ -276,6 +292,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
   own horizon, and shadow rays leaving the flat triangles hit their neighbors. Now light fades out at the smooth
   surface's horizon, and rays leave from the smooth surface the normals describe, as Blender's Cycles does. A normal
   map's light fades out smoothly too. Renders under soft light don't change.
+
+</details>
 
 <details>
 <summary><b>1.2.3 (2026-10-22)</b></summary>

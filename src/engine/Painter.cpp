@@ -74,7 +74,9 @@ bool Painter::prepareTarget() {
 }
 
 void Painter::renderDepth() {
-  if (uvSpace_ || brush.projection != BrushProjection::Screen) return;
+  // (1.2.5) every dab stamped from the screen tests against it: Screen brushes and UV brushes used in the 3D view
+  // (before, only Screen ones drew it, and a UV brush tested against an older stroke's view)
+  if (uvSpace_ || brush.projection == BrushProjection::Surface) return;
   ivec2 vp = glm::max(ivec2(view_.viewport), ivec2(1));
   depth_.ensure(vp.x, vp.y, GL_R8);
   gl::FramebufferScope fs(depth_.fbo.id());
@@ -252,13 +254,29 @@ void Painter::emitDab(vec2 pos, float pressure, vec2 dir) {
           m.n3 = mn;
           pending_.push_back(m);
         } else {
-          // project the copy back to the screen; skip it if it is off screen
+          // project the copy back to the screen where the camera sees that spot; (1.2.5) where it doesn't (off
+          // screen, facing away or behind something), stamp it on the surface instead, as a Surface brush would:
+          // symmetry follows the model, not the view
           float aspect = view_.viewport.x / view_.viewport.y;
           vec4 clip = view_.camera.viewProj(aspect) * vec4(mc, 1);
-          if (clip.w <= 0) continue;
-          vec2 ndc = vec2(clip) / clip.w;
-          if (std::abs(ndc.x) > 1.2f || std::abs(ndc.y) > 1.2f) continue;
-          m.pos = {(ndc.x * 0.5f + 0.5f) * view_.viewport.x, (ndc.y * 0.5f + 0.5f) * view_.viewport.y};
+          bool seen = false;
+          if (clip.w > 0) {
+            vec2 ndc = vec2(clip) / clip.w;
+            m.pos = {(ndc.x * 0.5f + 0.5f) * view_.viewport.x, (ndc.y * 0.5f + 0.5f) * view_.viewport.y};
+            if (std::abs(ndc.x) <= 1.f && std::abs(ndc.y) <= 1.f) {
+              vec3 o, rd;
+              view_.camera.ray(vec2(m.pos.x, view_.viewport.y - m.pos.y), view_.viewport, o, rd);
+              RayHit h = d.bvh.raycast(d.mesh, o, rd, 1e30f, d.hiddenMask());
+              seen = h.hit && glm::dot(mn, rd) < 0 &&
+                     glm::length(h.position - mc) < std::max(base.worldR * 0.25f, d.mesh.boundingRadius * 1e-3f);
+            }
+          }
+          if (!seen) {
+            if (base.worldR <= 0) continue;
+            m.onSurface = true;
+            m.n3 = mn;
+            m.radius = base.worldR;
+          }
           pending_.push_back(m);
         }
       }
@@ -327,6 +345,14 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
   Shader& s = ShaderCache::get("uvraster.vs.glsl", "paint_stamp.fs.glsl");
   int mode = uvSpace_ ? 2 : (brush.projection == BrushProjection::Surface ? 1 : 0);
+  // (1.2.5) a screen stroke's mirror copies the camera can't see go on the surface: a pass of their own after
+  std::vector<Dab> onSurface;
+  std::vector<Dab> onScreen;
+  if (mode == 0 && std::any_of(dabs, dabs + count, [](const Dab& x) { return x.onSurface; })) {
+    for (size_t i = 0; i < count; ++i) (dabs[i].onSurface ? onSurface : onScreen).push_back(dabs[i]);
+    dabs = onScreen.data();
+    count = onScreen.size();
+  }
   s.set("uMode", mode);
   GLuint alpha = brushes_->alphaTexture(brush.alpha);
   s.set("uAlphaIsRound", alpha ? 0 : 1);
@@ -351,28 +377,36 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
     s.set("uAngleFalloff", brush.angleFalloff);
   }
   vec4 A[kMaxDabsPerPass], B[kMaxDabsPerPass], N[kMaxDabsPerPass];
-  for (size_t i = 0; i < count; i += kMaxDabsPerPass) {
-    int n = (int)std::min<size_t>(kMaxDabsPerPass, count - i);
-    for (int k = 0; k < n; ++k) {
-      const Dab& dab = dabs[i + k];
-      if (mode == 1) {
-        A[k] = vec4(dab.c3, dab.radius);
-        B[k] = vec4(dab.flow, dab.roundness, dab.angle, 0);
-        N[k] = vec4(dab.n3, 0);
-      } else {
-        A[k] = vec4(dab.pos, dab.radius, dab.angle);
-        B[k] = vec4(dab.flow, dab.roundness, 0, 0);
-        N[k] = vec4(0);
+  auto stamp = [&](const Dab* list, size_t total) {
+    for (size_t i = 0; i < total; i += kMaxDabsPerPass) {
+      int n = (int)std::min<size_t>(kMaxDabsPerPass, total - i);
+      for (int k = 0; k < n; ++k) {
+        const Dab& dab = list[i + k];
+        if (mode == 1) {
+          A[k] = vec4(dab.c3, dab.radius);
+          B[k] = vec4(dab.flow, dab.roundness, dab.angle, 0);
+          N[k] = vec4(dab.n3, 0);
+        } else {
+          A[k] = vec4(dab.pos, dab.radius, dab.angle);
+          B[k] = vec4(dab.flow, dab.roundness, 0, 0);
+          N[k] = vec4(0);
+        }
       }
+      s.set("uStampCount", n);
+      s.setArray("uStampA", A, n);
+      s.setArray("uStampB", B, n);
+      s.setArray("uStampN", N, n);
+      s.use();
+      scissor(true);
+      d.gpu.drawTriangles();
+      scissor(false);
     }
-    s.set("uStampCount", n);
-    s.setArray("uStampA", A, n);
-    s.setArray("uStampB", B, n);
-    s.setArray("uStampN", N, n);
-    s.use();
-    scissor(true);
-    d.gpu.drawTriangles();
-    scissor(false);
+  };
+  stamp(dabs, count);
+  if (!onSurface.empty()) {
+    mode = 1;
+    s.set("uMode", 1);
+    stamp(onSurface.data(), onSurface.size());
   }
   s.set("uTile", -1);  // the program is shared (fills, locks): no tile filter left behind
   glDisable(GL_BLEND);
@@ -390,7 +424,7 @@ bool Painter::dabTexelBox(const Dab& dab, int pad, glm::ivec4& box) const {
     // triangles near the dab on the surface (screen dabs stretch on slanted faces: generous)
     std::vector<uint32_t>& tris = const_cast<std::vector<uint32_t>&>(boxTris_);
     tris.clear();
-    float r = dab.worldR * (brush.projection == BrushProjection::Surface ? 1.1f : 2.5f) /
+    float r = dab.worldR * (brush.projection == BrushProjection::Surface || dab.onSurface ? 1.1f : 2.5f) /
               std::max(dab.roundness, 0.05f);
     d.bvh.querySphere(dab.c3, r, tris);
     for (uint32_t t : tris)
@@ -734,7 +768,7 @@ bool Painter::pendingBox(glm::ivec4& box) const {
   glm::ivec2 last(cellsW_ - 1, cellsH_ - 1);
   for (const Dab& dab : pending_) {
     glm::ivec4 b(INT_MAX, INT_MAX, INT_MIN, INT_MIN);
-    if (screen) {
+    if (screen && !dab.onSurface) {
       float r = dab.radius / std::max(dab.roundness, 0.05f) + 2.f;
       glm::ivec2 c0 = glm::clamp(glm::ivec2(glm::floor((dab.pos - r) / float(kCell))), glm::ivec2(0), last);
       glm::ivec2 c1 = glm::clamp(glm::ivec2(glm::floor((dab.pos + r) / float(kCell))), glm::ivec2(0), last);

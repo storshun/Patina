@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.4 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.5 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -41,7 +41,7 @@
 <a href="translating.html">Translating Patina</a>
 <a href="commands.html">Command reference</a>
 <a href="changes.html" class="cur">What&#x27;s new</a>
-<div class="toc"><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
+<div class="toc"><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
 <main>
 <article>
 <!-- title: What's new -->
@@ -49,8 +49,17 @@
 <h1>What's new</h1>
 <p>What changed in each version of Patina, newest first. The same list comes with Patina as <code>CHANGELOG.md</code>.</p>
 <p>What changed in each version, newest first. The manual (Help › Manual, or <code>docs/manual</code>) explains how to use each feature, and docs/ROADMAP.md lists every feature with the version it came in.</p>
-<h2 id="1-2-4-2026-10-22">1.2.4 (2026-10-22)</h2>
+<h2 id="1-2-5-2026-10-23">1.2.5 (2026-10-23)</h2>
 <h3 id="fixed">Fixed</h3>
+<ul><li>
+<b>A brush set to UV projection could stop painting.</b> After a few strokes, or after the camera moved, strokes in the 3D view put nothing on the layer, and the status line said "Nothing to paint". A fill or a Screen stroke made it work again until the next camera move. Such a brush checks which spots the camera sees, but Patina drew the picture of the view it checks against only for Screen brushes, so it used an old one. It draws it for these brushes too now.
+</li><li>
+<b>Symmetry needed the camera to see both sides.</b> With a Screen or UV brush, a mirrored copy the camera couldn't see (facing away, or off screen) was left out, or it landed on whatever the view showed at that spot, like an eyelid's copy on the nose. Those copies now go straight onto the model's surface, so the mirror follows the model, not the view.
+</li><li>
+"Nothing to paint" no longer shows after a stroke that did paint with a library material.
+</li></ul>
+<h2 id="1-2-4-2026-10-22">1.2.4 (2026-10-22)</h2>
+<h3 id="fixed-2">Fixed</h3>
 <ul><li>
 <b>The path tracer showed the triangles of smooth models where light grazes them.</b> Under a hard light, the line between light and shadow on a nose, a cheek or a shoulder ran in triangle-shaped steps, though the Lit view and Blender's viewport were smooth. This is the "shadow terminator" problem. Light was cut off at each flat triangle's own horizon, and shadow rays leaving the flat triangles hit their neighbors. Now light fades out at the smooth surface's horizon, and rays leave from the smooth surface the normals describe, as Blender's Cycles does. A normal map's light fades out smoothly too. Renders under soft light don't change.
 </li></ul>
@@ -63,14 +72,14 @@
 </li><li>
 <b>A size slider for the material tiles</b> (Ctrl+mouse wheel over them does it too). Patina remembers the view and the size.
 </li></ul>
-<h3 id="fixed-2">Fixed</h3>
+<h3 id="fixed-2-2">Fixed</h3>
 <ul><li>
 <b>Adding a model could replace the one you had.</b> After you opened a project, Patina still took it for the sphere it starts with. <i>Add a Model to the Scene</i> then put the new model in place of a one-object project, and a model dropped on the window opened instead of asking. Blender's <i>Add to the Patina Scene</i> replaced the scene too. Now only the untouched starting sphere gives way.
 </li><li>
 <b>Material tiles ran off the side of the panel.</b> The panel didn't count the space around each tile or the scrollbar, so at some widths the last column was cut off. A long name could also widen its tile. The tiles fit now, and long names end with "...". The same fix applies to the smart materials, smart masks and brushes.
 </li></ul>
 <h2 id="1-2-2-2026-10-22">1.2.2 (2026-10-22)</h2>
-<h3 id="fixed-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2">Fixed</h3>
 <ul><li>
 <b>Hair cards, leaves and lace from OBJ and FBX files came in solid.</b> Many game assets keep their cut-outs only in the color texture's alpha, and their file says nothing about opacity. Patina now makes that alpha the Opacity channel of the layer <i>From the model</i> when it has see-through and solid parts, and the status line says so. An alpha that is even all over is left out, because some assets keep gloss there. For a model you already brought in, select it and use <i>File › Bring In the Model's Textures</i> again.
 </li><li>
@@ -83,7 +92,7 @@ The layer's <i>Opacity</i> channel box and its <i>Channel opacity › Opacity</i
 <code>import_model_textures</code> takes <code>color_alpha</code>: <code>"opacity"</code> always uses the color texture's alpha, <code>"ignore"</code> never.
 </li></ul>
 <h2 id="1-2-1-2026-10-22">1.2.1 (2026-10-22)</h2>
-<h3 id="fixed-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>Saving could close Patina.</b> A paint layer with clearcoat (painted with car paint, lacquer or another material that has it) made every save and every autosave stop the app.
 </li><li>

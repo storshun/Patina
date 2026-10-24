@@ -632,7 +632,7 @@ void App::drawGuided() {
   const float gap = std::round(3.f * uiScale);
   const float top = pos.y + barH + gap, H = size.y - barH - gap;
   const bool tools = guidedToolGroups != 0;
-  const float toolsW = tools ? std::round(84.f * uiScale) : 0.f;
+  const float toolsW = tools ? std::round(std::max(84.f * uiScale, toolbarNamesW)) : 0.f;  // (1.2.8: room for the names)
   const float rightW = std::round(std::clamp(390.f * uiScale, 280.f, size.x * 0.36f));
   const float cx0 = pos.x + (tools ? toolsW + gap : 0.f), cx1 = pos.x + size.x - rightW - gap;
   const ImVec2 right(cx1 + gap, top), rightSize(rightW, H);

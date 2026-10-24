@@ -559,6 +559,8 @@ class App {
   void drawAddLayerMenu();
   // (1.2.7) the shared new-layer list; run does an action now or later
   void newLayerItems(const std::function<void(std::function<void()>)>& run);
+  float toolbarNamesW = 0.f;  // (1.2.8) the tool strip's width with names beside the icons
+  void materialEditorBody();  // (1.2.8) the Material Editor's content: its window, or the Blender layout's tab
   void viewMenuItems();  // (1.2.7) the View menu, in the menu bar and the 3D view's right-click menu
   void smartMaterialItems(const std::function<void(std::function<void()>)>& run);
   void addFillLayerUI(float mask);
@@ -878,7 +880,7 @@ class App {
   // materials, smart masks and brushes, by category) is under the 3D view in the Paint step, the UV editor beside it
   // in the UVs step. The areas' borders are dragged to resize them.
   enum class PropsTab { Step = 0, Object, Layer, TextureSet, FaceSets, Retopology, History, Notes, Console, Count };
-  enum class SideTab { Brush = 0, Colors, View, Blender, Count };
+  enum class SideTab { Brush = 0, Colors, View, Blender, MaterialEdit, Count };  // (1.2.8 Material Edit)
   enum class ShelfKind { Materials = 0, SmartMaterials, SmartMasks, Brushes };
   struct BlenderUI {
     float rightW = 420.f, outlinerH = 560.f, shelfH = 230.f, sidebarW = 310.f;  // (at UI scale 1)

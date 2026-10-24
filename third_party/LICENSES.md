@@ -7,7 +7,7 @@ source tree under `third_party/` and on the project pages) for the exact terms.
 | Component | Use | License |
 |---|---|---|
 | [SDL 3](https://libsdl.org) | windows, input, pen pressure | zlib |
-| [Dear ImGui](https://github.com/ocornut/imgui) (docking; one change: `label###id` hashes as `id` alone, so translated labels keep their IDs) | user interface | MIT |
+| [Dear ImGui](https://github.com/ocornut/imgui) (docking; two changes: `label###id` hashes as `id` alone, so translated labels keep their IDs; a field's default width is at most 13 em) | user interface | MIT |
 | [glad](https://github.com/Dav1dde/glad) | OpenGL / EGL loader (generated code) | MIT / public domain (generated) |
 | [glm](https://github.com/g-truc/glm) | math | MIT (Happy Bunny) |
 | [nlohmann/json](https://github.com/nlohmann/json) | JSON | MIT |

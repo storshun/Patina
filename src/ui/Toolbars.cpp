@@ -119,7 +119,8 @@ void App::selectTool(ViewportTool t) {
 }
 
 void App::drawToolbar() {
-  ImGui::SetNextWindowSizeConstraints(ImVec2(40, 100), ImVec2(260, 10000));
+  // (1.2.8) with names beside the icons, at least as wide as they need (the names shrank to unreadable sizes)
+  ImGui::SetNextWindowSizeConstraints(ImVec2(std::max(40.f, toolbarNamesW), 100), ImVec2(std::max(260.f, toolbarNamesW), 10000));
   beginPanel(L_("Tools"), ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
   struct T {
     ViewportTool t;
@@ -162,8 +163,22 @@ void App::drawToolbar() {
                                                      "Ctrl+click on a stroke takes it away."), "tool.flow"},
           {ViewportTool::Density, "density", N_("Density"), N_("Retopology density brush: fine-tunes the resolution where you paint,\n"
                                                               "within a zone. Ctrl: back to normal."), "tool.density"}}});
-  const bool icons = toolbarIcons(), names = !icons || toolbarNames;
+  const bool icons = toolbarIcons();
+  bool names = !icons || toolbarNames;
   const float avail = ImGui::GetContentRegionAvail().x, sp = std::round(3.f * uiScale);
+  {  // (1.2.8) the width the names need, for layouts that size the strip themselves (the Blender layout)
+    float widest = ImGui::CalcTextSize(T_("Mirror X")).x;
+    for (auto& g : groups)
+      for (auto& t : g.tools) widest = std::max(widest, ImGui::CalcTextSize(T_(t.label)).x);
+    float bhN = std::round(34.f * uiScale);
+    toolbarNamesW = names ? (icons ? bhN : 0.f) + widest + ImGui::GetStyle().FramePadding.x * 2.f +
+                                ImGui::GetStyle().WindowPadding.x * 2.f + 8.f * uiScale
+                          : 0.f;
+    // a strip still narrower than that (a dock kept its width) shows the icons alone, not names too small to read
+    if (names && icons && avail + ImGui::GetStyle().WindowPadding.x * 2.f + 1.f < toolbarNamesW) names = false;
+  }
+  const bool namesPref = toolbarNames;
+  toolbarNames = toolbarNames && names;  // (iconButton reads it; back after the strip)
   // icons alone: two columns when they fit (a narrow column gets one); with names: one row per tool
   int cols = 1;
   float bw = avail, bh = std::round(34.f * uiScale);
@@ -177,9 +192,8 @@ void App::drawToolbar() {
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(sp, sp));
   int gi = 0;
   // (0.47) each group in the color of the step it belongs to (the Guided layout's): a stripe beside its tools, its
-  // name in that color, its chosen tool filled with it. (1.2.7) Not in the Blender layout, which has no steps: there
-  // the chosen tool is in the theme's accent, as in Blender's toolbar
-  const bool stepColors = engine.features.on("guided_layout") && !blenderOn();
+  // name in that color, its chosen tool filled with it
+  const bool stepColors = engine.features.on("guided_layout");  // (1.2.8: the Blender layout's tabs have the colors too)
   float groupY0 = 0.f;
   ImVec4 groupColor(0, 0, 0, 0);
   auto endGroup = [&] {
@@ -291,6 +305,7 @@ void App::drawToolbar() {
   }
   endGroup();
   iconAccent = ImVec4(0, 0, 0, 0);
+  toolbarNames = namesPref;
   ImGui::PopStyleVar();
   // right-click on the empty part of the toolbar
   if (contextMenus() && ImGui::BeginPopupContextWindow("##toolsctx", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems)) {
@@ -322,7 +337,15 @@ void App::viewportBar() {
     if (right <= ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x - 4.f) ImGui::SameLine(0, spacing);
     else ImGui::SetCursorPosX(barX);
   };
-  auto gap = [&] { wide = true; };  // a little more room before the next group
+  // a little more room before the next group, and a thin line between the groups
+  auto gap = [&] {
+    wide = true;
+    if (first) return;
+    ImVec2 r = ImGui::GetItemRectMax();
+    float x = r.x + std::round(ImGui::GetStyle().ItemSpacing.x * 1.25f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(x, r.y - fh + 3.f * uiScale), ImVec2(x, r.y - 3.f * uiScale),
+                                        ImGui::GetColorU32(ImGuiCol_Separator), std::max(1.f, uiScale));
+  };
   // buttons side by side, one of them chosen (the names and tips: N_() tables, translated here)
   auto segmented = [&](int n, const char* const* ids, const char* const* iconNames, const char* const* nameList,
                        const char* const* tips, int chosen) {
@@ -339,24 +362,40 @@ void App::viewportBar() {
   // a brush slider: its icon and the number (with names: "Size 34" as before)
   auto slider = [&](const char* icon, const char* id, const char* name, float* v, float lo, float hi, const char* numFmt,
                     const char* nameFmt, ImGuiSliderFlags fl, const char* tip) {
-    float sw = (names ? 110.f : 64.f) * uiScale;
-    next((icons ? fh : 0.f) + sw);
-    bool hov = false;
-    if (icons) {
-      ImVec2 p = ImGui::GetCursorScreenPos();
-      ImGui::Dummy(ImVec2(fh, fh));
-      hov = ImGui::IsItemHovered();
-      float isz = std::round(fh - 2.f * iconPad(fh, uiScale));
-      ui::drawIcon(ImGui::GetWindowDrawList(), icon, p + ImVec2((fh - isz) * 0.5f, (fh - isz) * 0.5f), isz, ui::iconColors(IconState::Normal));
-      ImGui::SameLine(0, 2.f * uiScale);
-    }
-    ImGui::SetNextItemWidth(sw);
-    ImGui::SliderFloat(id, v, lo, hi, names ? nameFmt : numFmt, fl);
     {
+      // (1.2.8) one field per setting: its icon inside at the left, the field filled up to the value (as Blender's
+      // sliders), the name and number in the middle. The icon stood apart, beside a slider with its own grab: which
+      // icon went with which slider was hard to see
+      const float fw = std::round((names ? 124.f : 84.f) * uiScale);
+      next(fw);
+      const ImVec2 p = ImGui::GetCursorScreenPos(), q = p + ImVec2(fw, fh);
+      ImDrawList* dl = ImGui::GetWindowDrawList();
+      const ImGuiID sid = ImGui::GetID(id);
+      const bool active = ImGui::GetActiveID() == sid, hovered = ImGui::IsMouseHoveringRect(p, q) && ImGui::IsWindowHovered();
+      const float rnd = ImGui::GetStyle().FrameRounding;
+      dl->AddRectFilled(p, q, ImGui::GetColorU32(active ? ImGuiCol_FrameBgActive : hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_FrameBg), rnd);
+      float t = (fl & ImGuiSliderFlags_Logarithmic) && lo > 0.f ? std::log(std::max(*v, lo) / lo) / std::log(hi / lo) : (*v - lo) / (hi - lo);
+      t = std::clamp(t, 0.f, 1.f);
+      if (t > 0.f) dl->AddRectFilled(p, ImVec2(p.x + fw * t, q.y), mixColor(ui::theme().accentDeep, ui::theme().accentDeep, 0.f, 0.55f), rnd);
+      if (icons) {
+        float isz = std::round(fh - 2.f * iconPad(fh, uiScale));
+        ui::drawIcon(dl, icon, p + ImVec2(std::round(3.f * uiScale), (fh - isz) * 0.5f), isz, ui::iconColors(IconState::Normal));
+      }
+      ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+      ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0, 0, 0, 0));
+      ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0, 0, 0, 0));
+      ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0, 0, 0, 0));
+      ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0, 0, 0, 0));
+      if (icons) ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(fh * 0.5f, ImGui::GetStyle().FramePadding.y));
+      ImGui::SetNextItemWidth(fw);
+      ImGui::SliderFloat(id, v, lo, hi, names ? nameFmt : numFmt, fl);
+      if (icons) ImGui::PopStyleVar();
+      ImGui::PopStyleColor(5);
       ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
-      engine.uiRects[std::string("toolbar.slider:") + (id + 2)] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests; "##size" -> size)
+      engine.uiRects[std::string("toolbar.slider:") + (id + 2)] = {a.x, a.y, b.x - a.x, b.y - a.y};
+      if (ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ImGui::SetTooltip("%s\n%s", name, tip);
+      return;
     }
-    if (hov || ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ImGui::SetTooltip("%s\n%s", name, tip);
   };
   // (0.46) the brush's settings only for the tools that paint with a brush (not Select, Seams, Fill, Pick, Note, the
   // retopology lines and zones), and not while the view only looks
@@ -425,20 +464,22 @@ void App::viewportBar() {
   // view: the view mode, wireframe and seams
   gap();
   {
-    float cw = 130.f * uiScale;
-    next((icons ? fh : 0.f) + cw);
+    // (1.2.8) its icon inside the field, as the sliders'
+    float cw = std::round((icons ? 150.f : 130.f) * uiScale);
+    next(cw);
     bool hov = false;
-    if (icons) {
-      ImVec2 p = ImGui::GetCursorScreenPos();
-      ImGui::Dummy(ImVec2(fh, fh));
-      hov = ImGui::IsItemHovered();
-      float isz = std::round(fh - 2.f * iconPad(fh, uiScale));
-      ui::drawIcon(ImGui::GetWindowDrawList(), "view", p + ImVec2((fh - isz) * 0.5f, (fh - isz) * 0.5f), isz, ui::iconColors(IconState::Normal));
-      ImGui::SameLine(0, 2.f * uiScale);
-    }
+    const ImVec2 cp = ImGui::GetCursorScreenPos();
+    ImDrawList* barDl = ImGui::GetWindowDrawList();
+    if (icons) ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(fh, ImGui::GetStyle().FramePadding.y));
     ImGui::SetNextItemWidth(cw);
     int vm = (int)engine.viewOptions.mode;
-    if (ImGui::BeginCombo("##view", T_(viewModeLabel(std::clamp(vm, 0, (int)ViewMode::Count - 1))))) {
+    bool open = ImGui::BeginCombo("##view", T_(viewModeLabel(std::clamp(vm, 0, (int)ViewMode::Count - 1))));
+    if (icons) {
+      ImGui::PopStyleVar();
+      float isz = std::round(fh - 2.f * iconPad(fh, uiScale));
+      ui::drawIcon(barDl, "view", cp + ImVec2(std::round(3.f * uiScale), (fh - isz) * 0.5f), isz, ui::iconColors(IconState::Normal));
+    }
+    if (open) {
       for (int m = 0; m < (int)ViewMode::Count; ++m) {
         if (!viewModeAvailable((ViewMode)m)) continue;
         if (ImGui::Selectable(L_(viewModeLabel(m)), m == vm)) engine.viewOptions.mode = (ViewMode)m;

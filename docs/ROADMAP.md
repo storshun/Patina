@@ -518,6 +518,8 @@ from the custom brushes folder ... That should be part of 1.2."
 | T25 | **A Blender layout and a Vivid Dark theme**: the steps as workspace tabs, the Outliner, a Properties editor with icon tabs, an asset shelf; Vivid Dark colors (Preferences › Display › Theme; MCP `layout` mode `blender`, theme `vivid_dark`) | Blender users find their way at once | **1.2.7** |
 | T26 | **The same menu everywhere**: UV, View, New Layer and Select are one menu each wherever they appear; menu items in Title Case; Select the Other Half by the model's symmetry | One command, one name, one place | **1.2.7** |
 | T27 | **Undo in RAM, compressed**: copies past the graphics card's budget are packed on idle ticks, never on disk; Preferences › Undo (steps, RAM, card), MCP `undo_settings` | Every UV edit on a big model can be undone | **1.2.7** |
+| T28 | **Quick retopology edits**: a change makes new quads only on the part of the model round it (about 1 s instead of 21 on a 190k-face character), with the quad count that worked remembered | Retopology by hand-guided edits stays interactive | **1.2.8** |
+| T29 | **A clearer workspace**: the 3D view bar's settings as single fields with their icons inside; fields at most 13 em wide; the Blender layout's step colors and Material Edit tab; wrapping layer buttons | Less noise, nothing off screen | **1.2.8** |
 
 Shipped in **1.2.0** (2026-10-21). How it works: each object is a Document of its own; Engine::doc is the active one
 and the others wait in Engine::objects_ (they move in and out, so GpuMesh moves now). A mesh stays in its own space;

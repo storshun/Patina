@@ -3,6 +3,32 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.8 (2026-10-24)
+
+### Changed
+
+- **The bar over the 3D view is easier to read.** Each brush setting is one field with its icon inside it, filled up
+  to its value, as Blender's sliders are; thin lines part the groups (the brush, its projection, the locks, the view).
+  The icons stood apart from their sliders, so which icon went with which slider was hard to see.
+- **Fields are narrower.** A slider or drop-down is at most about 13 characters wide, so its label sits beside it in
+  wide panels (they took 65% of a panel's width).
+- **The Blender layout's workspace tabs have their steps' colors again**, as the Guided layout's steps, and so do the
+  tool groups in its tool strip.
+- **Material Edit** is a tab of the Blender layout's sidebar, beside Brush, Colors, View and Blender. The Material
+  Editor's window opened behind the layout there.
+- With names beside the icons, the tool strip of the Blender and Guided layouts is as wide as the names need. A
+  docked strip that is narrower shows the icons alone instead of names too small to read.
+- The Outliner says the layers are the object's, for all of its texture sets (each layer paints every set).
+
+### Fixed
+
+- **The layer buttons ran off the panel** with names beside the icons. They go on to a new row now.
+- **Retopology: a change remade the whole model.** "Only the quads near a change" made new quads on the whole model,
+  then kept them only near the change, so every edit cost a full build (19 s on a head, up to a minute and more on a
+  body). The new quads are now made only on the part of the model round the change: on a 190,000-face character, a
+  zone line drawn after the first build updates in about 1 second instead of 21. Builds also ask for the number of
+  quads that worked last time, so most need one pass instead of two.
+
 ## 1.2.7 (2026-10-24)
 
 ### New

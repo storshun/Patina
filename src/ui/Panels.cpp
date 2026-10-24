@@ -1109,11 +1109,22 @@ void App::editorPreview(const MaterialDef& m, float size) {
 
 void App::drawMaterialEditor() {
   if (!showMaterialEditor) return;
+  // (1.2.8) the Blender layout shows it in the sidebar's Material Edit tab (as a window it hid behind the layout)
+  if (blenderOn()) {
+    showMaterialEditor = false;
+    blui.side = SideTab::MaterialEdit, blui.sideOpen = true;
+    return;
+  }
   ImGui::SetNextWindowSize(ImVec2(440, 760) * uiScale, ImGuiCond_FirstUseEver);
   if (!ImGui::Begin(L_("Material Editor"), &showMaterialEditor)) {
     ImGui::End();
     return;
   }
+  materialEditorBody();
+  ImGui::End();
+}
+
+void App::materialEditorBody() {
   MaterialDef& m = editMaterial;
   ProcParams& p = m.proc;
   bool ch = false;
@@ -1266,7 +1277,6 @@ void App::drawMaterialEditor() {
   }
   ImGui::SameLine();
   if (ImGui::Button(L_("Paint with preview")) && editPreviewEntry) engine.selectMaterial("__preview__");
-  ImGui::End();
 }
 
 void App::drawBrushes() {

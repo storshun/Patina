@@ -205,7 +205,8 @@ void App::drawBlenderLayout() {
     blui.uvShare = std::clamp(share / std::max(cw, 1.f), 0.15f, 0.8f);
     x += uvW + gap;
   }
-  const float toolsW = std::round(84.f * s);
+  // (1.2.8) with names beside the icons, as wide as the longest name needs (it was 84 px: the names shrank to fit)
+  const float toolsW = std::round(std::max(84.f * s, toolbarNamesW));
   embedPanel(&App::drawToolbar, ImVec2(x, pos.y), ImVec2(toolsW, viewH));
   x += toolsW + gap;
   // the sidebar: its tabs at the right edge, its panel beside them while open
@@ -215,7 +216,7 @@ void App::drawBlenderLayout() {
   ImGui::SetCursorScreenPos(ImVec2(tabX, pos.y));
   ImGui::BeginChild("##sidebar_tabs", ImVec2(tabW, viewH), ImGuiChildFlags_None, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
   {
-    static const char* kSideNames[] = {N_("Brush"), N_("Colors"), N_("View"), N_("Blender")};
+    static const char* kSideNames[] = {N_("Brush"), N_("Colors"), N_("View"), N_("Blender"), N_("Material Edit")};
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, std::round(2.f * s)));
     for (int t = 0; t < (int)SideTab::Count; ++t) {
       const bool on = blui.sideOpen && (int)blui.side == t;
@@ -275,15 +276,20 @@ void App::blenderStepTabs() {
     const bool on = guidedStep == st.step, hov = ImGui::IsItemHovered();
     const ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
     engine.uiRects[std::string("blender.step.") + st.id] = {a.x, a.y, b.x - a.x, b.y - a.y};
+    // (1.2.8) each tab in its step's color, as the Guided layout's steps: the chosen one filled with it, the others
+    // with a line of it under their names
+    const ImVec4 sc = stepColor(st.step), base = ImGui::GetStyleColorVec4(ImGuiCol_MenuBarBg);
     if (on || hov)
-      dl->AddRectFilled(a + ImVec2(0, 2.f * s), b - ImVec2(0, 1.f * s), ImGui::GetColorU32(on ? ImGuiCol_Button : ImGuiCol_ButtonHovered),
+      dl->AddRectFilled(a + ImVec2(0, 2.f * s), b - ImVec2(0, 1.f * s), mixColor(base, sc, on ? 0.42f : 0.2f),
                         ImGui::GetStyle().FrameRounding);
-    if (on) dl->AddRectFilled(ImVec2(a.x + 3.f * s, b.y - 3.f * s), ImVec2(b.x - 3.f * s, b.y - 1.f * s), ui::themeColor(t.accent), 1.f);
+    dl->AddRectFilled(ImVec2(a.x + 3.f * s, b.y - (on ? 3.f : 2.f) * s), ImVec2(b.x - 3.f * s, b.y - 1.f * s),
+                      mixColor(sc, sc, 0.f, on ? 1.f : 0.55f), 1.f);
+    (void)t;
     const ImVec2 c(a.x + padX + dot, std::round((a.y + b.y) * 0.5f));
     if (state.state == 0) dl->AddCircle(c, dot * 0.8f, stateColor(0), 16, std::max(1.f, 1.4f * s));
     else dl->AddCircleFilled(c, dot, stateColor(state.state), 16);
     dl->AddText(ImVec2(c.x + dot + std::round(6.f * s), std::round(c.y - ts.y * 0.5f)),
-                ImGui::GetColorU32(on ? ImGuiCol_Text : ImGuiCol_TextDisabled), name);
+                on ? ImGui::GetColorU32(ImGuiCol_Text) : mixColor(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), sc, 0.45f), name);
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip)) ImGui::SetTooltip("%s\n%s", name, state.text.c_str());
     if (clicked) setBlenderStep(st.step);
     ImGui::PopID();
@@ -367,8 +373,15 @@ void App::drawOutliner() {
     // ---- its layers: the Layers panel's buttons and tree, a level in
     size_t count = 0;
     for (auto& l : d.layers) count += !l->isBaked() && !l->isFolder();
-    if (treeRow("##layers", 1, blui.layersOpen ? 1 : 0, "add_folder", T_("Layers"), std::to_string(count), false, false, 0.f))
+    // (1.2.8) the layers belong to the object, not to one texture set: each layer paints every set, so they sit
+    // beside the sets. The row says so when there are several
+    std::string info = tl.active() ? F_("%zu, for all %d sets", count, tl.count()) : std::to_string(count);
+    if (treeRow("##layers", 1, blui.layersOpen ? 1 : 0, "add_folder", T_("Layers"), info, false, false, 0.f))
       blui.layersOpen = !blui.layersOpen;
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayNormal))
+      ImGui::SetTooltip("%s", T_("The object's layers. Each one paints every texture set: a stroke that crosses from the\n"
+                                 "head's set into the body's paints both. Set lock (in the bar over the 3D view) keeps\n"
+                                 "a stroke to the set it starts on."));
     if (!blui.layersOpen) continue;
     const float ind = std::round(fh * 0.8f) * 2.f;
     ImGui::Indent(ind);
@@ -478,6 +491,11 @@ void App::drawViewSidebar() {
       sceneUI();  // (the material under the layers, and the lighting)
       ImGui::EndChild();
       break;
+    case SideTab::MaterialEdit:  // (1.2.8) the Material Editor, as a tab of the sidebar
+      ImGui::BeginChild("##side_material_edit", cs, ImGuiChildFlags_AlwaysUseWindowPadding);
+      materialEditorBody();
+      ImGui::EndChild();
+      break;
     default: embedPanel(&App::drawBlender, ImVec2(-1.f, 0.f), cs); break;
   }
 }
@@ -561,6 +579,7 @@ bool App::blenderOpenWindow(const std::string& w) {
   if (w == "properties") blui.side = SideTab::Brush, blui.sideOpen = true;
   else if (w == "colors") blui.side = SideTab::Colors, blui.sideOpen = true;
   else if (w == "blender") blui.side = SideTab::Blender, blui.sideOpen = true;
+  else if (w == "material_editor") blui.side = SideTab::MaterialEdit, blui.sideOpen = true;
   else if (w == "layers") blui.props = PropsTab::Layer;
   else if (w == "materials") setBlenderStep(GuidedStep::Paint), blui.shelf = ShelfKind::Materials;
   else if (w == "brushes") setBlenderStep(GuidedStep::Paint), blui.shelf = ShelfKind::Brushes;

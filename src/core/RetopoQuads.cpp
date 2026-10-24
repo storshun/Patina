@@ -873,6 +873,19 @@ ChainPlan planChains(const CleanMesh& cm, const std::unordered_map<uint64_t, std
   return cp;
 }
 
+// (1.2.8) QuadriFlow's usual shortfall, by the size of the surface and the count asked for: it gives about 75% to
+// 80% of the quads asked for on a refined surface, so a build asked again in a second pass, which cost as long as
+// the first (9 s of a head's 19). The factor that worked is remembered, and the next build of about the same zone
+// asks for that much at once: one pass, as long as the count lands within 15%.
+namespace {
+std::mutex g_gainMutex;
+std::unordered_map<uint64_t, double> g_gains;
+uint64_t gainKey(size_t triangles, int targetFaces) {
+  auto bucket = [](double v) { return (uint64_t)std::max(0.0, std::round(std::log(std::max(v, 1.0)) * 6.0)); };
+  return (bucket((double)triangles) << 32) | bucket((double)targetFaces);
+}
+}  // namespace
+
 static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<Stroke>& strokes, const std::vector<int32_t>& faceLabel,
                             const std::vector<float>& vertexDensity, const FlowOptions& opt, const std::vector<float>& faceResolution) {
   auto t0 = std::chrono::steady_clock::now();
@@ -1965,6 +1978,12 @@ static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<
     for (int k = 0; (int)tries.size() < variants; ++k) tries.push_back({opt.seed + k / 3, smooths[k % 3], true});
     Variant kept;
     double keptScore = 1e30, g = 1;
+    const uint64_t gk = gainKey(m.tri.size(), targetFaces);
+    {
+      std::lock_guard<std::mutex> lock(g_gainMutex);
+      if (auto it = g_gains.find(gk); it != g_gains.end()) g = it->second;
+    }
+    if (g != 1) PLOG_I("Retopology (flow): asking for %.0f%% of the count at once (what this zone needed before)", 100 * g);
     bool pinOpenNow = true;  // (the open edges held: see run)
     int farOffPinned = 0;
     bool hasOpen = false;
@@ -2131,7 +2150,13 @@ static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<
               fclose(fo);
             }
       if (got[bestV].score < keptScore) keptScore = got[bestV].score, kept = std::move(got[bestV]);
-      if (std::abs(count - 1) < 0.15) break;
+      if (std::abs(count - 1) < 0.15) {
+        if (pinOpenNow && mean > 0.05) {  // (what to ask for next time: the factor that gives the count)
+          std::lock_guard<std::mutex> lock(g_gainMutex);
+          g_gains[gk] = std::clamp(g / mean, 0.3, 8.0);
+        }
+        break;
+      }
       // (a count very far off with the open edges held, twice, the second time asked for more or fewer
       // to make up, as on a hood, or the best try missing much of the surface, as a torn hem: tried again
       // with them free, as asked; once far off is often only QuadriFlow's usual shortfall)
@@ -4076,10 +4101,12 @@ static Result flowQuadsLocal(const Mesh& high, const Bvh& bvh, const std::vector
   const float L0 = 1.f / std::sqrt(std::max(opt.quadsPerM2, 1e-3f));
   // what changed: the lines and strokes drawn or taken away, the painted density, zones' resolutions, patches
   LocalChange ch;
+  bool flowChanged = false;  // (a flow stroke turns the quads of its whole zone: no part of the model is enough)
   {
     std::vector<char> usedOld(was.strokes.size(), 0);
     auto same = [](const Stroke& a, const Stroke& b) { return a.edge == b.edge && a.loop == b.loop && a.points == b.points; };
     auto add = [&](const Stroke& st) {
+      flowChanged |= !st.edge;
       std::vector<vec3> pts = st.points;
       bool closed = st.loop || (pts.size() > 3 && glm::length(pts.front() - pts.back()) < 0.5f * L0);
       if (st.loop && !pts.empty()) pts.push_back(pts.front());
@@ -4128,7 +4155,98 @@ static Result flowQuadsLocal(const Mesh& high, const Bvh& bvh, const std::vector
   if (ch.points.size() > high.positions.size() / 3) return {};
   FlowOptions o = opt;
   o.previous.reset();
-  Result fresh = flowQuadsWhole(high, bvh, strokes, faceLabel, vertexDensity, o, faceResolution);
+  // (1.2.8) the new quads made only on the part of the model round the change: the faces within the farthest row
+  // tried and four quads more. They were made on the whole model and then kept only near the change, so a small
+  // edit cost a whole build (19 s on a head, a minute on a body); the part is a fraction of that
+  Result fresh;
+  bool cropped = false;
+  {
+    const float R = (std::max(1.5f, opt.localReach + 2.f) + 4.f) * L0;
+    std::vector<vec3> samples = ch.points;
+    for (auto& l : ch.lines) {
+      if (l.size() == 1) samples.push_back(l[0]);
+      for (size_t i = 0; i + 1 < l.size(); ++i) {
+        int n = std::max(1, (int)std::ceil(glm::length(l[i + 1] - l[i]) / (0.5f * L0)));
+        for (int k = 0; k <= n; ++k) samples.push_back(glm::mix(l[i], l[i + 1], float(k) / n));
+      }
+    }
+    auto key = [](glm::ivec3 c) { return (uint64_t(c.x & 0x1FFFFF) << 42) | (uint64_t(c.y & 0x1FFFFF) << 21) | uint64_t(c.z & 0x1FFFFF); };
+    std::unordered_map<uint64_t, std::vector<vec3>> grid;
+    for (auto& p : samples) grid[key(glm::ivec3(glm::floor(p / R)))].push_back(p);
+    auto within = [&](const vec3& p, float r) {
+      glm::ivec3 c = glm::ivec3(glm::floor(p / R));
+      for (int dz = -1; dz <= 1; ++dz)
+        for (int dy = -1; dy <= 1; ++dy)
+          for (int dx = -1; dx <= 1; ++dx) {
+            auto it = grid.find(key(c + glm::ivec3(dx, dy, dz)));
+            if (it == grid.end()) continue;
+            for (auto& q : it->second)
+              if (glm::length(q - p) < r) return true;
+          }
+      return false;
+    };
+    std::vector<char> vin(high.positions.size(), 0);
+    for (size_t v = 0; v < vin.size(); ++v) vin[v] = within(high.positions[v], R);
+    std::vector<uint32_t> faces;
+    for (uint32_t f = 0; f < high.faceCount(); ++f) {
+      bool any = false;
+      for (uint32_t l = high.faceStart[f]; l < high.faceStart[f + 1] && !any; ++l) any = vin[high.loopVert[l]] != 0;
+      if (any) faces.push_back(f);
+    }
+    if (!flowChanged && !samples.empty() && !faces.empty() && faces.size() * 10 < high.faceCount() * 6) {
+      Mesh part;
+      part.name = high.name;
+      std::vector<int64_t> remap(high.positions.size(), -1);
+      std::vector<int32_t> partLabel;
+      std::vector<float> partRes, partDensity;
+      part.faceStart.push_back(0);
+      for (uint32_t f : faces) {
+        for (uint32_t l = high.faceStart[f]; l < high.faceStart[f + 1]; ++l) {
+          uint32_t v = high.loopVert[l];
+          if (remap[v] < 0) {
+            remap[v] = (int64_t)part.positions.size();
+            part.positions.push_back(high.positions[v]);
+            partDensity.push_back(v < vertexDensity.size() ? vertexDensity[v] : 1.f);
+          }
+          part.loopVert.push_back((uint32_t)remap[v]);
+        }
+        part.faceStart.push_back((uint32_t)part.loopVert.size());
+        partLabel.push_back(f < faceLabel.size() ? faceLabel[f] : 0);
+        partRes.push_back(f < faceResolution.size() ? faceResolution[f] : 1.f);
+      }
+      part.finalize();
+      Bvh partBvh;
+      partBvh.build(part);
+      // the lines on the part (points a little inside its edge, so they lie on it), cut where they leave it
+      std::vector<Stroke> partStrokes;
+      for (auto& st : strokes) {
+        Stroke run = st;
+        run.points.clear();
+        bool whole = true;
+        auto flush = [&] {
+          if (run.points.size() >= 2) partStrokes.push_back(run);
+          run.points.clear();
+        };
+        for (auto& p : st.points) {
+          if (within(p, R - 0.5f * L0)) run.points.push_back(p);
+          else whole = false, flush();
+        }
+        run.loop = st.loop && whole;
+        flush();
+      }
+      FlowOptions po = o;
+      po.cache.reset();  // (the whole model's working surface stays cached for a full build)
+      fresh = flowQuadsWhole(part, partBvh, partStrokes, partLabel, partDensity, po, partRes);
+      cropped = !fresh.cancelled && fresh.low.faceCount() > 0;
+      if (fresh.cancelled) {
+        done = true;
+        return fresh;
+      }
+      if (cropped)
+        PLOG_I("Retopology (flow): new quads made on the part round the change only: %zu of %u faces", faces.size(), high.faceCount());
+    }
+  }
+  if (!cropped) fresh = flowQuadsWhole(high, bvh, strokes, faceLabel, vertexDensity, o, faceResolution);
   if (fresh.cancelled || fresh.low.faceCount() == 0) {
     done = true;
     return fresh;
@@ -4151,16 +4269,31 @@ static Result flowQuadsLocal(const Mesh& high, const Bvh& bvh, const std::vector
   std::vector<char> nearRow;
   float reachOf = 0;
   std::string whyNot;
-  for (float k : {0.f, 1.f, 2.f, -0.75f}) {
-    const float rr = std::max(1.5f, opt.localReach + k) * L0;
-    Mesh m;
-    LocalStats s2;
-    std::vector<char> nr;
-    if (!keepAwayFromChange(prev.low, fresh.low, ch, L0, rr, edgeLines, snap, m, s2, &nr)) {
-      if (whyNot.empty()) whyNot = s2.why;
-      continue;
+  auto join = [&] {
+    for (float k : {0.f, 1.f, 2.f, -0.75f}) {
+      const float rr = std::max(1.5f, opt.localReach + k) * L0;
+      Mesh m;
+      LocalStats s2;
+      std::vector<char> nr;
+      if (!keepAwayFromChange(prev.low, fresh.low, ch, L0, rr, edgeLines, snap, m, s2, &nr)) {
+        if (whyNot.empty()) whyNot = s2.why;
+        continue;
+      }
+      if (reachOf == 0 || s2.rowPoles < st.rowPoles) joined = std::move(m), st = s2, nearRow = std::move(nr), reachOf = rr;
     }
-    if (reachOf == 0 || s2.rowPoles < st.rowPoles) joined = std::move(m), st = s2, nearRow = std::move(nr), reachOf = rr;
+  };
+  join();
+  if (reachOf == 0 && cropped) {
+    // (1.2.8) the part's quads didn't join the kept ones: the whole model's, as before, tried the same way
+    PLOG_I("Retopology (flow): the part's quads didn't join (%s); made on the whole model", whyNot.c_str());
+    whyNot.clear();
+    fresh = flowQuadsWhole(high, bvh, strokes, faceLabel, vertexDensity, o, faceResolution);
+    cropped = false;
+    if (fresh.cancelled || fresh.low.faceCount() == 0) {
+      done = true;
+      return fresh;
+    }
+    join();
   }
   if (reachOf == 0) {
     PLOG_I("Retopology (flow): all the quads made again (%s)", whyNot.c_str());
@@ -4288,6 +4421,12 @@ static Result flowQuadsLocal(const Mesh& high, const Bvh& bvh, const std::vector
   r.low = std::move(joined);
   countQuality(r);
   r.quadPatch.assign(r.low.faceCount(), 1);
+  if (cropped) {  // (the whole model's notes from the last build; the part's own, but not the bits its cut left loose)
+    std::vector<std::string> pr = prev.problems;
+    for (auto& t : r.problems)
+      if (t.find("loose bits") == std::string::npos && std::find(pr.begin(), pr.end(), t) == pr.end()) pr.push_back(t);
+    r.problems = std::move(pr);
+  }
   r.localKept = st.keptFaces;
   // the points left out: the new build's near the change, the last one's elsewhere
   {

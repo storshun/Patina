@@ -817,10 +817,16 @@ void App::layersButtons() {
   // ---- add buttons (0.36: icons, as in a paint program's layers panel)
   using ui::IconState;
   const float fh = ImGui::GetFrameHeight();
+  // (1.2.8) the next button beside the last when it fits, else on a new row: with names beside the icons they ran
+  // off the panel's edge
+  auto next = [&](const char* name, float sp, float extra = 0.f) {
+    float right = ImGui::GetItemRectMax().x + sp + iconButtonWidth(name, fh) + extra;
+    if (right <= ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x) ImGui::SameLine(0, sp);
+  };
   if (iconButton("layer.new_paint", "add_paint", T_("Paint layer"), IconState::Normal, fh, T_("New paint layer above the selection"),
                  "layer.new_paint"))
     d.addPaintLayer();
-  ImGui::SameLine(0, 2);
+  next(T_("Fill layer"), 2, ImGui::GetFrameHeight());
   auto addFill = [&](float mask) { addFillLayerUI(mask); };
   if (iconButton("layer.new_fill", "add_fill", T_("Fill layer"), IconState::Normal, fh,
                  T_("New fill layer with the current paint material\n(arrow: with a black or white mask)")))
@@ -834,19 +840,19 @@ void App::layersButtons() {
     if (ImGui::MenuItem(L_("Fill Layer with a White Mask"))) addFill(1.f);
     ImGui::EndPopup();
   }
-  ImGui::SameLine(0, 2);
+  next(T_("Adjustment layer"), 2);
   if (iconButton("layer.new_adjust", "add_adjust", T_("Adjustment layer"), IconState::Normal, fh,
                  T_("New adjustment layer: hue / saturation / brightness / contrast and\n"
                     "roughness / metallic / height offsets applied to everything below")))
     d.addAdjustLayer();
-  ImGui::SameLine(0, 2);
+  next(T_("Folder"), 2);
   {
     std::string tip = F_("New folder above the selection. Drag layers onto it, or select a layer and press %s\n"
                          "to put it into a new folder. Folders have their own opacity, blend mode and mask.",
                          keyLabel("layer.group") ? keyLabel("layer.group") : "-");
     if (iconButton("layer.new_folder", "add_folder", T_("Folder"), IconState::Normal, fh, tip.c_str())) d.addFolder();
   }
-  ImGui::SameLine(0, 2);
+  next(T_("Smart materials"), 2);
   if (iconButton("layer.smart", "smart", T_("Smart materials"), IconState::Normal, fh,
                  T_("Ready-made layer stacks that adapt to the mesh (edges, cavities...)")))
     ImGui::OpenPopup("SmartMenu");
@@ -870,8 +876,7 @@ void App::layersButtons() {
   }
   // ---- arrange buttons (on the same row when the panel is wide enough)
   {
-    float need = 4 * iconButtonWidth(T_("Duplicate"), fh) + 6 + 2 * ImGui::GetStyle().ItemSpacing.x;
-    if (ImGui::GetContentRegionAvail().x - (ImGui::GetItemRectMax().x - ImGui::GetWindowPos().x) > need) ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.x * 2.5f);
+    next(T_("Duplicate"), ImGui::GetStyle().ItemSpacing.x * 2.5f);
   }
   const bool bakedSel = d.selectedLayer() && d.selectedLayer()->isBaked();  // (0.41) one layer per baked map, under the stack
   ImGui::BeginDisabled(d.selected < 0 || bakedSel);
@@ -879,16 +884,16 @@ void App::layersButtons() {
     g_deferred.push_back([&d] { d.duplicateLayer(d.selected); });
   ImGui::EndDisabled();
   ImGui::BeginDisabled(d.selected < 0);
-  ImGui::SameLine(0, 2);
+  next(T_("Delete"), 2);
   if (iconButton("layer.delete", "delete", T_("Delete"), IconState::Normal, fh, T_("Delete the selected layer (with its contents if it is a folder)"),
                  "layer.delete"))
     g_deferred.push_back([&d] { d.removeLayer(d.selected); });
   ImGui::EndDisabled();
   ImGui::BeginDisabled(d.selected < 0 || bakedSel);
-  ImGui::SameLine(0, 2);
+  next(T_("Move up"), 2);
   if (iconButton("layer.up", "move_up", T_("Move up"), IconState::Normal, fh, T_("Move the selected layer up the stack")))
     g_deferred.push_back([&d] { d.moveSibling(d.selected, +1); });
-  ImGui::SameLine(0, 2);
+  next(T_("Move down"), 2);
   if (iconButton("layer.down", "move_down", T_("Move down"), IconState::Normal, fh, T_("Move the selected layer down the stack")))
     g_deferred.push_back([&d] { d.moveSibling(d.selected, -1); });
   ImGui::EndDisabled();

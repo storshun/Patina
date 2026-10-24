@@ -11,7 +11,7 @@ Works as a legacy add-on (``bl_info``) and as a Blender 4.2+ extension
 bl_info = {
     "name": "Patina Bridge",
     "author": "Patina contributors",
-    "version": (0, 14, 0),
+    "version": (0, 14, 1),
     "blender": (3, 6, 0),
     "location": "3D Viewport > Sidebar (N) > Patina",
     "description": "Live link to the Patina texture painter: send meshes, receive textures and UVs",

@@ -109,10 +109,13 @@ void App::buildPaletteEntries() {
       continue;
     add(T_(a.group), T_(a.label), a.chord ? chordName(a.chord, true) : "", [this, id] { pendingAction = id; });
   }
-  // (0.46) the layouts and the Guided layout's steps
+  // (0.46) the layouts and the Guided layout's steps; (1.2.7) the Blender layout and the themes
+  add(T_("Layout"), T_("Full: every panel"), "", [this] { setLayoutMode(LayoutMode::Full); });
+  add(T_("Layout"), T_("Blender: the panels where Blender has them"), "", [this] { setLayoutMode(LayoutMode::Blender); });
+  add(T_("Theme"), T_("Patina"), "", [this] { setThemeUI(ui::ThemeId::Patina); });
+  add(T_("Theme"), T_("Vivid Dark"), "", [this] { setThemeUI(ui::ThemeId::VividDark); });
   if (engine.features.on("guided_layout")) {
     add(T_("Layout"), T_("Guided: the work in five steps"), "", [this] { setLayoutMode(true); });
-    add(T_("Layout"), T_("Full: every panel"), "", [this] { setLayoutMode(false); });
     static const char* kStepNames[] = {N_("1 Model: open it, check it, its textures"), N_("2 UVs: check and unwrap"),
                                        N_("3 Bake: the mesh maps"), N_("4 Paint: layers, materials, brushes"),
                                        N_("5 Export: send to Blender, texture files")};

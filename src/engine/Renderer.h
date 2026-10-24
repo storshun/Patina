@@ -96,6 +96,8 @@ struct UVViewOptions {
   bool faceSets = false;  // (1.2) each face set's faces tinted in its color
   // Texture tiles: the tile shown (its local 0..1 square is the view's 0..1; -1 = all / no tiles)
   int tile = -1;
+  vec3 background{0.075f, 0.078f, 0.085f};  // (1.2.7) round the texture, and the texture's border: the window's
+  vec3 border{0.9f, 0.6f, 0.2f};             // theme sets them
 };
 
 class Renderer {

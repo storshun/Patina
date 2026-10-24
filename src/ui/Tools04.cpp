@@ -107,6 +107,7 @@ size_t App::overlappingIslandCount() {
 void App::openWindowByName(const std::string& w, const json& a) {
   // (0.46) in the Guided layout a docked panel is in a step: that step comes up (the Paint step's side tabs: the one
   // asked for); the panels it has no room for are in the Full layout
+  if (blenderOn() && blenderOpenWindow(w)) return;  // (1.2.7) the Blender layout: its tab
   if (guidedOn()) {
     if (w == "layers" || w == "materials" || w == "brushes" || w == "properties" || w == "colors" || w == "history") {
       setGuidedStep(GuidedStep::Paint);
@@ -791,12 +792,18 @@ void App::drawWelcome() {
   }
   if (engine.features.on("guided_layout")) {
     ImGui::SeparatorText(T_("Layout"));
-    if (ImGui::RadioButton(L_("Guided: the work in five steps"), guidedLayout)) setLayoutMode(true);
+    const bool guided = layoutMode == LayoutMode::Guided;
+    if (ImGui::RadioButton(L_("Guided: the work in five steps"), guided)) setLayoutMode(LayoutMode::Guided);
     if (ImGui::IsItemHovered())
       ImGui::SetTooltip("%s", T_("Model, UVs, Bake, Paint, Export along the top, each with what it needs in front"));
-    if (ImGui::RadioButton(L_("Full: every panel"), !guidedLayout)) setLayoutMode(false);
+    if (ImGui::RadioButton(L_("Full: every panel"), !guided && layoutMode != LayoutMode::Blender)) setLayoutMode(LayoutMode::Full);
+    if (ImGui::RadioButton(L_("Blender: the panels where Blender has them"), layoutMode == LayoutMode::Blender))
+      setLayoutMode(LayoutMode::Blender);
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", T_("Arranged as Blender is: the steps as workspace tabs, the Outliner and the Properties\n"
+                                 "editor at the right, the asset shelf under the 3D view."));
   }
-  ImGui::TextDisabled("%s", T_("Change these any time: Edit > Preferences, and Guided / Full at the right of the menu bar."));
+  ImGui::TextDisabled("%s", T_("Change these any time: Edit > Preferences, and Guided / Full / Blender at the right of the menu bar."));
   ImGui::EndGroup();
   ImGui::SameLine();
   ImGui::BeginGroup();

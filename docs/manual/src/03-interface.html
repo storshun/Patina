@@ -7,7 +7,7 @@ panel at once. Switch between them with <b>Guided</b> and <b>Full</b> at the rig
 <p>In the Full layout every panel is a dockable window. Drag a panel's tab to rearrange the layout, and Patina remembers it,
 along with which tool windows were open (Retopology, Assistant, Texel density, Mesh symmetry, Auto texture, Macro
 recorder, Material Editor). The Retopology window starts as a tab beside Properties; nothing of retopology runs or shows
-until you choose a retopology tool or its tab. To get the default layout back, use <i>View › Reset layout</i>.</p>
+until you choose a retopology tool or its tab. To get the default layout back, use <i>View › Reset the Layout</i>.</p>
 
 <figure><img src="img/overview.png" alt="Patina main window"></figure>
 
@@ -112,7 +112,7 @@ was closed. You don't need to open the Retopology tab first.</p>
 [[icon:make_island]] <i>Make island</i>, [[icon:deselect]] <i>Clear</i>, [[icon:pin]] <i>Pin</i> and [[icon:unpin]]
 <i>Unpin</i>, the select tool's [[icon:sel_face]] faces or [[icon:sel_island]] islands with [[icon:pin]] <i>Pin</i> and
 [[icon:unpin]] <i>Unpin</i> (see <a href="uv.html#pins-3d">Pinning in the 3D view</a>), and the retopology tools' settings with [[icon:quads]]
-<i>Make quads</i>. The UV editor's bar has [[icon:uv_edit]] <i>Edit UVs</i> or [[icon:paint]] <i>Paint</i>, the
+<i>Make Quads</i>. The UV editor's bar has [[icon:uv_edit]] <i>Edit UVs</i> or [[icon:paint]] <i>Paint</i>, the
 selection [[icon:sel_vertex]] [[icon:sel_face]] [[icon:sel_island]], then [[icon:unwrap]] <i>Unwrap</i>,
 [[icon:pack]] <i>Pack</i>, [[icon:seams]] <i>Seams</i> and [[icon:more]] <i>More</i>. The layers' bar has
 [[icon:add_paint]] a paint layer, [[icon:add_fill]] a fill layer, [[icon:add_adjust]] an adjustment layer,
@@ -134,24 +134,26 @@ it off.</p>
 <figure><img src="img/view_context.png" alt="The 3D view's right-click menu" style="max-width:620px"><figcaption>The 3D view's menu, for the spot under the pointer.</figcaption></figure>
 <table>
   <tr><th>Where</th><th>The menu has</th></tr>
-  <tr><td><b>3D view</b>, on the model</td><td>What is there (face, UV island, material slot). <i>Pick the color here</i>.
-    <i>Layers painted here</i>: every layer that shows on that spot, with how much, to select one. <i>Fill with the
-    paint material</i> (this face, its UV island, the connected part, its material slot) and erase an island.
-    <i>Select</i> the same parts, or all, none, invert. <i>Add a note here</i>, <i>Set the clone source here</i> and
-    <i>Center the view here</i>.</td></tr>
-  <tr><td><b>3D view</b>, anywhere</td><td><i>Tool</i> (every tool, grouped), <i>Symmetry</i> (mirrors and radial
-    copies), <i>Brush</i> (the locks, the projection, swap the colors), <i>View</i> (frame the model, front, back,
-    left, right, top, bottom, orthographic, the view mode, wireframe, seams, note pins, the retopology preview, the axis
-    gizmo, compare, hide the panels), and
-    with a retopology tool <i>Make quads</i>.</td></tr>
+  <tr><td><b>3D view</b>, on the model</td><td>What is there (face, UV island, material slot). <i>Pick the Color Here</i>.
+    <i>Layers Painted Here</i>: every layer that shows on that spot, with how much, to select one. <i>Fill with the
+    Paint Material</i> (this face, its UV island, the connected part, its material slot) and erase an island. <i>Add a Note Here</i>, <i>Set the Clone Source Here</i> and
+    <i>Center the View Here</i>.</td></tr>
+  <tr><td><b>3D view</b>, anywhere</td><td><i>Select</i>: on the model, what is under the pointer (this face, its UV
+    island, the connected part, the flat region, its material slot, the loop or ring across the nearest edge); then the
+    same items as the UV editor's <i>Select</i> (all, none, invert, grow, shrink, whole islands, the other half, the
+    whole material slot, pinned or overlapping islands). <i>Tool</i> (every tool, grouped), <i>Symmetry</i> (mirrors and radial
+    copies), <i>Brush</i> (the locks, the projection, swap the colors), <i>View</i> (the menu bar's <i>View</i>: frame the model, the
+    side views, orthographic, the view mode and what the view shows, compare, hide the panels, the UI scale,
+    navigation, reset the layout), and
+    with a retopology tool <i>Make Quads</i>.</td></tr>
   <tr><td><b>Tool strip</b></td><td>On a tool: its shortcut, change it, reset it. Elsewhere: names beside the icons, the
     shortcuts editor.</td></tr>
   <tr><td><b>Layers</b>, on a layer</td><td>Hide or show it, open or close a folder, a new layer above it, rename,
     duplicate, delete, instances, move up or down, a fill layer's material (use the paint material, paint with its
     material), folders, solo, the color tag, masks, clear the paint, copy and paste settings, save as a smart material,
     export.</td></tr>
-  <tr><td><b>Layers</b>, below the layers</td><td>New layers and folders, a smart material, open or close all folders,
-    end solo.</td></tr>
+  <tr><td><b>Layers</b>, below the layers</td><td><i>New Layer</i> (paint, fill, fill with a black or white mask,
+    adjustment, folder, a baked map's layer, a smart material), open or close all folders, end solo.</td></tr>
   <tr><td><b>Mask effects</b></td><td>Turn an effect off or on, move it up or down, duplicate it, remove it.</td></tr>
   <tr><td><b>Materials</b></td><td>On a material: paint with it, add it as a fill layer, use it on the selected fill
     layer, edit or duplicate it, copy its id. In the empty part: import a folder, a new procedural material, your
@@ -164,10 +166,15 @@ it off.</p>
   <tr><td><b>History</b></td><td>Go back to a step, undo, redo, clear the history.</td></tr>
   <tr><td><b>Notes</b></td><td>Go to a note, edit, resolve or reopen it, copy its text, delete it.</td></tr>
   <tr><td><b>Console</b></td><td>Copy the log or only its errors and warnings, clear it, list the commands.</td></tr>
-  <tr><td><b>UV editor</b></td><td>Everything for the selection: move, rotate, scale, flip, align, weld, pin, unwrap,
-    straighten, orient, texel density, relax, pack, mirrored halves, texture sets, seams, select, the whole layout and
-    the view (see <a href="uv.html">UV editing</a>).</td></tr>
+  <tr><td><b>UV editor</b></td><td>The menu bar's <i>UV</i> menu, with move, rotate and scale at the top (see <a
+    href="uv.html#uv-menu">the UV menu</a>).</td></tr>
 </table>
+<p id="same-menus"><b>The same menu everywhere</b> (since 1.2.7): where a menu of the menu bar and a right-click
+menu do the same job, they are one menu, with the same items in the same order under the same names. The 3D view's
+<i>View</i> is the menu bar's <i>View</i>; the UV editor's right-click menu and its More button are the menu bar's
+<i>UV</i>; the new-layer list is the same in <i>Edit › New Layer</i>, the Layers panel's right-click menus and the
+<i>Add</i> menu (<kbd>Shift</kbd>+<kbd>A</kbd> in the Blender keymap); and <i>Select</i> has the same items in the 3D
+view and the UV editor. Menu items are in Title Case, as in Blender.</p>
 <p>Switching off the <i>Right-click menus</i> feature (<i>Edit › Preferences › Features</i>) leaves only the menus
 Patina had before 0.36: layers, materials, swatches and the UV editor.</p>
 
@@ -186,7 +193,7 @@ colors). Patina's Y axis points up. The dots without letters are the negative en
   <li><b>Click the end facing you</b> to see the model from the other side.</li>
   <li><b>Drag</b> inside the gizmo to orbit. The wheel zooms over it, as over the rest of the view.</li>
 </ul>
-<p><i>View › Axis gizmo</i> hides or shows it. Patina Web has the same gizmo.</p>
+<p><i>View › Axis Gizmo</i> hides or shows it. Patina Web has the same gizmo.</p>
 
 <h3 id="side-views">Side views, and back to your view</h3>
 <figure class="right"><img src="img/view_back.png" alt="The Back button under the axis gizmo" style="max-width:340px"><figcaption>On a side view, the Back button under the gizmo.</figcaption></figure>
@@ -308,7 +315,7 @@ variant, so no middle button is needed.</div>
   machine.</li>
   <li><b>Hide the panels:</b> <kbd>Tab</kbd> shows only the viewport and its brush bar. Press <kbd>Tab</kbd> again to bring
   everything back exactly as it was.</li>
-  <li><b>UI scale:</b> <i>View › UI scale</i> makes text and controls 75–200% of their normal size. It is applied
+  <li><b>UI scale:</b> <i>View › UI Scale</i> makes text and controls 75–200% of their normal size. It is applied
   immediately and remembered.</li>
   <li><b>Versions and re-exports:</b> <i>File › Save Incremental</i> (<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd>) and
   <i>File › Export Again</i> (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>); see <a href="texture-set.html#projects">Projects</a>.</li>
@@ -348,13 +355,13 @@ paint found the high-poly and where it had to be guessed (see <a href="texture-s
 down</a>). <b>Face Sets</b> shows each face set in its color (see <a href="uv.html#face-sets">Face sets</a>).</p>
 
 <h2 id="compare">Compare view</h2>
-<p>To see what a change does, split the view: <i>View › Compare view</i>, or <kbd>\</kbd>. The left of the divider shows
+<p>To see what a change does, split the view: <i>View › Compare View</i>, or <kbd>\</kbd>. The left of the divider shows
 a <b>snapshot</b> of the textures, the right the live result. Drag the divider to wipe between them. <kbd>Shift</kbd>+<kbd>\</kbd>
 takes a new snapshot, so the usual way is: take a snapshot, change a mask or a material, and wipe. The camera, lighting
 and brush are shared by both sides, and you can keep painting on the right.</p>
 <figure><img src="img/compare_notes.png" alt="Compare view with notes" style="max-width:656px"><figcaption>The
 snapshot on the left still has the edge rust that is now hidden. The numbered pins are notes.</figcaption></figure>
-<p>The left side can also show a <b>view mode</b> instead (<i>Compare view › Left: a view mode</i>), for example the
+<p>The left side can also show a <b>view mode</b> instead (<i>Compare View › Left: A View Mode</i>), for example the
 roughness or the normal map next to the lit material. After a <a href="texture-set.html#bake-down">bake-down</a>,
 <i>Left: the high-poly before the bake-down</i> shows the painted high-poly as it was, beside the low-poly with the
 layers baked down. The snapshot lives only for the session, and a new texture resolution clears it. Claude uses <code>set_compare</code>, and <code>render_view</code> renders the split too.</p>

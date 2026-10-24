@@ -273,7 +273,7 @@ void Engine::registerAssistantCommands() {
                  {"what", propEnum({"all", "layer", "mask"}, "export: all layers, only the selected layer, or its mask")},
                  {"path", prop("string", "bake_down: the low-poly model's file to start with")},
                  {"keymap", propEnum({"patina", "blender"}, "preferences: switch to this keymap (and its mouse navigation)")},
-                 {"section", propEnum({"language", "http", "features", "pies"}, "preferences: scrolled to this section")},
+                 {"section", propEnum({"language", "http", "features", "pies", "undo"}, "preferences: scrolled to this section")},
                  {"material", prop("string", "material_editor: the library material to edit (a built-in one is copied)")},
                  {"generator", prop("string", "material_editor: a new procedural material with this generator")}},
                 {"window"}),
@@ -288,11 +288,17 @@ void Engine::registerAssistantCommands() {
 
   R.add({"layout",
          "(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: "
-         "model, uvs, bake, paint, export) or full (every panel docked). With no arguments it only reports. Returns the "
-         "layout, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few "
-         "words: the same marks the step bar shows. Only with the window open (not headless).",
-         schema({{"mode", propEnum({"guided", "full"}, "Switch to this layout")},
-                 {"step", propEnum({"model", "uvs", "bake", "paint", "export"}, "Go to this step (switches to the Guided layout)")}}),
+         "model, uvs, bake, paint, export), full (every panel docked) or (1.2.7) blender (arranged as Blender is: "
+         "the steps as workspace tabs, the Outliner and a Properties editor with vertical tabs, an asset shelf), and "
+         "(1.2.7) its theme: patina (gray and copper) or "
+         "vivid_dark (KDE Plasma's Vivid Dark: navy and cyan, as the Vivid Dark Blender theme). With no arguments it "
+         "only reports. Returns the layout, the theme, the Guided step shown, and each step's state (done, look: needs "
+         "a look, todo) with why, in a few words: the same marks the step bar shows. Only with the window open (not "
+         "headless).",
+         schema({{"mode", propEnum({"guided", "full", "blender"}, "Switch to this layout")},
+                 {"step", propEnum({"model", "uvs", "bake", "paint", "export"},
+                                   "Go to this step (switches to the Guided layout; in the Blender layout, its workspace tab)")},
+                 {"theme", propEnum({"patina", "vivid_dark"}, "Switch to this theme (Edit > Preferences > Display)")}}),
          [](CommandContext& c, const json& a) {
            if (!c.engine.layoutHook) return json{{"available", false}, {"why", "Patina runs without its window"}};
            return c.engine.layoutHook(a);

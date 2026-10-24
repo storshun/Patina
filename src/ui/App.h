@@ -17,6 +17,7 @@ struct ImRect;
 #include "engine/SmartMaterial.h"
 #include "AppArgs.h"
 #include "ui/Icons.h"
+#include "ui/Theme.h"
 #include "ui/Tr.h"
 #include "ui/PenInput.h"
 #include "platform/HttpApi.h"
@@ -345,7 +346,11 @@ class App {
   double uvToastTime = 0;
   void uvToast(const std::string& s);
   void updateUVIslandInfo();
-  void uvOpsMenu(bool context);
+  enum class UVMenuFrom { Bar, Editor, Context };  // (1.2.7) one UV menu in all three places
+  void uvOpsMenu(UVMenuFrom from);
+  void selectOtherHalf();
+  void faceSelectItems(bool uvEditor);  // (1.2.7) the Select menu's common part (UV menu, 3D view)
+  void drawUndoPrefs();
   // (0.37.1) also the 3D view's Pin / Unpin buttons and Alt+P there; `uvVertices`: with no faces selected, the faces
   // round the selected UV vertices (the UV editor's vertex mode)
   void uvPinSelection(bool pin, bool uvVertices = true);
@@ -552,6 +557,10 @@ class App {
   void applyKeymapPreset(KeymapPreset preset, bool alsoNavigation);
   void drawPreferences();
   void drawAddLayerMenu();
+  // (1.2.7) the shared new-layer list; run does an action now or later
+  void newLayerItems(const std::function<void(std::function<void()>)>& run);
+  void viewMenuItems();  // (1.2.7) the View menu, in the menu bar and the 3D view's right-click menu
+  void smartMaterialItems(const std::function<void(std::function<void()>)>& run);
   void addFillLayerUI(float mask);
   // (0.22.5) drag and drop onto the layer stack (LayersPanel.cpp)
   void dropMaterial(const MaterialRef& m, bool fromLibrary, int target, bool replace, bool into, bool below);
@@ -802,15 +811,20 @@ class App {
   float tabLift[5] = {0, 0, 0, 0, 0};
   void applyStepTint();               // each frame, before any window
   int pushPanelColors(const char* label);  // a docked panel's tab in its step's color; returns what to pop
-  ImVec4 iconAccent{0, 0, 0, 0};      // the chosen tool's color in iconButton (w 0: copper)
-  bool guidedLayout = false;  // session.json "layout": "guided" or "full" (new installs: guided)
+  ImVec4 iconAccent{0, 0, 0, 0};      // the chosen tool's color in iconButton (w 0: the theme's accent)
+  // (1.2.7) a third layout, Blender (BlenderLayout.cpp); Full is the docked one
+  enum class LayoutMode { Guided = 0, Full, Blender };
+  LayoutMode layoutMode = LayoutMode::Full;  // session.json "layout": "guided", "full" or "blender" (new installs: guided)
   bool firstStart = false;    // no session.json yet
   GuidedStep guidedStep = GuidedStep::Model;
   bool guidedOn() const;      // the Guided layout is what shows (its feature on, the panels not hidden)
+  bool blenderOn() const;     // the Blender layout is what shows
   void drawGuided();
   void guidedStepBar(float h);
   void setGuidedStep(GuidedStep s);
-  void setLayoutMode(bool guided);
+  void setLayoutMode(LayoutMode m);
+  void setLayoutMode(bool guided) { setLayoutMode(guided ? LayoutMode::Guided : LayoutMode::Full); }
+  void setThemeUI(ui::ThemeId theme);  // (1.2.7) Edit > Preferences > Display > Theme: the style made again before the next frame
   StepState guidedStatus(GuidedStep s);
   void guidedModelPanel();
   void guidedUVPanel();
@@ -818,7 +832,7 @@ class App {
   void guidedPaintPanel(ImVec2 size);
   void guidedExportPanel();
   void guidedNextButton();
-  void layoutSwitch();        // Guided | Full, at the right of the menu bar
+  void layoutSwitch();        // Guided | Full | Blender, at the right of the menu bar
   json layoutCommand(const json& args);  // the `layout` command
   int guidedToolGroups = ~0;  // the tool strip's groups shown (bits: 1 paint, 2 UV, 4 retopology, 8 symmetry, 16 notes, 32 scene)
   bool viewOnly = false;      // the 3D view only looks (Guided: Model, Bake, Export): a left drag orbits, no tool acts
@@ -856,6 +870,48 @@ class App {
   ExportOptions exportOptions();    // (0.47) the Export Textures dialog's settings
   void exportPlanUI(int maxRows);   // the files they would write (0: all)
   bool bakeWant[3] = {true, true, true};  // the Bake step's maps: ambient occlusion, curvature, thickness
+
+  // ---- (1.2.7) the Blender layout (BlenderLayout.cpp): a screen of its own over the same panels, arranged as Blender
+  // arranges its editors. The steps are workspace tabs in the menu bar; the tools stand at the 3D view's left and its
+  // sidebar (Brush, Colors, View, Blender: vertical tabs) at its right; the Outliner (objects, their texture sets and
+  // layers) and the Properties editor (vertical icon tabs) are at the right; the asset shelf (materials, smart
+  // materials, smart masks and brushes, by category) is under the 3D view in the Paint step, the UV editor beside it
+  // in the UVs step. The areas' borders are dragged to resize them.
+  enum class PropsTab { Step = 0, Object, Layer, TextureSet, FaceSets, Retopology, History, Notes, Console, Count };
+  enum class SideTab { Brush = 0, Colors, View, Blender, Count };
+  enum class ShelfKind { Materials = 0, SmartMaterials, SmartMasks, Brushes };
+  struct BlenderUI {
+    float rightW = 420.f, outlinerH = 560.f, shelfH = 230.f, sidebarW = 310.f;  // (at UI scale 1)
+    float uvShare = 0.45f;          // the UV editor's part of the width beside the 3D view (UVs step)
+    PropsTab props = PropsTab::Step;
+    SideTab side = SideTab::Brush;
+    bool sideOpen = true;
+    ShelfKind shelf = ShelfKind::Materials;
+    std::string brushCategory;      // the shelf's brush category ("": all)
+    std::string outlinerFilter;     // the Outliner's search: layers whose name has it
+    bool setsOpen = true, layersOpen = true;  // the Outliner's texture sets and layers, open
+  } blui;
+  bool outlinerDrawing = false;     // layersTree draws the Outliner's layers (its search applies)
+  void drawBlenderLayout();
+  void blenderStepTabs();           // the steps as workspace tabs, in the menu bar
+  void setBlenderStep(GuidedStep s);
+  void drawOutliner();
+  void drawPropertiesEditor();
+  void drawViewSidebar();
+  void drawAssetShelf();
+  bool blenderOpenWindow(const std::string& window);  // open_window in the Blender layout: its tab (false: not one)
+  void blenderSessionLoad(const json& j);
+  json blenderSessionSave() const;
+  // the parts of the Layers panel the Outliner and the Properties editor take apart (LayersPanel.cpp)
+  void layersButtons();
+  void layersTree(float height);    // (height 0: as tall as the stack, up to the space there is)
+  void layerProperties();
+  int materialsTabShown = -1;       // drawMaterials: the shelf chose this tab and the category (-1: its own tabs)
+  std::string brushCategoryShown;   // drawBrushes: only this category ("": every one; the shelf sets it)
+  bool brushCategoryOnly = false;
+  void retopoPanel();               // the Retopology window's content (RetopoUI.cpp)
+  void stepGuidePanel();            // the step's own panel, the Properties editor's Step tab (Guided.cpp)
+  void blenderFollowTool();         // a tool of another step brings its workspace up (Guided.cpp)
 };
 
 }  // namespace patina

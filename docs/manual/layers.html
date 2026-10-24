@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.6 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.7 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -107,9 +107,9 @@ edge of the list while you drag and it scrolls.</p>
 
 <h2 id="masks">Masks</h2>
 <p>A paint layer can also have a mask. Click <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="12" cy="12" r="4.2" stroke="#E8852C" fill="#E8852C" stroke-width="1"/></svg> <b>Add mask</b> on its row, then the same button (<b>Mask</b>) to paint the mask rather than the
-layer. The viewport label shows <code>[mask]</code> while you are painting a mask. <i>Add white mask</i> and <i>Add
+layer. The viewport label shows <code>[mask]</code> while you are painting a mask. <i>Add White Mask</i> and <i>Add
 black mask</i> set the starting state. Black hides the whole layer, so you can then reveal it with the brush.</p>
-<p><b>From selection</b> (in the mask settings, or right-click ▸ <i>Mask from the face selection</i>) makes the mask
+<p><b>From selection</b> (in the mask settings, or right-click ▸ <i>Mask from the Face Selection</i>) makes the mask
 white on the selected faces and black everywhere else. Select an island, a material slot or a painted region (the
 <a href="uv.html#island-brush">Island brush</a> selects too), and the layer shows only there. It is one undo step, and
 you can keep painting the mask afterward.</p>
@@ -212,10 +212,10 @@ removes it, <i>Remove the stack</i> goes back to a plain mask. Everything is one
 build stacks with <code>add_mask_effect</code> and <code>update_layer</code> (<code>mask_effects</code>).</p>
 
 <h2 id="instances">Instances</h2>
-<p>An <b>instance</b> (right-click › <i>Make an instance</i>, <kbd>Alt</kbd>+<kbd>D</kbd>) is a linked copy of a layer: it
+<p>An <b>instance</b> (right-click › <i>Make an Instance</i>, <kbd>Alt</kbd>+<kbd>D</kbd>) is a linked copy of a layer: it
 shows the same paint or fill as its source, everywhere the source changes, but has its own mask, opacity, blend mode
 and place in the stack. Use one to repeat a decal layer in a second folder with another mask, or to put the same dirt
-pass at two strengths. Painting on an instance paints its source. <i>Select the source</i> jumps to it, and <i>Make
+pass at two strengths. Painting on an instance paints its source. <i>Select the Source</i> jumps to it, and <i>Make
 independent</i> turns the instance into an ordinary copy. Deleting the source hands its content to the first instance.</p>
 
 <h2 id="a-typical-stack">A typical stack</h2>
@@ -239,9 +239,9 @@ them. Patina stores only the parts of the textures that changed, so long session
 value and press <kbd>Ctrl</kbd>+<kbd>Z</kbd>. To see what a single layer contributes, <kbd>Alt</kbd>+click its eye
 (<a href="organizing.html#solo-see-what-one-layer-does">solo</a>).</div>
 <div class="callout gotcha"><span class="t">“I painted but nothing changed”</span>The selected layer is a fill or adjustment
-layer whose mask is already white, so painting white changes nothing. Use <i>Add black mask</i> first, or erase.</div>
+layer whose mask is already white, so painting white changes nothing. Use <i>Add Black Mask</i> first, or erase.</div>
 <div class="callout warn"><span class="t">Smart masks after a mesh change</span>AO and curvature are baked for the current
-mesh and UVs. After you change the topology or the UVs a lot, re-bake them with <i>Bake › All mesh maps</i>. Otherwise
+mesh and UVs. After you change the topology or the UVs a lot, re-bake them with <i>Bake › All Mesh Maps</i>. Otherwise
 edge masks land in the wrong places.</div>
 <div class="callout tip"><span class="t">Height blends</span>Height in non-normal blend modes is added as an offset
 around mid-gray (0.5). <i>Darken</i> and <i>Lighten</i> keep the lower or higher surface. That makes stacked dents and

@@ -222,9 +222,9 @@ bool App::maskStackWidgets(Layer& l) {
     bool open = ImGui::TreeNodeEx("##fx", ImGuiTreeNodeFlags_SpanAvailWidth, "%s", summary.c_str());
     int dupAt = -1;
     if (contextMenus() && ImGui::BeginPopupContextItem("##fxctx")) {
-      if (ImGui::MenuItem(e.enabled ? L_("Turn off") : L_("Turn on"))) e.enabled = !e.enabled, changed = true;
-      if (ImGui::MenuItem(L_("Move up"), nullptr, false, i < n - 1)) moveFrom = i, moveTo = i + 1;
-      if (ImGui::MenuItem(L_("Move down"), nullptr, false, i > 0)) moveFrom = i, moveTo = i - 1;
+      if (ImGui::MenuItem(e.enabled ? L_("Turn Off") : L_("Turn On"))) e.enabled = !e.enabled, changed = true;
+      if (ImGui::MenuItem(L_("Move Up"), nullptr, false, i < n - 1)) moveFrom = i, moveTo = i + 1;
+      if (ImGui::MenuItem(L_("Move Down"), nullptr, false, i > 0)) moveFrom = i, moveTo = i - 1;
       if (ImGui::MenuItem(L_("Duplicate"))) dupAt = i;
       ImGui::Separator();
       if (ImGui::MenuItem(L_("Remove"))) removeAt = i;

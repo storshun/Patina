@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "core/VectorIcon.h"
+#include "ui/Theme.h"
 
 namespace patina::ui {
 
@@ -15,11 +16,12 @@ static ImU32 withAlpha(ImU32 c, float a) {
 }
 
 IconColors iconColors(IconState s) {
+  const Theme& t = theme();  // (1.2.7) the accent is the theme's
   switch (s) {
-    case IconState::Chosen: return {IM_COL32(255, 246, 234, 255), IM_COL32(58, 34, 16, 255)};
-    case IconState::On: return {IM_COL32(255, 246, 234, 255), IM_COL32(245, 160, 76, 255)};
-    case IconState::Disabled: return {IM_COL32(216, 212, 204, 255), IM_COL32(232, 133, 44, 255), 0.38f};
-    default: return {IM_COL32(216, 212, 204, 255), IM_COL32(232, 133, 44, 255)};
+    case IconState::Chosen: return {themeColor(t.onAccent), themeColor(t.onAccentMark)};
+    case IconState::On: return {themeColor(t.onAccent), themeColor(t.accentLight)};
+    case IconState::Disabled: return {themeColor(t.iconBase), themeColor(t.accent), 0.38f};
+    default: return {themeColor(t.iconBase), themeColor(t.accent)};
   }
 }
 

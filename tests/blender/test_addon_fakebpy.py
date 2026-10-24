@@ -781,6 +781,30 @@ class FakeBpyTests(unittest.TestCase):
         self.assertIsNotNone(self.bpy.data.materials.get("Patina_Wait"))
         self.assertNotIn("UVs", self.server.state.message)
 
+    def test_textures_load_after_the_mesh_changed_in_blender(self):
+        """(0.14.1) The mesh changed in Blender since it was sent, but Patina kept the UVs it got: the textures still
+        fit every face left alone, so they load, with a warning. Before, they were refused ("Patina sent 60930 loops
+        but ... has 60916") although Patina had not changed a UV."""
+        obj = self.make_obj("Edited")
+        self.server.state.sent["Edited"] = self.mesh_io.export_object(obj, self.tmp.name)
+        textures = self._write_pngs("Edited", ["basecolor"])
+        # in Blender: the quad becomes a triangle (a corner dissolved)
+        m = obj.data
+        m.loops = type(m.loops)(list(m.loops)[:3])
+        m.polygons[0].loop_total = 3
+        layer = m.uv_layers.active
+        layer.data = type(layer.data)(list(layer.data)[:3])
+        before = [c for d in layer.data for c in d.uv]
+        self.assertTrue(self.server.apply_patina_result("Edited", textures, self._write_ptuv("Edited", tp.QUAD_UVS)))
+        self.assertIsNotNone(self.bpy.data.materials.get("Patina_Edited"))
+        self.assertIn("changed in Blender since it was sent", self.server.state.message)
+        self.assertIn("Patina sent 4 loops but Edited has 3", self.server.state.message)
+        self.assertEqual([c for d in layer.data for c in d.uv], before)  # Blender's UVs untouched
+        # Patina changed its UVs too: they can't come across, so the textures still wait
+        moved = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+        self.assertFalse(self.server.apply_patina_result("Edited", textures, self._write_ptuv("Edited", moved)))
+        self.assertIn("left as they were", self.server.state.message)
+
     def test_uv_edits_made_in_blender_after_sending_are_kept(self):
         obj = self.make_obj("Kept")
         info = self.mesh_io.export_object(obj, self.tmp.name)

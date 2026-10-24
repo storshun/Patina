@@ -11,6 +11,7 @@
 #include "core/Paths.h"
 #include "engine/SmartMaterial.h"
 #include "ui/App.h"
+#include "ui/Theme.h"
 
 namespace patina {
 
@@ -46,6 +47,62 @@ void App::addFillLayerUI(float mask) {
   }
 }
 
+// (1.2.7) The new-layer list: one list, the same in Edit > New Layer, the Layers panel's right-click menus, the
+// Add menu (Shift+A in the Blender keymap) and the smart materials button. Five lists had grown apart (some had
+// the adjustment layer, the white mask, baked maps or smart materials, others not, under other names).
+// `run` does an action now, or after the layer list is drawn (from a layer's own menu).
+void App::newLayerItems(const std::function<void(std::function<void()>)>& run) {
+  Document& d = engine.doc;
+  if (ImGui::MenuItem(L_("Paint Layer"), keyLabel("layer.new_paint"))) run([&d] { d.addPaintLayer(); });
+  if (ImGui::MenuItem(L_("Fill Layer"))) run([this] { addFillLayerUI(-1); });
+  if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Covers the model with the current paint material"));
+  if (ImGui::MenuItem(L_("Fill Layer with a Black Mask"))) run([this] { addFillLayerUI(0.f); });
+  if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Hidden until you paint its mask - the usual way to paint a material on"));
+  if (ImGui::MenuItem(L_("Fill Layer with a White Mask"))) run([this] { addFillLayerUI(1.f); });
+  if (ImGui::MenuItem(L_("Adjustment Layer"))) run([&d] { d.addAdjustLayer(); });
+  if (ImGui::IsItemHovered())
+    ImGui::SetTooltip("%s", T_("Hue / saturation / brightness / contrast and roughness / metallic / height offsets\n"
+                               "applied to everything below"));
+  if (ImGui::MenuItem(L_("Folder"))) run([&d] { d.addFolder(); });
+  ImGui::Separator();
+  if (ImGui::BeginMenu(L_("Baked Map Layer"))) {
+    bool any = false;
+    for (int k = 0; k < kBakedMapCount; ++k) {
+      if (!d.tex.hasBakedMap(k) || d.bakedLayer(k)) continue;
+      any = true;
+      if (ImGui::MenuItem(L_(bakedMapLabel(k)), nullptr, false, engine.features.on("baked_layers"))) run([&d, k] { d.addBakedLayer(k); });
+    }
+    if (!any) ImGui::TextDisabled("%s", T_("Every baked map has its layer"));
+    ImGui::EndMenu();
+  }
+  if (ImGui::BeginMenu(L_("Smart Material"))) {
+    smartMaterialItems(run);
+    ImGui::EndMenu();
+  }
+}
+
+// the smart materials, Patina's then yours, with their descriptions
+void App::smartMaterialItems(const std::function<void(std::function<void()>)>& run) {
+  auto list = listSmartMaterials();
+  bool anyUser = false;
+  ImGui::SeparatorText(T_("Patina smart materials"));
+  for (int pass = 0; pass < 2; ++pass)
+    for (auto& m : list) {
+      if (m.builtin != (pass == 0)) continue;
+      if (pass == 1 && !anyUser) ImGui::SeparatorText(T_("Yours")), anyUser = true;
+      if (ImGui::MenuItem((m.name + "##" + m.id).c_str())) {
+        std::string path = m.path, name = m.name;
+        run([this, path, name] {
+          std::string err;
+          if (applySmartMaterial(engine.doc, path, &err) < 0) showError(T_("Could not apply the smart material"), err);
+          else setStatus(F_("Added the smart material %s", name.c_str()));
+        });
+      }
+      if (ImGui::IsItemHovered() && !m.description.empty())
+        ImGui::SetTooltip("%s%s%s", m.description.c_str(), m.hasPaint ? "\n" : "", m.hasPaint ? T_("(includes painted textures)") : "");
+    }
+}
+
 // Blender-style Add menu (Shift+A in the Blender keymap), opened at the mouse.
 void App::drawAddLayerMenu() {
   if (openAddLayerMenu) {
@@ -53,28 +110,9 @@ void App::drawAddLayerMenu() {
     openAddLayerMenu = false;
   }
   if (!ImGui::BeginPopup("##AddLayerMenu")) return;
-  Document& d = engine.doc;
-  ImGui::TextDisabled("%s", T_("Add"));
+  ImGui::TextDisabled("%s", T_("New Layer"));
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Paint layer"))) d.addPaintLayer();
-  if (ImGui::MenuItem(L_("Fill layer"))) addFillLayerUI(-1);
-  if (ImGui::MenuItem(L_("Fill layer with a black mask"))) addFillLayerUI(0.f);
-  if (ImGui::MenuItem(L_("Adjustment layer"))) d.addAdjustLayer();
-  if (ImGui::MenuItem(L_("Folder"))) d.addFolder();
-  if (ImGui::BeginMenu(L_("Baked map layer"))) {
-    if (!bakedMapMenuItems()) ImGui::TextDisabled("%s", T_("Every baked map has its layer"));
-    ImGui::EndMenu();
-  }
-  ImGui::Separator();
-  if (ImGui::BeginMenu(L_("Smart material"))) {
-    for (auto& m : listSmartMaterials())
-      if (ImGui::MenuItem((m.name + "##" + m.id).c_str())) {
-        std::string err;
-        if (applySmartMaterial(d, m.path, &err) < 0) showError(T_("Could not apply the smart material"), err);
-        else setStatus(F_("Added smart material %s", m.name.c_str()));
-      }
-    ImGui::EndMenu();
-  }
+  newLayerItems([](std::function<void()> f) { f(); });
   ImGui::EndPopup();
 }
 
@@ -107,13 +145,12 @@ void App::layerContextMenu(int i) {
   ImGui::Separator();
   if (contextMenus()) {
     if (ImGui::MenuItem(l.visible ? L_("Hide") : L_("Show"), T_("click the check"))) l.visible = !l.visible, d.markComposite();
-    if (l.isFolder() && ImGui::MenuItem(l.expanded ? L_("Close the folder") : L_("Open the folder"))) l.expanded = !l.expanded;
-    if (ImGui::BeginMenu(L_("New layer above"))) {
-      if (ImGui::MenuItem(L_("Paint layer"), keyLabel("layer.new_paint"))) d.selected = i, g_deferred.push_back([&d] { d.addPaintLayer(); });
-      if (ImGui::MenuItem(L_("Fill layer"))) d.selected = i, g_deferred.push_back([this] { addFillLayerUI(-1); });
-      if (ImGui::MenuItem(L_("Fill layer with a black mask"))) d.selected = i, g_deferred.push_back([this] { addFillLayerUI(0.f); });
-      if (ImGui::MenuItem(L_("Adjustment layer"))) d.selected = i, g_deferred.push_back([&d] { d.addAdjustLayer(); });
-      if (ImGui::MenuItem(L_("Folder"))) d.selected = i, g_deferred.push_back([&d] { d.addFolder(); });
+    if (l.isFolder() && ImGui::MenuItem(l.expanded ? L_("Close the Folder") : L_("Open the Folder"))) l.expanded = !l.expanded;
+    if (ImGui::BeginMenu(L_("New Layer Above"))) {
+      newLayerItems([&d, i](std::function<void()> f) {
+        d.selected = i;  // (new layers go above the selection)
+        g_deferred.push_back(std::move(f));
+      });
       ImGui::EndMenu();
     }
     ImGui::Separator();
@@ -121,24 +158,24 @@ void App::layerContextMenu(int i) {
   if (ImGui::MenuItem(L_("Rename"), T_("double-click"))) renameLayerUid = (int)uid, g_focusRename = true;
   if (ImGui::MenuItem(L_("Duplicate"), keyLabel("layer.duplicate"))) g_deferred.push_back([&d, idx] { d.duplicateLayer(idx()); });
   if (ImGui::MenuItem(L_("Delete"), keyLabel("layer.delete"))) g_deferred.push_back([&d, idx] { d.removeLayer(idx()); });
-  if (!l.isFolder() && ImGui::MenuItem(L_("Make an instance"), keyLabel("layer.instance")))
+  if (!l.isFolder() && ImGui::MenuItem(L_("Make an Instance"), keyLabel("layer.instance")))
     g_deferred.push_back([&d, idx] { d.addInstance(idx()); });
   if (ImGui::IsItemHovered())
     ImGui::SetTooltip("%s", T_("Same content, own opacity, blend mode, channels and mask. Painting either one changes both."));
   if (l.instanceOf) {
-    if (ImGui::MenuItem(L_("Select the source"))) {
+    if (ImGui::MenuItem(L_("Select the Source"))) {
       if (const Layer* src = d.contentLayer(l); src != &l) d.selected = d.indexOf(src->uid), d.editMask = false;
     }
-    if (ImGui::MenuItem(L_("Make independent (copy the content)"))) g_deferred.push_back([&d, idx] { d.makeIndependent(idx()); });
+    if (ImGui::MenuItem(L_("Make Independent (Copy the Content)"))) g_deferred.push_back([&d, idx] { d.makeIndependent(idx()); });
   }
   if (contextMenus()) {
-    if (ImGui::MenuItem(L_("Move up"))) g_deferred.push_back([&d, idx] { d.moveSibling(idx(), +1); });
-    if (ImGui::MenuItem(L_("Move down"))) g_deferred.push_back([&d, idx] { d.moveSibling(idx(), -1); });
+    if (ImGui::MenuItem(L_("Move Up"))) g_deferred.push_back([&d, idx] { d.moveSibling(idx(), +1); });
+    if (ImGui::MenuItem(L_("Move Down"))) g_deferred.push_back([&d, idx] { d.moveSibling(idx(), -1); });
     const Layer* content = d.contentLayer(l);
     if (content && content->type == LayerType::Fill) {
       ImGui::Separator();
       const MaterialRef& pm = engine.painter.material;
-      if (ImGui::MenuItem(L_("Use the paint material"))) {
+      if (ImGui::MenuItem(L_("Use the Paint Material"))) {
         std::string oldName, newName;
         if (auto* oe = engine.materials.find(content->material.id)) oldName = oe->def.name;
         if (auto* ne = engine.materials.find(pm.id)) newName = ne->def.name;
@@ -146,13 +183,13 @@ void App::layerContextMenu(int i) {
         g_deferred.push_back([&d, idx, r, oldName, newName] { d.replaceFillMaterial(idx(), r, oldName, newName); });
       }
       if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("The material (or flat color) the brush paints with becomes this layer's"));
-      if (ImGui::MenuItem(L_("Paint with its material"))) engine.painter.material = content->material, engine.selectedMaterialId = content->material.id;
+      if (ImGui::MenuItem(L_("Paint with Its Material"))) engine.painter.material = content->material, engine.selectedMaterialId = content->material.id;
     }
   }
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Group into a folder"), keyLabel("layer.group")))
+  if (ImGui::MenuItem(L_("Group into a Folder"), keyLabel("layer.group")))
     g_deferred.push_back([&d, idx] { d.groupIntoFolder(idx()); });
-  if (d.effectiveParent(l) && ImGui::MenuItem(L_("Move out of the folder")))
+  if (d.effectiveParent(l) && ImGui::MenuItem(L_("Move Out of the Folder")))
     g_deferred.push_back([&d, idx] {
       // just above the folder it was in
       int f = d.indexOf(d.effectiveParent(*d.layers[idx()]));
@@ -162,7 +199,7 @@ void App::layerContextMenu(int i) {
   for (int k = 0; k < (int)d.layers.size(); ++k)
     if (d.layers[k]->isFolder() && k != i && !d.isDescendant(d.layers[k]->uid, uid) && d.effectiveParent(l) != d.layers[k]->uid)
       folders.push_back(k);
-  if (ImGui::BeginMenu(L_("Move into folder"), !folders.empty())) {
+  if (ImGui::BeginMenu(L_("Move into Folder"), !folders.empty())) {
     for (int k : folders) {
       uint32_t fu = d.layers[k]->uid;
       if (ImGui::MenuItem((d.layers[k]->name + "##" + std::to_string(fu)).c_str()))
@@ -171,47 +208,47 @@ void App::layerContextMenu(int i) {
     ImGui::EndMenu();
   }
   bool soloed = d.soloUid == uid;
-  if (ImGui::MenuItem(soloed ? L_("Show all layers (end solo)") : L_("Solo"), T_("Alt+click eye"))) {
+  if (ImGui::MenuItem(soloed ? L_("Show All Layers (End Solo)") : L_("Solo"), T_("Alt+click eye"))) {
     d.soloUid = soloed ? 0 : uid;
     d.compositeDirty = true;
   }
-  if (ImGui::BeginMenu(L_("Color tag"))) {
+  if (ImGui::BeginMenu(L_("Color Tag"))) {
     tagPicker(l);
     ImGui::EndMenu();
   }
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Mask from the face selection"), nullptr, false, !d.selectedFaces().empty()))
+  if (ImGui::MenuItem(L_("Mask from the Face Selection"), nullptr, false, !d.selectedFaces().empty()))
     g_deferred.push_back([&d, idx] { d.maskFromSelection(idx()); });
   if (!l.mask) {
-    if (ImGui::MenuItem(L_("Add white mask"))) g_deferred.push_back([&d, idx] { d.addMask(idx(), 1.f); });
-    if (ImGui::MenuItem(L_("Add black mask"))) g_deferred.push_back([&d, idx] { d.addMask(idx(), 0.f); });
+    if (ImGui::MenuItem(L_("Add White Mask"))) g_deferred.push_back([&d, idx] { d.addMask(idx(), 1.f); });
+    if (ImGui::MenuItem(L_("Add Black Mask"))) g_deferred.push_back([&d, idx] { d.addMask(idx(), 0.f); });
   } else {
-    if (ImGui::MenuItem(L_("Edit mask"))) d.selected = i, d.editMask = true;
-    if (ImGui::MenuItem(L_("Remove mask"))) g_deferred.push_back([&d, idx] { d.removeMask(idx()); });
+    if (ImGui::MenuItem(L_("Edit Mask"))) d.selected = i, d.editMask = true;
+    if (ImGui::MenuItem(L_("Remove Mask"))) g_deferred.push_back([&d, idx] { d.removeMask(idx()); });
   }
   bool painted = false;
   for (int c = 0; c < kChannelCount; ++c) painted |= l.hasChannel(c);
-  if (l.type == LayerType::Paint && ImGui::MenuItem(L_("Clear paint (keep the mask)"), nullptr, false, painted))
+  if (l.type == LayerType::Paint && ImGui::MenuItem(L_("Clear Paint (Keep the Mask)"), nullptr, false, painted))
     g_deferred.push_back([&d, idx] { d.clearPaint(idx()); });
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Copy layer settings"))) {
+  if (ImGui::MenuItem(L_("Copy Layer Settings"))) {
     layerClipboard = copyLayerSettings(l);
     setStatus(F_("Copied the settings of %s", l.name.c_str()));
   }
-  if (ImGui::MenuItem(L_("Paste layer settings"), nullptr, false, !layerClipboard.is_null())) {
+  if (ImGui::MenuItem(L_("Paste Layer Settings"), nullptr, false, !layerClipboard.is_null())) {
     pasteLayerSettings(l, layerClipboard);
     d.pendingLabel = "Paste settings: " + l.name;
     d.markComposite();
   }
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Save as smart material..."))) {
+  if (ImGui::MenuItem(L_("Save as Smart Material..."))) {
     d.selected = i;
     smartSaveName = l.name;
     smartSaveIncludePaint = false;
     g_deferred.push_back([] { ImGui::OpenPopup("Save smart material"); });
   }
-  if (ImGui::MenuItem(L_("Export this layer..."))) d.selected = i, exportWhat = 1, showExport = true;
-  if (ImGui::MenuItem(L_("Export its mask..."), nullptr, false, (bool)l.mask)) d.selected = i, exportWhat = 2, showExport = true;
+  if (ImGui::MenuItem(L_("Export This Layer..."))) d.selected = i, exportWhat = 1, showExport = true;
+  if (ImGui::MenuItem(L_("Export Its Mask..."), nullptr, false, (bool)l.mask)) d.selected = i, exportWhat = 2, showExport = true;
 }
 
 // (0.22.5) the selected layer's smart mask in the properties (the item just drawn): a smart mask or
@@ -415,7 +452,7 @@ void App::drawLayerRow(int i, int depth) {
       d.editMask = true;
     }
     maskDragSource(l, th.mask.id());
-    if (maskSel) dl->AddRect(p - ImVec2(1, 1), ImGui::GetItemRectMax() + ImVec2(1, 1), IM_COL32(232, 133, 44, 255), 2.f, 0, 2.f);
+    if (maskSel) dl->AddRect(p - ImVec2(1, 1), ImGui::GetItemRectMax() + ImVec2(1, 1), ui::themeColor(ui::theme().accent), 2.f, 0, 2.f);
     if (!l.maskEffects.empty()) dl->AddText(p + ImVec2(rowH + 1, 0), IM_COL32(200, 200, 210, 230), C_("mask effects badge", "fx"));
     if (ImGui::IsItemHovered())
       ImGui::SetTooltip("%s", l.maskEffects.empty()
@@ -595,7 +632,7 @@ void App::bakedContextMenu(int i) {
   auto idx = [&d, uid] { return d.indexOf(uid); };
   ImGui::TextDisabled("%s", l.name.c_str());
   ImGui::Separator();
-  if (ImGui::MenuItem(l.visible ? L_("Show the bake as it came out") : L_("Turn the fixes on again"), T_("click the check")))
+  if (ImGui::MenuItem(l.visible ? L_("Show the Bake as It Came Out") : L_("Turn the Fixes On Again"), T_("click the check")))
     l.visible = !l.visible, d.markComposite();
   if (ImGui::MenuItem(L_("Rename"), T_("double-click"))) renameLayerUid = (int)uid, g_focusRename = true;
   ImGui::Separator();
@@ -603,22 +640,22 @@ void App::bakedContextMenu(int i) {
     ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
     engine.uiRects[key] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
   };
-  if (ImGui::MenuItem(L_("Reset the fixes"), nullptr, false, (bool)l.mask)) g_deferred.push_back([&d, idx] { d.removeMask(idx()); });
+  if (ImGui::MenuItem(L_("Reset the Fixes"), nullptr, false, (bool)l.mask)) g_deferred.push_back([&d, idx] { d.removeMask(idx()); });
   rectOf("menu.baked_reset");
   if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Takes the painted fixes away: the bake shows again (undoable)"));
-  if (ImGui::MenuItem(L_("Remove the adjustments"), nullptr, false, !l.maskEffects.empty() || l.bakedStrength != 1.f)) {
+  if (ImGui::MenuItem(L_("Remove the Adjustments"), nullptr, false, !l.maskEffects.empty() || l.bakedStrength != 1.f)) {
     l.maskEffects.clear();
     l.bakedStrength = 1.f;
     d.markComposite();
   }
-  if (ImGui::MenuItem(L_("Bake again"))) {
+  if (ImGui::MenuItem(L_("Bake Again"))) {
     int k = l.bakedMap;
     g_deferred.push_back([this, k] { bakeMapAgain(k); });
   }
   if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("A new bake under the same fixes and adjustments"));
-  if (ImGui::MenuItem(L_("Export this map..."))) d.selected = i, exportWhat = 1, showExport = true;
+  if (ImGui::MenuItem(L_("Export This Map..."))) d.selected = i, exportWhat = 1, showExport = true;
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Delete (use the bake as it is)"), keyLabel("layer.delete")))
+  if (ImGui::MenuItem(L_("Delete (Use the Bake as It Is)"), keyLabel("layer.delete")))
     g_deferred.push_back([&d, idx] { d.removeLayer(idx()); });
   rectOf("menu.baked_delete");
 }
@@ -746,8 +783,8 @@ void App::stackDropTarget(const ImRect& r, int i) {
   }
   if (shown) {
     ImDrawList* dl = ImGui::GetWindowDrawList();
-    const ImU32 c = IM_COL32(232, 133, 44, 255);
-    if (kind == Onto) dl->AddRectFilled(r.Min, r.Max, IM_COL32(232, 133, 44, 50), 3.f), dl->AddRect(r.Min, r.Max, c, 3.f, 0, 2.f);
+    const ImU32 c = ui::themeColor(ui::theme().accent);
+    if (kind == Onto) dl->AddRectFilled(r.Min, r.Max, ui::themeColor(ui::theme().accent, 0.196f), 3.f), dl->AddRect(r.Min, r.Max, c, 3.f, 0, 2.f);
     else if (kind == Into) dl->AddRect(r.Min, r.Max, c, 3.f, 0, 2.f);
     else {
       float ly = !l ? r.Min.y + 1 : below ? r.Max.y : r.Min.y;
@@ -767,6 +804,16 @@ void App::drawLayers() {
     ImGui::Spacing();
     ImGui::SeparatorText(F_("Layers of %s", d.displayName().c_str()).c_str());
   }
+  layersButtons();
+  layersTree(0.f);
+  layerProperties();
+  endPanel();
+}
+
+// (1.2.7) the Layers panel's parts, which the Blender layout's Outliner and Properties editor take apart
+
+void App::layersButtons() {
+  Document& d = engine.doc;
   // ---- add buttons (0.36: icons, as in a paint program's layers panel)
   using ui::IconState;
   const float fh = ImGui::GetFrameHeight();
@@ -781,10 +828,10 @@ void App::drawLayers() {
   ImGui::SameLine(0, 0);
   if (ImGui::ArrowButton("##fillmore", ImGuiDir_Down)) ImGui::OpenPopup("FillMore");
   if (ImGui::BeginPopup("FillMore")) {
-    if (ImGui::MenuItem(L_("Fill layer"))) addFill(-1);
-    if (ImGui::MenuItem(L_("Fill layer with a black mask"))) addFill(0.f);
+    if (ImGui::MenuItem(L_("Fill Layer"))) addFill(-1);
+    if (ImGui::MenuItem(L_("Fill Layer with a Black Mask"))) addFill(0.f);
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Hidden until you paint its mask - the usual way to paint a material on"));
-    if (ImGui::MenuItem(L_("Fill layer with a white mask"))) addFill(1.f);
+    if (ImGui::MenuItem(L_("Fill Layer with a White Mask"))) addFill(1.f);
     ImGui::EndPopup();
   }
   ImGui::SameLine(0, 2);
@@ -804,29 +851,14 @@ void App::drawLayers() {
                  T_("Ready-made layer stacks that adapt to the mesh (edges, cavities...)")))
     ImGui::OpenPopup("SmartMenu");
   if (ImGui::BeginPopup("SmartMenu")) {
-    auto list = listSmartMaterials();
-    bool anyUser = false;
-    ImGui::SeparatorText(T_("Patina smart materials"));
-    for (int pass = 0; pass < 2; ++pass) {
-      for (auto& m : list) {
-        if (m.builtin != (pass == 0)) continue;
-        if (pass == 1 && !anyUser) ImGui::SeparatorText(T_("Yours")), anyUser = true;
-        if (ImGui::MenuItem((m.name + "##" + m.id).c_str())) {
-          std::string err;
-          if (applySmartMaterial(d, m.path, &err) < 0) showError(T_("Could not apply the smart material"), err);
-          else setStatus(F_("Added smart material %s", m.name.c_str()));
-        }
-        if (ImGui::IsItemHovered() && !m.description.empty())
-          ImGui::SetTooltip("%s%s%s", m.description.c_str(), m.hasPaint ? "\n" : "", m.hasPaint ? T_("(includes painted textures)") : "");
-      }
-    }
+    smartMaterialItems([](std::function<void()> f) { f(); });
     ImGui::Separator();
-    if (ImGui::MenuItem(L_("Save the selected layer as a smart material..."), nullptr, false, d.selectedLayer() != nullptr)) {
+    if (ImGui::MenuItem(L_("Save the Selected Layer as a Smart Material..."), nullptr, false, d.selectedLayer() != nullptr)) {
       smartSaveName = d.selectedLayer()->name;
       smartSaveIncludePaint = false;
       g_deferred.push_back([] { ImGui::OpenPopup("Save smart material"); });
     }
-    if (ImGui::MenuItem(L_("Open the smart materials folder"))) {
+    if (ImGui::MenuItem(L_("Open the Smart Materials Folder"))) {
 #ifdef _WIN32
       std::string url = "file:///" + paths::ensureDir(paths::userDataDir() / "smart_materials").generic_string();
 #else
@@ -872,6 +904,10 @@ void App::drawLayers() {
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Only this layer is shown. Click to show all layers again."));
   }
 
+}
+
+void App::layersTree(float height) {
+  Document& d = engine.doc;
   // ---- the tree (top of the stack first)
   // (rows are half as tall again as a widget: drawLayerRow; and room under them to drop things at the bottom)
   const float rowStep = std::round(ImGui::GetFrameHeight() * 1.5f) + ImGui::GetStyle().ItemSpacing.y;
@@ -885,18 +921,32 @@ void App::drawLayers() {
   // its rows in sight (the window's own scroll was the only way down to them)
   float bakedH = bakedSection ? (float(d.layers.size() - stackRows) + 1.4f) * rowStep : 0.f;  // (room for the section under it)
   listH = std::min(listH, std::max(4 * rowStep, ImGui::GetContentRegionAvail().y - 4 * uiScale - bakedH));
+  if (height > 0.f) listH = std::max(4 * rowStep, height - bakedH);  // (1.2.7: the Outliner gives it its height)
   ImGui::BeginChild("##layerlist", ImVec2(0, listH), ImGuiChildFlags_Borders);
   {
     ImVec2 a = ImGui::GetWindowPos(), b = ImGui::GetWindowSize();
     engine.uiRects["layers.list"] = {a.x, a.y, b.x, b.y};  // (for tests)
   }
+  // (1.2.7) the Outliner's search: the layers whose name has it, and the folders they are in (opened)
+  std::string want = outlinerDrawing ? blui.outlinerFilter : std::string();
+  std::transform(want.begin(), want.end(), want.begin(), ::tolower);
+  std::function<bool(int)> matches = [&](int i) {
+    std::string name = d.layers[i]->name;
+    std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+    if (name.find(want) != std::string::npos) return true;
+    if (d.layers[i]->isFolder())
+      for (auto k : d.childrenOf(d.layers[i]->uid))
+        if (matches(k)) return true;
+    return false;
+  };
   std::function<void(uint32_t, int)> level = [&](uint32_t parent, int depth) {
     auto kids = d.childrenOf(parent);
     for (auto it = kids.rbegin(); it != kids.rend(); ++it) {
       if (d.layers[*it]->isBaked()) continue;  // (their own section, under the stack)
+      if (!want.empty() && !matches(*it)) continue;
       drawLayerRow(*it, depth);
       const Layer& l = *d.layers[*it];
-      if (l.isFolder() && l.expanded && depth < 32) level(l.uid, depth + 1);
+      if (l.isFolder() && (l.expanded || !want.empty()) && depth < 32) level(l.uid, depth + 1);
     }
   };
   level(0, 0);
@@ -943,18 +993,20 @@ void App::drawLayers() {
     ImGui::EndPopup();
   }
 
+}
+
+void App::layerProperties() {
+  Document& d = engine.doc;
   // ---- properties of the selected layer
   Layer* l = d.selectedLayer();
   if (!l) {
     ImGui::TextDisabled("%s", T_("No layer selected"));
-    endPanel();
     return;
   }
   if (l->isBaked()) {
     drawBakedProperties(*l);
     for (auto& f : g_deferred) f();
     g_deferred.clear();
-    endPanel();
     return;
   }
   bool changed = false;
@@ -1162,7 +1214,6 @@ void App::drawLayers() {
   // (edits asked for in the properties: a material dropped on the fill material, Make independent)
   for (auto& f : g_deferred) f();
   g_deferred.clear();
-  endPanel();
 }
 
 // ------------------------------------------------------------------ history
@@ -1180,13 +1231,17 @@ void App::drawHistory() {
   }
   Document& d = engine.doc;
   UndoStack& u = d.undo;
-  ImGui::TextDisabled(T_("%zu steps, %.0f MB of undo data"), u.count(), u.bytes() / 1048576.0);
+  const UndoLimits& lim = UndoStack::limits();
+  ImGui::TextDisabled(T_("%zu steps, %.0f MB on the graphics card, %.0f MB compressed"), u.count(), u.bytes() / 1048576.0,
+                      u.ramBytes() / 1048576.0);
   ImGui::SameLine();
   ImGui::TextDisabled("(?)");
   if (ImGui::IsItemHovered())
     ImGui::SetTooltip(T_("Click a step to go back to it; later steps stay until you change something.\n"
-                         "The oldest steps are dropped after %zu steps or %zu MB."),
-                      u.maxEntries, u.maxBytes >> 20);
+                         "Recent steps stay on the graphics card (up to %zu MB for every object), so they undo at once.\n"
+                         "Older ones are compressed into RAM. The oldest steps are dropped after %zu steps, or when the\n"
+                         "compressed ones pass %.1f GB (Preferences > Undo). Undo is never written to disk."),
+                      lim.gpuBytes >> 20, lim.steps, lim.ramBytes / 1073741824.0);
   ImGui::BeginChild("##hist", ImVec2(0, 0), ImGuiChildFlags_Borders);
   static uint64_t lastVersion = 0;
   bool scroll = u.version() != lastVersion;
@@ -1280,8 +1335,8 @@ void App::drawColors() {
       if (contextMenus()) {
         colorsContextMenu(2, s, (int)i);
       } else {
-        if (ImGui::MenuItem(L_("Use as secondary"))) secondaryColor = s;
-        if (ImGui::MenuItem(L_("Replace with the primary color"))) swatches[i] = m.flat.color;
+        if (ImGui::MenuItem(L_("Use as the Secondary Color"))) secondaryColor = s;
+        if (ImGui::MenuItem(L_("Replace with the Primary Color"))) swatches[i] = m.flat.color;
         if (ImGui::MenuItem(L_("Remove"))) remove = (int)i;
       }
       ImGui::EndPopup();

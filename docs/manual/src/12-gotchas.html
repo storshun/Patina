@@ -46,18 +46,19 @@ sharp. Lower <b>Level</b>, add <b>Noise</b>, or paint the mask by hand.</p>
 in the project, and exports ignore it.</p>
 <h3>Painting on a folder hid everything in it</h3>
 <p>The brush paints a folder's <i>mask</i>, and a new mask starts black, so only the painted spot shows. Undo, then use
-<i>Add white mask</i> on the folder and erase where it should be hidden.</p>
+<i>Add White Mask</i> on the folder and erase where it should be hidden.</p>
 <h3>Undo went further back than expected</h3>
 <p>Each slider change is its own step, recorded when you let go. A long session of tweaks becomes many small steps. The
 History panel shows them all. Click the step you want instead of pressing <kbd>Ctrl</kbd>+<kbd>Z</kbd> many times.
-Only the last 100 steps (or 1 GB of undo data) are kept.</p>
+Each object keeps 100 steps by default; set how many, and how much memory undo may use, in <i>Edit › Preferences ›
+Undo</i> (see <a href="organizing.html#undo-memory">How much undo keeps</a>).</p>
 <h3>A smart material with paint looks scrambled</h3>
 <p>Painted textures in a smart material follow the UV layout of the mesh they were painted on. Save smart materials
 <i>without</i> paint to use them on other models.</p>
 
 <h2>UVs</h2>
 <h3>After unwrapping, the model shows no paint</h3>
-<p><i>UV › Keep paint on UV edits</i> was off, so the paint stayed where it was in the texture while the UVs moved. Undo
+<p><i>UV › Keep Paint on UV Edits</i> was off, so the paint stayed where it was in the texture while the UVs moved. Undo
 (<kbd>Ctrl</kbd>+<kbd>Z</kbd>), turn the option on, and unwrap again.</p>
 <h3>The Island brush made several small islands, or the whole layout moved</h3>
 <p>Each connected piece of the painted area becomes its own island; paint across gaps, or grow the selection
@@ -138,7 +139,7 @@ hides the panels. <i>Edit › Preferences</i> shows which keymap is active and s
 <a href="shortcuts-blender.html">Blender keymap reference</a>.</p>
 <h3>Patina starts with odd brush settings or a tiny UI</h3>
 <p>Brush, colors, UI scale and other choices are restored from <code>session.json</code> in the settings folder
-(<i>Help › About</i> shows where). Use <i>View › UI scale › 100%</i>, or quit and delete that file to get the defaults back.
+(<i>Help › About</i> shows where). Use <i>View › UI Scale › 100%</i>, or quit and delete that file to get the defaults back.
 <code>keymap.json</code> next to it holds the shortcuts.</p>
 
 <h2>System and setup</h2>

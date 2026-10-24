@@ -193,9 +193,9 @@ bool App::notesOverlay(ImVec2 origin, ImVec2 size, bool hovered) {
 }
 
 void App::drawNotes() {
-  if (ImGuiWindow* h = ImGui::FindWindowByName("History"))
+  if (ImGuiWindow* h = ImGui::FindWindowByName("History"); h && !panelEmbedded)
     if (h->DockId) ImGui::SetNextWindowDockID(h->DockId, ImGuiCond_FirstUseEver);
-  ImGui::Begin(L_("Notes"));
+  beginPanel(L_("Notes"));  // (1.2.7: also a Properties tab of the Blender layout)
   Document& d = engine.doc;
   ImGui::Checkbox(L_("Pins"), &showNotePins);
   ImGui::SameLine();
@@ -270,7 +270,7 @@ void App::drawNotes() {
     d.notes.erase(d.notes.begin() + remove);
     d.dirty = true;
   }
-  ImGui::End();
+  endPanel();
 }
 
 }  // namespace patina

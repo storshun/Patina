@@ -531,13 +531,13 @@ def _apply_patina_result(obj_name: str, textures: Dict[str, Any], uv_path: Optio
         uv_error = ""
         if uv_path:
             sent = state.sent.get(obj_name, {})
+            # The .ptmesh of the last send (also after a restart of Blender: its header says
+            # whether modifiers were applied, its loop_verts guard against changed topology).
+            sent_path = sent.get("path") or mesh_io.ptmesh_path(exchange_dir(), obj_name)
             if sent.get("evaluated"):
                 uv_error = ("the mesh was sent with modifiers that change its faces applied - turn off 'Apply "
                             "Modifiers When Sending', send it again and repaint")
             else:
-                # The .ptmesh of the last send (also after a restart of Blender: its header says
-                # whether modifiers were applied, its loop_verts guard against changed topology).
-                sent_path = sent.get("path") or mesh_io.ptmesh_path(exchange_dir(), obj_name)
                 try:
                     uv_applied, msg = mesh_io.apply_ptuv(obj, uv_path, sent_ptmesh=sent_path)
                     if not uv_applied:
@@ -556,6 +556,17 @@ def _apply_patina_result(obj_name: str, textures: Dict[str, Any], uv_path: Optio
                 except Exception as exc:  # noqa: BLE001
                     traceback.print_exc()
                     uv_error = str(exc)
+            topology = "loops but" in uv_error or "face corners" in uv_error  # not UVs edited in Blender
+            if topology and not sent.get("evaluated") and mesh_io.patina_kept_uvs(uv_path, sent_path):
+                # (0.14.1) the mesh changed in Blender since it was sent, but Patina kept the UVs it got: they are
+                # still Blender's UVs, so the textures fit every face that was left alone. Refusing them made the
+                # user send the mesh again (or fear 'Update Mesh') for a push that was safe.
+                warnings.append("%s changed in Blender since it was sent to Patina (%s). The textures were loaded: "
+                                "Patina kept the UVs, so they fit every face you didn't change. To paint the "
+                                "changed faces, send it to Patina again: the paint carries over"
+                                % (obj_name, uv_error.split(" (")[0] if "loops but" in uv_error else
+                                   "its face corners are not the ones sent"))
+                uv_error = ""
         if uv_error:
             # The textures are painted for Patina's UV layout: on the old UVs they would show up
             # scrambled, so nothing changes until the UVs can come across too.

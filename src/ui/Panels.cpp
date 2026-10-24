@@ -78,6 +78,8 @@ static void tileName(const std::string& name, float width, int maxLines = 2) {
 // ------------------------------------------------------------------ menus
 
 // a menu of the menu bar; where it is goes in uiRects as menu.<key> (tests and the manual's screenshots)
+static bool gMenuStepLines = true;  // (1.2.7) not in the Blender layout (drawMenuBar)
+
 bool menuHeader(Engine& engine, const char* key, const char* label) {
   ImGuiWindow* bar = ImGui::GetCurrentWindow();
   bool open = ImGui::BeginMenu(label);
@@ -90,7 +92,7 @@ bool menuHeader(Engine& engine, const char* key, const char* label) {
                     : k == "bake"                      ? App::GuidedStep::Bake
                     : k == "blender"                   ? App::GuidedStep::Export
                                                        : App::GuidedStep::Count;
-  if (s != App::GuidedStep::Count && engine.features.on("guided_layout")) {
+  if (s != App::GuidedStep::Count && engine.features.on("guided_layout") && gMenuStepLines) {
     float t = std::max(1.f, std::round(2.f * ImGui::GetFontSize() / 15.f)), pad = ImGui::GetStyle().FramePadding.x;
     bar->DrawList->AddRectFilled(ImVec2(a.x + pad, b.y - t - 1.f), ImVec2(b.x - pad, b.y - 1.f),
                                  App::mixColor(App::stepColor(s), App::stepColor(s), 0.f, 0.85f), t * 0.5f);
@@ -100,6 +102,7 @@ bool menuHeader(Engine& engine, const char* key, const char* label) {
 
 void App::drawMenuBar() {
   if (!ImGui::BeginMainMenuBar()) return;
+  gMenuStepLines = !blenderOn();
   Document& d = engine.doc;
   if (menuHeader(engine, "file", L_("File"))) {
     if (ImGui::BeginMenu(L_("New"))) {
@@ -131,7 +134,7 @@ void App::drawMenuBar() {
         if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s%s", f.c_str(), exists ? "" : T_("\n(missing)"));
       }
       ImGui::Separator();
-      if (ImGui::MenuItem(L_("Clear the list"))) recentFiles.clear(), saveSession(true);
+      if (ImGui::MenuItem(L_("Clear the List"))) recentFiles.clear(), saveSession(true);
       ImGui::EndMenu();
       if (!open.empty())
         replaceProject(T_("open another file"), [this, open] {
@@ -184,7 +187,7 @@ void App::drawMenuBar() {
     }
     if (ImGui::MenuItem(L_("Render Image..."), keyLabel("file.render"))) showRender = true;
     ImGui::Separator();
-    if (ImGui::MenuItem(L_("Reload Mesh (keep layers)"), nullptr, false, !d.meshPath.empty())) {
+    if (ImGui::MenuItem(L_("Reload Mesh (Keep Layers)"), nullptr, false, !d.meshPath.empty())) {
       json r;
       if (runCommand("reload_mesh", json::object(), &r)) setStatus(F_("Reloaded %s", d.meshPath.c_str()));
     }
@@ -204,9 +207,10 @@ void App::drawMenuBar() {
     if (engine.features.on("command_palette") && ImGui::MenuItem(L_("Search Everything..."), keyLabel("app.palette")))
       openCommandPalette();
     ImGui::Separator();
-    if (ImGui::MenuItem(L_("Add Paint Layer"), keyLabel("layer.new_paint"))) runCommand("add_layer", {{"type", "paint"}});
-    if (ImGui::MenuItem(L_("Add Fill Layer (current material)"))) d.addFillLayer(engine.painter.material);
-    if (ImGui::MenuItem(L_("Add Folder"))) runCommand("add_layer", {{"type", "folder"}});
+    if (ImGui::BeginMenu(L_("New Layer"))) {  // (1.2.7) the same list as the Layers panel's
+      newLayerItems([](std::function<void()> f) { f(); });
+      ImGui::EndMenu();
+    }
     if (engine.features.on("auto_texture")) {
       if (ImGui::MenuItem(L_("Auto Texture from Material Slots..."), nullptr, false, d.hasMesh())) openAutoTexture();
       if (ImGui::IsItemHovered())
@@ -233,51 +237,7 @@ void App::drawMenuBar() {
     ImGui::EndMenu();
   }
   if (menuHeader(engine, "view", L_("View"))) {
-    ImGui::MenuItem(L_("Wireframe"), nullptr, &engine.viewOptions.wireframe);
-    ImGui::MenuItem(L_("Seams"), nullptr, &engine.viewOptions.seams);
-    ImGui::MenuItem(L_("Tint UV islands"), nullptr, &engine.viewOptions.islandTint);
-    ImGui::MenuItem(L_("Environment background"), nullptr, &engine.viewOptions.envBackground);
-    ImGui::MenuItem(L_("Use baked AO"), nullptr, &engine.viewOptions.useAO);
-    if (engine.features.on("retopology") && engine.features.on("retopo_preview_toggle"))
-      ImGui::MenuItem(L_("Retopology preview"), keyLabel("view.retopo_preview"), &engine.viewOptions.retopoPreview);
-    if (engine.features.on("axis_gizmo")) ImGui::MenuItem(L_("Axis gizmo"), nullptr, &engine.viewOptions.axisGizmo);
-    if (engine.features.on("texture_set_tools") && d.mesh.tiles.active())
-      ImGui::MenuItem(L_("Isolate current texture set"), keyLabel("view.isolate_set"), &engine.viewOptions.isolateSet);
-    ImGui::Separator();
-    if (ImGui::MenuItem(L_("Frame mesh"), "F")) engine.frameMesh();
-    static const char* kViews[][2] = {{"front", N_("View front")}, {"back", N_("View back")},     {"left", N_("View left")},
-                                      {"right", N_("View right")}, {"top", N_("View top")},       {"bottom", N_("View bottom")},
-                                      {"persp", N_("View persp")}};  // (the id, the menu item)
-    for (auto& v : kViews) {
-      float y, p;
-      if (!ImGui::MenuItem(L_(v[1]))) continue;
-      if (Camera::viewAngles(v[0], y, p)) snapToView(y, p);  // (0.38: remembered, Numpad 0 goes back)
-      else engine.camera.setView(v[0]);
-    }
-    if (ImGui::MenuItem(L_("Orthographic"), "Num 5", engine.camera.ortho))
-      engine.camera.ortho = !engine.camera.ortho, engine.viewMemory.orthoBySnap = false;
-    if (viewSnapping() && ImGui::MenuItem(L_("Back to your view"), keyLabel("view.back"), false, engine.viewMemory.hasBack)) goBackView();
-    ImGui::Separator();
-    compareMenu();
-    if (ImGui::MenuItem(L_("Hide panels (distraction-free)"), keyLabel("view.focus"), distractionFree))
-      distractionFree = !distractionFree, distractionFreeSince = nowSeconds();
-    if (ImGui::BeginMenu(L_("UI scale"))) {
-      for (float sc : {0.75f, 0.85f, 1.f, 1.15f, 1.25f, 1.5f, 1.75f, 2.f}) {
-        char b[16];
-        snprintf(b, sizeof b, "%d%%", int(sc * 100 + 0.5f));
-        if (ImGui::MenuItem(b, nullptr, std::abs(userUiScale - sc) < 0.01f)) applyUiScale(sc);
-      }
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu(L_("Navigation"))) {
-      for (int i = 0; i < (int)NavPreset::Count; ++i)
-        if (ImGui::MenuItem(L_(navPresetName((NavPreset)i)), nullptr, (int)navPreset == i)) navPreset = (NavPreset)i;
-      ImGui::Separator();
-      ImGui::TextDisabled("%s", T_("Ctrl+right-drag always resizes the brush; the wheel always zooms."));
-      ImGui::EndMenu();
-    }
-    ImGui::Separator();
-    if (ImGui::MenuItem(L_("Reset layout"))) requestLayoutReset = true;
+    viewMenuItems();  // (1.2.7) the same menu as the 3D view's right-click View
     if (std::getenv("PATINA_DEV")) ImGui::MenuItem("ImGui demo", nullptr, &showDemo);  // (for Patina's developers)
     ImGui::EndMenu();
   }
@@ -315,106 +275,8 @@ void App::drawMenuBar() {
   // (0.47) the menus of the work in the order of the Guided layout's steps: Mesh and Retopology (Model), UV, Bake,
   // Blender (Export)
   if (menuHeader(engine, "uv", L_("UV"))) {
-    auto run = [&](const char* cmd, json args) {
-      try {
-        engine.execute(cmd, args);
-      } catch (std::exception& e) {
-        setStatus(e.what());
-      }
-    };
-    // (0.47) the UV menu in groups: what most models need at the top level, the rest a submenu each, as the UV
-    // editor's right-click menu has them
-    bool hasSel = !d.selectedFaces().empty();
-    if (engine.features.on("face_sets") && ImGui::MenuItem(L_("Face Sets..."))) openFaceSets();  // (1.2)
-    if (ImGui::BeginMenu(hasSel ? L_("Unwrap the Selection###unwrap") : L_("Unwrap###unwrap"))) {
-      auto unwrap = [&](const char* method) {
-        run("uv_unwrap", {{"method", method}, {"selection", hasSel}, {"reproject", reprojectOnUVEdit}});
-      };
-      if (ImGui::MenuItem(L_("Along the Seams (LSCM)"))) unwrap("lscm");
-      if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Flattens each piece the seams cut out. Lay the seams first (the Seams tool, M)."));
-      if (ImGui::MenuItem(L_("Smart UV Project"))) unwrap("smart");
-      if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Cuts where the model bends sharply and lays each piece flat: hard-surface models"));
-      if (ImGui::MenuItem(L_("Box Project"))) unwrap("box");
-      if (ImGui::MenuItem(L_("Planar from view"))) unwrap("planar");
-      if (ImGui::MenuItem(L_("Cylinder Project"))) unwrap("cylinder");
-      if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Unrolls around the longest axis: arms, legs, tubes, barrels. Select one part first."));
-      if (ImGui::MenuItem(L_("Sphere Project"))) unwrap("sphere");
-      ImGui::EndMenu();
-    }
-    if (ImGui::MenuItem(hasSel ? L_("Relax Islands (selection)") : L_("Relax Islands")))
-      run("uv_relax", {{"selection", hasSel}, {"reproject", reprojectOnUVEdit}});
-    if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Removes stretch: each island is solved again and put back in place, at the same size"));
-    if (ImGui::MenuItem(L_("Pack Islands"))) run("uv_pack", {{"reproject", reprojectOnUVEdit}});
-    if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Packs the islands by their outlines, so small ones fill the gaps of big ones"));
-    size_t ov = overlappingIslandCount();
-    std::string ovl = (ov ? F_("Fix Overlapping UVs (%zu)", ov) : std::string(T_("Fix Overlapping UVs (none)"))) + "###fixoverlaps";
-    if (ImGui::MenuItem(ovl.c_str(), nullptr, false, ov > 0)) run("uv_fix_overlaps", {{"reproject", reprojectOnUVEdit}});
-    ImGui::Separator();
-    if (ImGui::MenuItem(L_("Island Brush"), keyLabel("tool.island"))) selectTool(ViewportTool::Island);
-    if (ImGui::MenuItem(L_("Make Island from Selection"), keyLabel("island.make"), false, hasSel)) makeIslandFromSelection();
-    if (ImGui::BeginMenu(L_("Islands"))) {
-      if (ImGui::MenuItem(L_("Orient Upright"), nullptr, false, hasSel)) run("uv_orient", {{"mode", "upright"}, {"selection", true}, {"reproject", reprojectOnUVEdit}});
-      if (ImGui::MenuItem(L_("Orient Along Their Longest Side"), nullptr, false, hasSel)) run("uv_orient", {{"mode", "longest_axis"}, {"selection", true}, {"reproject", reprojectOnUVEdit}});
-      if (ImGui::MenuItem(hasSel ? L_("Rectify Quad Islands (selection)") : L_("Rectify Quad Islands")))
-        run("uv_rectify", {{"selection", hasSel}, {"reproject", reprojectOnUVEdit}});
-      if (ImGui::IsItemHovered())
-        ImGui::SetTooltip("%s", T_("Straightens islands made of quads (belts, pipes, trims, planks) into a straight grid"));
-      if (ImGui::MenuItem(L_("Move Selection into Free Space"), nullptr, false, hasSel)) run("uv_pack", {{"free_space", true}, {"selection", true}, {"reproject", reprojectOnUVEdit}});
-      ImGui::Separator();
-      if (ImGui::MenuItem(L_("Texel Density..."))) showDensity = true;
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu(L_("Mirrored Halves"))) {
-      if (ImGui::MenuItem(L_("Mirror UVs (X)"))) {
-        json r;
-        if (runCommand("uv_mirror", {{"axes", {"x"}}, {"reproject", reprojectOnUVEdit}}, &r))
-          setStatus(F_("%d faces on the -X side now share the UVs of the +X side", r.value("mirrored_faces", 0)));
-      }
-      if (ImGui::IsItemHovered())
-        ImGui::SetTooltip("%s", T_("The -X half of a symmetric model takes the mirrored UVs of the +X half: both share one place in the texture"));
-      if (ImGui::MenuItem(L_("Re-stack Mirrored Halves"), nullptr, false, uvUnstacked > 0))
-        uvRunOnSelection("uv_restack", {{"reproject", reprojectOnUVEdit}}, T_("Mirrored halves are stacked on their other half again"));
-      if (ImGui::MenuItem(L_("Unstack Mirrored Halves (selection)"), nullptr, false, hasSel))
-        uvRunOnSelection("uv_unstack", {{"selection", true}, {"reproject", reprojectOnUVEdit}}, T_("The mirrored half has its own place now"));
-      if (engine.features.on("symmetry_check")) {
-        ImGui::Separator();
-        if (ImGui::MenuItem(L_("Check Mesh Symmetry..."))) showSymmetry = true;
-        if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("How far the two halves of the model differ, with a heat map and the worst spots"));
-      }
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu(L_("Pins"))) {
-      if (ImGui::MenuItem(L_("Pin Selected Islands"), T_("P (UV editor)"), false, hasSel)) uvPinSelection(true);
-      if (ImGui::MenuItem(L_("Unpin Selected Islands"), keyLabel("uv.unpin"), false, hasSel)) uvPinSelection(false);
-      if (ImGui::MenuItem(L_("Unpin Every Island"), nullptr, false, uv::pinnedFaceCount(d.mesh) > 0))
-        uvRunOnSelection("uv_pin", {{"all", true}, {"pin", false}}, T_("No islands are pinned now"));
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu(L_("Selection"))) {
-      if (ImGui::MenuItem(L_("Grow Selection"), keyLabel("select.grow"), false, hasSel)) run("select_faces", {{"mode", "grow"}});
-      if (ImGui::MenuItem(L_("Shrink Selection"), keyLabel("select.shrink"), false, hasSel)) run("select_faces", {{"mode", "shrink"}});
-      if (ImGui::MenuItem(L_("Select the Whole Material Slot"), nullptr, false, hasSel && !d.mesh.faceMaterial.empty())) {
-        // every face that uses a material slot of the selected faces
-        std::vector<uint32_t> slots;
-        for (uint32_t f : d.selectedFaces())
-          if (f < d.mesh.faceMaterial.size() &&
-              std::find(slots.begin(), slots.end(), d.mesh.faceMaterial[f]) == slots.end())
-            slots.push_back(d.mesh.faceMaterial[f]);
-        for (uint32_t sl : slots) run("select_faces", {{"mode", "material"}, {"material", sl}});
-      }
-      if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Adds every face that uses the same Blender material slot as the selection"));
-      if (ImGui::MenuItem(L_("New Texture Set from Selection..."), nullptr, false, hasSel)) openNewTextureSet();
-      if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("A texture of their own for the selected faces, such as one for the head and one for the body"));
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu(L_("Seams"))) {
-      if (ImGui::MenuItem(L_("Seams from Islands"))) run("uv_seams", {{"mode", "from_islands"}});
-      if (ImGui::MenuItem(L_("Seams by Angle (60)"))) run("uv_seams", {{"mode", "by_angle"}, {"angle", 60}});
-      if (ImGui::MenuItem(L_("Clear Seams"))) run("uv_seams", {{"mode", "clear"}});
-      ImGui::EndMenu();
-    }
-    ImGui::Separator();
-    ImGui::MenuItem(L_("Keep paint on UV edits"), nullptr, &reprojectOnUVEdit);
+    // (1.2.7) the same menu as the UV editor's More button and right-click menu (UVEditor.cpp)
+    uvOpsMenu(UVMenuFrom::Bar);
     ImGui::EndMenu();
   }
   if (menuHeader(engine, "bake", L_("Bake"))) {
@@ -430,10 +292,10 @@ void App::drawMenuBar() {
       d.tex.bakeThickness(d.mesh, d.bvh, d.thicknessRays);
       d.markComposite();
     }
-    if (ImGui::MenuItem(L_("All mesh maps"))) d.rebakeMeshMaps(true, true, true);
+    if (ImGui::MenuItem(L_("All Mesh Maps"))) d.rebakeMeshMaps(true, true, true);
     ImGui::Separator();
-    if (ImGui::MenuItem(L_("From a High-poly Mesh..."))) showHighPoly = true;
-    if (ImGui::MenuItem(L_("Remove the High-poly Bake"), nullptr, false, d.tex.hasHighNormal()))
+    if (ImGui::MenuItem(L_("From a High-Poly Mesh..."))) showHighPoly = true;
+    if (ImGui::MenuItem(L_("Remove the High-Poly Bake"), nullptr, false, d.tex.hasHighNormal()))
       runCommand("bake_from_high_poly", {{"clear", true}});
     if (engine.features.on("bake_down")) {
       ImGui::Separator();
@@ -448,12 +310,12 @@ void App::drawMenuBar() {
   }
   if (menuHeader(engine, "blender", L_("Blender"))) {
     bool linked = d.bridge.active;
-    if (ImGui::MenuItem(L_("Send textures to Blender"), keyLabel("blender.send"), false, linked)) {
+    if (ImGui::MenuItem(L_("Send Textures to Blender"), keyLabel("blender.send"), false, linked)) {
       std::string err;
       if (engine.pushToBlender(&err)) setStatus(T_("Sent textures to Blender"));
       else setStatus(F_("Send failed: %s", err.c_str()));
     }
-    ImGui::MenuItem(L_("Auto-send after changes"), nullptr, &engine.autoPushToBlender, linked);
+    ImGui::MenuItem(L_("Auto-Send After Changes"), nullptr, &engine.autoPushToBlender, linked);
     if (engine.features.on("model_export")) {
       ImGui::Separator();
       if (ImGui::MenuItem(L_("Send Model to Blender as a New Object"), nullptr, false, d.hasMesh())) {
@@ -475,17 +337,18 @@ void App::drawMenuBar() {
     ImGui::EndMenu();
   }
   if (menuHeader(engine, "help", L_("Help"))) {
-    if (ImGui::MenuItem(L_("Manual (opens in your browser)"))) openLocalPage("manual");
-    if (ImGui::MenuItem(L_("What's New (the change log)"))) openLocalPage("manual:changes");  // (1.2)
-    if (ImGui::MenuItem(L_("Shortcuts & usage"), "F1")) showHelp = true;
-    if (ImGui::MenuItem(L_("Patina Web (browser painter)"))) openLocalPage("web");
+    if (ImGui::MenuItem(L_("Manual (Opens in Your Browser)"))) openLocalPage("manual");
+    if (ImGui::MenuItem(L_("What's New (The Change Log)"))) openLocalPage("manual:changes");  // (1.2)
+    if (ImGui::MenuItem(L_("Shortcuts & Usage"), "F1")) showHelp = true;
+    if (ImGui::MenuItem(L_("Patina Web (Browser Painter)"))) openLocalPage("web");
     if (ImGui::MenuItem(L_("Welcome Window"))) showWelcome = true;
     if (ImGui::MenuItem(L_("Pen Tablet Test..."))) showPenTest = true;
     ImGui::Separator();
     if (ImGui::MenuItem(L_("About Patina"))) showAbout = true;
     ImGui::EndMenu();
   }
-  layoutSwitch();  // (0.46) Guided | Full
+  if (blenderOn()) blenderStepTabs();  // (1.2.7) the steps as workspace tabs
+  layoutSwitch();  // (0.46) Guided | Full; (1.2.7) | Blender
   ImGui::EndMainMenuBar();
 }
 
@@ -817,7 +680,8 @@ void App::drawMaterials() {
   // (0.22.5) the materials, the smart materials and the smart masks, each to click or to drag onto the
   // layer stack
   int tab = 0;
-  if (ImGui::BeginTabBar("##assets")) {
+  if (materialsTabShown >= 0) tab = materialsTabShown;  // (1.2.7: the Blender layout's shelf chose it, at its left)
+  else if (ImGui::BeginTabBar("##assets")) {
     auto item = [&](const char* label, int k, const char* key, const char* tip) {
       bool open = ImGui::BeginTabItem(label);
       ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
@@ -839,14 +703,16 @@ void App::drawMaterials() {
   ImGui::SetNextItemWidth(160 * uiScale);
   ImGui::InputTextWithHint("##search", T_("search"), &materialFilter);
   ImGui::SameLine();
-  ImGui::SetNextItemWidth(140 * uiScale);
-  if (ImGui::BeginCombo("##cat", materialCategory.empty() ? T_("All categories") : materialCategory.c_str())) {
-    if (ImGui::Selectable(L_("All categories"), materialCategory.empty())) materialCategory.clear();
-    for (auto& c : engine.materials.categories())
-      if (ImGui::Selectable(c.c_str(), c == materialCategory)) materialCategory = c;
-    ImGui::EndCombo();
+  if (materialsTabShown < 0) {  // (the shelf lists the categories itself)
+    ImGui::SetNextItemWidth(140 * uiScale);
+    if (ImGui::BeginCombo("##cat", materialCategory.empty() ? T_("All categories") : materialCategory.c_str())) {
+      if (ImGui::Selectable(L_("All categories"), materialCategory.empty())) materialCategory.clear();
+      for (auto& c : engine.materials.categories())
+        if (ImGui::Selectable(c.c_str(), c == materialCategory)) materialCategory = c;
+      ImGui::EndCombo();
+    }
+    ImGui::SameLine();
   }
-  ImGui::SameLine();
   if (ImGui::Button(L_("Import folder..."))) openFileDialog(DialogPurpose::ImportMaterial);
   if (ImGui::IsItemHovered())
     ImGui::SetTooltip("%s", T_("A folder of texture maps: base color, roughness, metallic, normal, height...\n"
@@ -914,7 +780,7 @@ void App::drawMaterials() {
       dl->AddText(top + ImVec2(0, lh), ImGui::GetColorU32(ImGuiCol_TextDisabled), fitText(sub, room).c_str());
     } else {
       ImGui::BeginGroup();
-      if (sel) ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.78f, 0.44f, 0.14f, 1));
+      if (sel) ImGui::PushStyleColor(ImGuiCol_Button, ui::theme().accentDeep);
       if (ImGui::ImageButton("##t", texId(t), ImVec2(cell, cell))) engine.selectMaterial(e.def.id);
       if (sel) ImGui::PopStyleColor();
     }
@@ -949,24 +815,24 @@ void App::drawMaterials() {
                         e.def.id.c_str());
     if (ImGui::BeginPopupContextItem()) {
       if (contextMenus()) ImGui::TextDisabled("%s", e.def.name.c_str()), ImGui::Separator();
-      if (ImGui::MenuItem(L_("Paint with this"))) engine.selectMaterial(e.def.id);
-      if (ImGui::MenuItem(L_("Add as fill layer"))) {
+      if (ImGui::MenuItem(L_("Paint with This"))) engine.selectMaterial(e.def.id);
+      if (ImGui::MenuItem(L_("Add as Fill Layer"))) {
         MaterialRef r = engine.painter.material;
         r.id = e.def.id;
         engine.doc.addFillLayer(r, e.def.name);
       }
       if (contextMenus()) {
         Layer* fl = engine.doc.selectedLayer();
-        if (ImGui::MenuItem(L_("Use on the selected fill layer"), nullptr, false, fl && fl->type == LayerType::Fill)) {
+        if (ImGui::MenuItem(L_("Use on the Selected Fill Layer"), nullptr, false, fl && fl->type == LayerType::Fill)) {
           MaterialRef r = fl->material;
           std::string oldName;
           if (auto* oe = engine.materials.find(r.id)) oldName = oe->def.name;
           r.id = e.def.id;
           engine.doc.replaceFillMaterial(engine.doc.selected, r, oldName, e.def.name);
         }
-        if (ImGui::MenuItem(L_("Copy its id"))) ImGui::SetClipboardText(e.def.id.c_str());
+        if (ImGui::MenuItem(L_("Copy Its ID"))) ImGui::SetClipboardText(e.def.id.c_str());
       }
-      if (e.def.type == MaterialType::Procedural && ImGui::MenuItem(L_("Edit / duplicate..."))) {
+      if (e.def.type == MaterialType::Procedural && ImGui::MenuItem(L_("Edit / Duplicate..."))) {
         editMaterial = e.def;
         if (e.def.builtin) {
           editMaterial.id = "user_" + e.def.id;
@@ -978,14 +844,14 @@ void App::drawMaterials() {
       }
       if (e.def.type == MaterialType::Image && !e.def.builtin && e.def.maps.count("normal")) {
         bool dx = e.def.normalDirectX;
-        if (ImGui::MenuItem(L_("Normal map is DirectX (green down)"), nullptr, dx)) {
+        if (ImGui::MenuItem(L_("Normal Map Is DirectX (Green Down)"), nullptr, dx)) {
           pendingMaterialSave = std::make_unique<MaterialDef>(e.def);
           pendingMaterialSave->normalDirectX = !dx;
         }
         if (ImGui::IsItemHovered())
           ImGui::SetTooltip("%s", T_("Tick when bumps look like dents. Unreal and DirectX exports use this convention."));
       }
-      if (!e.def.builtin && ImGui::MenuItem(L_("Delete from library"))) removeId = e.def.id;
+      if (!e.def.builtin && ImGui::MenuItem(L_("Delete from Library"))) removeId = e.def.id;
       ImGui::EndPopup();
     }
     if (!list) {
@@ -1085,10 +951,10 @@ void App::drawSmartMaterialTiles() {
     if (contextMenus() && ImGui::BeginPopupContextItem("##smartctx")) {
       ImGui::TextDisabled("%s", m.name.c_str());
       ImGui::Separator();
-      if (ImGui::MenuItem(L_("Add above the selected layer"))) clicked = true;
-      if (ImGui::MenuItem(L_("Copy its id"))) ImGui::SetClipboardText(m.id.c_str());
+      if (ImGui::MenuItem(L_("Add Above the Selected Layer"))) clicked = true;
+      if (ImGui::MenuItem(L_("Copy Its ID"))) ImGui::SetClipboardText(m.id.c_str());
       ImGui::Separator();
-      if (ImGui::MenuItem(L_("Open the smart materials folder"))) {
+      if (ImGui::MenuItem(L_("Open the Smart Materials Folder"))) {
 #ifdef _WIN32
         std::string url = "file:///" + paths::ensureDir(paths::userDataDir() / "smart_materials").generic_string();
 #else
@@ -1167,8 +1033,8 @@ void App::drawSmartMaskTiles() {
     ImGui::PushID(t);
     bool give = ImGui::Button(L_(kName[t]), ImVec2(w, h));
     if (contextMenus() && ImGui::BeginPopupContextItem("##smctx")) {
-      if (ImGui::MenuItem(L_("Give it to the selected layer"), nullptr, false, sel != nullptr)) give = true;
-      if (ImGui::MenuItem(L_("New fill layer with this mask"))) {
+      if (ImGui::MenuItem(L_("Give It to the Selected Layer"), nullptr, false, sel != nullptr)) give = true;
+      if (ImGui::MenuItem(L_("New Fill Layer with This Mask"))) {
         addFillLayerUI(-1);
         if (d.selectedLayer()) d.addSmartMask(d.selected, t), d.editMask = false;
         give = false;
@@ -1417,6 +1283,7 @@ void App::drawBrushes() {
   std::string lastCat;
   int i = 0;
   for (auto& p : engine.brushes.presets()) {
+    if (brushCategoryOnly && !brushCategoryShown.empty() && p.category != brushCategoryShown) continue;  // (1.2.7: the shelf's)
     if (p.category != lastCat) {
       ImGui::SeparatorText(p.category.c_str());
       lastCat = p.category;
@@ -1426,15 +1293,15 @@ void App::drawBrushes() {
     ImGui::PushID(p.id.c_str());
     ImGui::BeginGroup();
     bool sel = engine.selectedBrushId == p.id;
-    if (sel) ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.78f, 0.44f, 0.14f, 1));
+    if (sel) ImGui::PushStyleColor(ImGuiCol_Button, ui::theme().accentDeep);
     if (ImGui::ImageButton("##b", texId(engine.brushes.previewTexture(p)), ImVec2(cell, cell))) engine.selectBrush(p.id);
     if (sel) ImGui::PopStyleColor();
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", p.name.c_str());
     if (contextMenus() && ImGui::BeginPopupContextItem("##brushctx")) {
       ImGui::TextDisabled("%s", p.name.c_str());
       ImGui::Separator();
-      if (ImGui::MenuItem(L_("Paint with this brush"))) engine.selectBrush(p.id);
-      if (ImGui::MenuItem(L_("Copy its id"))) ImGui::SetClipboardText(p.id.c_str());
+      if (ImGui::MenuItem(L_("Paint with This Brush"))) engine.selectBrush(p.id);
+      if (ImGui::MenuItem(L_("Copy Its ID"))) ImGui::SetClipboardText(p.id.c_str());
       ImGui::Separator();
       brushesEmptyMenu();
       ImGui::EndPopup();
@@ -1615,9 +1482,10 @@ void App::drawTextureSet() {
     ImGui::Text("%s", d.mesh.name.c_str());
     ImGui::Text(T_("%zu verts  %u faces  %zu tris  %u UV islands"), d.mesh.positions.size(), d.mesh.faceCount(), d.mesh.tris.size(),
                 d.mesh.islandCount);
-    ImGui::TextDisabled(T_("Undo memory: %.0f MB"), d.undo.bytes() / 1048576.0);
+    ImGui::TextDisabled(T_("Undo memory: %.0f MB on the graphics card, %.0f MB compressed"), d.undo.bytes() / 1048576.0,
+                        d.undo.ramBytes() / 1048576.0);
   }
-  ImGui::End();
+  endPanel();
 }
 
 // ------------------------------------------------------------------ Blender
@@ -1704,13 +1572,13 @@ void App::drawBlender() {
                         mcp::mcpCommand().string().c_str());
     if (!result.empty()) ImGui::TextWrapped("%s", result.c_str());
   }
-  ImGui::End();
+  endPanel();
 }
 
 // ------------------------------------------------------------------ console
 
 void App::drawConsole() {
-  ImGui::Begin(L_("Console"));
+  beginPanel(L_("Console"));  // (1.2.7: also a Properties tab of the Blender layout)
   ImGui::BeginChild("##log", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()), ImGuiChildFlags_None);
   static uint64_t lastCount = 0;
   for (auto& e : Log::snapshot(400)) {
@@ -1744,7 +1612,7 @@ void App::drawConsole() {
     }
     ImGui::SetKeyboardFocusHere(-1);
   }
-  ImGui::End();
+  endPanel();
 }
 
 // ------------------------------------------------------------------ export dialog

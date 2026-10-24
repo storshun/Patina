@@ -59,26 +59,26 @@ void App::objectMenu(int i) {
   const bool active = i == engine.activeObject();
   ImGui::TextDisabled("%s", o.displayName().c_str());
   ImGui::Separator();
-  if (!active && ImGui::MenuItem(L_("Paint this object"))) selectObjectUI(i);
+  if (!active && ImGui::MenuItem(L_("Paint This Object"))) selectObjectUI(i);
   if (ImGui::MenuItem(L_("Rename..."))) objectRename = i, objectRenameText = o.displayName(), objectRenameOpen = true;
-  if (ImGui::MenuItem(L_("Frame it"))) runCommand("frame_object", {{"object", i}});
-  if (ImGui::MenuItem(L_("Only this object (Local view)"), keyLabel("view.local"), active && engine.isolateActive))
+  if (ImGui::MenuItem(L_("Frame It"))) runCommand("frame_object", {{"object", i}});
+  if (ImGui::MenuItem(L_("Only This Object (Local View)"), keyLabel("view.local"), active && engine.isolateActive))
     queueSceneAction([this, i] {
       bool on = !(engine.isolateActive && i == engine.activeObject());
       engine.activateObject(i);
       engine.isolateActive = on;
     });
-  if (ImGui::MenuItem(o.objectHidden ? L_("Show it") : L_("Hide it")))
+  if (ImGui::MenuItem(o.objectHidden ? L_("Show It") : L_("Hide It")))
     runCommand("set_object", {{"object", i}, {"visible", o.objectHidden}});
-  if (ImGui::MenuItem(L_("Hide the others")))
+  if (ImGui::MenuItem(L_("Hide the Others")))
     for (int k = 0; k < engine.objectCount(); ++k)
       if (k != i && !engine.object(k).objectHidden) runCommand("set_object", {{"object", k}, {"visible", false}});
-  if (ImGui::MenuItem(L_("Show every object")))
+  if (ImGui::MenuItem(L_("Show Every Object")))
     for (int k = 0; k < engine.objectCount(); ++k)
       if (engine.object(k).objectHidden) runCommand("set_object", {{"object", k}, {"visible", true}});
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Put it on the ground"))) runCommand("set_object", {{"object", i}, {"on_ground", true}});
-  if (ImGui::MenuItem(L_("Back to where it came in"), nullptr, false, o.placement.moved()))
+  if (ImGui::MenuItem(L_("Put It on the Ground"))) runCommand("set_object", {{"object", i}, {"on_ground", true}});
+  if (ImGui::MenuItem(L_("Back to Where It Came In"), nullptr, false, o.placement.moved()))
     runCommand("set_object", {{"object", i}, {"reset", true}});
   if (ImGui::MenuItem(L_("Duplicate"))) {
     queueSceneAction([this, i] {
@@ -89,7 +89,7 @@ void App::objectMenu(int i) {
     });
   }
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Remove from the scene..."), nullptr, false, engine.objectCount() > 1)) objectRemove = i;
+  if (ImGui::MenuItem(L_("Remove from the Scene..."), nullptr, false, engine.objectCount() > 1)) objectRemove = i;
 }
 
 void App::drawObjectsSection() {

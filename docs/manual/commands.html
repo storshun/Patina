@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.6 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.7 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -128,8 +128,9 @@
 <tr><td><code>path</code></td><td>string</td><td></td><td>Mesh file (default: the current mesh's file)</td></tr>
 </tbody></table>
 <h3 id="import-model-textures"><code>import_model_textures</code></h3>
-<p>Brings in the model's own materials (textures and colors of each material slot, and vertex colors, from a .glb, .gltf, .obj with its .mtl, .fbx or .ply) as a paint layer, From the model, at the bottom of the stack (one undo step). Opening a model does this by itself when it has textures, vertex colors or materials that are more than plain gray.</p>
+<p>Brings in the model's own materials (textures and colors of each material slot, and vertex colors, from a .glb, .gltf, .obj with its .mtl, .fbx or .ply) as a paint layer, From the model, at the bottom of the stack (one undo step). Opening a model does this by itself when it has textures, vertex colors or materials that are more than plain gray. (1.2.2) An OBJ or FBX color texture's alpha becomes the opacity channel when the file says nothing about opacity and the alpha cuts out (hair cards, leaves, lace).</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
+<tr><td><code>color_alpha</code></td><td>auto \</td><td>opacity \</td><td>ignore</td><td></td><td>OBJ / FBX: the color texture's alpha as the opacity. auto (default): when it has see-through and solid parts (a cut-out); opacity: whenever the image has alpha; ignore: never (alpha that holds gloss, as in some Unity assets)</td></tr>
 <tr><td><code>path</code></td><td>string</td><td></td><td>The model file (default: the open model's file)</td></tr>
 </tbody></table>
 <h2 id="materials">Materials</h2>
@@ -673,7 +674,7 @@
 <tr><td><code>set</code></td><td>string</td><td></td><td>auto</td><td>layout</td><td>fit</td><td>screen, or texels per unit (omit to only read)</td></tr>
 </tbody></table>
 <h3 id="uv-orient"><code>uv_orient</code></h3>
-<p>Orients UV islands: upright (object up = texture up) or along their longest side.</p>
+<p>Orients UV islands: upright (object up = texture up) or along their longest side. (1.2.7) changed is false when the islands already were (nothing moved by a quarter of a texel): no undo step then.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>faces</code></td><td>array</td><td></td><td>Faces (default selection, or all)</td></tr>
 <tr><td><code>mode</code> <i>(required)</i></td><td>upright \</td><td>longest_axis</td><td></td><td>Orientation</td></tr>
@@ -777,11 +778,12 @@
 <h3 id="uv-info"><code>uv_info</code></h3>
 <p>UV statistics: islands, coverage of 0..1, overlaps, texel density, seam count, pinned faces, mirrored (stacked) faces and how many of those have drifted off their other half, and faces with no UV area (collapsed onto a point or a line: they get no paint).</p>
 <h3 id="select-faces"><code>select_faces</code></h3>
-<p>Face selection for UV tools, the island brush and fills: set, add, remove, clear, all, invert, by island, by material slot, grow or shrink. (0.45) visible: of the faces this selects (or, with remove, takes off), only those the camera sees (set_camera; turned toward it, on screen, not behind other faces), like the Select tool's Visible only: an island that wraps inside the model, or a skin under clothes, gives just what is seen. (0.47) no_uv_area adds the faces whose UVs collapsed onto a point or a line (they get no paint; uv_info counts them): unwrap them with uv_unwrap selection.</p>
+<p>Face selection for UV tools, the island brush and fills: set, add, remove, clear, all, invert, by island, by material slot, grow or shrink. (0.45) visible: of the faces this selects (or, with remove, takes off), only those the camera sees (set_camera; turned toward it, on screen, not behind other faces), like the Select tool's Visible only: an island that wraps inside the model, or a skin under clothes, gives just what is seen. (0.47) no_uv_area adds the faces whose UVs collapsed onto a point or a line (they get no paint; uv_info counts them): unwrap them with uv_unwrap selection. (1.2.7) mirror adds the mirror images of the faces (default: of the selection) across the model's symmetry (axes, default x), and the halves stacked on them: one half of a face's UVs selects the other half, side by side or stacked.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
+<tr><td><code>axes</code></td><td>array</td><td></td><td>mirror: the symmetry axes, e.g. ["x"] (default x)</td></tr>
 <tr><td><code>faces</code></td><td>array</td><td></td><td>Face indices</td></tr>
 <tr><td><code>material</code></td><td>integer</td><td>0 to 255</td><td>Material slot (mode material; adds to the selection)</td></tr>
-<tr><td><code>mode</code> <i>(required)</i></td><td>set \</td><td>add \</td><td>remove \</td><td>clear \</td><td>all \</td><td>invert \</td><td>island \</td><td>material \</td><td>grow \</td><td>shrink \</td><td>no_uv_area</td><td></td><td>Operation</td></tr>
+<tr><td><code>mode</code> <i>(required)</i></td><td>set \</td><td>add \</td><td>remove \</td><td>clear \</td><td>all \</td><td>invert \</td><td>island \</td><td>material \</td><td>grow \</td><td>shrink \</td><td>no_uv_area \</td><td>mirror</td><td></td><td>Operation</td></tr>
 <tr><td><code>visible</code></td><td>boolean</td><td>default false</td><td>Only the faces the camera sees (default false)</td></tr>
 </tbody></table>
 <h3 id="island-brush"><code>island_brush</code></h3>
@@ -1260,10 +1262,11 @@
 <tr><td><code>point</code> <i>(required)</i></td><td>array</td><td></td><td>[x,y] normalized viewport point (0..1, 0,0 top left)</td></tr>
 </tbody></table>
 <h3 id="layout"><code>layout</code></h3>
-<p>(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: model, uvs, bake, paint, export) or full (every panel docked). With no arguments it only reports. Returns the layout, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few words: the same marks the step bar shows. Only with the window open (not headless).</p>
+<p>(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: model, uvs, bake, paint, export), full (every panel docked) or (1.2.7) blender (arranged as Blender is: the steps as workspace tabs, the Outliner and a Properties editor with vertical tabs, an asset shelf), and (1.2.7) its theme: patina (gray and copper) or vivid_dark (KDE Plasma's Vivid Dark: navy and cyan, as the Vivid Dark Blender theme). With no arguments it only reports. Returns the layout, the theme, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few words: the same marks the step bar shows. Only with the window open (not headless).</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
-<tr><td><code>mode</code></td><td>guided \</td><td>full</td><td></td><td>Switch to this layout</td></tr>
-<tr><td><code>step</code></td><td>model \</td><td>uvs \</td><td>bake \</td><td>paint \</td><td>export</td><td></td><td>Go to this step (switches to the Guided layout)</td></tr>
+<tr><td><code>mode</code></td><td>guided \</td><td>full \</td><td>blender</td><td></td><td>Switch to this layout</td></tr>
+<tr><td><code>step</code></td><td>model \</td><td>uvs \</td><td>bake \</td><td>paint \</td><td>export</td><td></td><td>Go to this step (switches to the Guided layout; in the Blender layout, its workspace tab)</td></tr>
+<tr><td><code>theme</code></td><td>patina \</td><td>vivid_dark</td><td></td><td>Switch to this theme (Edit &gt; Preferences &gt; Display)</td></tr>
 </tbody></table>
 <h3 id="list-face-sets"><code>list_face_sets</code></h3>
 <p>The active object's face sets (1.2): named, colored groups of faces kept in the project (a face is in one at most), each with its id, color, face count and whether it is hidden. Blender's sculpt face sets come in with the model from the add-on 0.14.</p>
@@ -1319,7 +1322,7 @@
 <tr><td><code>material</code></td><td>string</td><td></td><td>material_editor: the library material to edit (a built-in one is copied)</td></tr>
 <tr><td><code>path</code></td><td>string</td><td></td><td>bake_down: the low-poly model's file to start with</td></tr>
 <tr><td><code>preset</code></td><td>blender \</td><td>gltf \</td><td>unreal \</td><td>unity</td><td></td><td>export: the map layout to start with</td></tr>
-<tr><td><code>section</code></td><td>language \</td><td>http \</td><td>features \</td><td>pies</td><td></td><td>preferences: scrolled to this section</td></tr>
+<tr><td><code>section</code></td><td>language \</td><td>http \</td><td>features \</td><td>pies \</td><td>undo</td><td></td><td>preferences: scrolled to this section</td></tr>
 <tr><td><code>what</code></td><td>all \</td><td>layer \</td><td>mask</td><td></td><td>export: all layers, only the selected layer, or its mask</td></tr>
 <tr><td><code>window</code> <i>(required)</i></td><td>export \</td><td>render \</td><td>texel_density \</td><td>symmetry \</td><td>high_poly \</td><td>bake_down \</td><td>new_texture_set \</td><td>texture_set \</td><td>blender \</td><td>preferences \</td><td>shortcuts \</td><td>macros \</td><td>retopology \</td><td>mesh_check \</td><td>export_model \</td><td>reduce \</td><td>batch \</td><td>transform \</td><td>collision \</td><td>lightmap \</td><td>material_editor \</td><td>layers \</td><td>properties \</td><td>materials \</td><td>brushes \</td><td>console \</td><td>history \</td><td>notes \</td><td>colors \</td><td>about \</td><td>help \</td><td>welcome \</td><td>pen_test \</td><td>face_sets</td><td></td><td>The window</td></tr>
 </tbody></table>
@@ -1432,6 +1435,13 @@
 <tr><td><code>name</code></td><td>string</td><td></td><td>The widget</td></tr>
 <tr><td><code>prefix</code></td><td>string</td><td></td><td>Instead: every widget whose name starts so (for example materials.tile:)</td></tr>
 </tbody></table>
+<h3 id="undo-settings"><code>undo_settings</code></h3>
+<p>(1.2.7) How much undo keeps, for every object's history together, and what it uses now. Recent steps keep their texture copies on the graphics card (instant undo, up to gpu_mb); older ones are compressed into RAM, and past ram_mb the oldest steps are dropped. Undo is never written to disk. Each value given is set (the user's preferences); without any, it only reports.</p>
+<table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
+<tr><td><code>gpu_mb</code></td><td>integer</td><td>256 to 65536, default 1024</td><td>Undo copies kept on the graphics card for instant undo, in MB. Less leaves more for textures; more makes older steps undo faster</td></tr>
+<tr><td><code>ram_mb</code></td><td>integer</td><td>1 to 1048576</td><td>Compressed undo in RAM, in MB; past it the oldest steps go. Default: a quarter of the machine's memory, 1 to 8 GB</td></tr>
+<tr><td><code>steps</code></td><td>integer</td><td>10 to 1000, default 100</td><td>Steps each object's history keeps. More: undo further back; fewer: less memory</td></tr>
+</tbody></table>
 <h3 id="use-face-set"><code>use_face_set</code></h3>
 <p>Does something with a face set's faces in one go (1.2): select (the selection becomes them), add_to_selection, hide, show, isolate (hide every other set and the faces in none; again: show_all), show_all, fill (the selected layer gets the paint material on them, as the polygon fill does) or mask (the selected layer's mask: white on them, black elsewhere). One undo step.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
@@ -1439,7 +1449,7 @@
 <tr><td><code>set</code></td><td>string</td><td></td><td>The face set: its name or id (not needed for show_all)</td></tr>
 </tbody></table>
 <h3 id="uv-relax"><code>uv_relax</code></h3>
-<p>Relaxes UV islands: each island of the faces is solved again without stretch (conformal) and fitted back onto where it was, at the same size. Pinned islands are left alone. Paint is reprojected.</p>
+<p>Relaxes UV islands: each island of the faces is solved again without stretch (conformal) and fitted back onto where it was, at the same size. Pinned islands are left alone. Paint is reprojected. (1.2.7) changed is false when nothing moved by a quarter of a texel or more (the islands were already relaxed): no undo step then.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>faces</code></td><td>array</td><td></td><td>Faces whose islands to relax (default all)</td></tr>
 <tr><td><code>reproject</code></td><td>boolean</td><td></td><td>Keep existing paint (default true)</td></tr>

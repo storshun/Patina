@@ -4,7 +4,9 @@
   It did, so a Patina window opened afterward moved to the next port (7861, the Blender add-on's), and Blender
   talked to the hidden engine: Blender got its startup sphere's UVs for the user's object;
 - when a Patina opens on that port later, the MCP tools switch to it (live mode);
-- `bridge_export` for an object this Patina has no link to is refused, instead of exporting another object.
+- `bridge_export` for an object this Patina has no link to is refused, instead of exporting another object;
+- (1.2.7) SIGTERM ends `--mcp` while its client keeps stdin open, with its own engine and in live mode. It waited
+  for input forever, and only SIGKILL ended it.
 
     PATINA_BIN=build/patina python3 tests/api/test_mcp_port.py
 """
@@ -121,6 +123,22 @@ def main():
             check(False, "bridge_export for an object it has no link to is refused")
         except protocol.RemoteError as e:
             check("no object linked to 'Mai_Body_UE5'" in str(e), "bridge_export for an object it has no link to is refused (%s)" % e)
+
+        # (1.2.7) the stop signal, in live mode (this window) and with its own engine (a port nothing listens on)
+        if os.name == "posix":
+            for what, p in (("live mode", port), ("its own engine", free_port())):
+                m = subprocess.Popen([exe, "--mcp", "--port", str(p)], env=env("term"), stdin=subprocess.PIPE,
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                time.sleep(3)
+                m.terminate()
+                try:
+                    code = m.wait(timeout=10)
+                    check(True, "SIGTERM ends --mcp with stdin still open, %s (exit %d)" % (what, code))
+                except subprocess.TimeoutExpired:
+                    m.kill()
+                    m.wait()
+                    check(False, "SIGTERM ends --mcp with stdin still open, %s" % what)
+                m.stdin.close()
     finally:
         for p in (mcp, window):
             if p is None:

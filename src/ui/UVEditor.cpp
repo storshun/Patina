@@ -9,6 +9,7 @@
 #include "core/UVIsland.h"
 #include "core/UVOps.h"
 #include "ui/App.h"
+#include "ui/Theme.h"
 
 namespace patina {
 
@@ -216,7 +217,7 @@ static void startTransform(App& app, char kind, vec2 mouseUV, bool drag) {
   bool pinned = false;
   auto loops = transformLoops(app, sel, &pinned);
   if (loops.empty()) {
-    app.uvToast(T_("Pinned: Alt+P (or right-click > Unpin islands) to move them"));
+    app.uvToast(T_("Pinned: Alt+P (or right-click > Pins > Unpin Selected Islands) to move them"));
     return;
   }
   if (pinned) app.uvToast(T_("Pinned islands in the selection stay where they are"));
@@ -335,10 +336,13 @@ void App::uvFrameSelection() {
   uvViewZoom = std::clamp(0.85f / std::max(s.x, s.y), 0.05f, 200.f);
 }
 
-// the UV operations, shared by the right-click menu and the More menu
-void App::uvOpsMenu(bool context) {
+// (1.2.7) The UV menu: one menu, the same in the menu bar (UV), the UV editor's More button and its right-click menu.
+// They were three menus that had grown apart: the same command had another name or place in each, some only in
+// one, and Mirrored halves offered different things. The right-click menu adds Move / Rotate / Scale at the top.
+void App::uvOpsMenu(UVMenuFrom from) {
   Document& d = engine.doc;
   Mesh& m = d.mesh;
+  const bool context = from == UVMenuFrom::Context;
   bool vertMode = uvSelectMode == UVSelectMode::Vertex;
   auto faces = d.selectedFaces();
   auto loops = uvSelectedLoops();
@@ -358,7 +362,7 @@ void App::uvOpsMenu(bool context) {
       ImGui::TextDisabled(T_("%zu faces selected%s%s"), faces.size(), pinnedSel ? T_(", pinned") : "",
                           linkedSel ? T_(", mirrored") : "");
     else
-      ImGui::TextDisabled("%s", T_("Nothing selected"));
+      ImGui::TextDisabled("%s", T_("Nothing selected: the commands act on every island"));
     ImGui::Separator();
   }
   // discrete edits of the selected UVs (pinned faces stay; stacked halves follow)
@@ -366,112 +370,181 @@ void App::uvOpsMenu(bool context) {
     bool pinned = false;
     auto tl = transformLoops(*this, loops, &pinned);
     if (tl.empty()) {
-      uvToast(pinned ? T_("Pinned: Alt+P (or right-click > Unpin islands) to change them") : T_("Select something first"));
+      uvToast(pinned ? T_("Pinned: Alt+P (or right-click > Pins > Unpin Selected Islands) to change them") : T_("Select something first"));
       return;
     }
     Mesh work = m;
     fn(work, tl, uv::boundsOfLoops(m, loops).center());
     d.applyUVs(work.loopUV, reprojectOnUVEdit, label);
   };
-  if (context) {
-    if (ImGui::MenuItem(L_("Move"), "G", false, any)) startTransform(*this, 'g', uvMenuUV, false);
-    if (ImGui::MenuItem(L_("Rotate"), "R", false, any)) startTransform(*this, 'r', uvMenuUV, false);
-    if (ImGui::MenuItem(L_("Scale"), "S", false, any)) startTransform(*this, 's', uvMenuUV, false);
-  }
-  if (ImGui::BeginMenu(L_("Rotate / flip"), any)) {
-    if (ImGui::MenuItem(L_("Rotate 90 CW"))) edit("Rotate UVs", [](Mesh& w, auto& l, vec2 p) { uv::rotate(w, l, -kPi / 2, p); });
-    if (ImGui::MenuItem(L_("Rotate 90 CCW"))) edit("Rotate UVs", [](Mesh& w, auto& l, vec2 p) { uv::rotate(w, l, kPi / 2, p); });
-    if (ImGui::MenuItem(L_("Rotate 180"))) edit("Rotate UVs", [](Mesh& w, auto& l, vec2 p) { uv::rotate(w, l, kPi, p); });
-    if (ImGui::MenuItem(L_("Flip horizontal"))) edit("Flip UVs", [](Mesh& w, auto& l, vec2) { uv::flip(w, l, true); });
-    if (ImGui::MenuItem(L_("Flip vertical"))) edit("Flip UVs", [](Mesh& w, auto& l, vec2) { uv::flip(w, l, false); });
-    ImGui::EndMenu();
-  }
-  if (ImGui::BeginMenu(L_("Align / weld"), any)) {
-    if (ImGui::MenuItem(L_("Align vertically (same U)")))
-      edit("Align UVs", [](Mesh& w, auto& l, vec2 p) { for (uint32_t i : l) w.loopUV[i].x = p.x; });
-    if (ImGui::MenuItem(L_("Align horizontally (same V)")))
-      edit("Align UVs", [](Mesh& w, auto& l, vec2 p) { for (uint32_t i : l) w.loopUV[i].y = p.y; });
-    if (ImGui::MenuItem(L_("Weld / stitch"))) edit("Weld UVs", [](Mesh& w, auto& l, vec2) { uv::weld(w, l); });
-    if (ImGui::IsItemHovered())
-      ImGui::SetTooltip("%s", T_("Moves selected UVs of the same mesh vertex to their average.\nSelect both sides of a seam to stitch it."));
-    if (ImGui::MenuItem(L_("Fit to 0-1"))) edit("Fit UVs", [](Mesh& w, auto& l, vec2) { uv::fitToUnitSquare(w, l, 0.005f); });
-    ImGui::EndMenu();
-  }
-  ImGui::Separator();
-  // island operations: they act on whole islands of the selected faces
-  json sel = {{"selection", true}, {"reproject", reprojectOnUVEdit}};
+  // an island command; when it changed nothing it says so (and why), instead of a success line for no change
+  auto island = [&](const char* cmd, json args, const char* done, const char* unchanged) {
+    args["reproject"] = reprojectOnUVEdit;
+    uint64_t v = d.undo.version();
+    if (!uvRunOnSelection(cmd, args)) return;
+    uvToast(d.undo.version() != v || !unchanged ? done : unchanged);
+  };
+  json sel = {{"selection", anyFaces}};  // nothing selected: every island
   auto with = [&](const json& extra) {
     json j = sel;
     for (auto& [k, v] : extra.items()) j[k] = v;
     return j;
   };
-  if (ImGui::MenuItem(L_("Pin islands"), "P", false, any)) uvPinSelection(true);
-  if (ImGui::IsItemHovered())
-    ImGui::SetTooltip("%s", T_("Pinned islands keep their place through every UV edit;\npacking and unwrapping put other islands around them."));
-  if (ImGui::MenuItem(L_("Unpin islands"), keyLabel("uv.unpin"), false, any && (pinnedSel || vertMode))) uvPinSelection(false);
-  if (ImGui::MenuItem(L_("Straighten (rectify quad islands)"), nullptr, false, anyFaces)) {
-    json r;
-    try {
-      r = engine.execute("uv_rectify", sel);
-      int rectified = r.value("rectified", 0), skipped = r.value("skipped", 0);
-      setStatus(!rectified ? std::string(T_("Nothing straightened: the islands are not grids of quads"))
-                : skipped  ? F_("Straightened %d island(s), %d are not a grid of quads", rectified, skipped)
-                           : F_("Straightened %d island(s)", rectified));
-    } catch (std::exception& e) {
-      setStatus(e.what());
-    }
+  if (context) {
+    if (ImGui::MenuItem(L_("Move"), "G", false, any)) startTransform(*this, 'g', uvMenuUV, false);
+    if (ImGui::MenuItem(L_("Rotate"), "R", false, any)) startTransform(*this, 'r', uvMenuUV, false);
+    if (ImGui::MenuItem(L_("Scale"), "S", false, any)) startTransform(*this, 's', uvMenuUV, false);
+    ImGui::Separator();
   }
-  if (ImGui::BeginMenu(L_("Orient"), anyFaces)) {
-    if (ImGui::MenuItem(L_("Upright (model up = texture up)"))) uvRunOnSelection("uv_orient", with({{"mode", "upright"}}), T_("Oriented upright"));
-    if (ImGui::MenuItem(L_("Along the longest side"))) uvRunOnSelection("uv_orient", with({{"mode", "longest_axis"}}), T_("Oriented"));
-    ImGui::EndMenu();
-  }
-  if (ImGui::BeginMenu(L_("Texel density"), anyFaces)) {
-    const char* names[] = {N_("Automatic"), N_("Match the layout"), N_("Fit the texture"), N_("One texel per pixel")};
-    const char* vals[] = {"auto", "layout", "fit", "screen"};
-    for (int i = 0; i < 4; ++i)
-      if (ImGui::MenuItem(L_(names[i]))) uvRunOnSelection("uv_density", with({{"set", vals[i]}}), T_("Texel density set"));
-    if (ImGui::MenuItem(L_("Texel density window..."))) showDensity = true;
-    ImGui::EndMenu();
-  }
-  if (ImGui::MenuItem(L_("Move into free space"), nullptr, false, anyFaces))
-    uvRunOnSelection("uv_pack", with({{"free_space", true}}), T_("Moved into free space"));
-  if (ImGui::BeginMenu(L_("Unwrap selection"), anyFaces)) {
-    const char* names[] = {N_("LSCM (uses seams)"), N_("Smart Project"), N_("Box Project"), N_("Planar (from the 3D view)"),
-                           N_("Cylinder (limbs, tubes, barrels)"), N_("Sphere")};
+
+  // ---- the layout: unwrap, relax, pack, overlaps (on the selection's islands, or all of them)
+  if (ImGui::BeginMenu(anyFaces ? L_("Unwrap the Selection###unwrap") : L_("Unwrap###unwrap"))) {
+    const char* names[] = {N_("Along the Seams (LSCM)"), N_("Smart UV Project"), N_("Box Project"), N_("Planar (from the 3D View)"),
+                           N_("Cylinder Project"), N_("Sphere Project")};
+    const char* tips[] = {N_("Flattens each piece the seams cut out. Lay the seams first (the Seams tool, M)."),
+                          N_("Cuts where the model bends sharply and lays each piece flat: hard-surface models"), nullptr, nullptr,
+                          N_("Unrolls around the longest axis: arms, legs, tubes, barrels. Select one part first."), nullptr};
     const char* vals[] = {"lscm", "smart", "box", "planar", "cylinder", "sphere"};
-    for (int i = 0; i < 6; ++i)
-      if (ImGui::MenuItem(L_(names[i]))) uvRunOnSelection("uv_unwrap", with({{"method", vals[i]}}), T_("Unwrapped"));
+    for (int i = 0; i < 6; ++i) {
+      if (ImGui::MenuItem(L_(names[i]))) island("uv_unwrap", with({{"method", vals[i]}}), T_("Unwrapped"), nullptr);
+      if (tips[i] && ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_(tips[i]));
+    }
     ImGui::EndMenu();
   }
-  if (ImGui::MenuItem(L_("Relax"), nullptr, false, anyFaces))
-    uvRunOnSelection("uv_relax", sel, T_("Relaxed: the stretch is gone, the islands stay in place"));
+  if (ImGui::MenuItem(anyFaces ? L_("Relax Islands (Selection)###relax") : L_("Relax Islands###relax")))
+    island("uv_relax", sel, T_("Relaxed: the stretch is gone, the islands stay in place"),
+           T_("Already relaxed: nothing moved by a quarter of a texel"));
   if (ImGui::IsItemHovered())
     ImGui::SetTooltip("%s", T_("Solves the islands again without stretch and puts them back where they were, at the same size"));
-  if (ImGui::MenuItem(L_("Pack selection"), nullptr, false, anyFaces)) uvRunOnSelection("uv_pack", sel, T_("Packed around the other islands"));
-  if (ImGui::BeginMenu(L_("Mirrored halves"), !L.empty() || anyFaces)) {
-    if (ImGui::MenuItem(L_("Select the other half"), nullptr, false, linkedSel)) {
-      for (uint32_t f : uv::withLinkedFaces(m, L, faces)) d.faceSelection[f] = 1;
-      d.updateSelectionFlags();
+  if (ImGui::MenuItem(anyFaces ? L_("Pack Islands (Selection)###pack") : L_("Pack Islands###pack")))
+    island("uv_pack", sel,
+           anyFaces ? T_("Packed around the other islands")
+                    : (uv::pinnedFaceCount(m) ? T_("Packed around the pinned islands") : T_("Packed")),
+           nullptr);
+  if (ImGui::IsItemHovered())
+    ImGui::SetTooltip("%s", anyFaces ? T_("Packs the selected islands into the space the others leave")
+                                     : T_("Packs the islands by their outlines, so small ones fill the gaps of big ones"));
+  size_t ov = overlappingIslandCount();
+  std::string ovl = (ov ? F_("Fix Overlapping UVs (%zu)", ov) : std::string(T_("Fix Overlapping UVs (none)"))) + "###fixoverlaps";
+  if (ImGui::MenuItem(ovl.c_str(), nullptr, false, ov > 0 || uvUnstacked > 0))
+    island("uv_fix_overlaps", json::object(), T_("Overlaps fixed"), nullptr);
+  ImGui::Separator();
+
+  // ---- the selected islands
+  if (ImGui::MenuItem(L_("Island Brush"), keyLabel("tool.island"))) selectTool(ViewportTool::Island);
+  if (ImGui::MenuItem(L_("Make Island from Selection"), keyLabel("island.make"), false, anyFaces)) makeIslandFromSelection();
+  if (ImGui::BeginMenu(L_("Islands"), anyFaces)) {
+    if (ImGui::MenuItem(L_("Orient Upright")))
+      island("uv_orient", with({{"mode", "upright"}}), T_("Oriented upright: model up is texture up"),
+             T_("Already upright: nothing turned"));
+    if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Turns each island so that up on the model is up in the texture"));
+    if (ImGui::MenuItem(L_("Orient Along Their Longest Side")))
+      island("uv_orient", with({{"mode", "longest_axis"}}), T_("Oriented along their longest side"), T_("Already along their longest side: nothing turned"));
+    if (ImGui::MenuItem(L_("Straighten (Rectify Quad Islands)"))) {
+      try {
+        json r = engine.execute("uv_rectify", with({{"reproject", reprojectOnUVEdit}}));
+        int rectified = r.value("rectified", 0), skipped = r.value("skipped", 0);
+        uvToast(!rectified ? std::string(T_("Nothing straightened: the islands are not grids of quads"))
+                : skipped  ? F_("Straightened %d island(s), %d are not a grid of quads", rectified, skipped)
+                           : F_("Straightened %d island(s)", rectified));
+      } catch (std::exception& e) {
+        uvToast(e.what());
+      }
     }
-    if (ImGui::MenuItem(L_("Re-stack all mirrored halves"), nullptr, false, uvUnstacked > 0))
-      uvRunOnSelection("uv_restack", {{"reproject", reprojectOnUVEdit}}, T_("Mirrored halves are stacked on their other half again"));
-    if (ImGui::MenuItem(L_("Unstack (make independent)"), nullptr, false, linkedSel))
-      uvRunOnSelection("uv_unstack", sel, T_("The mirrored half has its own place now: each side can be painted separately"));
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", T_("Straightens islands made of quads (belts, pipes, trims, planks) into a straight grid"));
+    if (ImGui::MenuItem(L_("Move into Free Space")))
+      island("uv_pack", with({{"free_space", true}}), T_("Moved into free space"), nullptr);
+    if (ImGui::BeginMenu(L_("Texel Density"))) {
+      const char* names[] = {N_("Automatic"), N_("Match the Layout"), N_("Fit the Texture"), N_("One Texel per Pixel")};
+      const char* vals[] = {"auto", "layout", "fit", "screen"};
+      for (int i = 0; i < 4; ++i)
+        if (ImGui::MenuItem(L_(names[i]))) island("uv_density", with({{"set", vals[i]}}), T_("Texel density set"), nullptr);
+      ImGui::Separator();
+      if (ImGui::MenuItem(L_("Texel Density Window..."))) showDensity = true;
+      ImGui::EndMenu();
+    }
+    ImGui::EndMenu();
+  }
+  if (ImGui::BeginMenu(L_("Rotate / Flip"), any)) {
+    if (ImGui::MenuItem(L_("Rotate 90 CW"))) edit("Rotate UVs", [](Mesh& w, auto& l, vec2 p) { uv::rotate(w, l, -kPi / 2, p); });
+    if (ImGui::MenuItem(L_("Rotate 90 CCW"))) edit("Rotate UVs", [](Mesh& w, auto& l, vec2 p) { uv::rotate(w, l, kPi / 2, p); });
+    if (ImGui::MenuItem(L_("Rotate 180"))) edit("Rotate UVs", [](Mesh& w, auto& l, vec2 p) { uv::rotate(w, l, kPi, p); });
+    if (ImGui::MenuItem(L_("Flip Horizontal"))) edit("Flip UVs", [](Mesh& w, auto& l, vec2) { uv::flip(w, l, true); });
+    if (ImGui::MenuItem(L_("Flip Vertical"))) edit("Flip UVs", [](Mesh& w, auto& l, vec2) { uv::flip(w, l, false); });
+    ImGui::EndMenu();
+  }
+  if (ImGui::BeginMenu(L_("Align / Weld"), any)) {
+    if (ImGui::MenuItem(L_("Align Vertically (Same U)")))
+      edit("Align UVs", [](Mesh& w, auto& l, vec2 p) { for (uint32_t i : l) w.loopUV[i].x = p.x; });
+    if (ImGui::MenuItem(L_("Align Horizontally (Same V)")))
+      edit("Align UVs", [](Mesh& w, auto& l, vec2 p) { for (uint32_t i : l) w.loopUV[i].y = p.y; });
+    if (ImGui::MenuItem(L_("Weld / Stitch"))) edit("Weld UVs", [](Mesh& w, auto& l, vec2) { uv::weld(w, l); });
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", T_("Moves selected UVs of the same mesh vertex to their average.\nSelect both sides of a seam to stitch it."));
+    if (ImGui::MenuItem(L_("Fit to 0-1"))) edit("Fit UVs", [](Mesh& w, auto& l, vec2) { uv::fitToUnitSquare(w, l, 0.005f); });
+    ImGui::EndMenu();
+  }
+  if (ImGui::BeginMenu(L_("Mirrored Halves"))) {
+    // (1.2.7) the other half by the model's symmetry, side by side in the layout or stacked: it only knew stacked
+    // halves, so one half of a face that was unwrapped in two halves had none
+    if (ImGui::MenuItem(L_("Select the Other Half"), nullptr, false, anyFaces)) selectOtherHalf();
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", T_("Adds the mirror image of the selection across the model's X symmetry,\nwherever it is in the layout"));
+    if (ImGui::MenuItem(anyFaces ? L_("Mirror the Selection's UVs (X)###mirroruv") : L_("Mirror UVs (X)###mirroruv"))) {
+      json r;
+      if (runCommand("uv_mirror", {{"axes", {"x"}}, {"selection", anyFaces}, {"reproject", reprojectOnUVEdit}}, &r)) {
+        int n = r.value("mirrored_faces", 0);
+        uvToast(n ? F_("%d faces on the -X side now share the UVs of the +X side", n)
+                  : std::string(T_("Nothing mirrored: no faces with a mirror image on the +X side")));
+      }
+    }
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", anyFaces ? T_("The -X half of the selection (or of its mirror image) takes the mirrored UVs of the +X half:\n"
+                                            "both halves share one place in the texture, and paint shows on both")
+                                       : T_("The -X half of a symmetric model takes the mirrored UVs of the +X half:\n"
+                                            "both share one place in the texture"));
+    if (ImGui::MenuItem(L_("Unstack (Make Independent)"), nullptr, false, linkedSel))
+      island("uv_unstack", sel, T_("The mirrored half has its own place now: each side can be painted separately"), nullptr);
     if (ImGui::IsItemHovered())
       ImGui::SetTooltip("%s", T_("The stacked half of the selected islands stops following the other half\nand moves into free space."));
+    if (ImGui::MenuItem(L_("Re-stack All Mirrored Halves"), nullptr, false, uvUnstacked > 0))
+      island("uv_restack", json::object(), T_("Mirrored halves are stacked on their other half again"), nullptr);
+    if (engine.features.on("symmetry_check")) {
+      ImGui::Separator();
+      if (ImGui::MenuItem(L_("Check Mesh Symmetry..."))) showSymmetry = true;
+      if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("How far the two halves of the model differ, with a heat map and the worst spots"));
+    }
+    ImGui::Separator();
     ImGui::TextDisabled("%s", T_("Moving either half of a stacked pair moves both."));
     ImGui::EndMenu();
   }
-  if (ImGui::BeginMenu(L_("Texture sets"))) {
+  if (ImGui::BeginMenu(L_("Pins"))) {
+    if (ImGui::MenuItem(L_("Pin Selected Islands"), "P", false, any)) uvPinSelection(true);
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", T_("Pinned islands keep their place through every UV edit;\npacking and unwrapping put other islands around them."));
+    if (ImGui::MenuItem(L_("Unpin Selected Islands"), keyLabel("uv.unpin"), false, any && (pinnedSel || vertMode))) uvPinSelection(false);
+    if (ImGui::MenuItem(L_("Pin Every Island"))) island("uv_pin", {{"all", true}, {"pin", true}}, T_("Every island is pinned"), nullptr);
+    if (ImGui::MenuItem(L_("Unpin Every Island"), nullptr, false, uv::pinnedFaceCount(m) > 0))
+      island("uv_pin", {{"all", true}, {"pin", false}}, T_("No islands are pinned now"), nullptr);
+    ImGui::EndMenu();
+  }
+  ImGui::Separator();
+
+  // ---- selection, texture sets, seams
+  if (ImGui::BeginMenu(L_("Select"))) {
+    faceSelectItems(true);
+    ImGui::EndMenu();
+  }
+  if (ImGui::BeginMenu(L_("Texture Sets"))) {
     const TileLayout& tl = m.tiles;
     bool udimOnly = (tl.mode & TileByUdim) && !(tl.mode & TileBySlot);
-    if (ImGui::MenuItem(udimOnly ? L_("Move selection to a new UDIM tile...") : L_("New texture set from selection..."), nullptr, false,
+    if (ImGui::MenuItem(udimOnly ? L_("Move Selection to a New UDIM Tile...") : L_("New Texture Set from Selection..."), nullptr, false,
                         anyFaces))
       openNewTextureSet();
     if (ImGui::IsItemHovered())
       ImGui::SetTooltip("%s", T_("A texture of their own for the selected faces, such as one for the head and one for the body"));
-    if ((tl.mode & TileBySlot) && ImGui::BeginMenu(L_("Move selection to"), anyFaces)) {
+    if ((tl.mode & TileBySlot) && ImGui::BeginMenu(L_("Move Selection To"), anyFaces)) {
       for (int t = 0; t < tl.count(); ++t) {
         std::string n = m.slotName(tl.tiles[t].slot);
         if (ImGui::MenuItem(n.c_str())) {
@@ -485,94 +558,161 @@ void App::uvOpsMenu(bool context) {
     if (!anyFaces) ImGui::TextDisabled("%s", T_("Select faces first."));
     ImGui::EndMenu();
   }
-  if (ImGui::BeginMenu(L_("Seams"), anyFaces)) {
-    // edges by how many of their faces are selected
-    std::vector<uint8_t> total(m.edges.size(), 0), selected(m.edges.size(), 0);
-    for (uint32_t f = 0; f < m.faceCount(); ++f)
-      for (uint32_t l = m.faceStart[f]; l < m.faceStart[f + 1]; ++l) {
-        uint32_t e = m.loopEdge[l];
-        if (e >= total.size()) continue;
-        total[e] = (uint8_t)std::min(255, total[e] + 1);
-        if (d.faceSelection[f]) selected[e] = (uint8_t)std::min(255, selected[e] + 1);
+  if (ImGui::BeginMenu(L_("Seams"))) {
+    auto seams = [&](json a) {
+      try {
+        engine.execute("uv_seams", a);
+      } catch (std::exception& e) {
+        uvToast(e.what());
       }
-    if (ImGui::MenuItem(L_("Mark the selection's border as seams"))) {
+    };
+    // edges by how many of their faces are selected
+    auto border = [&](bool mark) {
+      std::vector<uint8_t> total(m.edges.size(), 0), selected(m.edges.size(), 0);
+      for (uint32_t f = 0; f < m.faceCount(); ++f)
+        for (uint32_t l = m.faceStart[f]; l < m.faceStart[f + 1]; ++l) {
+          uint32_t e = m.loopEdge[l];
+          if (e >= total.size()) continue;
+          total[e] = (uint8_t)std::min(255, total[e] + 1);
+          if (d.faceSelection[f]) selected[e] = (uint8_t)std::min(255, selected[e] + 1);
+        }
       auto flags = m.edgeFlags;
-      for (size_t e = 0; e < flags.size(); ++e)
-        if (selected[e] && selected[e] < total[e]) flags[e] |= EdgeSeam;
-      d.applySeams(flags, "Seams around the selection");
-    }
-    if (ImGui::MenuItem(L_("Clear seams inside the selection"))) {
-      auto flags = m.edgeFlags;
-      for (size_t e = 0; e < flags.size(); ++e)
-        if (total[e] >= 2 && selected[e] == total[e]) flags[e] &= ~EdgeSeam;
-      d.applySeams(flags, "Clear seams inside the selection");
-    }
-    ImGui::TextDisabled("%s", T_("Unwrap (LSCM) afterward to use them."));
+      for (size_t e = 0; e < flags.size(); ++e) {
+        if (mark && selected[e] && selected[e] < total[e]) flags[e] |= EdgeSeam;
+        if (!mark && total[e] >= 2 && selected[e] == total[e]) flags[e] &= ~EdgeSeam;
+      }
+      d.applySeams(flags, mark ? "Seams around the selection" : "Clear seams inside the selection");
+    };
+    if (ImGui::MenuItem(L_("Mark the Selection's Border as Seams"), nullptr, false, anyFaces)) border(true);
+    if (ImGui::MenuItem(L_("Clear Seams Inside the Selection"), nullptr, false, anyFaces)) border(false);
+    ImGui::Separator();
+    if (ImGui::MenuItem(L_("Seams from Islands"))) seams({{"mode", "from_islands"}});
+    if (ImGui::MenuItem(L_("Seams by Angle (60)"))) seams({{"mode", "by_angle"}, {"angle", 60}});
+    if (ImGui::MenuItem(L_("Clear All Seams"))) seams({{"mode", "clear"}});
+    ImGui::Separator();
+    ImGui::TextDisabled("%s", T_("Unwrap (Along the Seams) afterward to use them."));
+    ImGui::EndMenu();
+  }
+  if (engine.features.on("face_sets") && ImGui::MenuItem(L_("Face Sets..."))) openFaceSets();  // (1.2)
+  if (ImGui::BeginMenu(L_("View"))) {
+    if (ImGui::MenuItem(L_("Frame the Selection"), "F")) uvFrameSelection();
+    if (ImGui::MenuItem(L_("Frame 0-1"), "Home")) uvViewCenter = vec2(0.5f), uvViewZoom = 0.9f;
     ImGui::EndMenu();
   }
   ImGui::Separator();
-  if (ImGui::BeginMenu(L_("Select"))) {
-    auto setSel = [&](const std::function<bool(uint32_t)>& want, bool add) {
-      if (!add) std::fill(d.faceSelection.begin(), d.faceSelection.end(), 0);
-      for (uint32_t f = 0; f < m.faceCount(); ++f)
-        if (want(f)) d.faceSelection[f] = 1;
-      d.updateSelectionFlags();
-    };
-    if (ImGui::MenuItem(L_("All"), "A")) {  // texture tiles: all of the tile shown
-      if (vertMode)
-        for (uint32_t l = 0; l < uvLoopSel.size(); ++l) uvLoopSel[l] = loopShown(m, l) ? 1 : 0;
-      setSel([&](uint32_t f) { return faceShown(m, f); }, false);
-    }
-    if (ImGui::MenuItem(L_("None"), "Alt+A")) {
-      std::fill(uvLoopSel.begin(), uvLoopSel.end(), 0);
-      setSel([](uint32_t) { return false; }, false);
-    }
-    if (ImGui::MenuItem(L_("Invert"))) {
-      if (vertMode) {
-        for (uint32_t l = 0; l < uvLoopSel.size(); ++l) uvLoopSel[l] = loopShown(m, l) ? !uvLoopSel[l] : 0;
-      } else {
-        for (uint32_t f = 0; f < d.faceSelection.size(); ++f) d.faceSelection[f] = faceShown(m, f) ? !d.faceSelection[f] : 0;
-      }
-      d.updateSelectionFlags();
-    }
-    if (ImGui::MenuItem(L_("Grow"), "Ctrl+Num +", false, anyFaces)) uv::growSelection(m, d.faceSelection), d.updateSelectionFlags();
-    if (ImGui::MenuItem(L_("Shrink"), "Ctrl+Num -", false, anyFaces)) uv::shrinkSelection(m, d.faceSelection), d.updateSelectionFlags();
-    if (ImGui::MenuItem(L_("Whole islands"), nullptr, false, anyFaces)) {
-      std::vector<uint8_t> isl(m.islandCount + 1, 0);
-      for (uint32_t f : faces) isl[std::min(m.loopIsland[m.faceStart[f]], m.islandCount)] = 1;
-      setSel([&](uint32_t f) { return isl[std::min(m.loopIsland[m.faceStart[f]], m.islandCount)] != 0; }, true);
-    }
-    if (ImGui::MenuItem(L_("Pinned islands"), nullptr, false, uv::pinnedFaceCount(m) > 0))
-      setSel([&](uint32_t f) { return uv::isPinned(m, f); }, false);
-    if (ImGui::MenuItem(L_("Overlapping islands"), nullptr, false, overlappingIslandCount() > 0)) {
-      std::vector<uint8_t> want(m.faceCount(), 0);
-      for (auto& isl : uv::overlappingIslands(m))
-        for (uint32_t f : isl) want[f] = 1;
-      setSel([&](uint32_t f) { return want[f] != 0; }, false);
-    }
-    if (ImGui::MenuItem(L_("Vertices of the selected faces"), nullptr, false, anyFaces)) {
+  ImGui::MenuItem(L_("Keep Paint on UV Edits"), nullptr, &reprojectOnUVEdit);
+  if (ImGui::IsItemHovered())
+    ImGui::SetTooltip("%s", T_("UV edits move the paint with the UVs (it costs memory: every layer is copied for undo)"));
+}
+
+// (1.2.7) The face selection's commands, the same in the UV menu and the 3D view's right-click Select (which
+// adds what is under the pointer above them). In the UV editor, All and Invert keep to the texture set shown,
+// and vertex mode selects UV vertices. Each change is an undo step, as in the 3D view.
+void App::faceSelectItems(bool uvEditor) {
+  Document& d = engine.doc;
+  Mesh& m = d.mesh;
+  bool vertMode = uvEditor && uvSelectMode == UVSelectMode::Vertex;
+  auto faces = d.selectedFaces();
+  bool anyFaces = !faces.empty();
+  auto shown = [&](uint32_t f) { return !uvEditor || faceShown(m, f); };
+  auto setSel = [&](const std::function<bool(uint32_t)>& want, bool add, const char* label) {
+    auto before = d.faceSelection;
+    d.faceSelection.resize(m.faceCount(), 0);
+    if (!add) std::fill(d.faceSelection.begin(), d.faceSelection.end(), 0);
+    for (uint32_t f = 0; f < m.faceCount(); ++f)
+      if (want(f)) d.faceSelection[f] = 1;
+    d.updateSelectionFlags();
+    d.pushSelectionUndo(before, label);
+    setStatus(F_("%zu faces selected", d.selectedFaces().size()));
+  };
+  if (ImGui::MenuItem(L_("All"), keyLabel("select.all"))) {
+    if (vertMode)
+      for (uint32_t l = 0; l < uvLoopSel.size(); ++l) uvLoopSel[l] = loopShown(m, l) ? 1 : 0;
+    setSel(shown, false, "Select all faces");
+  }
+  if (ImGui::MenuItem(L_("None"), keyLabel("select.none"))) {
+    std::fill(uvLoopSel.begin(), uvLoopSel.end(), 0);
+    setSel([](uint32_t) { return false; }, false, "Select no faces");
+  }
+  if (ImGui::MenuItem(L_("Invert"))) {
+    if (vertMode)
+      for (uint32_t l = 0; l < uvLoopSel.size(); ++l) uvLoopSel[l] = loopShown(m, l) ? !uvLoopSel[l] : 0;
+    std::vector<uint8_t> was = d.faceSelection;
+    was.resize(m.faceCount(), 0);
+    setSel([&](uint32_t f) { return shown(f) && !was[f]; }, false, "Invert the selection");
+  }
+  if (ImGui::MenuItem(L_("Grow"), keyLabel("select.grow"), false, anyFaces)) {
+    auto before = d.faceSelection;
+    uv::growSelection(m, d.faceSelection), d.updateSelectionFlags(), d.pushSelectionUndo(before, "Grow the selection");
+  }
+  if (ImGui::MenuItem(L_("Shrink"), keyLabel("select.shrink"), false, anyFaces)) {
+    auto before = d.faceSelection;
+    uv::shrinkSelection(m, d.faceSelection), d.updateSelectionFlags(), d.pushSelectionUndo(before, "Shrink the selection");
+  }
+  ImGui::Separator();
+  if (ImGui::MenuItem(L_("Whole Islands"), nullptr, false, anyFaces)) {
+    std::vector<uint8_t> isl(m.islandCount + 1, 0);
+    for (uint32_t f : faces) isl[std::min(m.loopIsland[m.faceStart[f]], m.islandCount)] = 1;
+    setSel([&](uint32_t f) { return isl[std::min(m.loopIsland[m.faceStart[f]], m.islandCount)] != 0; }, true, "Select whole islands");
+  }
+  if (ImGui::MenuItem(L_("The Other Half"), nullptr, false, anyFaces)) selectOtherHalf();
+  if (ImGui::IsItemHovered())
+    ImGui::SetTooltip("%s", T_("Adds the mirror image of the selection across the model's X symmetry,\nwherever it is in the layout"));
+  if (ImGui::MenuItem(L_("Whole Material Slot"), nullptr, false, anyFaces && !m.faceMaterial.empty())) {
+    std::vector<uint8_t> slots(256, 0);
+    for (uint32_t f : faces)
+      if (f < m.faceMaterial.size()) slots[m.faceMaterial[f] & 255] = 1;
+    setSel([&](uint32_t f) { return f < m.faceMaterial.size() && slots[m.faceMaterial[f] & 255]; }, true, "Select the material slot");
+  }
+  if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("Adds every face that uses the same Blender material slot as the selection"));
+  if (ImGui::MenuItem(L_("Pinned Islands"), nullptr, false, uv::pinnedFaceCount(m) > 0))
+    setSel([&](uint32_t f) { return uv::isPinned(m, f); }, false, "Select pinned islands");
+  if (ImGui::MenuItem(L_("Overlapping Islands"), nullptr, false, overlappingIslandCount() > 0)) {
+    std::vector<uint8_t> want(m.faceCount(), 0);
+    for (auto& isl : uv::overlappingIslands(m))
+      for (uint32_t f : isl) want[f] = 1;
+    setSel([&](uint32_t f) { return want[f] != 0; }, false, "Select overlapping islands");
+  }
+  if (uvEditor) {
+    ImGui::Separator();
+    if (ImGui::MenuItem(L_("Vertices of the Selected Faces"), nullptr, false, anyFaces)) {
       std::fill(uvLoopSel.begin(), uvLoopSel.end(), 0);
       for (uint32_t l : uv::loopsOfFaces(m, faces)) uvLoopSel[l] = 1;
       uvSelectMode = UVSelectMode::Vertex;
     }
-    ImGui::EndMenu();
   }
-  if (ImGui::BeginMenu(L_("Whole layout"))) {
-    json all = {{"reproject", reprojectOnUVEdit}};
-    if (ImGui::MenuItem(L_("Pack all islands")))
-      uvRunOnSelection("uv_pack", all, uv::pinnedFaceCount(m) ? T_("Packed around the pinned islands") : T_("Packed"));
-    if (ImGui::MenuItem(L_("Fix overlapping UVs"), nullptr, false, overlappingIslandCount() > 0 || uvUnstacked > 0))
-      uvRunOnSelection("uv_fix_overlaps", all, T_("Overlaps fixed"));
-    if (ImGui::MenuItem(L_("Unpin every island"), nullptr, false, uv::pinnedFaceCount(m) > 0))
-      uvRunOnSelection("uv_pin", {{"all", true}, {"pin", false}}, T_("No islands are pinned now"));
-    if (ImGui::MenuItem(L_("Pin every island"))) uvRunOnSelection("uv_pin", {{"all", true}, {"pin", true}}, T_("Every island is pinned"));
-    ImGui::EndMenu();
+}
+
+// (1.2.7) Adds the other half of the selection: its mirror image across X (by the model's symmetry, wherever that is
+// in the layout) and the halves stacked on it. A selection of whole islands takes the other islands whole, as far
+// as the mirror image covers at least half of each (the halves may be triangulated a little differently).
+void App::selectOtherHalf() {
+  Document& d = engine.doc;
+  Mesh& m = d.mesh;
+  auto before = d.selectedFaces();
+  if (before.empty()) return;
+  std::vector<uint32_t> faceCount(m.islandCount + 1, 0), selCount(m.islandCount + 1, 0);
+  auto islandOf = [&](uint32_t f) { return std::min(m.loopIsland[m.faceStart[f]], m.islandCount); };
+  for (uint32_t f = 0; f < m.faceCount(); ++f) ++faceCount[islandOf(f)];
+  for (uint32_t f : before) ++selCount[islandOf(f)];
+  bool whole = true;
+  for (uint32_t f : before) whole &= selCount[islandOf(f)] == faceCount[islandOf(f)];
+  std::vector<uint8_t> was = d.faceSelection;
+  json r;
+  if (!runCommand("select_faces", {{"mode", "mirror"}}, &r)) return;
+  if (whole) {
+    std::vector<uint32_t> added(m.islandCount + 1, 0);
+    for (uint32_t f = 0; f < m.faceCount(); ++f)
+      if (d.faceSelection[f] && !was[f]) ++added[islandOf(f)];
+    for (uint32_t f = 0; f < m.faceCount(); ++f) {
+      uint32_t i = islandOf(f);
+      if (i < m.islandCount && added[i] * 2 >= faceCount[i]) d.faceSelection[f] = 1;
+    }
+    d.updateSelectionFlags();
   }
-  if (ImGui::BeginMenu(L_("View"))) {
-    if (ImGui::MenuItem(L_("Frame the selection"), "F")) uvFrameSelection();
-    if (ImGui::MenuItem(L_("Frame 0-1"), "Home")) uvViewCenter = vec2(0.5f), uvViewZoom = 0.9f;
-    ImGui::EndMenu();
-  }
+  size_t n = d.selectedFaces().size() - before.size();
+  uvToast(n ? F_("Selected the other half: %zu more faces", n)
+            : std::string(T_("No other half: the selection's mirror image across X is already selected, or the model has none there")));
 }
 
 static void updateTransformPreview(App& app, vec2 mouseUV, bool snap) {
@@ -703,7 +843,7 @@ void App::drawUVEditor() {
       ImGui::OpenPopup("seam_menu");
     if (ImGui::BeginPopup("seam_menu")) {
       Mesh work = d.mesh;
-      if (ImGui::MenuItem(L_("Seams from UV islands"))) {
+      if (ImGui::MenuItem(L_("Seams from UV Islands"))) {
         uv::seamsFromIslands(work, true);
         d.applySeams(work.edgeFlags, "Seams from islands");
       }
@@ -711,11 +851,11 @@ void App::drawUVEditor() {
       ImGui::SetNextItemWidth(120);
       ImGui::SliderFloat("##ang", &angle, 10.f, 120.f, T_("%.0f deg"));
       ImGui::SameLine();
-      if (ImGui::MenuItem(L_("Mark by angle"))) {
+      if (ImGui::MenuItem(L_("Mark by Angle"))) {
         uv::seamsByAngle(work, angle, false);
         d.applySeams(work.edgeFlags, "Seams by angle");
       }
-      if (ImGui::MenuItem(L_("Clear all seams"))) {
+      if (ImGui::MenuItem(L_("Clear All Seams"))) {
         for (auto& f : work.edgeFlags) f &= ~EdgeSeam;
         d.applySeams(work.edgeFlags, "Clear seams");
       }
@@ -727,9 +867,8 @@ void App::drawUVEditor() {
       ImGui::OpenPopup("uv_more");
     if (ImGui::BeginPopup("uv_more")) {
       uvMenuUV = uvViewCenter + (g_uvTile >= 0 ? vec2(tl.uvOrigin(g_uvTile)) : vec2(0.f));
-      uvOpsMenu(false);
+      uvOpsMenu(UVMenuFrom::Editor);
       ImGui::Separator();
-      ImGui::Checkbox(L_("Keep paint when editing UVs (reproject)"), &reprojectOnUVEdit);
       ImGui::Checkbox(L_("Show distortion"), &engine.uvOptions.distortion);
       ImGui::Checkbox(L_("Show wireframe"), &engine.uvOptions.wireframe);
       ImGui::Checkbox(L_("Show seams"), &engine.uvOptions.seams);
@@ -777,6 +916,11 @@ void App::drawUVEditor() {
     default: break;
   }
   engine.uvOptions.texMode = texMode;
+  {
+    const ImVec4 &bg = ui::theme().uvBackdrop, &bd = ui::theme().uvBorder;  // (1.2.7)
+    engine.uvOptions.background = vec3(bg.x, bg.y, bg.z);
+    engine.uvOptions.border = vec3(bd.x, bd.y, bd.z);
+  }
   // (1.2) the Face Sets view shows them on the layout too
   engine.uvOptions.faceSets = engine.viewOptions.mode == ViewMode::FaceSets && engine.features.on("face_sets");
   float fbs = io.DisplayFramebufferScale.x > 0 ? io.DisplayFramebufferScale.x : 1.f;
@@ -964,8 +1108,8 @@ void App::drawUVEditor() {
     }
     if (boxSelecting) {
       ImVec2 a = boxStart, b = io.MousePos;
-      dl->AddRectFilled(ImMin(a, b), ImMax(a, b), IM_COL32(232, 133, 44, 40));
-      dl->AddRect(ImMin(a, b), ImMax(a, b), IM_COL32(232, 133, 44, 200));
+      dl->AddRectFilled(ImMin(a, b), ImMax(a, b), ui::themeColor(ui::theme().accent, 0.157f));
+      dl->AddRect(ImMin(a, b), ImMax(a, b), ui::themeColor(ui::theme().accent, 0.784f));
       if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
         boxSelecting = false;
         vec2 u0 = fr.toUV(ImMin(a, b)), u1 = fr.toUV(ImMax(a, b));
@@ -1001,7 +1145,7 @@ void App::drawUVEditor() {
     }
   }
   if (ImGui::BeginPopup("uv_ctx")) {
-    uvOpsMenu(true);
+    uvOpsMenu(UVMenuFrom::Context);
     ImGui::EndPopup();
   }
 

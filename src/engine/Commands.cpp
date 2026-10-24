@@ -1785,6 +1785,29 @@ void Engine::registerCommands() {
            for (size_t i = 0; i < d.undo.count(); ++i) steps.push_back(d.undo.label(i));
            return json{{"steps", steps}, {"position", d.undo.position()}};
          }});
+  R.add({"undo_settings",
+         "(1.2.7) How much undo keeps, for every object's history together, and what it uses now. Recent steps keep "
+         "their texture copies on the graphics card (instant undo, up to gpu_mb); older ones are compressed into RAM, "
+         "and past ram_mb the oldest steps are dropped. Undo is never written to disk. Each value given is set (the "
+         "user's preferences); without any, it only reports.",
+         schema({{"steps", num("integer", "Steps each object's history keeps. More: undo further back; fewer: less memory", 10, 1000, 100)},
+                 {"ram_mb", num("integer", "Compressed undo in RAM, in MB; past it the oldest steps go. Default: a quarter of the machine's memory, 1 to 8 GB", 1, 1048576)},
+                 {"gpu_mb", num("integer", "Undo copies kept on the graphics card for instant undo, in MB. Less leaves more for textures; more makes older steps undo faster", 256, 65536, 1024)}}),
+         [](CommandContext& c, const json& a) {
+           UndoLimits& L = UndoStack::limits();
+           bool set = false;
+           if (a.contains("steps")) L.steps = std::clamp<size_t>(a["steps"].get<size_t>(), 10, 1000), set = true;
+           if (a.contains("ram_mb")) L.ramBytes = std::clamp<size_t>(a["ram_mb"].get<size_t>(), 1, 1048576) << 20, set = true;
+           if (a.contains("gpu_mb")) L.gpuBytes = std::clamp<size_t>(a["gpu_mb"].get<size_t>(), 256, 65536) << 20, set = true;
+           if (set) UndoStack::enforceAll();
+           UndoStack::settle();  // (the packing that waits for a quiet moment: done now, so the numbers are final)
+           Document& d = c.engine.doc;
+           return json{{"steps", L.steps}, {"ram_mb", L.ramBytes >> 20}, {"gpu_mb", L.gpuBytes >> 20},
+                       {"default_ram_mb", UndoLimits::defaultRam() >> 20},
+                       {"used_gpu_mb", UndoStack::totalBytes() / 1048576.0}, {"used_ram_mb", UndoStack::totalRamBytes() / 1048576.0},
+                       {"object_steps", d.undo.count()}, {"object_gpu_mb", d.undo.bytes() / 1048576.0},
+                       {"object_ram_mb", d.undo.ramBytes() / 1048576.0}};
+         }});
   R.add({"history_jump", "Undoes or redoes until 'position' steps of the history are applied (0 = before all).",
          schema({{"position", num("integer", "Target position (from history; 0 = the start)", 0, 1000000)}}, {"position"}),
          [](CommandContext& c, const json& a) {
@@ -2505,8 +2528,17 @@ void Engine::registerCommands() {
 
   // ---------------------------------------------------------------- UVs
   auto commitUV = [](Engine& e, Mesh& work, bool reproject, const std::string& label) {
+    // (1.2.7) UVs that moved less than a quarter of a texel look the same: no undo step (with "keep paint" one
+    // copies every layer), and the result says nothing changed. Orienting an island that was already upright
+    // turned it by a hair, and the editor said "Oriented upright" for a change no one could see.
+    const Mesh& m = e.doc.mesh;
+    float tol = 0.25f / float(std::max(e.doc.tex.resolution(), 1024)), moved = 0;
+    for (size_t l = 0; l < work.loopUV.size() && l < m.loopUV.size(); ++l)
+      moved = std::max(moved, glm::length(work.loopUV[l] - m.loopUV[l]));
+    bool flags = work.edgeFlags != m.edgeFlags || (work.faceFlags != m.faceFlags && work.faceFlags.size() == m.faceCount());
+    if (moved < tol && !flags) return false;
     // seams and face flags may have changed too: one undo step for all of it
-    e.doc.applyUVs(work.loopUV, reproject, label, &work.edgeFlags, &work.faceFlags);
+    return e.doc.applyUVs(work.loopUV, reproject, label, &work.edgeFlags, &work.faceFlags);
   };
   auto needTargets = [](Engine& e, const std::vector<uint32_t>& faces) {
     bool blocked = false;
@@ -2569,7 +2601,8 @@ void Engine::registerCommands() {
          }});
   R.add({"uv_relax",
          "Relaxes UV islands: each island of the faces is solved again without stretch (conformal) and fitted back "
-         "onto where it was, at the same size. Pinned islands are left alone. Paint is reprojected.",
+         "onto where it was, at the same size. Pinned islands are left alone. Paint is reprojected. (1.2.7) changed is "
+         "false when nothing moved by a quarter of a texel or more (the islands were already relaxed): no undo step then.",
          schema({{"faces", prop("array", "Faces whose islands to relax (default all)")},
                  {"selection", prop("boolean", "Use the selected faces")},
                  {"strength", num("number", "How far toward the relaxed layout: 0 keeps the old one, 1 fully relaxed", 0, 1, 1)},
@@ -2580,8 +2613,8 @@ void Engine::registerCommands() {
            auto faces = needTargets(e, facesArg(e, a));
            if (faces.empty()) throw CommandError("no unpinned faces to relax");
            int n = uv::relaxIslands(work, faces, a.value("strength", 1.f));
-           commitUV(e, work, a.value("reproject", true), "Relax UVs");
-           return json{{"islands_relaxed", n}};
+           bool changed = commitUV(e, work, a.value("reproject", true), "Relax UVs");
+           return json{{"islands_relaxed", n}, {"changed", changed}};
          }});
   R.add({"uv_pack", "Packs UV islands into 0..1 (optionally rotating and equalizing texel density). Islands are "
                     "packed by their outlines, nesting into each other's gaps (quality \"tight\", default), or by "
@@ -3044,7 +3077,8 @@ void Engine::registerCommands() {
            }
            return json{{"mirrored_faces", n}, {"islands", e.doc.mesh.islandCount}};
          }});
-  R.add({"uv_orient", "Orients UV islands: upright (object up = texture up) or along their longest side.",
+  R.add({"uv_orient", "Orients UV islands: upright (object up = texture up) or along their longest side. (1.2.7) changed is false "
+                       "when the islands already were (nothing moved by a quarter of a texel): no undo step then.",
          schema({{"mode", propEnum({"upright", "longest_axis"}, "Orientation")}, {"faces", prop("array", "Faces (default selection, or all)")},
                  {"selection", prop("boolean", "Use the selected faces")}, {"reproject", prop("boolean", "Keep paint (default true)")}},
                 {"mode"}),
@@ -3055,8 +3089,8 @@ void Engine::registerCommands() {
            faces = needTargets(e, faces);
            Mesh work = e.doc.mesh;
            uv::forEachTile(work, faces, [&](const std::vector<uint32_t>& f) { uv::orientIslands(work, f, uv::orientFromName(a.at("mode"))); });
-           commitUV(e, work, a.value("reproject", true), "Orient islands");
-           return json{{"islands", e.doc.mesh.islandCount}, {"overlaps", uv::overlapCount(e.doc.mesh)}};
+           bool changed = commitUV(e, work, a.value("reproject", true), "Orient islands");
+           return json{{"islands", e.doc.mesh.islandCount}, {"overlaps", uv::overlapCount(e.doc.mesh)}, {"changed", changed}};
          }});
   R.add({"uv_fix_overlaps",
          "Finds islands that overlap (paint would appear twice) and moves them into free UV space; repacks "
@@ -3213,9 +3247,12 @@ void Engine::registerCommands() {
          "only those the camera sees (set_camera; turned toward it, on screen, not behind other faces), like the "
          "Select tool's Visible only: an island that wraps inside the model, or a skin under clothes, gives just what "
          "is seen. (0.47) no_uv_area adds the faces whose UVs collapsed onto a point or a line (they get no paint; "
-         "uv_info counts them): unwrap them with uv_unwrap selection.",
-         schema({{"mode", propEnum({"set", "add", "remove", "clear", "all", "invert", "island", "material", "grow", "shrink", "no_uv_area"}, "Operation")},
+         "uv_info counts them): unwrap them with uv_unwrap selection. (1.2.7) mirror adds the mirror images of the "
+         "faces (default: of the selection) across the model's symmetry (axes, default x), and the halves stacked on "
+         "them: one half of a face's UVs selects the other half, side by side or stacked.",
+         schema({{"mode", propEnum({"set", "add", "remove", "clear", "all", "invert", "island", "material", "grow", "shrink", "no_uv_area", "mirror"}, "Operation")},
                  {"faces", prop("array", "Face indices")},
+                 {"axes", prop("array", "mirror: the symmetry axes, e.g. [\"x\"] (default x)")},
                  {"material", num("integer", "Material slot (mode material; adds to the selection)", 0, 255)},
                  {"visible", flag("Only the faces the camera sees (default false)", false)}},
                 {"mode"}),
@@ -3251,6 +3288,15 @@ void Engine::registerCommands() {
            }
            if (m == "no_uv_area")
              for (uint32_t f : uv::collapsedFaces(d.mesh)) s[f] = 1;
+           if (m == "mirror") {
+             int axes = 0;
+             for (auto& v : a.value("axes", json::array({"x"})))
+               if (v.is_string()) axes |= v == "x" ? 1 : v == "y" ? 2 : v == "z" ? 4 : 0;
+             if (!axes) throw CommandError("give axes: x, y and / or z");
+             if (faces.empty()) faces = d.selectedFaces();
+             for (uint32_t f : uv::withMirroredFaces(d.mesh, d.bvh, faces, axes)) s[f] = 1;
+             for (uint32_t f : uv::withLinkedFaces(d.mesh, d.mirrorLinks(), faces)) s[f] = 1;
+           }
            if (m == "grow") uv::growSelection(d.mesh, s);
            if (m == "shrink") uv::shrinkSelection(d.mesh, s);
            size_t unseen = 0;

@@ -731,7 +731,7 @@ void App::drawRetopoWindow() {
   // button) or the window is on screen (not a tab behind another: its numbers follow)
   retopoShown = false;
   if (retopoTool() || (retopoPreviewOn() && engine.viewOptions.retopoShowQuads)) S.wantPreviewAt = nowSeconds();
-  if (!showRetopo) return;
+  if (!showRetopo || blenderOn()) return;  // (1.2.7: the Blender layout has it as a Properties tab)
   ImGui::SetNextWindowSize(ImVec2(400 * uiScale, 760 * uiScale), ImGuiCond_FirstUseEver);
   // first time: a tab beside Properties (a layout from before it was docked there), else at the right; that
   // node keeps the tab it showed unless the window was asked for
@@ -759,10 +759,16 @@ void App::drawRetopoWindow() {
   }
   retopoShown = !keepTab;
   if (retopoShown) S.wantPreviewAt = nowSeconds();
+  retopoPanel();
+  ImGui::End();
+}
+
+void App::retopoPanel() {
+  // (1.2.7) the window's content: also the Blender layout's Retopology tab
+  auto& S = engine.retopo();
   Document& d = engine.doc;
   if (!d.hasMesh()) {
     ImGui::TextWrapped("%s", T_("Open a model first."));
-    ImGui::End();
     return;
   }
   const Mesh& m = d.mesh;
@@ -799,7 +805,7 @@ void App::drawRetopoWindow() {
   ImGui::SeparatorText(T_("Zones and flow"));
   auto toolButton = [&](const char* label, ViewportTool t, const char* tip) {
     bool on = tool == t;
-    if (on) ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.78f, 0.44f, 0.14f, 1));
+    if (on) ImGui::PushStyleColor(ImGuiCol_Button, ui::theme().accentDeep);
     if (ImGui::Button(label)) tool = t;
     if (on) ImGui::PopStyleColor();
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", tip);
@@ -1114,7 +1120,6 @@ void App::drawRetopoWindow() {
   } else {
     ImGui::TextDisabled("%s", T_("No quads yet"));
   }
-  ImGui::End();
 }
 
 }  // namespace patina

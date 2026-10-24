@@ -7,7 +7,7 @@ namespace patina::ui {
 enum class IconState { Normal, Chosen, On, Disabled };  // Chosen: the tool in use; On: a switch that is on
 
 struct IconColors {
-  ImU32 base, accent;  // currentColor and the copper accent
+  ImU32 base, accent;  // currentColor and the accent (the SVGs' copper: the theme's accent)
   float alpha = 1.f;   // (other colors, such as the axis letters, keep their color)
 };
 IconColors iconColors(IconState s);

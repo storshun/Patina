@@ -266,7 +266,83 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.6 (2026-10-23)
+### 1.2.7 (2026-10-24)
+
+#### New
+
+- **A Blender layout.** Besides Guided and Full, the switch at the right of the menu bar (and *Edit › Preferences ›
+  Display*, the Welcome window, the command palette) has *Blender*: Patina arranged as Blender arranges its editors,
+  with every panel and button of the Full layout.
+  - The five steps are workspace tabs in the menu bar, each with its mark (done, needs a look, to do). A step brings
+    up its tools and its own panel; UVs puts the UV editor beside the 3D view, as Blender's UV Editing workspace, and
+    Paint the asset shelf under it, as Texture Paint. A tool of another step brings that step up.
+  - The tools stand at the 3D view's left. Its sidebar is at its right, with vertical tabs as Blender's N panel:
+    Brush, Colors, View (the base material and the lighting) and Blender. The chosen tab again closes it.
+  - At the right, the Outliner: the objects, and under the active one its texture sets (a click shows one in the UV
+    editor) and its layers, with the layer buttons, folders, drag and drop and a search. (The layers paint every
+    texture set of their object, so they sit beside the sets, not in each one.)
+  - Under it, the Properties editor, with a column of icon tabs: the step's own panel (the Guided layout's, with its
+    Next button), Object, Layer (the selected layer's settings), Texture Set, Face Sets, Retopology, History, Notes and
+    Console.
+  - The asset shelf lists its catalogs at its left: the material categories, the smart materials and masks, the
+    brush categories.
+  - The borders between the areas are dragged to resize them, and the sizes and tabs are kept. The Full layout's own
+    arrangement is left as it was. Claude uses `layout` with `mode: "blender"`; `step` then picks the workspace tab.
+- **A Vivid Dark theme.** *Edit › Preferences › Display › Theme*: Patina's own gray and copper, or Vivid Dark, the navy
+  and cyan of KDE Plasma's Vivid-Dark-Global-6, with rounder corners. It matches the "Vivid Dark" Blender theme, so
+  Patina and Blender look alike side by side. The chosen tool, icons, pie menus, the brush size circle, selections and
+  drop marks follow the theme, and so does the UV editor round the texture. Claude uses `layout` with `theme`.
+
+#### Changed
+
+- **One UV menu, the same everywhere.** UV in the menu bar, the UV editor's More button and its right-click menu
+  had grown apart: the same command had another name or place in each, and some were only in one. Now all three are
+  the same menu, in the same order, with the same names (the right-click menu adds Move, Rotate and Scale at the
+  top). With faces selected, the commands work on their islands; with nothing selected, on every island.
+- **The same menu everywhere, for the other menus too.** The menu bar's View and the 3D view's right-click View
+  are now one menu (they named the same commands differently, "Frame mesh" and "Frame the model", and each had
+  options the other didn't). The new-layer list is the same in Edit › New Layer, the Layers panel's right-click
+  menus and the Add menu: five lists had grown apart, some with the adjustment layer, the white mask, baked maps or
+  smart materials and some without. The 3D view's right-click menu had two Select menus; now it has one, with the
+  same items as the UV editor's Select. Menu items are in Title Case everywhere, as in the menu bar and Blender.
+- **Mirrored Halves › Mirror the Selection's UVs (X)**: with faces selected, Mirror UVs stacks only their halves.
+
+- **Undo keeps much more, in less memory.** Older undo steps are now compressed into RAM, while the latest ones stay
+  on the graphics card for instant undo. *Edit › Preferences › Undo* sets the number of steps, the RAM undo may use
+  (default: a quarter of your computer's memory, 1 to 8 GB), and how much stays on the graphics card. Past the RAM
+  limit, the oldest steps are dropped. Undo is never written to disk, to spare your SSD. Claude uses
+  `undo_settings`.
+
+#### Fixed
+
+- **On a big model, only the latest UV edit could be undone.** With "Keep paint" on, a UV edit copies every layer:
+  4.9 GB for a character with seven texture sets. Each object's history could hold 1 GB on the graphics card, so every
+  UV edit pushed out the one before. Now that copy is compressed to about 131 MB, and the steps before it stay. The
+  limit also covered each object separately, so a scene of eight objects could hold 8 GB of graphics memory; it now
+  covers them all together.
+- **"Select the Other Half" was grayed out for a face unwrapped in two halves.** It only knew halves stacked on each
+  other. Now it adds the mirror image of the selection by the model's symmetry, wherever it is in the layout (whole
+  islands when you selected whole islands). It is also in Select › The Other Half. Claude uses `select_faces` with
+  `mode: "mirror"`.
+- **UV commands that changed nothing said they had done it.** Orient Upright on an island that was already upright
+  said "Oriented upright", and Relax on a relaxed island said "Relaxed". Now they say "Already upright: nothing
+  turned" or "Already relaxed", and make no undo step (with "Keep paint" on, each step copied every layer).
+  `uv_orient` and `uv_relax` return `changed`.
+
+- `patina --mcp` ignored the stop signal (SIGTERM, or Ctrl+C) while it waited for its client. Only closing its input
+  or a forced kill ended it. Now the stop signal ends it too, with its own hidden Patina and when it drives a window. It also ends while its hidden Patina is
+  still starting (which can wait a long time when the graphics driver is busy).
+
+#### Blender add-on 0.14.1
+
+- **"Send to Blender" was refused after the mesh changed in Blender, even when Patina hadn't changed a UV.** The
+  add-on said "Patina changed its UVs ... Patina sent 60930 loops but ... has 60916" and kept the old textures. Now,
+  when Patina sends back the UVs it was given, the textures load: they fit every face you didn't change. A warning
+  says the mesh changed, and that sending it to Patina again paints the changed faces too (the paint carries over).
+  When Patina did change the UVs, the textures still wait, as before.
+
+<details>
+<summary><b>1.2.6 (2026-10-23)</b></summary>
 
 #### Fixed
 
@@ -280,6 +356,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
   - a window that finds its port busy never takes 7861;
   - a Patina asked for an object it has no link to says so, instead of sending its own object's textures and UVs.
 - The manual's tip for two windows suggested `--port 7861`, Blender's port. It says `--port 7862` now.
+
+</details>
 
 <details>
 <summary><b>1.2.5 (2026-10-23)</b></summary>

@@ -49,7 +49,10 @@ class Display:
                 break
             time.sleep(0.1)
         env = dict(os.environ, WAYLAND_DISPLAY=sock)
-        self.xwl = subprocess.Popen(["Xwayland", self.name, "-geometry", "%dx%d" % (width, height)], env=env, **quiet)
+        # (1.2.7) PATINA_XWAYLAND_ARGS: more Xwayland options, e.g. "-shm" (no GPU drawing in Xwayland itself) when
+        # its glamor crashes because the graphics driver is in a bad state
+        extra = os.environ.get("PATINA_XWAYLAND_ARGS", "").split()
+        self.xwl = subprocess.Popen(["Xwayland", self.name, "-geometry", "%dx%d" % (width, height)] + extra, env=env, **quiet)
         self.ready(20.0)
 
     def ready(self, timeout=10.0):

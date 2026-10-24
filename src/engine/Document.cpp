@@ -1542,13 +1542,13 @@ struct UVEditEntry : UndoEntry {
   struct Slot {
     uint32_t uid;
     int channel;
-    std::unique_ptr<Texture2D> tex;
+    UndoTexture tex;
   };
   std::vector<Slot> slots;
   // mesh-derived maps of the texture set (AO, curvature, high-poly normal / IDs)
   struct MapSlot {
     int which;
-    Texture2D tex;
+    UndoTexture tex;
   };
   std::vector<MapSlot> maps;
   static Texture2D& mapRef(TextureSet& t, int which) {
@@ -1562,15 +1562,23 @@ struct UVEditEntry : UndoEntry {
     }
   }
   void swapTextures(Document& d) {
-    for (auto& s : slots) {
+    // (1.2.7) packed copies unpack side by side, about 1 GB ahead of the one being put back
+    auto ahead = [&](size_t from) {
+      for (size_t j = from; j < slots.size(); ++j) slots[j].tex.prefetch();
+      for (auto& m : maps) m.tex.prefetch();
+    };
+    for (size_t i = 0; i < slots.size(); ++i) {
+      ahead(i);
+      Slot& s = slots[i];
       Layer* l = d.findLayer(s.uid);
       if (!l) continue;
-      std::unique_ptr<Texture2D>& dst = s.channel < 0 ? l->mask : l->channels[s.channel];
-      std::swap(dst, s.tex);
+      s.tex.swapWith(s.channel < 0 ? l->mask : l->channels[s.channel]);
     }
     for (auto& m : maps) {
       Texture2D& dst = mapRef(d.tex, m.which);
-      if (dst.width() == m.tex.width() && dst.height() == m.tex.height()) std::swap(dst, m.tex);
+      std::unique_ptr<Texture2D> t = m.tex.take();
+      if (t && dst.width() == t->width() && dst.height() == t->height()) std::swap(dst, *t);
+      m.tex = std::move(t);
     }
   }
   void apply(Document& d, const std::vector<vec2>& uvs, const std::vector<uint8_t>& flags,
@@ -1592,9 +1600,22 @@ struct UVEditEntry : UndoEntry {
   void redo(Document& d) override { apply(d, newUVs, newFlags, newFaceFlags); }
   size_t bytes() const override {
     size_t b = 0;
-    for (auto& s : slots)
-      if (s.tex) b += size_t(s.tex->width()) * s.tex->height() * 4;
+    for (auto& s : slots) b += s.tex.gpuBytes();
+    for (auto& m : maps) b += m.tex.gpuBytes();
     return b;
+  }
+  size_t ramBytes() const override {
+    size_t b = oldUVs.size() * sizeof(vec2) * 2;
+    for (auto& s : slots) b += s.tex.ramBytes();
+    for (auto& m : maps) b += m.tex.ramBytes();
+    return b;
+  }
+  size_t packOne() override {
+    for (auto& s : slots)
+      if (size_t g = s.tex.gpuBytes(); g && s.tex.pack()) return g;
+    for (auto& m : maps)
+      if (size_t g = m.tex.gpuBytes(); g && m.tex.pack()) return g;
+    return 0;
   }
 };
 }  // namespace
@@ -1689,9 +1710,9 @@ bool Document::applyUVs(const std::vector<vec2>& requestedUVs, bool reprojectPai
       if (!on) return;
       Texture2D& src = UVEditEntry::mapRef(tex, which);
       if (!src.valid()) return;
-      UVEditEntry::MapSlot ms{which, Texture2D(src.width(), src.height(), src.format(), 1)};
-      ms.tex.copyFrom(src);
-      e->maps.push_back(std::move(ms));
+      auto copy = std::make_unique<Texture2D>(src.width(), src.height(), src.format(), 1);
+      copy->copyFrom(src);
+      e->maps.push_back({which, std::move(copy)});
     };
     keep(0, tex.hasAO());
     keep(1, tex.hasCurvature());
@@ -1701,7 +1722,7 @@ bool Document::applyUVs(const std::vector<vec2>& requestedUVs, bool reprojectPai
     keep(5, tex.hasBentNormals());
     reprojectMeshMaps(drawUVs, [&](uint32_t, int which) -> const Texture2D* {
       for (auto& ms : e->maps)
-        if (ms.which == which) return &ms.tex;
+        if (ms.which == which) return ms.tex.get();
       return nullptr;
     });
     tex.releaseScratch();

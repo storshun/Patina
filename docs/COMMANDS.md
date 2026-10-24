@@ -121,10 +121,11 @@ Reloads the mesh file the project came from (after it was re-exported, e.g. from
 
 ### `import_model_textures`
 
-Brings in the model's own materials (textures and colors of each material slot, and vertex colors, from a .glb, .gltf, .obj with its .mtl, .fbx or .ply) as a paint layer, From the model, at the bottom of the stack (one undo step). Opening a model does this by itself when it has textures, vertex colors or materials that are more than plain gray.
+Brings in the model's own materials (textures and colors of each material slot, and vertex colors, from a .glb, .gltf, .obj with its .mtl, .fbx or .ply) as a paint layer, From the model, at the bottom of the stack (one undo step). Opening a model does this by itself when it has textures, vertex colors or materials that are more than plain gray. (1.2.2) An OBJ or FBX color texture's alpha becomes the opacity channel when the file says nothing about opacity and the alpha cuts out (hair cards, leaves, lace).
 
 | argument | type | range, default | description |
 |---|---|---|---|
+| `color_alpha` | auto \| opacity \| ignore |  | OBJ / FBX: the color texture's alpha as the opacity. auto (default): when it has see-through and solid parts (a cut-out); opacity: whenever the image has alpha; ignore: never (alpha that holds gloss, as in some Unity assets) |
 | `path` | string |  | The model file (default: the open model's file) |
 
 ## Materials
@@ -868,7 +869,7 @@ Texel density: targets (fit the texture, 1 texel per pixel on screen, the existi
 
 ### `uv_orient`
 
-Orients UV islands: upright (object up = texture up) or along their longest side.
+Orients UV islands: upright (object up = texture up) or along their longest side. (1.2.7) changed is false when the islands already were (nothing moved by a quarter of a texel): no undo step then.
 
 | argument | type | range, default | description |
 |---|---|---|---|
@@ -1010,13 +1011,14 @@ UV statistics: islands, coverage of 0..1, overlaps, texel density, seam count, p
 
 ### `select_faces`
 
-Face selection for UV tools, the island brush and fills: set, add, remove, clear, all, invert, by island, by material slot, grow or shrink. (0.45) visible: of the faces this selects (or, with remove, takes off), only those the camera sees (set_camera; turned toward it, on screen, not behind other faces), like the Select tool's Visible only: an island that wraps inside the model, or a skin under clothes, gives just what is seen. (0.47) no_uv_area adds the faces whose UVs collapsed onto a point or a line (they get no paint; uv_info counts them): unwrap them with uv_unwrap selection.
+Face selection for UV tools, the island brush and fills: set, add, remove, clear, all, invert, by island, by material slot, grow or shrink. (0.45) visible: of the faces this selects (or, with remove, takes off), only those the camera sees (set_camera; turned toward it, on screen, not behind other faces), like the Select tool's Visible only: an island that wraps inside the model, or a skin under clothes, gives just what is seen. (0.47) no_uv_area adds the faces whose UVs collapsed onto a point or a line (they get no paint; uv_info counts them): unwrap them with uv_unwrap selection. (1.2.7) mirror adds the mirror images of the faces (default: of the selection) across the model's symmetry (axes, default x), and the halves stacked on them: one half of a face's UVs selects the other half, side by side or stacked.
 
 | argument | type | range, default | description |
 |---|---|---|---|
+| `axes` | array |  | mirror: the symmetry axes, e.g. ["x"] (default x) |
 | `faces` | array |  | Face indices |
 | `material` | integer | 0 to 255 | Material slot (mode material; adds to the selection) |
-| `mode` *(required)* | set \| add \| remove \| clear \| all \| invert \| island \| material \| grow \| shrink \| no_uv_area |  | Operation |
+| `mode` *(required)* | set \| add \| remove \| clear \| all \| invert \| island \| material \| grow \| shrink \| no_uv_area \| mirror |  | Operation |
 | `visible` | boolean | default false | Only the faces the camera sees (default false) |
 
 ### `island_brush`
@@ -1700,12 +1702,13 @@ The layers that paint the spot of the model under a viewport point (what the 3D 
 
 ### `layout`
 
-(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: model, uvs, bake, paint, export) or full (every panel docked). With no arguments it only reports. Returns the layout, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few words: the same marks the step bar shows. Only with the window open (not headless).
+(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: model, uvs, bake, paint, export), full (every panel docked) or (1.2.7) blender (arranged as Blender is: the steps as workspace tabs, the Outliner and a Properties editor with vertical tabs, an asset shelf), and (1.2.7) its theme: patina (gray and copper) or vivid_dark (KDE Plasma's Vivid Dark: navy and cyan, as the Vivid Dark Blender theme). With no arguments it only reports. Returns the layout, the theme, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few words: the same marks the step bar shows. Only with the window open (not headless).
 
 | argument | type | range, default | description |
 |---|---|---|---|
-| `mode` | guided \| full |  | Switch to this layout |
-| `step` | model \| uvs \| bake \| paint \| export |  | Go to this step (switches to the Guided layout) |
+| `mode` | guided \| full \| blender |  | Switch to this layout |
+| `step` | model \| uvs \| bake \| paint \| export |  | Go to this step (switches to the Guided layout; in the Blender layout, its workspace tab) |
+| `theme` | patina \| vivid_dark |  | Switch to this theme (Edit > Preferences > Display) |
 
 ### `list_face_sets`
 
@@ -1788,7 +1791,7 @@ Opens one of Patina's windows, set up for what was asked: export (textures, with
 | `material` | string |  | material_editor: the library material to edit (a built-in one is copied) |
 | `path` | string |  | bake_down: the low-poly model's file to start with |
 | `preset` | blender \| gltf \| unreal \| unity |  | export: the map layout to start with |
-| `section` | language \| http \| features \| pies |  | preferences: scrolled to this section |
+| `section` | language \| http \| features \| pies \| undo |  | preferences: scrolled to this section |
 | `what` | all \| layer \| mask |  | export: all layers, only the selected layer, or its mask |
 | `window` *(required)* | export \| render \| texel_density \| symmetry \| high_poly \| bake_down \| new_texture_set \| texture_set \| blender \| preferences \| shortcuts \| macros \| retopology \| mesh_check \| export_model \| reduce \| batch \| transform \| collision \| lightmap \| material_editor \| layers \| properties \| materials \| brushes \| console \| history \| notes \| colors \| about \| help \| welcome \| pen_test \| face_sets |  | The window |
 
@@ -1950,6 +1953,16 @@ For tests: where a widget was last drawn in the window (x, y, width, height in w
 | `name` | string |  | The widget |
 | `prefix` | string |  | Instead: every widget whose name starts so (for example materials.tile:) |
 
+### `undo_settings`
+
+(1.2.7) How much undo keeps, for every object's history together, and what it uses now. Recent steps keep their texture copies on the graphics card (instant undo, up to gpu_mb); older ones are compressed into RAM, and past ram_mb the oldest steps are dropped. Undo is never written to disk. Each value given is set (the user's preferences); without any, it only reports.
+
+| argument | type | range, default | description |
+|---|---|---|---|
+| `gpu_mb` | integer | 256 to 65536, default 1024 | Undo copies kept on the graphics card for instant undo, in MB. Less leaves more for textures; more makes older steps undo faster |
+| `ram_mb` | integer | 1 to 1048576 | Compressed undo in RAM, in MB; past it the oldest steps go. Default: a quarter of the machine's memory, 1 to 8 GB |
+| `steps` | integer | 10 to 1000, default 100 | Steps each object's history keeps. More: undo further back; fewer: less memory |
+
 ### `use_face_set`
 
 Does something with a face set's faces in one go (1.2): select (the selection becomes them), add_to_selection, hide, show, isolate (hide every other set and the faces in none; again: show_all), show_all, fill (the selected layer gets the paint material on them, as the polygon fill does) or mask (the selected layer's mask: white on them, black elsewhere). One undo step.
@@ -1961,7 +1974,7 @@ Does something with a face set's faces in one go (1.2): select (the selection be
 
 ### `uv_relax`
 
-Relaxes UV islands: each island of the faces is solved again without stretch (conformal) and fitted back onto where it was, at the same size. Pinned islands are left alone. Paint is reprojected.
+Relaxes UV islands: each island of the faces is solved again without stretch (conformal) and fitted back onto where it was, at the same size. Pinned islands are left alone. Paint is reprojected. (1.2.7) changed is false when nothing moved by a quarter of a texel or more (the islands were already relaxed): no undo step then.
 
 | argument | type | range, default | description |
 |---|---|---|---|

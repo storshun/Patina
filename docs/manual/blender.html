@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.6 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.7 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -78,8 +78,8 @@ themselves, and UV changes made in Patina go back too.</p>
     A color attribute (vertex paint, add-on 0.10) comes in too, where a slot has no image on Base Color. One that is
     a single flat color is skipped, unless a material shows it. If you painted the object before and saved
     the project, Patina opens that project instead (see <a href="#reopen">After a restart</a>).</li>
-  <li><b>Paint.</b> Press <kbd>Ctrl</kbd>+<kbd>B</kbd> in Patina, use <i>Blender › Send textures to Blender</i>, or turn on
-    <i>Auto-send after changes</i> to keep Blender up to date as you paint.</li>
+  <li><b>Paint.</b> Press <kbd>Ctrl</kbd>+<kbd>B</kbd> in Patina, use <i>Blender › Send Textures to Blender</i>, or turn on
+    <i>Auto-Send After Changes</i> to keep Blender up to date as you paint.</li>
   <li>Blender reloads the images <code>Patina_&lt;object&gt;_&lt;map&gt;</code> and builds or updates a material
     <code>Patina_&lt;object&gt;</code>. It contains a Principled BSDF with base color, roughness, metallic, normal, emission
     and AO, and optionally displacement. Base color and emission are sRGB; everything else is Non-Color.</li>

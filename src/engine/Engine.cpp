@@ -155,7 +155,7 @@ bool Engine::waitForWork(int timeoutMs) {
 bool Engine::Macro::recordable(const std::string& cmd, const json& args) {
   // left out: questions that change nothing, the recorder itself, undo (undone steps drop out
   // on their own), and what ties a macro to one file or to Blender (opening, saving, the bridge)
-  static const char* skip[] = {"ping", "features", "mesh_symmetry", "history", "history_jump", "undo", "redo",
+  static const char* skip[] = {"ping", "features", "mesh_symmetry", "history", "history_jump", "undo_settings", "undo", "redo",
                                "render_view", "render_uv", "assistant_grammar", "assistant_model", "assistant_panel", "screenshot_window", "pick", "pick_face", "uv_info",
                                "uv_islands", "go_to_note", "set_viewport_size", "open_file", "open_mesh",
                                "new_project", "save_project", "save_incremental", "reload_mesh", "send_to_blender"};
@@ -246,6 +246,8 @@ void Engine::tick() {
     lastPushedComposite = doc.tex.compositeCount;
     pushToBlender();
   }
+  // (1.2.7) undo copies past the card's budget go to RAM, a texture at a time, while no stroke is on
+  if (!painter.active() && UndoStack::idleDue()) UndoStack::idleWork();
   // autosave (GUI only) so a crash never costs more than a few minutes of work
   // only while idle (no stroke in the last 8 s) so the save never interrupts painting
   // Autosave without stopping the window (it used to stop for several seconds with a 4K

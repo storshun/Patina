@@ -9,7 +9,7 @@
 namespace patina {
 
 void App::drawFaceSetsWindow() {
-  if (!engine.features.on("face_sets") || !showFaceSets) return;
+  if (!engine.features.on("face_sets") || !showFaceSets || blenderOn()) return;  // (1.2.7: a Properties tab there)
   // first time: a tab beside Properties (as the Retopology window), else at the right
   const bool placed = ImGui::FindWindowByName("Face Sets") || ImGui::FindWindowSettingsByID(ImHashStr("Face Sets"));
   ImGuiDockNode* besideNode = nullptr;
@@ -54,9 +54,9 @@ void App::faceSetsPanel() {
   if (ImGui::Button(L_("Make sets from..."))) ImGui::OpenPopup("##fsfrom");
   if (ImGui::BeginPopup("##fsfrom")) {
     ImGui::TextDisabled("%s", T_("Replaces the face sets there are"));
-    if (ImGui::MenuItem(L_("The material slots"))) runCommand("make_face_set", {{"from", "material"}});
-    if (ImGui::MenuItem(L_("The UV islands"))) runCommand("make_face_set", {{"from", "island"}});
-    if (ImGui::MenuItem(L_("The connected parts"))) runCommand("make_face_set", {{"from", "connected"}});
+    if (ImGui::MenuItem(L_("The Material Slots"))) runCommand("make_face_set", {{"from", "material"}});
+    if (ImGui::MenuItem(L_("The UV Islands"))) runCommand("make_face_set", {{"from", "island"}});
+    if (ImGui::MenuItem(L_("The Connected Parts"))) runCommand("make_face_set", {{"from", "connected"}});
     ImGui::EndPopup();
   }
   // ---- the view, the lock, show all
@@ -122,17 +122,17 @@ void App::faceSetsPanel() {
         a["action"] = what;
         runCommand("use_face_set", a);
       };
-      if (ImGui::MenuItem(L_("Select its faces"))) act("select");
-      if (ImGui::MenuItem(L_("Add its faces to the selection"))) act("add_to_selection");
-      if (ImGui::MenuItem(L_("Show it alone"))) act("isolate");
-      if (ImGui::MenuItem(s.hidden ? L_("Show it") : L_("Hide it"))) act(s.hidden ? "show" : "hide");
+      if (ImGui::MenuItem(L_("Select Its Faces"))) act("select");
+      if (ImGui::MenuItem(L_("Add Its Faces to the Selection"))) act("add_to_selection");
+      if (ImGui::MenuItem(L_("Show It Alone"))) act("isolate");
+      if (ImGui::MenuItem(s.hidden ? L_("Show It") : L_("Hide It"))) act(s.hidden ? "show" : "hide");
       ImGui::Separator();
-      if (ImGui::MenuItem(L_("Fill it with the paint material"))) act("fill");
-      if (ImGui::MenuItem(L_("Mask the selected layer with it"), nullptr, false, d.selectedLayer() != nullptr)) act("mask");
+      if (ImGui::MenuItem(L_("Fill It with the Paint Material"))) act("fill");
+      if (ImGui::MenuItem(L_("Mask the Selected Layer with It"), nullptr, false, d.selectedLayer() != nullptr)) act("mask");
       ImGui::Separator();
-      if (ImGui::MenuItem(L_("Add the selected faces to it"), nullptr, false, nsel > 0))
+      if (ImGui::MenuItem(L_("Add the Selected Faces to It"), nullptr, false, nsel > 0))
         runCommand("edit_face_set", {{"set", s.id}, {"add", "selection"}});
-      if (ImGui::MenuItem(L_("Take the selected faces out of it"), nullptr, false, nsel > 0))
+      if (ImGui::MenuItem(L_("Take the Selected Faces Out of It"), nullptr, false, nsel > 0))
         runCommand("edit_face_set", {{"set", s.id}, {"remove", "selection"}});
       if (ImGui::MenuItem(L_("Rename..."))) faceSetRename = (int)s.id, faceSetRenameText = s.name, faceSetRenameOpen = true;
       if (ImGui::MenuItem(L_("Delete"))) runCommand("delete_face_set", {{"set", s.id}});

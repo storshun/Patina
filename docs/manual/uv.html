@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.6 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.7 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -80,7 +80,7 @@ Fixing those is a matter of a few clicks.</p>
   <figure><img src="img/island_made.png" alt="The new island"><figcaption>After <kbd>Enter</kbd>: seams around the
   region, and the new island placed in free space at the bottom of the layout.</figcaption></figure>
 </div>
-<p>Each stroke is one undo step (<i>Island brush</i> in the History panel), so <kbd>Ctrl</kbd>+<kbd>Z</kbd> takes a
+<p>Each stroke is one undo step (<i>Island Brush</i> in the History panel), so <kbd>Ctrl</kbd>+<kbd>Z</kbd> takes a
 stray stroke back. Hold <kbd>Ctrl</kbd> to remove faces from the painted area, and use <kbd>Ctrl</kbd>+Numpad <kbd>+</kbd> /
 <kbd>-</kbd> to grow or shrink it by one ring of faces. <kbd>A</kbd> selects every face and <kbd>Alt</kbd>+<kbd>A</kbd>
 clears the selection. The bar above the viewport has <b>Make island</b>, <b>Clear</b>, the orientation and the density
@@ -110,7 +110,7 @@ painting one ear selects both, and the island is made once, with the second ear 
 <p>The two halves stay linked: <b>moving, rotating or scaling either half moves both</b>, in the UV editor or with
 any UV tool, so they can't drift apart by accident. The UV editor marks an island with a stacked half on it with
 <span class="badge" style="background:#2c5a3a">x2</span>. To give one side its own place in the texture (for text that
-must read the right way on both sides, say), right-click it › <i>Mirrored halves › Unstack (make independent)</i>.
+must read the right way on both sides, say), right-click it › <i>Mirrored Halves › Unstack (Make Independent)</i>.
 If the halves of a project from Patina 0.6 were moved apart, the UV editor says so and <b>Re-stack</b> puts them back.</p>
 <p>Stacked mirrored halves are on purpose, so the overlap check (<a href="#overlaps">Overlapping UVs</a>)
 doesn't count them. The halves only stack where the mesh really is symmetric: faces without a mirror partner are
@@ -137,8 +137,8 @@ works on any face selection: one made with the <b>Select</b> tool, by material s
 (<code>uv_make_island</code>).</div>
 
 <h2 id="pinning">Pinning islands</h2>
-<p>Once an island is where you want it, <b>pin</b> it: select it and press <kbd>P</kbd> in the UV editor (or right-click ›
-<i>Pin islands</i>, or <i>UV › Pins › Pin Selected Islands</i>). A pinned island keeps its UVs through every UV edit: dragging it,
+<p>Once an island is where you want it, <b>pin</b> it: select it and press <kbd>P</kbd> in the UV editor (or <i>UV › Pins › Pin Selected Islands</i>,
+in the menu bar or the UV editor's right-click menu). A pinned island keeps its UVs through every UV edit: dragging it,
 <kbd>G</kbd> / <kbd>R</kbd> / <kbd>S</kbd>, Pack, Unwrap, Orient, Fix Overlapping UVs and the Island brush all leave it
 where it is, and the UV editor tells you it is pinned instead of moving it. Packing and unwrapping put the other islands
 in the space around the pinned ones, at the pinned islands' texel density. <kbd>Alt</kbd>+<kbd>P</kbd> unpins.</p>
@@ -147,15 +147,15 @@ with its mirrored half stacked on it (x2). Trying to drag it shows why it doesn'
 the island under the cursor.</figcaption></figure>
 <p>The Island brush pins the islands it makes (the <b>Pin</b> box next to <i>Make island</i>; untick it to leave new
 islands unpinned). Pins cover whole islands, and pinning one half of a symmetric island pins the stacked half too.
-Pins are saved with the project, and undo restores them like any other edit. <i>Right-click › Select › Pinned
-islands</i> finds them, and <i>Whole layout › Unpin every island</i> releases them all.</p>
+Pins are saved with the project, and undo restores them like any other edit. <i>UV › Select › Pinned
+Islands</i> finds them, and <i>UV › Pins › Unpin Every Island</i> releases them all.</p>
 <h3 id="pins-3d">Pinning in the 3D view</h3>
 <p>You don't need the UV editor to pin or unpin. With the <b>Select</b> tool, the bar over the 3D view has
 <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5 H15 M10.2 3.5 V9.2 L7.2 12.6 V14.3 H16.8 V12.6 L13.8 9.2 V3.5"/><path d="M12 14.3 V20.8" stroke="#E8852C" stroke-width="2"/></svg> <b>Pin</b> and <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5 H15 M10.2 3.5 V9.2 L7.2 12.6 V14.3 H16.8 V12.6 L13.8 9.2 V3.5"/><path d="M12 14.3 V20.8"/><path d="M4 4.5 L20 19.5" stroke="#E8852C" stroke-width="2"/></svg> <b>Unpin</b> for the selected faces' islands, and the number of selected faces
 that are pinned. The <b>Island</b> tool has <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5 H15 M10.2 3.5 V9.2 L7.2 12.6 V14.3 H16.8 V12.6 L13.8 9.2 V3.5"/><path d="M12 14.3 V20.8"/><path d="M4 4.5 L20 19.5" stroke="#E8852C" stroke-width="2"/></svg> <b>Unpin</b> too, for the painted faces. <kbd>Alt</kbd>+<kbd>P</kbd>
 unpins over the 3D view as well as in the UV editor. While either tool is chosen, pinned islands have <b>blue stripes</b> on
-the model, so you can see what is pinned before you select it. Right-click the model for <i>Pin its UV island</i> or
-<i>Unpin its UV island</i>, for the island under the pointer.</p>
+the model, so you can see what is pinned before you select it. Right-click the model for <i>Pin Its UV Island</i> or
+<i>Unpin Its UV Island</i>, for the island under the pointer.</p>
 <figure><img src="img/view_pins.png" alt="Pinned islands striped blue in the 3D view, with the Pin and Unpin buttons">
 <figcaption>The Select tool: the pinned islands have blue stripes, the selected face is orange, and the bar shows Pin,
 Unpin and how many of the selected faces are pinned.</figcaption></figure>
@@ -266,26 +266,26 @@ repacks everything if there is no room). Mirrored halves that overlap on purpose
 only if you want each side painted separately.</p>
 <p><b>Faces with no UV area.</b> A face whose UVs all sit on one point (or one line) gets no paint, and you can't see or
 click it in the UV editor. The editor warns when a model has some; <b>Select</b> selects them, so you can unwrap them
-(right-click › <i>Unwrap selection</i>). Before 0.11.1 such a face could catch clicks meant for other islands.</p>
+(right-click › <i>Unwrap the Selection</i>). Before 0.11.1 such a face could catch clicks meant for other islands.</p>
 
 <h2 id="orient">Orient, free space, grow and shrink</h2>
 <table>
   <tr><th>UV menu</th><th>What it does</th></tr>
-  <tr><td>Orient Islands Upright</td><td>Turns each island so that the model's up direction is up in the texture. Wood
+  <tr><td>Orient Upright</td><td>Turns each island so that the model's up direction is up in the texture. Wood
     grain, text, drips and tiles then run the right way. Flat, horizontal islands are laid along their longest side.</td></tr>
-  <tr><td>Orient Islands Along Their Longest Side</td><td>Turns each island so its smallest bounding box lies along U.
+  <tr><td>Orient Along Their Longest Side</td><td>Turns each island so its smallest bounding box lies along U.
     Packs tighter.</td></tr>
-  <tr><td>Move Selection into Free Space</td><td>Places the selected islands in empty parts of the layout without moving
+  <tr><td>Move into Free Space</td><td>Places the selected islands in empty parts of the layout without moving
     the others, so a finished layout (and its paint) stays put.</td></tr>
-  <tr><td>Rectify Quad Islands</td><td>Straightens quad strips and grids into exact rectangles (see <a href="#rectify">below</a>).</td></tr>
+  <tr><td>Straighten (Rectify Quad Islands)</td><td>Straightens quad strips and grids into exact rectangles (see <a href="#rectify">below</a>).</td></tr>
   <tr><td>Mirror UVs (X)</td><td>The −X half takes the mirrored UVs of the +X half (see <a href="#mirror-uvs">below</a>).</td></tr>
-  <tr><td>Grow / Shrink Selection</td><td>Adds or removes one ring of faces (<kbd>Ctrl</kbd>+Numpad <kbd>+</kbd> /
+  <tr><td>Select › Grow / Shrink</td><td>Adds or removes one ring of faces (<kbd>Ctrl</kbd>+Numpad <kbd>+</kbd> /
     <kbd>-</kbd>).</td></tr>
 </table>
 <h3 id="rectify">Rectify quad islands</h3>
 <p>Belts, straps, pipes, trims, planks and ladders are strips or grids of quads, and they are much easier to texture
 when their island is a straight rectangle: a tiling material, stripes or stitching then run straight along them. An
-unwrap or projection usually leaves such islands curved or wobbly. <i>UV › Islands › Rectify Quad Islands</i> straightens each
+unwrap or projection usually leaves such islands curved or wobbly. <i>UV › Islands › Straighten (Rectify Quad Islands)</i> straightens each
 island that is a grid of quads into an exact grid: rows become horizontal lines and columns vertical lines. Each
 column keeps its width and each row its height from the 3D model (averaged along the row), so nothing is stretched,
 and the island keeps its texel density and its position. Islands that would overlap afterward are moved into free
@@ -306,18 +306,35 @@ Claude uses <code>uv_mirror</code>, which can also mirror across Y or Z.</p>
 
 <figure><img src="img/menu_uv.png" alt="UV menu" style="max-width:520px"><figcaption>The UV menu. Items that need a
 selection are grayed out without one.</figcaption></figure>
-<p>The UV menu keeps what most models need at the top: <i>Unwrap</i> (along the seams, Smart UV Project, box, planar,
-cylinder, sphere: the selected faces, or the whole model when nothing is selected), <i>Relax Islands</i>, <i>Pack
-Islands</i>, <i>Fix Overlapping UVs</i>, the <i>Island Brush</i> and <i>Make Island from Selection</i>. The rest is in
-groups:</p>
+<p id="uv-menu">The UV menu is the same in three places: <i>UV</i> in the menu bar, the UV editor's <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg> <b>More</b>
+button and its right-click menu (which adds Move, Rotate and Scale at the top). The names and places match, so what you
+learn in one works in the others (since 1.2.7; they had grown apart). With faces selected, the commands work on their
+islands, and their names say <i>(selection)</i>; with nothing selected, they work on every island. At the top is what
+most models need: <i>Unwrap</i> (along the seams, Smart UV Project, box, planar, cylinder, sphere), <i>Relax Islands</i>,
+<i>Pack Islands</i>, <i>Fix Overlapping UVs</i>, the <i>Island Brush</i> and <i>Make Island from Selection</i>. The rest
+is in groups:</p>
 <ul>
-  <li><b>Islands</b>: orient upright or along the longest side, rectify quad islands, move into free space, texel
-    density.</li>
-  <li><b>Mirrored Halves</b>: mirror UVs, re-stack, unstack, check the mesh's symmetry.</li>
-  <li><b>Pins</b>: pin or unpin the selected islands, unpin every island.</li>
-  <li><b>Selection</b>: grow or shrink it, the whole material slot, a new texture set from it.</li>
-  <li><b>Seams</b>: from the islands, by angle, clear them.</li>
+  <li><b>Islands</b>: orient upright or along the longest side, straighten (rectify quad islands), move into free space,
+    texel density.</li>
+  <li><b>Rotate / Flip</b> and <b>Align / Weld</b>: 90° and 180° turns, flips, aligning, stitching, fitting to 0–1.</li>
+  <li><b>Mirrored Halves</b>: select the other half, mirror UVs, unstack, re-stack, check the mesh's symmetry.</li>
+  <li><b>Pins</b>: pin or unpin the selected islands, or every island.</li>
+  <li><b>Select</b>: all, none, invert, grow, shrink, whole islands, the other half, the whole material slot, pinned or
+    overlapping islands.</li>
+  <li><b>Texture Sets</b>: a <a href="texture-set.html#new-set">texture set of their own</a> for the selected faces, or
+    move them into one that exists.</li>
+  <li><b>Seams</b>: around the selection or none inside it, from the islands, by angle, clear them all.</li>
+  <li><b>Face Sets</b>, <b>View</b> (frame the selection with <kbd>F</kbd>, or 0–1 with <kbd>Home</kbd>), and
+    <b>Keep Paint on UV Edits</b>.</li>
 </ul>
+<p>A command that would change nothing says so, and makes no undo step: <i>Orient Upright</i> on islands that already
+are upright says "Already upright: nothing turned", and <i>Relax</i> on relaxed islands says "Already relaxed".</p>
+<h3 id="other-half">The other half</h3>
+<p><i>Mirrored Halves › Select the Other Half</i> adds the mirror image of the selection across the model's X symmetry,
+wherever it is in the layout: a face unwrapped in two halves side by side, or halves stacked on each other. Select one
+half of the face, and the other half joins (whole islands, when you selected whole islands). Then
+<i>Mirror the Selection's UVs (X)</i> stacks the −X half on the +X half, for those faces only, so paint on one side shows
+on both. Claude uses <code>select_faces</code> with <code>mode: "mirror"</code>.</p>
 
 <h2 id="the-uv-editor">The UV editor</h2>
 <p>At the top are <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.5 V18.2 L9.4 14.8 L12 20.6 L14.6 19.4 L12 13.7 H17.2 Z" stroke="#E8852C" fill="#E8852C" fill-opacity="0.25"/></svg> <b>Edit UVs</b> and <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 3.5 L14.2 9.8"/><path d="M10.9 10.9 C8.9 11.9 8.1 13.3 7.7 15 C7.3 16.8 6.2 18.6 3.8 20.2 C6.5 20.2 8.8 19 10.2 17.6 C11.9 15.9 12.7 14.6 13.1 13.1 Z" stroke="#E8852C" fill="#E8852C" stroke-width="1.25"/><path d="M15.3 10.9 L13.1 8.7 L10.9 10.9 L13.1 13.1 Z"/></svg> <b>Paint</b> (texture-space painting), the texture shown underneath (any channel,
@@ -325,26 +342,8 @@ a baked map, a layer, or a checker), and the selection mode.</p>
 <h3 id="uv-context-menu">The right-click menu</h3>
 <p><b>Right-click</b> in the UV editor for every UV operation in one place. If what is under the cursor isn't selected yet,
 it is selected first, so right-click an island and pick what to do with it:</p>
-<div class="two">
-  <figure><img src="img/uv_context_menu.png" alt="The UV editor's right-click menu"></figure>
-  <div>
-  <table>
-    <tr><th>Item</th><th>Does</th></tr>
-    <tr><td>Move / Rotate / Scale</td><td>The same as <kbd>G</kbd> / <kbd>R</kbd> / <kbd>S</kbd>.</td></tr>
-    <tr><td>Rotate / flip, Align / weld</td><td>90° and 180° turns, flips, aligning, stitching, fitting to 0–1.</td></tr>
-    <tr><td>Pin / Unpin islands</td><td>See <a href="#pinning">Pinning islands</a>.</td></tr>
-    <tr><td>Straighten, Orient, Texel density, Move into free space</td><td>For the selected islands (see below).</td></tr>
-    <tr><td>Unwrap selection, Pack selection</td><td>Only the selected faces.</td></tr>
-    <tr><td>Mirrored halves</td><td>Select the other half, re-stack, or unstack.</td></tr>
-    <tr><td>Texture sets</td><td>A <a href="texture-set.html#new-set">texture set of their own</a> for the selected faces, or
-      move them into one that exists.</td></tr>
-    <tr><td>Seams</td><td>Seams around the selection, or none inside it.</td></tr>
-    <tr><td>Select</td><td>All, none, invert, grow, shrink, whole islands, pinned islands, overlapping islands.</td></tr>
-    <tr><td>Whole layout</td><td>Pack everything, fix overlaps, pin or unpin every island.</td></tr>
-    <tr><td>View</td><td>Frame the selection (<kbd>F</kbd>) or 0–1 (<kbd>Home</kbd>).</td></tr>
-  </table>
-  </div>
-</div>
+<figure><img src="img/uv_context_menu.png" alt="The UV editor's right-click menu"><figcaption>The right-click
+menu: the UV menu, with Move, Rotate and Scale at the top (see <a href="#uv-menu">the UV menu</a>).</figcaption></figure>
 <p>The <svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg> <b>More</b> button above the editor has the same operations, plus the display options. Hovering over an island
 shows its number, face count, and whether it is pinned or has a mirrored half; warnings about overlapping or drifted
 islands have a button that fixes them.</p>
@@ -431,13 +430,13 @@ size is in screen pixels of the UV view, so zoom in for detail.</p>
 <figure><img src="img/uv_paint.png" alt="Painting in the UV editor" style="max-width:480px"><figcaption>A gold stroke painted in texture space.</figcaption></figure>
 
 <h2 id="gotchas">Gotchas</h2>
-<div class="callout gotcha"><span class="t">Paint follows UV edits only with “Keep paint” on</span><i>UV › Keep paint on UV
-edits</i> is on by default. Each UV edit then moves your painted layers and masks to the new layout through 3D, so nothing
+<div class="callout gotcha"><span class="t">Paint follows UV edits only with “Keep paint” on</span><i>UV › Keep Paint on UV
+Edits</i> is on by default. Each UV edit then moves your painted layers and masks to the new layout through 3D, so nothing
 appears to change on the model. Turn it off only if you want the texture to stay put while the UVs move, for example to
 line up a trim sheet.</div>
 <div class="callout gotcha"><span class="t">“My island won't move”</span>It is pinned: the UV editor draws a blue frame and a
-pin on it and says so when you try. Press <kbd>Alt</kbd>+<kbd>P</kbd> with it selected (or right-click › <i>Unpin
-islands</i>, or <b>Unpin</b> on the Select tool's bar in the 3D view). Islands made with the Island brush are pinned unless you untick <b>Pin</b> on its bar.</div>
+pin on it and says so when you try. Press <kbd>Alt</kbd>+<kbd>P</kbd> with it selected (or right-click › <i>Pins ›
+Unpin Selected Islands</i>, or <b>Unpin</b> on the Select tool's bar in the 3D view). Islands made with the Island brush are pinned unless you untick <b>Pin</b> on its bar.</div>
 <div class="callout gotcha"><span class="t">Moving an island onto another one</span>When an island lands on paint that
 belongs to another island, the overlapping part has two owners. Patina keeps each texel's existing paint and doesn't let
 the incoming paint overwrite it. Pack afterward, or move islands into free space.</div>

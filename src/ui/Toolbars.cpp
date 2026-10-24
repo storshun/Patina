@@ -8,6 +8,7 @@
 #include <cstring>
 
 #include "ui/App.h"
+#include "ui/Theme.h"
 
 namespace patina {
 
@@ -39,14 +40,16 @@ bool App::iconButton(const char* id, const char* icon, const char* name, IconSta
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, mixColor(dark, iconAccent, 1.f));
     pushed = 3;
   } else if (state == IconState::Chosen) {
-    ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(200, 112, 36, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(214, 126, 48, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(228, 140, 60, 255));
+    const ui::Theme& th = ui::theme();
+    ImGui::PushStyleColor(ImGuiCol_Button, ui::themeColor(th.accentDeep));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, mixColor(th.accentDeep, th.accent, 0.35f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, mixColor(th.accentDeep, th.accent, 0.7f));
     pushed = 3;
   } else if (state == IconState::On) {
-    ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(88, 62, 40, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(104, 74, 48, 255));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, IM_COL32(120, 84, 54, 255));
+    const ui::Theme& th = ui::theme();
+    ImGui::PushStyleColor(ImGuiCol_Button, ui::themeColor(th.accentDim));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, mixColor(th.accentDim, th.accent, 0.12f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, mixColor(th.accentDim, th.accent, 0.24f));
     pushed = 3;
   }
   ImGui::PushID(id);
@@ -57,7 +60,7 @@ bool App::iconButton(const char* id, const char* icon, const char* name, IconSta
   ImDrawList* dl = ImGui::GetWindowDrawList();
   if (state == IconState::On) {
     float t = std::max(1.f, 1.5f * uiScale);
-    dl->AddRect(a + ImVec2(t * 0.5f, t * 0.5f), b - ImVec2(t * 0.5f, t * 0.5f), IM_COL32(232, 133, 44, disabled ? 110 : 255),
+    dl->AddRect(a + ImVec2(t * 0.5f, t * 0.5f), b - ImVec2(t * 0.5f, t * 0.5f), ui::themeColor(ui::theme().accent, disabled ? 0.43f : 1.f),
                 ImGui::GetStyle().FrameRounding, 0, t);
   }
   ui::IconColors col = ui::iconColors(disabled ? IconState::Disabled : state);
@@ -71,7 +74,7 @@ bool App::iconButton(const char* id, const char* icon, const char* name, IconSta
   if (names) {
     ImVec2 ts = ImGui::CalcTextSize(name, nullptr, true);
     if (!icons) textX = a.x + std::max(ImGui::GetStyle().FramePadding.x, (w - ts.x) * 0.5f);
-    ImU32 tc = state == IconState::Normal ? ImGui::GetColorU32(ImGuiCol_Text) : IM_COL32(255, 246, 234, disabled ? 120 : 255);
+    ImU32 tc = state == IconState::Normal ? ImGui::GetColorU32(ImGuiCol_Text) : ui::themeColor(ui::theme().onAccent, disabled ? 0.47f : 1.f);
     ImGui::PushClipRect(a, b, true);
     dl->AddText(ImVec2(textX, a.y + (h - ts.y) * 0.5f), tc, name, ImGui::FindRenderedTextEnd(name));
     ImGui::PopClipRect();
@@ -95,7 +98,7 @@ void App::shortcutMenu(const char* keyId, const char* name) {
   ImGui::TextDisabled("%.*s", int(ImGui::FindRenderedTextEnd(name) - name), name);
   ImGui::Separator();
   const char* k = keyLabel(keyId);
-  ImGui::MenuItem(k ? F_("Shortcut: %s", k).c_str() : L_("No shortcut"), nullptr, false, false);
+  ImGui::MenuItem(k ? F_("Shortcut: %s", k).c_str() : L_("No Shortcut"), nullptr, false, false);
   if (ImGui::MenuItem(L_("Change Shortcut..."))) showKeymap = true, keymapCapture = keyId, keymapScrollTo = true;
   for (auto& a : keymap)
     if (keyId == std::string(a.id) && a.chord != a.defaultChord && ImGui::MenuItem(L_("Reset Shortcut"))) {
@@ -105,7 +108,7 @@ void App::shortcutMenu(const char* keyId, const char* name) {
   // (0.40) Blender's right-click > Add to Quick Favorites (the Q pie)
   ImGui::Separator();
   favoriteMenuItems(keyId);
-  if (toolbarIcons() && ImGui::MenuItem(L_("Show Names beside Icons"), nullptr, toolbarNames)) toolbarNames = !toolbarNames, saveSession(true);
+  if (toolbarIcons() && ImGui::MenuItem(L_("Show Names Beside Icons"), nullptr, toolbarNames)) toolbarNames = !toolbarNames, saveSession(true);
 }
 
 void App::selectTool(ViewportTool t) {
@@ -174,8 +177,9 @@ void App::drawToolbar() {
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(sp, sp));
   int gi = 0;
   // (0.47) each group in the color of the step it belongs to (the Guided layout's): a stripe beside its tools, its
-  // name in that color, its chosen tool filled with it
-  const bool stepColors = engine.features.on("guided_layout");
+  // name in that color, its chosen tool filled with it. (1.2.7) Not in the Blender layout, which has no steps: there
+  // the chosen tool is in the theme's accent, as in Blender's toolbar
+  const bool stepColors = engine.features.on("guided_layout") && !blenderOn();
   float groupY0 = 0.f;
   ImVec4 groupColor(0, 0, 0, 0);
   auto endGroup = [&] {
@@ -196,7 +200,8 @@ void App::drawToolbar() {
     float tw = ImGui::CalcTextSize(name).x;
     if (tw <= avail) {
       ImVec4 c = groupColor;
-      ImGui::PushStyleColor(ImGuiCol_Text, stepColors ? mixColor(ImVec4(0.6f, 0.61f, 0.64f, 1.f), c, 0.55f) : IM_COL32(150, 153, 160, 255));
+      ImGui::PushStyleColor(ImGuiCol_Text, stepColors ? mixColor(ImVec4(0.6f, 0.61f, 0.64f, 1.f), c, 0.55f)
+                                                      : ImGui::GetColorU32(ImGuiCol_TextDisabled));
       ImGui::TextUnformatted(name);
       ImGui::PopStyleColor();
     } else {
@@ -289,7 +294,7 @@ void App::drawToolbar() {
   ImGui::PopStyleVar();
   // right-click on the empty part of the toolbar
   if (contextMenus() && ImGui::BeginPopupContextWindow("##toolsctx", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems)) {
-    if (ImGui::MenuItem(L_("Show Names beside Icons"), nullptr, toolbarNames, toolbarIcons())) toolbarNames = !toolbarNames, saveSession(true);
+    if (ImGui::MenuItem(L_("Show Names Beside Icons"), nullptr, toolbarNames, toolbarIcons())) toolbarNames = !toolbarNames, saveSession(true);
     if (ImGui::MenuItem(L_("Keyboard Shortcuts..."))) showKeymap = true;
     ImGui::EndPopup();
   }

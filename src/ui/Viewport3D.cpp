@@ -9,6 +9,7 @@
 #include "core/UVIsland.h"
 #include "engine/SmartMaterial.h"
 #include "ui/App.h"
+#include "ui/Theme.h"
 
 namespace patina {
 
@@ -384,10 +385,10 @@ void App::drawViewport(bool fullscreen) {
       odl->AddCircle(radialCenter, kStrengthR, faint, 96, 1.f);
       odl->AddLine(radialCenter, ImVec2(radialCenter.x + kStrengthR, radialCenter.y), IM_COL32(255, 255, 255, 90), 1.f);
       odl->PathArcTo(radialCenter, kStrengthR * 0.35f, 0.f, -a, 32);
-      odl->PathStroke(IM_COL32(232, 133, 44, 255), 0, 2.5f);
+      odl->PathStroke(ui::themeColor(ui::theme().accent), 0, 2.5f);
       odl->AddLine(radialCenter, tip, IM_COL32(0, 0, 0, 160), 4.f);
       odl->AddLine(radialCenter, tip, white, 2.f);
-      odl->AddCircleFilled(tip, 4.f * uiScale, IM_COL32(232, 133, 44, 255), 16);
+      odl->AddCircleFilled(tip, 4.f * uiScale, ui::themeColor(ui::theme().accent), 16);
       txt = F_("Angle %.0f deg", P.brush.angleDeg);
     } else {
       const float lo = radialEdit == 3 ? 0.01f : 0.f;
@@ -395,17 +396,17 @@ void App::drawViewport(bool fullscreen) {
       const float r = *value * kStrengthR;
       odl->AddCircle(radialCenter, kStrengthR, faint, 96, 1.f);
       if (radialEdit == 4) {
-        // hardness: full strength inside the copper disc, fading out to the ring
+        // hardness: full strength inside the accent's disc, fading out to the ring
         const int steps = 12;
         const float band = (kStrengthR - r) / steps;
         for (int k = 0; k < steps; ++k) {
           float t = (k + 0.5f) / steps;
-          odl->AddCircle(radialCenter, r + band * (k + 0.5f), IM_COL32(232, 133, 44, (int)(90.f * (1.f - t))), 96, band + 1.f);
+          odl->AddCircle(radialCenter, r + band * (k + 0.5f), ui::themeColor(ui::theme().accent, 0.353f * (1.f - t)), 96, band + 1.f);
         }
-        odl->AddCircleFilled(radialCenter, r, IM_COL32(232, 133, 44, 110), 96);
+        odl->AddCircleFilled(radialCenter, r, ui::themeColor(ui::theme().accent, 0.43f), 96);
         txt = F_("Hardness %.2f", *value);
       } else {
-        odl->AddCircleFilled(radialCenter, r, IM_COL32(232, 133, 44, 90), 96);
+        odl->AddCircleFilled(radialCenter, r, ui::themeColor(ui::theme().accent, 0.353f), 96);
         txt = radialEdit == 2 ? F_("Opacity %.2f", *value) : F_("Flow %.2f", *value);
       }
       odl->AddCircle(radialCenter, r, white, 96, 1.5f);

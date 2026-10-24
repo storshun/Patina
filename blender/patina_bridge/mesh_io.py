@@ -496,6 +496,19 @@ def sent_uvs(ptmesh: Optional[str]):
     return blk.to_array() if blk is not None else None
 
 
+def patina_kept_uvs(uv_path: str, sent_ptmesh: Optional[str]) -> bool:
+    """(0.14.1) True when the UVs in ``uv_path`` are exactly the ones last sent to Patina. Its textures then fit
+    Blender's UVs, also after the mesh changed in Blender since the send: every face left alone still has them."""
+    sent = sent_uvs(sent_ptmesh)
+    if sent is None or not os.path.isfile(uv_path):
+        return False
+    try:
+        uv = protocol.read_ptuv(uv_path)
+    except (OSError, protocol.ProtocolError):
+        return False
+    return len(uv.loop_uvs) == len(sent) and uv_hash(uv.loop_uvs) == uv_hash(sent)
+
+
 BACKUP_UV_NAME = "UVMap before Patina"
 
 

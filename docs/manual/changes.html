@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.6 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.7 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -41,7 +41,7 @@
 <a href="translating.html">Translating Patina</a>
 <a href="commands.html">Command reference</a>
 <a href="changes.html" class="cur">What&#x27;s new</a>
-<div class="toc"><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
+<div class="toc"><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
 <main>
 <article>
 <!-- title: What's new -->
@@ -49,8 +49,52 @@
 <h1>What's new</h1>
 <p>What changed in each version of Patina, newest first. The same list comes with Patina as <code>CHANGELOG.md</code>.</p>
 <p>What changed in each version, newest first. The manual (Help › Manual, or <code>docs/manual</code>) explains how to use each feature, and docs/ROADMAP.md lists every feature with the version it came in.</p>
-<h2 id="1-2-6-2026-10-23">1.2.6 (2026-10-23)</h2>
+<h2 id="1-2-7-2026-10-24">1.2.7 (2026-10-24)</h2>
+<h3 id="new">New</h3>
+<ul><li>
+<b>A Blender layout.</b> Besides Guided and Full, the switch at the right of the menu bar (and <i>Edit › Preferences › Display</i>, the Welcome window, the command palette) has <i>Blender</i>: Patina arranged as Blender arranges its editors, with every panel and button of the Full layout.
+<ul><li>
+The five steps are workspace tabs in the menu bar, each with its mark (done, needs a look, to do). A step brings up its tools and its own panel; UVs puts the UV editor beside the 3D view, as Blender's UV Editing workspace, and Paint the asset shelf under it, as Texture Paint. A tool of another step brings that step up.
+</li><li>
+The tools stand at the 3D view's left. Its sidebar is at its right, with vertical tabs as Blender's N panel: Brush, Colors, View (the base material and the lighting) and Blender. The chosen tab again closes it.
+</li><li>
+At the right, the Outliner: the objects, and under the active one its texture sets (a click shows one in the UV editor) and its layers, with the layer buttons, folders, drag and drop and a search. (The layers paint every texture set of their object, so they sit beside the sets, not in each one.)
+</li><li>
+Under it, the Properties editor, with a column of icon tabs: the step's own panel (the Guided layout's, with its Next button), Object, Layer (the selected layer's settings), Texture Set, Face Sets, Retopology, History, Notes and Console.
+</li><li>
+The asset shelf lists its catalogs at its left: the material categories, the smart materials and masks, the brush categories.
+</li><li>
+The borders between the areas are dragged to resize them, and the sizes and tabs are kept. The Full layout's own arrangement is left as it was. Claude uses <code>layout</code> with <code>mode: "blender"</code>; <code>step</code> then picks the workspace tab.
+</li></ul>
+</li><li>
+<b>A Vivid Dark theme.</b> <i>Edit › Preferences › Display › Theme</i>: Patina's own gray and copper, or Vivid Dark, the navy and cyan of KDE Plasma's Vivid-Dark-Global-6, with rounder corners. It matches the "Vivid Dark" Blender theme, so Patina and Blender look alike side by side. The chosen tool, icons, pie menus, the brush size circle, selections and drop marks follow the theme, and so does the UV editor round the texture. Claude uses <code>layout</code> with <code>theme</code>.
+</li></ul>
+<h3 id="changed">Changed</h3>
+<ul><li>
+<b>One UV menu, the same everywhere.</b> UV in the menu bar, the UV editor's More button and its right-click menu had grown apart: the same command had another name or place in each, and some were only in one. Now all three are the same menu, in the same order, with the same names (the right-click menu adds Move, Rotate and Scale at the top). With faces selected, the commands work on their islands; with nothing selected, on every island.
+</li><li>
+<b>The same menu everywhere, for the other menus too.</b> The menu bar's View and the 3D view's right-click View are now one menu (they named the same commands differently, "Frame mesh" and "Frame the model", and each had options the other didn't). The new-layer list is the same in Edit › New Layer, the Layers panel's right-click menus and the Add menu: five lists had grown apart, some with the adjustment layer, the white mask, baked maps or smart materials and some without. The 3D view's right-click menu had two Select menus; now it has one, with the same items as the UV editor's Select. Menu items are in Title Case everywhere, as in the menu bar and Blender.
+</li><li>
+<b>Mirrored Halves › Mirror the Selection's UVs (X)</b>: with faces selected, Mirror UVs stacks only their halves.
+</li><li>
+<b>Undo keeps much more, in less memory.</b> Older undo steps are now compressed into RAM, while the latest ones stay on the graphics card for instant undo. <i>Edit › Preferences › Undo</i> sets the number of steps, the RAM undo may use (default: a quarter of your computer's memory, 1 to 8 GB), and how much stays on the graphics card. Past the RAM limit, the oldest steps are dropped. Undo is never written to disk, to spare your SSD. Claude uses <code>undo_settings</code>.
+</li></ul>
 <h3 id="fixed">Fixed</h3>
+<ul><li>
+<b>On a big model, only the latest UV edit could be undone.</b> With "Keep paint" on, a UV edit copies every layer: 4.9 GB for a character with seven texture sets. Each object's history could hold 1 GB on the graphics card, so every UV edit pushed out the one before. Now that copy is compressed to about 131 MB, and the steps before it stay. The limit also covered each object separately, so a scene of eight objects could hold 8 GB of graphics memory; it now covers them all together.
+</li><li>
+<b>"Select the Other Half" was grayed out for a face unwrapped in two halves.</b> It only knew halves stacked on each other. Now it adds the mirror image of the selection by the model's symmetry, wherever it is in the layout (whole islands when you selected whole islands). It is also in Select › The Other Half. Claude uses <code>select_faces</code> with <code>mode: "mirror"</code>.
+</li><li>
+<b>UV commands that changed nothing said they had done it.</b> Orient Upright on an island that was already upright said "Oriented upright", and Relax on a relaxed island said "Relaxed". Now they say "Already upright: nothing turned" or "Already relaxed", and make no undo step (with "Keep paint" on, each step copied every layer). <code>uv_orient</code> and <code>uv_relax</code> return <code>changed</code>.
+</li><li>
+<code>patina --mcp</code> ignored the stop signal (SIGTERM, or Ctrl+C) while it waited for its client. Only closing its input or a forced kill ended it. Now the stop signal ends it too, with its own hidden Patina and when it drives a window. It also ends while its hidden Patina is still starting (which can wait a long time when the graphics driver is busy).
+</li></ul>
+<h3 id="blender-add-on-0-14-1">Blender add-on 0.14.1</h3>
+<ul><li>
+<b>"Send to Blender" was refused after the mesh changed in Blender, even when Patina hadn't changed a UV.</b> The add-on said "Patina changed its UVs ... Patina sent 60930 loops but ... has 60916" and kept the old textures. Now, when Patina sends back the UVs it was given, the textures load: they fit every face you didn't change. A warning says the mesh changed, and that sending it to Patina again paints the changed faces too (the paint carries over). When Patina did change the UVs, the textures still wait, as before.
+</li></ul>
+<h2 id="1-2-6-2026-10-23">1.2.6 (2026-10-23)</h2>
+<h3 id="fixed-2">Fixed</h3>
 <ul><li>
 <b>Blender got another model's UVs, and textures sent from Patina never arrived.</b> When Claude Desktop (or another MCP client) started <code>patina --mcp</code> before any Patina window was open, that hidden Patina took port 7860. A Patina window opened afterward moved to 7861, which is the port Blender's add-on listens on. So Blender's requests went to the hidden Patina, which answered with its startup sphere: "Patina sent 8064 loops but ... has 60993". And the window's "Send to Blender" reached itself: "unknown command 'patina_textures_updated'". Now:
 <ul><li>
@@ -64,7 +108,7 @@ a Patina asked for an object it has no link to says so, instead of sending its o
 The manual's tip for two windows suggested <code>--port 7861</code>, Blender's port. It says <code>--port 7862</code> now.
 </li></ul>
 <h2 id="1-2-5-2026-10-23">1.2.5 (2026-10-23)</h2>
-<h3 id="fixed-2">Fixed</h3>
+<h3 id="fixed-2-2">Fixed</h3>
 <ul><li>
 <b>A brush set to UV projection could stop painting.</b> After a few strokes, or after the camera moved, strokes in the 3D view put nothing on the layer, and the status line said "Nothing to paint". A fill or a Screen stroke made it work again until the next camera move. Such a brush checks which spots the camera sees, but Patina drew the picture of the view it checks against only for Screen brushes, so it used an old one. It draws it for these brushes too now.
 </li><li>
@@ -73,12 +117,12 @@ The manual's tip for two windows suggested <code>--port 7861</code>, Blender's p
 "Nothing to paint" no longer shows after a stroke that did paint with a library material.
 </li></ul>
 <h2 id="1-2-4-2026-10-22">1.2.4 (2026-10-22)</h2>
-<h3 id="fixed-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2">Fixed</h3>
 <ul><li>
 <b>The path tracer showed the triangles of smooth models where light grazes them.</b> Under a hard light, the line between light and shadow on a nose, a cheek or a shoulder ran in triangle-shaped steps, though the Lit view and Blender's viewport were smooth. This is the "shadow terminator" problem. Light was cut off at each flat triangle's own horizon, and shadow rays leaving the flat triangles hit their neighbors. Now light fades out at the smooth surface's horizon, and rays leave from the smooth surface the normals describe, as Blender's Cycles does. A normal map's light fades out smoothly too. Renders under soft light don't change.
 </li></ul>
 <h2 id="1-2-3-2026-10-22">1.2.3 (2026-10-22)</h2>
-<h3 id="new">New</h3>
+<h3 id="new-2">New</h3>
 <ul><li>
 <b>G, R and S in the Object tool</b>, as in Blender's Object Mode. With the pointer over the 3D view, G moves the object, R turns it about the line of sight and S scales it evenly. There's no handle to hit. X, Y or Z keeps to one axis, a typed number sets the amount (S 0.5 halves it), and Ctrl snaps. A click or Enter keeps the change as one undo step, and a right-click or Esc puts it back. The keys are in <i>Edit › Keyboard Shortcuts</i> for both keymaps. In the Object tool they come first: S doesn't pick the Select tool there.
 </li><li>
@@ -86,27 +130,27 @@ The manual's tip for two windows suggested <code>--port 7861</code>, Blender's p
 </li><li>
 <b>A size slider for the material tiles</b> (Ctrl+mouse wheel over them does it too). Patina remembers the view and the size.
 </li></ul>
-<h3 id="fixed-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>Adding a model could replace the one you had.</b> After you opened a project, Patina still took it for the sphere it starts with. <i>Add a Model to the Scene</i> then put the new model in place of a one-object project, and a model dropped on the window opened instead of asking. Blender's <i>Add to the Patina Scene</i> replaced the scene too. Now only the untouched starting sphere gives way.
 </li><li>
 <b>Material tiles ran off the side of the panel.</b> The panel didn't count the space around each tile or the scrollbar, so at some widths the last column was cut off. A long name could also widen its tile. The tiles fit now, and long names end with "...". The same fix applies to the smart materials, smart masks and brushes.
 </li></ul>
 <h2 id="1-2-2-2026-10-22">1.2.2 (2026-10-22)</h2>
-<h3 id="fixed-2-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>Hair cards, leaves and lace from OBJ and FBX files came in solid.</b> Many game assets keep their cut-outs only in the color texture's alpha, and their file says nothing about opacity. Patina now makes that alpha the Opacity channel of the layer <i>From the model</i> when it has see-through and solid parts, and the status line says so. An alpha that is even all over is left out, because some assets keep gloss there. For a model you already brought in, select it and use <i>File › Bring In the Model's Textures</i> again.
 </li><li>
 <b>See-through parts drew in the wrong order.</b> Back layers of hair cards could land on top of front ones, and an object that was not the one you paint lost its see-through parts in front of the one you do. Every object's opaque parts are drawn first now, then the see-through parts, and the nearest layer of cards hides the ones behind it.
 </li></ul>
-<h3 id="changed">Changed</h3>
+<h3 id="changed-2">Changed</h3>
 <ul><li>
 The layer's <i>Opacity</i> channel box and its <i>Channel opacity › Opacity</i> slider explain themselves: the see-through channel and its strength, not the slider that says how strongly the whole layer shows.
 </li><li>
 <code>import_model_textures</code> takes <code>color_alpha</code>: <code>"opacity"</code> always uses the color texture's alpha, <code>"ignore"</code> never.
 </li></ul>
 <h2 id="1-2-1-2026-10-22">1.2.1 (2026-10-22)</h2>
-<h3 id="fixed-2-2-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>Saving could close Patina.</b> A paint layer with clearcoat (painted with car paint, lacquer or another material that has it) made every save and every autosave stop the app.
 </li><li>
@@ -114,7 +158,7 @@ The layer's <i>Opacity</i> channel box and its <i>Channel opacity › Opacity</i
 </li><li>
 A save that fails says why instead of closing Patina, and the autosave tries again later.
 </li></ul>
-<h3 id="changed-2">Changed</h3>
+<h3 id="changed-2-2">Changed</h3>
 <ul><li>
 Patina Web's material library is baked again with every build. 1.2.0's downloads had the library of 0.26, with its British names; 1.2.1's has the current one.
 </li><li>
@@ -125,7 +169,7 @@ The install notes and the manual no longer name version 0.2.0 in their file name
 A new README: download, install, your first texture, how-tos, and this change log from 1.0.0 on. The list of every feature moved to <code>docs/FEATURES.md</code>.
 </li></ul>
 <h2 id="1-2-0-2026-10-21">1.2.0 (2026-10-21)</h2>
-<h3 id="new-2">New</h3>
+<h3 id="new-2-2">New</h3>
 <ul><li>
 <b>Objects in a scene.</b> A project can hold several models, each an object with its own layers, texture set and undo history: a body, its clothes, its eyes, its hair. The <b>Objects</b> list over the layers shows them. Click one to paint it, and the layers below, the UV editor and the bakes are that object's.
 </li><li>
@@ -182,7 +226,7 @@ Tips are read the right way round: a dark shape on a light ground paints with th
 </li><li>
 <b>MCP:</b> <code>list_objects</code>, <code>add_object</code>, <code>select_object</code>, <code>set_object</code>, <code>remove_object</code>, <code>duplicate_object</code>, <code>isolate_object</code>, <code>frame_object</code>, <code>pick_object</code>, <code>select_loop</code>, <code>select_linked</code>, <code>list_face_sets</code>, <code>make_face_set</code>, <code>edit_face_set</code>, <code>delete_face_set</code>, <code>use_face_set</code>, <code>reload_brushes</code>, <code>import_brushes</code>. <code>export_model</code> and <code>export_textures</code> take <code>objects</code>, <code>send_to_blender</code> takes <code>objects</code>, and <code>set_brush</code> takes <code>lock_face_set</code>. New feature switches: <code>scene_objects</code> and <code>face_sets</code>.
 </li></ul>
-<h3 id="changed-2-2">Changed</h3>
+<h3 id="changed-2-2-2">Changed</h3>
 <ul><li>
 A project with several objects is saved in one <code>.patina</code> file. Patina 1.1 and older open its first object only.
 </li><li>
@@ -207,7 +251,7 @@ Each object's placement goes along. The automatic mesh sync only updates objects
 The sculpt face sets go along, for Patina's face sets.
 </li></ul>
 <h2 id="1-1-0-2026-10-21">1.1.0 (2026-10-21)</h2>
-<h3 id="new-2-2">New</h3>
+<h3 id="new-2-2-2">New</h3>
 <ul><li>
 <b>Bake down from the high-poly.</b> Paint the sculpt, then bake every layer down onto its low-poly version, with <i>Bake › Bake Down to a Low-Poly Model</i> or <i>Use the Quads as the Model</i> after Patina's retopology. The low-poly becomes the model and the whole layer stack comes along.
 <ul><li>
@@ -220,7 +264,7 @@ Painted normals are turned to fit the new surface. The high-poly's shape goes in
 </li><li>
 <b>The compare view</b> can put the high-poly as it was beside the result.
 </li></ul>
-<h3 id="changed-2-2-2">Changed</h3>
+<h3 id="changed-2-2-2-2">Changed</h3>
 <ul><li>
 <i>Bake from a high-poly mesh</i> uses the same rays: 4 points per texel, with the distance measured from the two models.
 </li><li>

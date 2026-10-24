@@ -37,6 +37,12 @@ if(Python3_FOUND)
   set_tests_properties(api_path_trace_terminator PROPERTIES ENVIRONMENT "PATINA_BIN=$<TARGET_FILE:patina>" TIMEOUT 900)
   add_test(NAME api_symmetry_unseen COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/api/test_symmetry_unseen.py)
   set_tests_properties(api_symmetry_unseen PROPERTIES ENVIRONMENT "PATINA_BIN=$<TARGET_FILE:patina>" TIMEOUT 900)
+  # (1.2.7) Select the other half of halves side by side; UV edits that move nothing make no undo step
+  add_test(NAME api_uv_halves COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/api/test_uv_halves.py)
+  set_tests_properties(api_uv_halves PROPERTIES ENVIRONMENT "PATINA_BIN=$<TARGET_FILE:patina>" TIMEOUT 600)
+  # (1.2.7) undo copies past the card's budget compressed in RAM, exact undo/redo, RAM and step limits
+  add_test(NAME api_undo_memory COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/api/test_undo_memory.py)
+  set_tests_properties(api_undo_memory PROPERTIES ENVIRONMENT "PATINA_BIN=$<TARGET_FILE:patina>" TIMEOUT 600)
   add_test(NAME api_mcp_port COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/api/test_mcp_port.py)
   set_tests_properties(api_mcp_port PROPERTIES ENVIRONMENT "PATINA_BIN=$<TARGET_FILE:patina>" TIMEOUT 900)
   add_test(NAME api_develop COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/api/test_develop.py)

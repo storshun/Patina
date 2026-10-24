@@ -76,7 +76,7 @@ when you open a project from before 0.41). What the layer makes is the map the r
   <li><b>Paint</b> on the model to fix the map. The brush paints the <i>Paint value</i> in the layer's properties (for
     the AO, 1 is no shadow and 0 is fully shadowed; the curvature's flat is 0.5). The picker takes the value under the
     cursor.</li>
-  <li><b>Erase</b> brings the bake back under the brush. <i>Reset the fixes</i> takes all of them away.</li>
+  <li><b>Erase</b> brings the bake back under the brush. <i>Reset the Fixes</i> takes all of them away.</li>
   <li><b>Blur</b> smooths the map, <b>Smudge</b> pushes it around and <b>Clone</b> copies a good part over a bad one. The
     polygon fill fills faces with the paint value.</li>
   <li><b>Adjustments</b> work on the whole map: Levels, Blur, Fill, Noise and the other effects of a
@@ -92,16 +92,16 @@ from Blender with new UVs), the maps move along with the paint. Where islands ch
 dark patches and blocks in the 3D view. The Baked maps section then says <i>Baked for other UVs</i>, with a
 <b>Re-bake</b> button: it bakes those maps again for the UVs as they are, and your fixes stay (0.44.2). Projects saved
 before 0.44.2 don't know what their bakes were made for: if you see dark patches that the base color doesn't have,
-bake again with <i>Bake › All mesh maps</i>.</p>
+bake again with <i>Bake › All Mesh Maps</i>.</p>
 <div class="two">
   <figure><img src="img/baked_ao_before.png" alt="A rough AO bake on Suzanne"><figcaption>A rough AO bake (6 samples):
   blotchy, the eye sockets too dark.</figcaption></figure>
   <figure><img src="img/baked_ao_after.png" alt="The same AO, fixed on its layer"><figcaption>Fixed on its layer: the
   sockets painted lighter and a Blur adjustment over the noise.</figcaption></figure>
 </div>
-<p>Baking the map again (<i>Bake again</i> in the layer's properties, or the Bake menu) keeps your fixes and adjustments
+<p>Baking the map again (<i>Bake Again</i> in the layer's properties, or the Bake menu) keeps your fixes and adjustments
 on top of the new bake. Deleting the layer drops them and uses the bake as it is; <i>Add a layer for…</i> under the
-section (or <i>Baked map layer</i> in the Add menu) gives the map a new one. <i>Export this map…</i> writes the fixed map
+section (or <i>Baked Map Layer</i> in the Add menu) gives the map a new one. <i>Export this map…</i> writes the fixed map
 as a grayscale PNG. Agents use <code>baked_maps</code> (see <a href="commands.html">Commands</a>). The feature can be
 switched off in <i>Preferences › Features</i>.</p>
 
@@ -207,7 +207,7 @@ off.</p>
 <h2 id="material-slots">Material slots</h2>
 <p>Models from Blender often already have their parts separated by material slots (rubber, metal, glass…). Patina keeps
 them: the <i>Material Slots</i> view mode shows them in colors, the <b>Fill</b> tool's <i>Material slot</i> mode fills every face
-of the clicked slot, <i>UV › Selection › Select the Whole Material Slot</i> extends a face selection to its slots, and the <b>Material slot</b> smart mask turns a fill layer
+of the clicked slot, <i>UV › Select › Whole Material Slot</i> extends a face selection to its slots, and the <b>Material slot</b> smart mask turns a fill layer
 on for one slot only. When you bake from a high-poly mesh with <i>Material slots</i> on, the sculpt's slots are used.</p>
 
 <h2 id="texture-sets">Texture sets and UDIM tiles</h2>
@@ -229,7 +229,7 @@ square, and <b>UDIM tiles</b> when the islands sit in several unit tiles. Island
 When the slots overlap and you choose <i>One texture</i>, they share texels again, so their paint mixes.</p>
 <h3 id="new-set">A texture set of its own: the head and the body</h3>
 <p>To give part of the model its own texture, for example one for the head and one for the body, select its faces and
-choose <i>UV › Selection › New Texture Set from Selection</i>. The same is in the UV editor's right-click menu (<i>Texture sets</i>),
+choose <i>UV › Texture Sets › New Texture Set from Selection</i>. The same is in the UV editor's right-click menu,
 at the bottom of its list of sets, and under <i>Texture Set › New set from selection</i>.</p>
 <ol>
   <li>Select the faces. <b>Select the head</b> in the window picks everything above the neck in one click; otherwise use
@@ -239,7 +239,7 @@ at the bottom of its list of sets, and under <i>Texture Set › New set from sel
     move too and stay pinned), and the set the faces came from is packed again, unless it has pinned islands.</li>
 </ol>
 <p>The faces go into a new material slot, and <i>One texture</i> becomes <i>Per material slot</i>. The paint moves with
-the faces, and the undo history is cleared. With the Blender link, the next <i>Send textures to Blender</i> adds the slot
+the faces, and the undo history is cleared. With the Blender link, the next <i>Send Textures to Blender</i> adds the slot
 to the object in Blender and assigns the faces to it (add-on 0.6.1 or later), so the head gets its own material there
 too. With <i>UDIM tiles</i>, the faces' islands move to the next free tile instead. <i>Move selection to</i> in the UV
 editor's right-click menu moves faces into a set that already exists.</p>
@@ -375,7 +375,7 @@ It goes to the cache folder (see <a href="install.html#where-patina-keeps-files"
   <li><b>The mesh changed on disk:</b> when the <code>.glb</code> or <code>.obj</code> you opened is saved again by another
   program (you edited it in Blender and exported over it), Patina offers to <b>update the mesh</b>. Your layers are kept:
   paint follows changed UVs, and is carried over through 3D when the topology changed. <i>Always update</i> (or
-  <i>File › Reload Automatically When the Mesh Changes</i>) skips the question. <i>File › Reload Mesh (keep layers)</i> does it
+  <i>File › Reload Automatically When the Mesh Changes</i>) skips the question. <i>File › Reload Mesh (Keep Layers)</i> does it
   by hand.</li>
 </ul>
 

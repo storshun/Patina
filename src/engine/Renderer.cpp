@@ -597,7 +597,7 @@ void Renderer::renderUV(Document& doc, RenderTarget& rt, int w, int h, const UVV
   gl::ViewportScope vp(0, 0, w, h);
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
-  glClearColor(0.07f, 0.075f, 0.08f, 1);
+  glClearColor(opt.background.x, opt.background.y, opt.background.z, 1);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   {
     Shader& s = ShaderCache::get("fullscreen.vs.glsl", "uvview.fs.glsl");
@@ -607,6 +607,8 @@ void Renderer::renderUV(Document& doc, RenderTarget& rt, int w, int h, const UVV
     s.set("uDim", opt.dim);
     s.set("uViewportPx", vec2(w, h));
     s.set("uTiling", opt.tiling ? 1 : 0);
+    s.set("uBackdrop", opt.background);
+    s.set("uBorder", opt.border);
     const TileLayout& tl = doc.mesh.tiles;
     int tile = tl.active() ? std::clamp(opt.tile, 0, tl.count() - 1) : 0;
     s.set("uAtlasCell", tl.active() ? vec3(tl.cellOrigin(tile), tl.cellSize()) : vec3(0, 0, 1));

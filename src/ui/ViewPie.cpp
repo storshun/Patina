@@ -14,6 +14,7 @@
 
 #include "core/Log.h"
 #include "ui/App.h"
+#include "ui/Theme.h"
 
 namespace patina {
 
@@ -352,7 +353,7 @@ void App::favoriteMenuItems(const std::string& id) {
   }
   const bool room = std::count(favorites.begin(), favorites.end(), std::string()) > 0 || favorites.size() < 8;
   const char* k = keyLabel("app.favorites");
-  bool go = ImGui::MenuItem(room ? L_("Add to Quick Favorites") : L_("Quick Favorites are full (remove one first)"), k, false, room);
+  bool go = ImGui::MenuItem(room ? L_("Add to Quick Favorites") : L_("Quick Favorites Are Full (Remove One First)"), k, false, room);
   rectOf("menu.favorite");
   if (go && addFavorite(id)) setStatus(F_("Added to Quick Favorites (%s)", k ? k : "Q"));
 }
@@ -525,7 +526,7 @@ void App::viewPieDraw() {
       if (Pi.menuId == a.id) {
         ImGui::Separator();
         const char* k = keyLabel(a.id);
-        ImGui::MenuItem(k ? F_("Shortcut: %s", k).c_str() : L_("No shortcut"), nullptr, false, false);
+        ImGui::MenuItem(k ? F_("Shortcut: %s", k).c_str() : L_("No Shortcut"), nullptr, false, false);
         if (ImGui::MenuItem(L_("Change Shortcut..."))) showKeymap = true, keymapCapture = a.id, keymapScrollTo = true;
       }
     ImGui::EndPopup();
@@ -549,7 +550,7 @@ void App::viewPieDraw() {
   if (dx * dx + dy * dy > L.dead * L.dead * 0.25f) {
     float a = std::atan2(dy, dx);
     dl->PathArcTo(c, L.dead, a - 0.45f, a + 0.45f, 12);
-    dl->PathStroke(IM_COL32(232, 133, 44, 255), 0, std::max(2.f, 3.f * s));
+    dl->PathStroke(ui::themeColor(ui::theme().accent), 0, std::max(2.f, 3.f * s));
   }
   // (0.40) which pie it is, over the middle
   if (engine.features.on("pie_menus")) {
@@ -557,23 +558,25 @@ void App::viewPieDraw() {
     ImVec2 ts = ImGui::CalcTextSize(t);
     ImVec2 p(std::round(c.x - ts.x * 0.5f), std::round(c.y - L.dead - 8.f * s - ts.y));
     dl->AddRectFilled(p - ImVec2(6, 2) * s, p + ts + ImVec2(6, 2) * s, IM_COL32(20, 20, 22, 190), 4.f * s);
-    dl->AddText(p, IM_COL32(232, 133, 44, 255), t);
+    dl->AddText(p, ui::themeColor(ui::theme().accent), t);
   }
   // the items
+  const ui::Theme& th = ui::theme();
   for (int i = 0; i < 8; ++i) {
     const PieItem& it = items[i];
     const bool hot = Pi.hot == i;
     const bool empty = it.id.empty();
     ImVec2 a = L.box[i][0], b = L.box[i][1];
-    ImU32 bg = hot ? IM_COL32(200, 112, 36, 255) : it.on ? IM_COL32(88, 62, 40, 245) : empty ? IM_COL32(30, 30, 33, 200) : IM_COL32(38, 38, 42, 240);
+    ImU32 bg = hot ? ui::themeColor(th.accentDeep) : it.on ? ui::themeColor(th.accentDim, 0.96f)
+             : empty ? ui::themeColor(th.plate, 0.85f) : ui::themeColor(th.plate);
     dl->AddRectFilled(a + ImVec2(2, 3) * s, b + ImVec2(2, 3) * s, IM_COL32(0, 0, 0, 70), L.h * 0.5f);
     dl->AddRectFilled(a, b, bg, L.h * 0.5f);
-    if (it.on && !hot) dl->AddRect(a, b, IM_COL32(232, 133, 44, 255), L.h * 0.5f, 0, std::max(1.f, 1.5f * s));
+    if (it.on && !hot) dl->AddRect(a, b, ui::themeColor(th.accent), L.h * 0.5f, 0, std::max(1.f, 1.5f * s));
     else dl->AddRect(a, b, IM_COL32(255, 255, 255, hot ? 90 : empty ? 50 : 28), L.h * 0.5f, 0, 1.f);
     ui::IconColors col = ui::iconColors(!it.enabled ? ui::IconState::Disabled : hot ? ui::IconState::Chosen : ui::IconState::Normal);
     ui::drawIcon(dl, it.icon, ImVec2(a.x + L.pad * 1.4f, std::round(a.y + (L.h - L.isz) * 0.5f)), L.isz, col);
     ImVec2 ts = ImGui::CalcTextSize(it.label.c_str());
-    ImU32 tc = !it.enabled || (empty && !hot) ? IM_COL32(150, 150, 150, 170) : hot ? IM_COL32(255, 246, 234, 255) : ImGui::GetColorU32(ImGuiCol_Text);
+    ImU32 tc = !it.enabled || (empty && !hot) ? IM_COL32(150, 150, 150, 170) : hot ? ui::themeColor(th.onAccent) : ImGui::GetColorU32(ImGuiCol_Text);
     dl->AddText(ImVec2(a.x + L.pad * 2.f + L.isz, std::round(a.y + (L.h - ts.y) * 0.5f)), tc, it.label.c_str());
   }
   // what the item under the pointer does, under the middle

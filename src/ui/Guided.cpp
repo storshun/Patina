@@ -218,7 +218,7 @@ int App::pushPanelColors(const char* label) {
   // (the Full layout) a docked panel's tab in its step's color: a hint of it on the tab, the line over the chosen one
   const char* id = std::strstr(label, "###");
   GuidedStep s = panelStep(id ? id + 3 : label);
-  if (s == GuidedStep::Count || guidedOn() || !engine.features.on("guided_layout")) return 0;
+  if (s == GuidedStep::Count || guidedOn() || blenderOn() || !engine.features.on("guided_layout")) return 0;  // (Blender's tabs: all alike)
   ImVec4 c = stepColor(s);
   const ImVec4* b = baseColors;
   ImGui::PushStyleColor(ImGuiCol_Tab, mixColor(b[ImGuiCol_Tab], c, 0.16f));
@@ -233,12 +233,15 @@ int App::pushPanelColors(const char* label) {
 
 // ------------------------------------------------------------------ the layout
 
-bool App::guidedOn() const { return guidedLayout && engine.features.on("guided_layout") && !distractionFree; }
+bool App::guidedOn() const { return layoutMode == LayoutMode::Guided && engine.features.on("guided_layout") && !distractionFree; }
 
-void App::setLayoutMode(bool guided) {
-  if (guided == guidedLayout) return;
-  guidedLayout = guided;
-  if (guided) {
+bool App::blenderOn() const { return layoutMode == LayoutMode::Blender && !distractionFree; }
+
+void App::setLayoutMode(LayoutMode m) {
+  if (m == LayoutMode::Guided && !engine.features.on("guided_layout")) m = LayoutMode::Full;
+  if (m == layoutMode) return;
+  layoutMode = m;
+  if (m == LayoutMode::Guided) {
     // the step the work is at
     Document& d = engine.doc;
     bool started = d.hasMesh() && !d.startupScene;
@@ -249,10 +252,22 @@ void App::setLayoutMode(bool guided) {
     guidedStep = GuidedStep::Count;  // (so the step is entered: its tool chosen)
     setGuidedStep(s);
     setStatus(T_("Guided layout: the work in five steps along the top. The Full layout is at the right of the menu bar."));
+  } else if (m == LayoutMode::Blender) {
+    viewOnly = false;
+    setBlenderStep(guidedStep);  // (the step's tools and Properties tab)
+    setStatus(T_("Blender layout: the steps are workspace tabs, the Outliner and the Properties editor at the right. Full "
+                 "or Guided at the right of the menu bar."));
   } else {
     viewOnly = false;
     setStatus(T_("Full layout: every panel, docked. Guided brings back the steps."));
   }
+  saveSession(true);
+}
+
+void App::setThemeUI(ui::ThemeId t) {
+  if (t == ui::themeId()) return;
+  ui::setTheme(t);
+  pendingUiScale = userUiScale;  // (setupStyle again before the next frame, as for a new UI scale)
   saveSession(true);
 }
 
@@ -334,13 +349,20 @@ App::StepState App::guidedStatus(GuidedStep s) {
 }
 
 json App::layoutCommand(const json& a) {
-  if (!engine.features.on("guided_layout") && (a.contains("mode") || a.contains("step")))
+  if (!engine.features.on("guided_layout") && (a.value("mode", std::string()) == "guided" || a.contains("step")))
     throw std::runtime_error("the Guided layout is switched off (features: guided_layout)");
-  if (a.contains("mode")) setLayoutMode(a.at("mode").get<std::string>() == "guided");
+  if (a.contains("theme")) setThemeUI(ui::themeFromId(a.at("theme").get<std::string>()));
+  if (a.contains("mode")) {
+    std::string mode = a.at("mode");
+    setLayoutMode(mode == "guided" ? LayoutMode::Guided : mode == "blender" ? LayoutMode::Blender : LayoutMode::Full);
+  }
   if (a.contains("step")) {
     std::string want = a.at("step");
-    for (auto& si : kSteps)
-      if (want == si.id) setLayoutMode(true), setGuidedStep(si.step);
+    for (auto& si : kSteps) {
+      if (want != si.id) continue;
+      if (blenderOn()) setBlenderStep(si.step);  // (1.2.7: its workspace tab)
+      else setLayoutMode(true), setGuidedStep(si.step);
+    }
   }
   json steps = json::array();
   static const char* kState[] = {"todo", "done", "look"};
@@ -348,22 +370,27 @@ json App::layoutCommand(const json& a) {
     StepState st = guidedStatus(si.step);
     steps.push_back({{"step", si.id}, {"state", kState[std::clamp(st.state, 0, 2)]}, {"why", st.text}});
   }
-  return json{{"layout", guidedLayout && engine.features.on("guided_layout") ? "guided" : "full"},
+  const bool guided = layoutMode == LayoutMode::Guided && engine.features.on("guided_layout");
+  return json{{"layout", guided ? "guided" : layoutMode == LayoutMode::Blender ? "blender" : "full"},
+              {"theme", ui::theme().id},
               {"step", info(guidedStep).id},
               {"steps", steps}};
 }
 
 void App::layoutSwitch() {
-  if (!engine.features.on("guided_layout")) return;
-  // two small buttons at the right end of the menu bar, the one in use lit
+  // small buttons at the right end of the menu bar, the one in use lit: Guided (with its feature), Full, Blender
+  const bool withGuided = engine.features.on("guided_layout");
   const char* g = L_("Guided");
   const char* f = L_("Full");
+  const char* bl = L_("Blender##layout");  // (not the Blender menu's ID)
   float pad = ImGui::GetStyle().FramePadding.x * 2.f;
-  float w = ImGui::CalcTextSize(g, nullptr, true).x + ImGui::CalcTextSize(f, nullptr, true).x + pad * 2.f + 12.f * uiScale;
+  float w = (withGuided ? ImGui::CalcTextSize(g, nullptr, true).x + pad + 6.f * uiScale : 0.f) + ImGui::CalcTextSize(f, nullptr, true).x +
+            ImGui::CalcTextSize(bl, nullptr, true).x + pad * 2.f + 12.f * uiScale;
   ImGui::SetCursorPosX(std::max(ImGui::GetCursorPosX() + 8.f, ImGui::GetWindowWidth() - w - 8.f * uiScale));
+  const ImVec4 black(0.f, 0.f, 0.f, 1.f), deep = ui::theme().accentDeep;
   auto seg = [&](const char* label, bool on, const char* key, const char* tipText) {
-    ImGui::PushStyleColor(ImGuiCol_Button, on ? IM_COL32(150, 82, 28, 255) : IM_COL32(0, 0, 0, 0));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, on ? IM_COL32(190, 104, 36, 255) : IM_COL32(70, 72, 78, 255));
+    ImGui::PushStyleColor(ImGuiCol_Button, on ? mixColor(black, deep, 0.75f) : IM_COL32(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, on ? mixColor(black, deep, 0.95f) : ImGui::GetColorU32(ImGuiCol_ButtonHovered));
     bool r = ImGui::SmallButton(label);
     ImGui::PopStyleColor(2);
     ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
@@ -371,11 +398,18 @@ void App::layoutSwitch() {
     tip(tipText);
     return r;
   };
-  if (seg(g, guidedLayout, "layout.guided",
-          T_("Guided layout: the work in five steps (Model, UVs, Bake, Paint, Export), each with what it needs in front")))
-    setLayoutMode(true);
-  if (seg(f, !guidedLayout, "layout.full", T_("Full layout: every panel docked, arranged as you like (View > Reset layout)")))
-    setLayoutMode(false);
+  const bool guided = layoutMode == LayoutMode::Guided && withGuided;
+  if (withGuided && seg(g, guided, "layout.guided",
+                        T_("Guided layout: the work in five steps (Model, UVs, Bake, Paint, Export), each with what it needs in front")))
+    setLayoutMode(LayoutMode::Guided);
+  if (seg(f, !guided && layoutMode != LayoutMode::Blender, "layout.full",
+          T_("Full layout: every panel docked, arranged as you like (View > Reset layout)")))
+    setLayoutMode(LayoutMode::Full);
+  if (seg(bl, layoutMode == LayoutMode::Blender, "layout.blender",
+          T_("Blender layout: arranged as Blender is. The steps are workspace tabs, the tools stand beside the 3D view "
+             "with its sidebar, the Outliner (objects, texture sets, layers) and the Properties editor are at the right, "
+             "and the asset shelf is under the 3D view")))
+    setLayoutMode(LayoutMode::Blender);
 }
 
 void App::guidedStepBar(float h) {
@@ -384,7 +418,7 @@ void App::guidedStepBar(float h) {
   ImDrawList* dl = ImGui::GetWindowDrawList();
   ImVec2 p0 = ImGui::GetCursorScreenPos();
   const float W = ImGui::GetContentRegionAvail().x;
-  const ImVec4 barBg(0.085f, 0.088f, 0.098f, 1.f);
+  const ImVec4 barBg = ui::theme().bar;
   dl->AddRectFilled(p0, ImVec2(p0.x + W, p0.y + h), ImGui::ColorConvertFloat4ToU32(barBg));
   const float band = std::round(4.f * uiScale), slant = std::round(10.f * uiScale), r = std::round(6.f * uiScale);
   const float yb = p0.y + h - band, tabH = h - band - std::round(8.f * uiScale), lift = std::round(4.f * uiScale);
@@ -508,10 +542,58 @@ void App::guidedNextButton() {
   std::string label = std::string(T_(kSteps[k].next)) + "  >###guided_next";
   ImVec4 keep = g_primary;
   g_primary = stepColor(kSteps[k].step);  // (in the color of the step it leads to)
-  if (wideButton(label.c_str(), true)) setGuidedStep(kSteps[k].step);
+  if (wideButton(label.c_str(), true)) blenderOn() ? setBlenderStep(kSteps[k].step) : setGuidedStep(kSteps[k].step);
   g_primary = keep;
   ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
   engine.uiRects["guided.next"] = {a.x, a.y, b.x - a.x, b.y - a.y};
+}
+
+// (1.2.7) the Blender layout's Properties editor: the step's own panel, as the Guided layout shows it beside the 3D
+// view, with its Next button
+void App::stepGuidePanel() {
+  g_primary = stepColor(guidedStep);
+  switch (guidedStep) {
+    case GuidedStep::Model: guidedModelPanel(); break;
+    case GuidedStep::UVs: guidedUVPanel(); break;
+    case GuidedStep::Bake: guidedBakePanel(); break;
+    case GuidedStep::Export: guidedExportPanel(); break;
+    default: {
+      header(T_("4  Paint"), T_(info(GuidedStep::Paint).tip), stepColor(GuidedStep::Paint));
+      StepState st = guidedStatus(GuidedStep::Paint);
+      checkLine(st.state, st.text);
+      ImGui::Spacing();
+      ImGui::PushTextWrapPos(0.f);
+      ImGui::BulletText("%s", T_("The layers are in the Outliner above; the selected layer's settings in the Layer tab."));
+      ImGui::BulletText("%s", T_("The brush, the colors and the lighting are in the 3D view's sidebar, at its right."));
+      ImGui::BulletText("%s", T_("Materials, smart materials, smart masks and brushes are in the shelf under the 3D view: "
+                                 "click one, or drag it onto the model or the layers."));
+      ImGui::PopTextWrapPos();
+      break;
+    }
+  }
+  guidedNextButton();
+}
+
+// (1.2.7) the Blender layout: a tool chosen from another step (its key, a menu, the palette, a command) brings that
+// step's workspace up, as a mode brings up its tools in Blender; a retopology tool, the Retopology tab
+void App::blenderFollowTool() {
+  if (tool == guidedLastTool && !toolPicked) return;
+  toolPicked = false;
+  guidedLastTool = tool;
+  if (retopologyTool(tool)) {
+    if (guidedStep != GuidedStep::Model) setGuidedStep(GuidedStep::Model);
+    guidedLastTool = tool;
+    blui.props = PropsTab::Retopology;
+  } else if (paintTool(tool) && guidedStep != GuidedStep::Paint) {
+    setBlenderStep(GuidedStep::Paint);
+  } else if (uvTool(tool) && guidedStep != GuidedStep::UVs) {
+    setBlenderStep(GuidedStep::UVs);
+  }
+}
+
+void App::setBlenderStep(GuidedStep s) {
+  setGuidedStep(s);  // (its tools; a view mode the last step chose goes back)
+  blui.props = s == GuidedStep::Paint ? PropsTab::Layer : PropsTab::Step;
 }
 
 void App::drawGuided() {
@@ -733,11 +815,16 @@ void App::guidedModelPanel() {
     if (engine.features.on("mesh_reduce") && ImGui::Button(L_("Reduce polygons...")) && d.hasMesh()) showReduce = true;
     if (engine.features.on("lightmap_uvs") && ImGui::Button(L_("Lightmap UVs...")) && d.hasMesh()) showLightmapWindow = true;
     if (engine.features.on("collision") && ImGui::Button(L_("Collision shapes...")) && d.hasMesh()) showCollisionWindow = true;
-    if (engine.features.on("retopology") && ImGui::Button(L_("Retopology (Full layout)..."))) {
-      setLayoutMode(false);
-      showRetopoWindow();
+    if (blenderOn()) {  // (1.2.7: a tab of the Properties editor there)
+      if (engine.features.on("retopology") && ImGui::Button(L_("Retopology..."))) blui.props = PropsTab::Retopology;
+      tip(T_("Retopology has its own tools and panel: the Retopology tab"));
+    } else {
+      if (engine.features.on("retopology") && ImGui::Button(L_("Retopology (Full layout)..."))) {
+        setLayoutMode(false);
+        showRetopoWindow();
+      }
+      tip(T_("Retopology has its own tools and panel, in the Full layout"));
     }
-    tip(T_("Retopology has its own tools and panel, in the Full layout"));
   }
 }
 

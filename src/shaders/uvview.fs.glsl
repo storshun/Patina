@@ -9,6 +9,8 @@ uniform float uDim;          // darken texture so wireframe reads
 uniform vec2 uViewportPx;
 uniform int uTiling;         // show repeated tiles outside 0..1
 uniform vec3 uAtlasCell = vec3(0.0, 0.0, 1.0);  // texture tiles: the shown tile's cell in the atlas (origin, size)
+uniform vec3 uBackdrop = vec3(0.075, 0.078, 0.085);  // (1.2.7) round the texture, and its border: the theme's
+uniform vec3 uBorder = vec3(0.9, 0.6, 0.2);
 
 void main() {
   vec2 uv = (vUV - uView.zw) / uView.xy;
@@ -27,7 +29,7 @@ void main() {
   if (uMode == 6) c = vec3(0.32 + 0.1 * chk);
   c *= uDim;
   if (!inside) {
-    c = uTiling == 1 ? mix(vec3(0.08), c, 0.25) : vec3(0.075, 0.078, 0.085);
+    c = uTiling == 1 ? mix(uBackdrop, c, 0.25) : uBackdrop;
   }
   // unit square border + grid
   vec2 g = abs(fract(uv * 8.0 + 0.5) - 0.5) / fwidth(uv * 8.0);
@@ -36,6 +38,6 @@ void main() {
   vec2 b = abs(uv - 0.5);
   vec2 bw = fwidth(uv) * 1.5;
   float border = (abs(b.x - 0.5) < bw.x && b.y <= 0.5 + bw.y) || (abs(b.y - 0.5) < bw.y && b.x <= 0.5 + bw.x) ? 1.0 : 0.0;
-  c = mix(c, vec3(0.9, 0.6, 0.2), border * 0.8);
+  c = mix(c, uBorder, border * 0.8);
   oColor = vec4(c, 1.0);
 }

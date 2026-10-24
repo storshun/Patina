@@ -4,6 +4,7 @@
 //   patina --mcp                  MCP server on stdio (proxies to a running window,
 //                                 or runs a headless engine in-process)
 #include <signal.h>
+#include <cstdlib>
 #ifdef _WIN32
 #include <fcntl.h>
 #include <io.h>
@@ -178,7 +179,14 @@ static Args parseArgs(int argc, char** argv) {
 }
 
 static std::atomic<bool> g_quit{false};
-static void onSignal(int) { g_quit = true; }
+static std::atomic<bool> g_stdinDone{false};  // (1.2.7) `--mcp`: the client closed stdin
+// (1.2.7) `--mcp` while its own engine starts: nothing to wind down yet, and the start may wait in the graphics driver
+// for a long time (it never looks at g_quit there), so a stop signal ends it at once
+static std::atomic<bool> g_mcpStarting{false};
+static void onSignal(int) {
+  if (g_mcpStarting) std::_Exit(0);
+  g_quit = true;
+}
 
 // Runs the engine on this thread with an offscreen context until g_quit.
 static int runHeadless(const Args& a, std::function<void(Engine&)> started = {}) {
@@ -535,6 +543,22 @@ static bool spawnGui(const std::string& project, int port) {
 }
 #endif
 
+// (1.2.7) the end of `--mcp`: the client closed stdin (the stdio thread is done: join it), or a signal set g_quit
+// while that thread still waits in a read that nothing can wake. Then leave without it: it waited forever
+// before, and only a SIGKILL ended it.
+static void endMcp(std::thread& io, int rc = 0) {
+  if (!io.joinable()) return;
+  if (g_stdinDone) {
+    io.join();
+    return;
+  }
+  PLOG_I("MCP: stopped by a signal");
+  std::cout.flush();
+  std::fflush(stdout);
+  std::fflush(stderr);
+  std::_Exit(rc);
+}
+
 static int runMcp(Args a) {
   // Proxy mode if a Patina window (or headless server) is already running.
   struct Proxy {
@@ -613,7 +637,14 @@ static int runMcp(Args a) {
       handled = n == "open_gui_window";
       return {{"ok", true}, {"result", {{"note", "connected to a live Patina window already"}}}};
     };
-    server->run(std::cin, std::cout);
+    // (1.2.7) stdio on a worker thread, so SIGTERM/SIGINT end it too, not only the client closing stdin
+    std::thread io([&server] {
+      server->run(std::cin, std::cout);
+      g_stdinDone = true;
+      g_quit = true;
+    });
+    while (!g_quit) std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    endMcp(io);
     return 0;
   }
 
@@ -626,7 +657,9 @@ static int runMcp(Args a) {
   // later off it (that window moved to 7861, Blender's port), and Blender's add-on reached this hidden engine.
   Args local = a;
   local.server = false;
+  g_mcpStarting = true;
   int rc = runHeadless(local, [&](Engine& engine) {
+    g_mcpStarting = false;
     enginePtr = &engine;
     ready = true;
     mcpThread = std::thread([&engine, proxy, makeServer, a]() mutable {
@@ -669,10 +702,11 @@ static int runMcp(Args a) {
         return {{"ok", false}, {"error", "the window did not come up within 15 s (is a display available?)"}};
       };
       server->run(std::cin, std::cout);
+      g_stdinDone = true;
       g_quit = true;
     });
   });
-  if (mcpThread.joinable()) mcpThread.join();
+  endMcp(mcpThread, rc);
   (void)enginePtr;
   return rc;
 }

@@ -29,6 +29,7 @@
 #include "core/Log.h"
 #include "core/Paths.h"
 #include "core/UVIsland.h"
+#include "ui/Theme.h"
 #include "ui/UiIdCheck.h"
 #include "gfx/GL.h"
 
@@ -352,11 +353,14 @@ void App::setupStyle(float scale, float density) {
   ImGuiStyle& s = ImGui::GetStyle();
   s = ImGuiStyle();  // start from defaults so a UI-scale change does not compound
   ImGui::StyleColorsDark();
-  s.WindowRounding = 3;
-  s.FrameRounding = 3;
-  s.GrabRounding = 3;
-  s.TabRounding = 3;
-  s.ScrollbarRounding = 3;
+  const ui::Theme& th = ui::theme();  // (1.2.7) Edit > Preferences > Display > Theme
+  const bool soft = th.rounding > 3.f;  // (rounder windows, popups and child regions too)
+  s.WindowRounding = th.rounding + (soft ? 1.f : 0.f);
+  if (soft) s.PopupRounding = th.rounding + 1.f, s.ChildRounding = th.rounding - 1.f;
+  s.FrameRounding = th.rounding;
+  s.GrabRounding = th.rounding;
+  s.TabRounding = th.rounding;
+  s.ScrollbarRounding = th.rounding;
   s.WindowBorderSize = 1;
   s.FrameBorderSize = 0;
   s.WindowPadding = ImVec2(8, 8);
@@ -366,39 +370,58 @@ void App::setupStyle(float scale, float density) {
   s.ScrollbarSize = 13;
   s.GrabMinSize = 9;
   ImVec4* c = s.Colors;
-  auto rgb = [](int r, int g, int b, float a = 1.f) { return ImVec4(r / 255.f, g / 255.f, b / 255.f, a); };
-  ImVec4 accent = rgb(232, 133, 44);
-  c[ImGuiCol_WindowBg] = rgb(33, 34, 37);
-  c[ImGuiCol_ChildBg] = rgb(30, 31, 34);
-  c[ImGuiCol_PopupBg] = rgb(28, 29, 32, 0.98f);
-  c[ImGuiCol_Border] = rgb(52, 54, 58);
-  c[ImGuiCol_FrameBg] = rgb(46, 48, 52);
-  c[ImGuiCol_FrameBgHovered] = rgb(58, 60, 66);
-  c[ImGuiCol_FrameBgActive] = rgb(66, 68, 74);
-  c[ImGuiCol_TitleBg] = rgb(26, 27, 29);
-  c[ImGuiCol_TitleBgActive] = rgb(30, 31, 34);
-  c[ImGuiCol_MenuBarBg] = rgb(26, 27, 29);
-  c[ImGuiCol_ScrollbarBg] = rgb(28, 29, 31);
-  c[ImGuiCol_CheckMark] = accent;
-  c[ImGuiCol_SliderGrab] = rgb(200, 112, 36);
-  c[ImGuiCol_SliderGrabActive] = accent;
-  c[ImGuiCol_Button] = rgb(52, 54, 59);
-  c[ImGuiCol_ButtonHovered] = rgb(68, 70, 77);
-  c[ImGuiCol_ButtonActive] = rgb(200, 112, 36, 0.8f);
-  c[ImGuiCol_Header] = rgb(60, 62, 68);
-  c[ImGuiCol_HeaderHovered] = rgb(72, 74, 81);
-  c[ImGuiCol_HeaderActive] = rgb(200, 112, 36, 0.7f);
-  c[ImGuiCol_Separator] = rgb(52, 54, 58);
-  c[ImGuiCol_Tab] = rgb(36, 37, 40);
-  c[ImGuiCol_TabHovered] = rgb(72, 74, 81);
-  c[ImGuiCol_TabSelected] = rgb(50, 52, 57);
-  c[ImGuiCol_TabSelectedOverline] = accent;
-  c[ImGuiCol_TabDimmed] = rgb(30, 31, 34);
-  c[ImGuiCol_TabDimmedSelected] = rgb(42, 44, 48);
-  c[ImGuiCol_DockingPreview] = rgb(232, 133, 44, 0.5f);
-  c[ImGuiCol_TextSelectedBg] = rgb(232, 133, 44, 0.35f);
-  c[ImGuiCol_NavHighlight] = accent;
-  c[ImGuiCol_ResizeGripHovered] = accent;
+  auto set = [&](ImGuiCol i, const ImVec4& v) {
+    if (v.w >= 0.f) c[i] = v;  // (w < 0: ImGui's dark default)
+  };
+  auto alpha = [](ImVec4 v, float a) { return ImVec4(v.x, v.y, v.z, a); };
+  const ImVec4 accent = th.accent, deep = th.accentDeep;
+  set(ImGuiCol_Text, th.text);
+  set(ImGuiCol_TextDisabled, th.textDisabled);
+  set(ImGuiCol_WindowBg, th.window);
+  set(ImGuiCol_ChildBg, th.child);
+  set(ImGuiCol_PopupBg, th.popup);
+  set(ImGuiCol_Border, th.border);
+  set(ImGuiCol_FrameBg, th.frame);
+  set(ImGuiCol_FrameBgHovered, th.frameHovered);
+  set(ImGuiCol_FrameBgActive, th.frameActive);
+  set(ImGuiCol_TitleBg, th.menuBar);
+  set(ImGuiCol_TitleBgActive, th.child);
+  set(ImGuiCol_MenuBarBg, th.menuBar);
+  set(ImGuiCol_ScrollbarBg, th.scrollbarBg);
+  set(ImGuiCol_ScrollbarGrab, th.scrollbarGrab);
+  set(ImGuiCol_CheckMark, accent);
+  set(ImGuiCol_SliderGrab, deep);
+  set(ImGuiCol_SliderGrabActive, accent);
+  set(ImGuiCol_Button, th.button);
+  set(ImGuiCol_ButtonHovered, th.buttonHovered);
+  set(ImGuiCol_ButtonActive, alpha(deep, 0.8f));
+  set(ImGuiCol_Header, th.header);
+  set(ImGuiCol_HeaderHovered, th.headerHovered);
+  set(ImGuiCol_HeaderActive, alpha(deep, 0.7f));
+  set(ImGuiCol_Separator, th.border);
+  set(ImGuiCol_Tab, th.tab);
+  set(ImGuiCol_TabHovered, th.tabHovered);
+  set(ImGuiCol_TabSelected, th.tabSelected);
+  set(ImGuiCol_TabSelectedOverline, accent);
+  set(ImGuiCol_TabDimmed, th.tabDimmed);
+  set(ImGuiCol_TabDimmedSelected, th.tabDimmedSelected);
+  set(ImGuiCol_DockingPreview, alpha(accent, 0.5f));
+  set(ImGuiCol_TextSelectedBg, alpha(accent, 0.35f));
+  set(ImGuiCol_NavHighlight, accent);
+  set(ImGuiCol_ResizeGripHovered, accent);
+  if (ui::themeId() != ui::ThemeId::Patina) {
+    // (what Patina's own look leaves at ImGui's dark defaults, which are blue)
+    set(ImGuiCol_DockingEmptyBg, th.menuBar);
+    set(ImGuiCol_SeparatorHovered, alpha(accent, 0.7f));
+    set(ImGuiCol_SeparatorActive, accent);
+    set(ImGuiCol_ResizeGrip, alpha(th.border, 0.6f));
+    set(ImGuiCol_ResizeGripActive, accent);
+    set(ImGuiCol_ScrollbarGrabHovered, th.buttonHovered);
+    set(ImGuiCol_ScrollbarGrabActive, deep);
+    set(ImGuiCol_TableHeaderBg, th.tabSelected);
+    set(ImGuiCol_TableBorderStrong, th.border);
+    set(ImGuiCol_TableBorderLight, th.frame);
+  }
   s.TabBarOverlineSize = 2.f;  // (0.47: the line over a panel's chosen tab, in its step's color)
   s.ScaleAllSizes(scale);
   std::copy(std::begin(s.Colors), std::end(s.Colors), std::begin(baseColors));  // (the steps' tint starts from these)
@@ -596,12 +619,13 @@ int App::run(const Args& args) {
   engine.lastAutosave = nowSeconds();
   engine.init(false);
   loadSession();  // brush, material, colors, recent files, UI scale, navigation, language
-  if (std::abs(userUiScale - 1.f) > 0.01f || i18n::current() != "en") pendingUiScale = userUiScale;
+  // (the style was made before the session was read: again with its UI scale, language or theme)
+  if (std::abs(userUiScale - 1.f) > 0.01f || i18n::current() != "en" || ui::themeId() != ui::ThemeId::Patina) pendingUiScale = userUiScale;
   languageVersion = i18n::version();
   startRecoveryCheck();
   // (0.46) in the Guided layout the Model step is the start: the welcome window only the first time (its choices)
   showWelcome = showWelcomeOnStart && args.file.empty() && !recoveryPending &&
-                (!guidedLayout || firstStart || !engine.features.on("guided_layout"));
+                (layoutMode != LayoutMode::Guided || firstStart || !engine.features.on("guided_layout"));
   std::string err;
   if (!args.file.empty() && !engine.openFile(args.file, &err)) setStatus(F_("Could not open %s: %s", args.file.c_str(), err.c_str()));
 
@@ -776,8 +800,8 @@ int App::run(const Args& args) {
     // (0.37) with the panels hidden the host is empty but in front of the view: it must not take the mouse,
     // or the view gets no strokes, navigation or gizmo clicks
     // (0.46) the same with the Guided layout, whose screen is under it
-    const bool guided = guidedOn();
-    if (distractionFree || guided) hostFlags |= ImGuiWindowFlags_NoMouseInputs;
+    const bool guided = guidedOn(), blender = blenderOn();
+    if (distractionFree || guided || blender) hostFlags |= ImGuiWindowFlags_NoMouseInputs;
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
     ImGui::Begin("##DockHost", nullptr, hostFlags);
@@ -788,10 +812,11 @@ int App::run(const Args& args) {
       firstRun = false;
       requestLayoutReset = false;
     }
-    // (0.46) the Guided layout draws its own screen: the docked layout stays as it was, out of sight
+    // (0.46) the Guided layout draws its own screen: the docked layout stays as it was, out of sight; (1.2.7) and so
+    // does the Blender layout
     embeddedRects.clear();
     if (!guided) viewOnly = false;
-    ImGui::DockSpace(ds, ImVec2(0, 0), distractionFree || guided ? ImGuiDockNodeFlags_KeepAliveOnly : ImGuiDockNodeFlags_None);
+    ImGui::DockSpace(ds, ImVec2(0, 0), distractionFree || guided || blender ? ImGuiDockNodeFlags_KeepAliveOnly : ImGuiDockNodeFlags_None);
     ImGui::End();
 
     followBakedSelection();  // (0.41) a baked map layer selected: the 3D view shows its map
@@ -799,6 +824,9 @@ int App::run(const Args& args) {
       drawViewport(true);
     } else if (guided) {
       drawGuided();
+      frameStats.mark("panels");
+    } else if (blender) {
+      drawBlenderLayout();
       frameStats.mark("panels");
     } else {
       drawToolbar();
@@ -855,7 +883,7 @@ int App::run(const Args& args) {
     drawMacroWindow();
     drawAssistantWindow();
     frameStats.mark("windows");
-    if (!guidedOn()) drawRetopoWindow();  // (a docked panel: in the Full layout)
+    if (!guidedOn()) drawRetopoWindow();  // (a docked panel: in the Full layout; the Blender layout's Properties tab)
     if (!guidedOn()) drawFaceSetsWindow();  // (1.2)
     frameStats.mark("retopo");
     drawRenderDialog();

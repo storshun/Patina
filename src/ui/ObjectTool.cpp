@@ -9,6 +9,7 @@
 #include <glm/gtx/euler_angles.hpp>
 
 #include "ui/App.h"
+#include "ui/Theme.h"
 
 namespace patina {
 
@@ -325,7 +326,7 @@ void App::objectToolUI(ImVec2 origin, ImVec2 size, bool hovered, vec2 local) {
       ok = toScreen(vec3(w * vec4((i & 1) ? b.hi.x : b.lo.x, (i & 2) ? b.hi.y : b.lo.y, (i & 4) ? b.hi.z : b.lo.z, 1.f)), c[i]);
     if (ok) {
       static const int e[12][2] = {{0, 1}, {2, 3}, {4, 5}, {6, 7}, {0, 2}, {1, 3}, {4, 6}, {5, 7}, {0, 4}, {1, 5}, {2, 6}, {3, 7}};
-      for (auto& s : e) dl->AddLine(c[s[0]], c[s[1]], IM_COL32(232, 133, 44, 150), 1.f);
+      for (auto& s : e) dl->AddLine(c[s[0]], c[s[1]], ui::themeColor(ui::theme().accent, 0.59f), 1.f);
     }
   }
   if (modal) {

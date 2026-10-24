@@ -406,7 +406,7 @@ void App::loadSession() {
     swatches = {{0.80f, 0.12f, 0.10f}, {0.95f, 0.55f, 0.10f}, {0.95f, 0.85f, 0.25f}, {0.25f, 0.60f, 0.20f},
                 {0.15f, 0.40f, 0.80f}, {0.45f, 0.25f, 0.65f}, {0.55f, 0.35f, 0.20f}, {0.92f, 0.90f, 0.86f},
                 {0.50f, 0.50f, 0.50f}, {0.08f, 0.08f, 0.09f}};
-    guidedLayout = true;  // (0.46) a first start: the Guided layout (a Patina used before keeps the layout it had)
+    layoutMode = LayoutMode::Guided;  // (0.46) a first start: the Guided layout (a Patina used before keeps the layout it had)
     firstStart = true;
     // (0.47) and the brush paints a color, not a material: a newcomer who picks the brush expects one
     engine.painter.material = MaterialRef();
@@ -448,7 +448,12 @@ void App::loadSession() {
     islandPinNew = j.value("island_pin", islandPinNew);
     islandReach = std::clamp(j.value("island_reach", islandReach), 0, 1);
     selectVisible = j.value("select_visible", selectVisible);
-    guidedLayout = j.value("layout", std::string("full")) == "guided";
+    {
+      std::string layout = j.value("layout", std::string("full"));  // (1.2.7: "blender" too)
+      layoutMode = layout == "guided" ? LayoutMode::Guided : layout == "blender" ? LayoutMode::Blender : LayoutMode::Full;
+      blenderSessionLoad(j.value("blender_layout", json::object()));
+    }
+    ui::setTheme(ui::themeFromId(j.value("theme", std::string("patina"))));
     guidedStep = (GuidedStep)std::clamp(j.value("guided_step", 0), 0, (int)GuidedStep::Count - 1);
     islandDensityMode = std::clamp(j.value("island_density_mode", islandDensityMode), 0, 4);
     islandCustomDensity = j.value("island_custom_density", islandCustomDensity);
@@ -490,6 +495,13 @@ void App::loadSession() {
       showMaterialEditor = w.value("material_editor", showMaterialEditor);
     }
     engine.autosaveMinutes = std::clamp(j.value("autosave_minutes", engine.autosaveMinutes), 0.0, 120.0);
+    if (j.contains("undo") && j["undo"].is_object()) {  // (1.2.7)
+      const json& u = j["undo"];
+      try {
+        engine.execute("undo_settings", u);
+      } catch (...) {
+      }
+    }
     Painter& P = engine.painter;
     if (j.contains("brush")) {
       std::string id = j.value("brush_id", std::string());
@@ -560,7 +572,9 @@ void App::saveSession(bool force) {
             {"island_pin", islandPinNew},
             {"island_reach", islandReach},
             {"select_visible", selectVisible},
-            {"layout", guidedLayout ? "guided" : "full"},
+            {"layout", layoutMode == LayoutMode::Guided ? "guided" : layoutMode == LayoutMode::Blender ? "blender" : "full"},
+            {"blender_layout", blenderSessionSave()},
+            {"theme", ui::theme().id},
             {"guided_step", (int)guidedStep},
             {"island_density_mode", islandDensityMode},
             {"island_custom_density", islandCustomDensity},
@@ -584,6 +598,8 @@ void App::saveSession(bool force) {
                          {"mesh_symmetry", showSymmetry}, {"auto_texture", showAutoTexture}, {"macros", showMacros},
                          {"material_editor", showMaterialEditor}}},
             {"autosave_minutes", engine.autosaveMinutes},
+            {"undo", {{"steps", UndoStack::limits().steps}, {"ram_mb", UndoStack::limits().ramBytes >> 20},
+                      {"gpu_mb", UndoStack::limits().gpuBytes >> 20}}},
             {"features", engine.features.toJson()},
             {"palette_recent", paletteRecent},
             {"assistant_model", engine.assistantModelPath},
@@ -675,6 +691,35 @@ void App::drawPreferences() {
   ImGui::SetNextItemWidth(200 * uiScale);
   if (ImGui::SliderFloat(L_("UI scale"), &pct, 50.f, 300.f, T_("%.0f%%"))) userUiScale = pct / 100.f;
   if (ImGui::IsItemDeactivatedAfterEdit()) applyUiScale(userUiScale);
+  // (1.2.7) the colors, and where the panels are
+  ImGui::AlignTextToFramePadding();
+  ImGui::TextUnformatted(T_("Theme"));
+  static const char* kThemeNames[] = {N_("Patina"), N_("Vivid Dark")};  // (ui::ThemeId's order)
+  for (int t = 0; t < (int)ui::ThemeId::Count; ++t) {
+    ImGui::SameLine();
+    if (ImGui::RadioButton((std::string(T_(kThemeNames[t])) + "##theme").c_str(), (int)ui::themeId() == t)) setThemeUI((ui::ThemeId)t);
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", t ? T_("KDE Plasma's Vivid Dark: navy panels and a cyan accent. The same colors as the\n"
+                                     "\"Vivid Dark\" Blender theme, so the two programs look alike.")
+                                : T_("Patina's own: gray panels and a copper accent."));
+  }
+  ImGui::AlignTextToFramePadding();
+  ImGui::TextUnformatted(T_("Layout"));
+  {
+    const bool withGuided = engine.features.on("guided_layout");
+    const bool guided = layoutMode == LayoutMode::Guided && withGuided;
+    if (withGuided) {
+      ImGui::SameLine();
+      if (ImGui::RadioButton(L_("Guided##prefs"), guided)) setLayoutMode(LayoutMode::Guided);
+    }
+    ImGui::SameLine();
+    if (ImGui::RadioButton(L_("Full##prefs"), !guided && layoutMode != LayoutMode::Blender)) setLayoutMode(LayoutMode::Full);
+    ImGui::SameLine();
+    if (ImGui::RadioButton(L_("Blender##prefs"), layoutMode == LayoutMode::Blender)) setLayoutMode(LayoutMode::Blender);
+    if (ImGui::IsItemHovered())
+      ImGui::SetTooltip("%s", T_("Arranged as Blender is: the steps as workspace tabs, the Outliner and the Properties\n"
+                                 "editor at the right, the asset shelf under the 3D view."));
+  }
   if (toolbarIcons() && ImGui::Checkbox(L_("Names beside the toolbar icons"), &toolbarNames)) saveSession(true);
   if (prefsScrollTo == "language") ImGui::SetScrollHereY(0.f), prefsScrollTo.clear();
   drawLanguagePrefs();
@@ -685,6 +730,7 @@ void App::drawPreferences() {
   if (ImGui::IsItemHovered())
     ImGui::SetTooltip("%s", T_("A copy of your work goes to the cache folder this often while there are unsaved changes,\n"
                                "written in the background. After a crash, Patina offers to bring it back."));
+  drawUndoPrefs();
   drawPenPrefs();
   if (prefsScrollTo == "http") ImGui::SetScrollHereY(0.f), prefsScrollTo.clear();
   drawNetworkPrefs();
@@ -751,6 +797,50 @@ void App::drawErrorPopup() {
       engine.uiRects.erase("error.ok");
     }
     ImGui::EndPopup();
+  }
+}
+
+}  // namespace patina
+
+namespace patina {
+
+// (1.2.7) How much undo keeps: steps per object, the copies on the graphics card, the compressed ones in RAM
+void App::drawUndoPrefs() {
+  if (prefsScrollTo == "undo") ImGui::SetScrollHereY(0.f), prefsScrollTo.clear();
+  ImGui::SeparatorText(T_("Undo"));
+  UndoLimits& L = UndoStack::limits();
+  bool changed = false;
+  int steps = (int)L.steps;
+  ImGui::SetNextItemWidth(200 * uiScale);
+  if (ImGui::SliderInt(L_("Undo steps"), &steps, 10, 1000, "%d", ImGuiSliderFlags_Logarithmic)) L.steps = (size_t)steps, changed = true;
+  if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("How many steps each object's history keeps (default 100)"));
+  size_t mem = physicalMemoryBytes();
+  float maxGb = mem ? std::max(1.f, float(mem / 2 / 1048576) / 1024.f) : 32.f;
+  float gb = float(L.ramBytes >> 20) / 1024.f;
+  ImGui::SetNextItemWidth(200 * uiScale);
+  if (ImGui::SliderFloat(L_("Undo memory (RAM)"), &gb, 0.5f, maxGb, T_("%.1f GB")))
+    L.ramBytes = size_t(std::clamp(gb, 0.5f, maxGb) * 1024.f) << 20, changed = true;
+  if (ImGui::IsItemHovered())
+    ImGui::SetTooltip(T_("Older undo steps are compressed into RAM. Past this much, the oldest steps are dropped,\n"
+                         "so undo never takes all your memory. The default is a quarter of this computer's memory\n"
+                         "(1 to 8 GB): %.1f GB. Undo is never written to disk, to spare your SSD."),
+                      UndoLimits::defaultRam() / 1073741824.0);
+  int gpu = (int)(L.gpuBytes >> 20);
+  ImGui::SetNextItemWidth(200 * uiScale);
+  if (ImGui::SliderInt(L_("Instant undo (graphics card)"), &gpu, 256, 8192, T_("%d MB"), ImGuiSliderFlags_Logarithmic))
+    L.gpuBytes = size_t(std::max(gpu, 256)) << 20, changed = true;
+  if (ImGui::IsItemHovered())
+    ImGui::SetTooltip("%s", T_("The latest steps keep their copies on the graphics card, so they undo at once (default 1024 MB).\n"
+                               "Past this much, older steps are compressed into RAM: they undo a moment slower."));
+  ImGui::TextDisabled(T_("Now: %.0f MB on the graphics card, %.0f MB compressed"), UndoStack::totalBytes() / 1048576.0,
+                      UndoStack::totalRamBytes() / 1048576.0);
+  // applied (steps dropped, copies packed) and saved when the slider is let go
+  static bool pending = false;
+  pending |= changed;
+  if (pending && !ImGui::IsAnyItemActive()) {
+    pending = false;
+    UndoStack::enforceAll();
+    saveSession(true);
   }
 }
 

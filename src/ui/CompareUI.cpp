@@ -8,25 +8,25 @@ namespace patina {
 
 void App::compareMenu() {
   auto& cv = engine.compare;
-  if (!ImGui::BeginMenu(L_("Compare view"))) return;
-  if (ImGui::MenuItem(L_("Split view"), keyLabel("view.compare"), cv.enabled)) toggleCompare();
-  if (ImGui::MenuItem(L_("Take a snapshot"), keyLabel("view.compare_snapshot"))) {
+  if (!ImGui::BeginMenu(L_("Compare View"))) return;
+  if (ImGui::MenuItem(L_("Split View"), keyLabel("view.compare"), cv.enabled)) toggleCompare();
+  if (ImGui::MenuItem(L_("Take a Snapshot"), keyLabel("view.compare_snapshot"))) {
     engine.takeCompareSnapshot();
     cv.mode = 0;
     cv.enabled = true;
     setStatus(F_("Compare: %s on the left, the live textures on the right", cv.label.c_str()));
   }
   ImGui::Separator();
-  if (ImGui::MenuItem(L_("Left: the snapshot"), nullptr, cv.mode == 0)) {
+  if (ImGui::MenuItem(L_("Left: The Snapshot"), nullptr, cv.mode == 0)) {
     cv.mode = 0;
     if (!cv.hasSnapshot) engine.takeCompareSnapshot();
   }
   if (engine.features.on("bake_down") &&
-      ImGui::MenuItem(L_("Left: the high-poly before the bake-down"), nullptr, cv.mode == 2, engine.doc.bakeDownBefore != nullptr)) {
+      ImGui::MenuItem(L_("Left: The High-Poly Before the Bake-Down"), nullptr, cv.mode == 2, engine.doc.bakeDownBefore != nullptr)) {
     cv.mode = 2;
     cv.enabled = true;
   }
-  if (ImGui::BeginMenu(L_("Left: a view mode"))) {
+  if (ImGui::BeginMenu(L_("Left: A View Mode"))) {
     for (int m = 0; m < (int)ViewMode::Count; ++m)
       if (viewModeAvailable((ViewMode)m) &&
           ImGui::MenuItem(L_(viewModeLabel(m)), nullptr, cv.mode == 1 && (int)cv.view == m)) {

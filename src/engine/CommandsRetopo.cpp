@@ -614,9 +614,31 @@ std::vector<retopo::Stroke> Engine::retopoLines(bool forBuild) {
   return out;
 }
 
+double Engine::retopoQuadsAsked() {
+  RetopoState& S = retopo();
+  if (!doc.hasMesh()) return 0;
+  if (S.quadsAskedInputs != S.inputsVersion) {
+    S.quadsAskedInputs = S.inputsVersion;
+    const Mesh& m = doc.mesh;
+    auto dens = retopoDensity();
+    double area = 0;
+    for (uint32_t f = 0; f < m.faceCount(); ++f) {
+      float dsum = 0;
+      for (uint32_t l = m.faceStart[f]; l < m.faceStart[f + 1]; ++l) dsum += l < m.loopVert.size() && m.loopVert[l] < dens.size() ? dens[m.loopVert[l]] : 1.f;
+      area += m.faceArea3D(f) * dsum / float(m.faceStart[f + 1] - m.faceStart[f]);
+    }
+    S.quadsAsked = area * S.quadsPerM2;
+  }
+  return S.quadsAsked;
+}
+
 bool Engine::startRetopoBuild(int relax, bool preview) {
   RetopoState& S = retopo();
   if (!doc.hasMesh()) return false;
+  // (1.2.9) a preview of a great many quads would take minutes and tens of GB (a million asked for took 114 GB):
+  // only Make quads makes those
+  S.previewTooBig = preview && S.method == 0 && retopoQuadsAsked() > kRetopoPreviewMaxQuads;
+  if (S.previewTooBig) return false;
   // 0.16: the preview is made just as the full build is: one made from what is there now is the result
   // (not for Remake all)
   if (!preview && !S.remakeAll && S.method == 0 && S.result && S.resultIsPreview && S.resultInputs == S.inputsVersion && !S.building.valid()) {
@@ -929,7 +951,7 @@ void Engine::retopoViewOptions(ViewportOptions& o) {
         }
     }
   }
-  o.retopoMarks = o.retopoShowQuads && !S.markSegs.empty() ? &S.markSegs : nullptr;
+  o.retopoMarks = o.retopoShowQuads && o.retopoShowMarks && !S.markSegs.empty() ? &S.markSegs : nullptr;
   o.retopoLinesKey = S.version ^ (S.resultVersion << 32);
   o.retopoSelectedZone = S.selectedZone;
   o.retopoQuads = S.result && o.retopoShowQuads && S.result->low.faceCount() ? &S.result->low : nullptr;
@@ -1817,6 +1839,9 @@ void Engine::registerRetopoCommands() {
                                {"description", "Over the model (patches: the same as zones)"}}},
                      {"quads", prop("boolean", "Show the quads of the last build")},
                      {"quads_only", prop("boolean", "Show the quads alone, shaded, instead of the model")},
+                     {"marks", prop("boolean", "Show the red crosses over the quads: parts too thin for them (left out), "
+                                               "tight spots patched where zones meet, and (with mirror) where the two sides "
+                                               "of the model differ. The build's problems say which. Default true")},
                      {"loops", prop("boolean", "Show the quads' poles, and light up the edge loop under the pointer")},
                      {"lines_behind", {{"type", "string"}, {"enum", {"shown", "darkened", "hidden"}},
                                        {"description", "Zone lines and flow strokes behind the model: shown through it, darkened, or hidden"}}},
@@ -1833,6 +1858,7 @@ void Engine::registerRetopoCommands() {
            }
            if (a.contains("quads")) v.retopoShowQuads = a["quads"].get<bool>();
            if (a.contains("quads_only")) v.retopoQuadsOnly = a["quads_only"].get<bool>();
+           if (a.contains("marks")) v.retopoShowMarks = a["marks"].get<bool>();
            if (a.contains("loops")) v.retopoLoops = a["loops"].get<bool>();
            static const char* behindNames[] = {"shown", "darkened", "hidden"};
            if (a.contains("lines_behind")) {
@@ -1841,7 +1867,7 @@ void Engine::registerRetopoCommands() {
            }
            static const char* names[] = {"none", "zones", "density"};
            json out = {{"preview", v.retopoPreview}, {"show", names[std::clamp(v.retopoView, 0, 2)]}, {"quads", v.retopoShowQuads}, {"quads_only", v.retopoQuadsOnly},
-                       {"loops", v.retopoLoops}, {"lines_behind", behindNames[std::clamp(v.retopoLinesBehind, 0, 2)]}};
+                       {"marks", v.retopoShowMarks}, {"loops", v.retopoLoops}, {"lines_behind", behindNames[std::clamp(v.retopoLinesBehind, 0, 2)]}};
            auto& S = c.engine.retopo();
            if (v.retopoLoops && S.result && S.result->low.faceCount()) {
              ViewportOptions o = v;
@@ -1862,7 +1888,9 @@ void Engine::registerRetopoCommands() {
            return out;
          }});
 
-  R.add({"retopo_info", "Retopology: the patches, the density, the lines and strokes, and the last result.",
+  R.add({"retopo_info", "Retopology: the patches, the density, the lines and strokes, and the last result. quads_asked: about how many "
+         "quads the settings ask for (zones and density counted); over 150,000 the live preview doesn't start "
+         "(preview_too_big) and only retopo_build makes them.",
          schema({{"line_points", prop("boolean", "Also every zone line's points")}}),
          [](CommandContext& c, const json& a) {
            Engine& e = c.engine;
@@ -1875,7 +1903,8 @@ void Engine::registerRetopoCommands() {
            size_t dense = 0;
            for (float d : S.density) dense += d != 1.f;
            json r = {{"quads_per_m2", S.quadsPerM2}, {"edge_length", 1.0 / std::sqrt(S.quadsPerM2)}, {"labels", labels},
-                     {"density_painted_vertices", dense}, {"building", e.retopoBuilding()}, {"strokes", S.strokes.size()},
+                     {"density_painted_vertices", dense}, {"building", e.retopoBuilding()},
+                     {"quads_asked", std::lround(e.retopoQuadsAsked())}, {"preview_too_big", S.previewTooBig}, {"strokes", S.strokes.size()},
                      {"lines", S.lines.size()}, {"keep_away", S.keepAway}};
            if (a.value("line_points", false)) {
              json L = json::array();

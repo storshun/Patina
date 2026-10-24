@@ -37,7 +37,7 @@ something else, turn on [[icon:retopo_view]] <b>Retopology preview</b> in the ba
 turn it off, whatever tool is chosen and whichever panel is in front, and it is kept between sessions.</p>
 <ul>
   <li><b>The arrow</b> beside it chooses what shows: <b>Zones</b>, <b>Density</b> or <b>Neither</b>, <b>The quads</b>,
-    <b>Alone</b> and <b>Loops</b> (the same settings as the window's <b>Show</b>). It also has <b>Make quads</b> and opens
+    <b>Alone</b>, <b>Red marks</b> and <b>Loops</b> (the same settings as the window's <b>Show</b>). It also has <b>Make quads</b> and opens
     the Retopology window.</li>
   <li><b>Make quads</b> turns the preview on, so the quads you asked for show.</li>
   <li>It is also in <i>View › Retopology Preview</i>, in the <i>View</i> menu of the 3D view's right-click menu and in the
@@ -55,6 +55,11 @@ m². A change while it is working stops it and starts it again. The preview is m
 quads, so what you see is what you keep; the window says <i>Preview</i> above its numbers until you keep them.
 Untick <b>Live preview</b> to make the quads only when you ask. On a big model the first preview takes longest; after
 that, drawing lines and strokes reuses the work.</p>
+<p>Settings that ask for more than 150,000 quads (the window's count includes the zones and the density brush) get no
+live preview: <b>Make quads</b> still makes them, and the window warns that they may take minutes and many GB of
+memory. Patina runs only as many of QuadriFlow's tries at once as the memory allows, and a zone too big for the
+memory free is not tried: the window says so, and how much it would need. Nor is a zone asking for more than 250,000
+quads, which QuadriFlow can't make in one piece: give it a lower resolution with the Zone tool.</p>
 <h3 id="retopo-keep">Keeping the quads away from a change</h3>
 <p>Each change makes only the quads near it again: a few quads round the line or stroke you draw or take away, or round
 where you paint the density or change a zone's resolution (the whole inside of a small new loop too). Everything
@@ -255,6 +260,9 @@ the other way round: its triangles are split where the quads need them smaller.<
 <p>Parts thinner than about a quad (fingers, strands of hair) can't be covered by quads that big, so they are left out:
 the window says how much of the surface that is, and red crosses mark where. Give those parts a zone with a higher
 resolution (fingers need about six quads round them), or let Patina do it:</p>
+<p>Red crosses also mark places where zones meet in a tight spot (patched there), and, with <b>Mirror</b> on, places
+where the two sides of the model aren't the same. The notes under the last build in the window say which. The marks
+change nothing in the quads: untick <b>Red marks</b> (next to <b>Alone</b>) to hide them.</p>
 
 <h3 id="retopo-thin">Zones for thin parts</h3>
 <div class="two">

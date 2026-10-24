@@ -3,6 +3,27 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.9 (2026-10-24)
+
+### Added
+
+- **Red marks** (Retopology window › Show, and the arrow beside the Retopology preview button) hides the red crosses
+  over the quads. Its tooltip says what they mark: parts too thin for the quads, tight spots patched where zones meet,
+  and, with Mirror on, places where the two sides of the model differ. MCP: `retopo_view` `marks`.
+
+### Fixed
+
+- **Retopology could take all the memory and close Patina.** A zone set to a high resolution over most of a big
+  model (a million quads asked for) ran six tries side by side, each of up to 25 GB, and the live preview started it
+  by itself when a project opened. The tries now share a memory budget: only as many run at once as fit, and a zone
+  that can't fit at all is not tried; the window says why. A zone asking for more than 250,000 quads isn't tried
+  either (QuadriFlow ran 20 minutes on one asking for a million and gave none): the window says to lower its
+  resolution. The live preview doesn't start for more than 150,000
+  quads (Make quads still makes them), and the window warns when the settings ask for that many. Memory freed after
+  a build goes back to the system. MCP: `retopo_info` `quads_asked`.
+- **The camera didn't move with the Note tool.** A middle drag, Alt + drag and the wheel did nothing while it was
+  chosen. Now only a click on the model or on a pin goes to the notes.
+
 ## 1.2.8 (2026-10-24)
 
 ### Changed

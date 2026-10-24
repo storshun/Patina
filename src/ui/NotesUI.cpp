@@ -189,7 +189,7 @@ bool App::notesOverlay(ImVec2 origin, ImVec2 size, bool hovered) {
     noteEditId = 0;
     noteEditIsNew = false;
   }
-  return noteTool || overPin;
+  return overPin;  // (1.2.9) only a pin takes the mouse: the camera still turns, moves and zooms with the Note tool
 }
 
 void App::drawNotes() {

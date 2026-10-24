@@ -58,6 +58,8 @@ def main():
                 time.sleep(0.2)
         c.call("open_file", {"path": model})
         c.call("retopo_density", {"quads_per_m2": 400})
+        asked = c.call("retopo_info")["quads_asked"]
+        check(abs(asked - 400 * math.pi) < 0.05 * 400 * math.pi, "about 1257 quads asked for over the ball (%s)" % asked)
         # a small ring on the near side (+z, toward the front view) and a wide one on the far side
         def ring(z, n=64):
             r = math.sqrt(0.25 - z * z)

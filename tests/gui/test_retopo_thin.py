@@ -88,6 +88,22 @@ def main():
         li = wait_result(s)
         problems = " ".join(li.get("result", {}).get("problems", []))
         check("too thin" in problems, "at 300 quads per m² the finger is too thin, and the window says so")
+        # (1.2.9) the red marks over the finger hide and show again (counted in the 3D view: the model is pink and
+        # the UV editor's island outlines are red)
+        from manual_scenes import rect
+        view = rect(s, "viewport.image")
+
+        def red():
+            im = s.image().crop(tuple(int(v) for v in view))
+            return sum(1 for p in im.getdata() if p[0] > 200 and p[1] < 70 and p[2] < 70)
+        s("retopo_view", preview=True, show="none", quads=True)
+        s.settle()
+        on = red()
+        check(s("retopo_view", marks=False)["marks"] is False, "retopo_view marks false")
+        s.settle()
+        off = red()
+        check(on > 200 and off < on * 0.05, "the red marks hide (%d red pixels, %d with them shown)" % (off, on))
+        s("retopo_view", marks=True)
         zones0 = len(s("retopo_zones")["zones"])
         rect = s("ui_rect", name="retopo.thin_zones")
         check(rect.get("found") is True, "the window has a Zones for thin parts button")
@@ -166,6 +182,19 @@ def main():
                 zs = [p[2] for p in pts]
                 xs = [p[0] for p in pts]
                 check(max(zs) - min(zs) < 0.01 * (max(xs) - min(xs)) + 1e-4, "it lies in a plane facing the screen (z %.4f to %.4f)" % (min(zs), max(zs)))
+        # (1.2.9) no live preview for a great many quads (it took all the memory): Make quads only
+        for _ in range(20):
+            if not s("retopo_info")["building"]:
+                break
+            time.sleep(0.5)
+        s("retopo_density", quads_per_m2=500000)
+        time.sleep(2.5)
+        li = s("retopo_info")
+        check(li["quads_asked"] > 150000 and li["preview_too_big"] and not li["building"],
+              "about %d quads asked for: no live preview starts" % li["quads_asked"])
+        s("retopo_density", quads_per_m2=300)
+        time.sleep(2.5)
+        check(not s("retopo_info")["preview_too_big"], "back to 300 per m²: the preview runs again")
     finally:
         s.close()
     print("zones for thin parts: %d failed" % len(failures) if failures else "zones for thin parts: all checks passed")

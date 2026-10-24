@@ -4,6 +4,8 @@
 #include <array>
 #include <chrono>
 #include <cmath>
+#include <condition_variable>
+#include <cstdio>
 #include <cstring>
 #include <functional>
 #include <map>
@@ -26,6 +28,21 @@
 #include "core/RetopoShell.h"
 #include "optimizer.hpp"
 #include "parametrizer.hpp"
+
+#ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#undef near  // (windows.h's old macros: the code here has variables of these names)
+#undef far
+#endif
+#if defined(__GLIBC__)
+#include <malloc.h>
+#endif
 
 namespace patina::retopo {
 
@@ -878,6 +895,65 @@ ChainPlan planChains(const CleanMesh& cm, const std::unordered_map<uint64_t, std
 // the first (9 s of a head's 19). The factor that worked is remembered, and the next build of about the same zone
 // asks for that much at once: one pass, as long as the count lands within 15%.
 namespace {
+// (1.2.9) the memory the QuadriFlow tries running at once may take. One takes about 3.5 KB per triangle of its part
+// (530 MB for 153,000), and every zone ran its six tries side by side with the other zones, so a fine zone on a big
+// model asked for 90 GB. The first try of each zone waits until it fits; the others run only if they fit at once.
+size_t availableMemory() {
+#ifdef _WIN32
+  MEMORYSTATUSEX ms{};
+  ms.dwLength = sizeof ms;
+  if (GlobalMemoryStatusEx(&ms)) return size_t(ms.ullAvailPhys);
+#else
+  if (FILE* f = std::fopen("/proc/meminfo", "r")) {
+    char line[256];
+    size_t kb = 0;
+    while (std::fgets(line, sizeof line, f))
+      if (std::strncmp(line, "MemAvailable:", 13) == 0) kb = std::strtoull(line + 13, nullptr, 10);
+    std::fclose(f);
+    if (kb) return kb * 1024;
+  }
+#endif
+  return size_t(8) << 30;
+}
+struct TryBudget {
+  std::mutex m;
+  std::condition_variable cv;
+  size_t used = 0, limit = 0;
+  // wait: until it fits (or nothing else runs); otherwise only if it fits now. False: not reserved.
+  bool reserve(size_t n, bool wait, const std::function<bool()>& cancelled) {
+    std::unique_lock<std::mutex> l(m);
+    if (used == 0) limit = std::max(availableMemory() / 10 * 6, size_t(1) << 30);  // (what is free when nothing runs)
+    auto fits = [&] { return used == 0 || used + n <= limit; };
+    if (!wait && !fits()) return false;
+    while (!fits()) {
+      if (cancelled()) return false;
+      cv.wait_for(l, std::chrono::milliseconds(100));
+    }
+    used += n;
+    return true;
+  }
+  // could ever run: no more than the memory free now, with nothing else of ours running (what runs gives its back)
+  bool fits(size_t n) {
+    std::lock_guard<std::mutex> l(m);
+    return n <= availableMemory() / 10 * 9 + used;
+  }
+  void release(size_t n) {
+    {
+      std::lock_guard<std::mutex> l(m);
+      used -= std::min(used, n);
+    }
+    cv.notify_all();
+  }
+};
+TryBudget g_tries;
+// memory freed by the build's threads back to the system (glibc keeps each thread's arena otherwise: tens of GB
+// after a big build)
+void releaseFreedMemory() {
+#if defined(__GLIBC__)
+  malloc_trim(0);
+#endif
+}
+
 std::mutex g_gainMutex;
 std::unordered_map<uint64_t, double> g_gains;
 uint64_t gainKey(size_t triangles, int targetFaces) {
@@ -1588,6 +1664,8 @@ static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<
     std::vector<std::vector<vec3>> ringLoopPos;
   };
   std::atomic<int> heldTotal{0};
+  std::mutex tooBigMutex;
+  std::string tooBigProblem;  // (1.2.9) a zone too big for the memory free (not tried)
   // QuadriFlow on one group's triangles: the laid lines' edges sharp (an edge loop runs exactly along
   // each), the direction strokes holding the field, the painted density as a size field, the open
   // edges (the model's, and the borders with other groups) kept exactly. Several fields at once
@@ -2002,9 +2080,45 @@ static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<
         const size_t nv = tries.size();
         std::unique_ptr<std::atomic<bool>[]> stop(new std::atomic<bool>[nv]), done(new std::atomic<bool>[nv]);
         for (size_t i = 0; i < nv; ++i) stop[i] = false, done[i] = false;
+        // (1.2.9) as many as the memory allows (the first one waits for it)
+        // (measured on a 190,000-face character: 25 GB for a try on 2.4 million triangles asked for a million quads,
+        // 2.5 GB on 585,000 triangles for 32,000)
+        static const size_t perTri = getenv("PATINA_RETOPO_TRY_BYTES") ? std::strtoull(getenv("PATINA_RETOPO_TRY_BYTES"), nullptr, 10) : 11000;
+        const size_t need = m.tri.size() * perTri + size_t(std::max(16.0, targetFaces * g)) * 4000 + (size_t(64) << 20);
+        // (a zone of a great many quads: QuadriFlow ran 20 minutes on one asked for a million and gave none)
+        if (targetFaces * g > 250000) {
+          char buf[300];
+          std::snprintf(buf, sizeof buf,
+                        "a zone asks for about %.0f quads, more than one zone can have (250,000): give it a lower resolution "
+                        "(Zone tool) or lower Quads per m²",
+                        targetFaces * g);
+          PLOG_W("Retopology (flow): %s", buf);
+          std::lock_guard<std::mutex> lock(tooBigMutex);
+          tooBigProblem = buf;
+          break;
+        }
+        if (!g_tries.fits(need)) {
+          char buf[400];
+          std::snprintf(buf, sizeof buf,
+                        "a zone of about %.0f quads (%zu working triangles) needs about %.0f GB of memory, more than is free "
+                        "(%.0f GB): give it a lower resolution (Zone tool) or lower Quads per m²",
+                        targetFaces * g, m.tri.size(), need / 1073741824.0, availableMemory() / 1073741824.0);
+          PLOG_W("Retopology (flow): %s", buf);
+          std::lock_guard<std::mutex> lock(tooBigMutex);
+          tooBigProblem = buf;
+          break;
+        }
+        std::vector<char> runs(nv, 0);
+        size_t running = 0;
+        for (size_t i = 0; i < nv; ++i)
+          if (g_tries.reserve(need, i == 0, [&] { return cancelled(); })) runs[i] = 1, ++running;
+          else done[i] = true;
+        if (running < nv)
+          PLOG_I("Retopology (flow): %zu of %zu tries at once, for the memory (about %.1f GB each, %zu triangles)", running, nv,
+                 need / 1073741824.0, m.tri.size());
         std::vector<std::thread> threads;
         for (size_t i = 0; i < nv; ++i)
-          threads.emplace_back([&, i] {
+          if (runs[i]) threads.emplace_back([&, i] {
             qflow::patina_cancel = &stop[i];
             qflow::patina_loop_count = 0;
             try {
@@ -2015,6 +2129,7 @@ static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<
             } catch (...) {
               got[i].ok = false;
             }
+            g_tries.release(need);
             done[i] = true;
           });
         auto start = std::chrono::steady_clock::now();
@@ -2026,7 +2141,7 @@ static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<
           std::this_thread::sleep_for(std::chrono::milliseconds(10));
           double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
           for (size_t i = 0; i < nv && firstDone < 0; ++i)
-            if (done[i]) firstDone = el;
+            if (done[i] && runs[i]) firstDone = el;
           bool stopAll = cancelled() || el > 600;
           for (size_t i = 0; i < nv; ++i)
             if (!done[i] && (stopAll || (firstDone >= 0 && el > std::max(20.0, 5 * firstDone)))) stop[i] = true;
@@ -2124,7 +2239,18 @@ static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<
       if (bestV < 0) {
         // (no try gave quads: on a few shapes, as a stretched ball, QuadriFlow gives far fewer than asked
         // for, down to none; asked for more, it gives some)
-        if (kept.ok || pass + 1 >= std::max(1, opt.passes) || g >= 8.0) break;
+        // (1.2.9: not for a zone of a great many quads: asked for a million, QuadriFlow gave none, and asked again
+        // for 3 and 8 million it took half an hour to give none again)
+        if (!kept.ok && targetFaces * g > 100000) {
+          char buf[300];
+          std::snprintf(buf, sizeof buf,
+                        "a zone asking for about %.0f quads gave none (QuadriFlow can't make that many in one zone): give it a "
+                        "lower resolution (Zone tool) or lower Quads per m²",
+                        targetFaces * g);
+          std::lock_guard<std::mutex> lock(tooBigMutex);
+          tooBigProblem = buf;
+        }
+        if (kept.ok || pass + 1 >= std::max(1, opt.passes) || g >= 8.0 || targetFaces * g > 100000) break;
         g = std::min(8.0, g * 3);
         PLOG_I("Retopology (flow): pass %d gave no quads; asked for %.0f times as many", pass + 1, g);
         continue;
@@ -2858,6 +2984,10 @@ static Result flowQuadsOnce(const Mesh& high, const Bvh& bvh, const std::vector<
       return res;
     }
     PLOG_I("Retopology (flow): the zones' quads made at %.2f s", since());
+    if (!tooBigProblem.empty()) {
+      res.problems.push_back(tooBigProblem);
+      return res;
+    }
     if (failed || Qd.empty()) {
       res.problems.push_back("the quads could not be made (the field didn't come out consistent)");
       return res;
@@ -4465,7 +4595,11 @@ static Result flowQuadsLocal(const Mesh& high, const Bvh& bvh, const std::vector
 
 Result flowQuads(const Mesh& high, const Bvh& bvh, const std::vector<Stroke>& strokes, const std::vector<int32_t>& faceLabel,
                  const std::vector<float>& vertexDensity, const FlowOptions& opt, const std::vector<float>& faceResolution) {
-  if ((opt.mirrorAxes & 7) && !opt.mirrored) return flowQuadsMirrored(high, bvh, strokes, faceLabel, vertexDensity, opt, faceResolution);
+  if ((opt.mirrorAxes & 7) && !opt.mirrored) {
+    Result r = flowQuadsMirrored(high, bvh, strokes, faceLabel, vertexDensity, opt, faceResolution);
+    releaseFreedMemory();
+    return r;
+  }
   auto now = std::make_shared<FlowInputs>();
   now->strokes = strokes, now->faceLabel = faceLabel, now->density = vertexDensity, now->faceResolution = faceResolution;
   now->quadsPerM2 = opt.quadsPerM2, now->loopsAtBorders = opt.loopsAtBorders, now->ringZones = opt.ringZones;
@@ -4481,6 +4615,7 @@ Result flowQuads(const Mesh& high, const Bvh& bvh, const std::vector<Stroke>& st
     r = flowQuadsWhole(high, bvh, strokes, faceLabel, vertexDensity, o, faceResolution);
   }
   if (!r.unchanged) r.builtFrom = now;
+  releaseFreedMemory();
   return r;
 }
 

@@ -67,6 +67,7 @@ struct ViewportOptions {
   const std::vector<vec3>* retopoLinesDone = nullptr;  // (0.22) confirmed zone lines: the same, drawn darker
   const std::vector<vec3>* retopoStrokes = nullptr;    // flow strokes: the same
   const std::vector<vec3>* retopoMarks = nullptr;      // where the quads left the surface out: the same
+  bool retopoShowMarks = true;                         // (1.2.9) the red crosses (retopoMarks) over the quads
   bool retopoLoops = false;                            // 0.16: the quads' edge loops in color, and the poles
   const std::vector<vec3>* retopoLoopPts = nullptr;    // (segments in pairs)
   const std::vector<vec4>* retopoLoopCols = nullptr;

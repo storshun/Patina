@@ -1328,3 +1328,31 @@ TEST(retopo, a_line_drawn_later_leaves_the_quads_away_from_it_as_they_were) {
   retopo::Result r4 = retopo::flowQuads(hi, bvh, {A, B}, {}, {}, o);
   CHECK(r4.localKept == -1);
 }
+
+// (1.2.9) not run by ctest: the memory one QuadriFlow try takes, per working triangle
+// (patina_tests retopo_mem; PATINA_MEM_VARIANTS, PATINA_MEM_SEG)
+TEST(retopo_mem, quadriflow_memory_per_triangle) {
+  auto rss = [](const char* key) {
+    FILE* f = std::fopen("/proc/self/status", "r");
+    char line[256];
+    long kb = 0;
+    while (f && std::fgets(line, sizeof line, f))
+      if (std::strncmp(line, key, std::strlen(key)) == 0) kb = std::atol(line + std::strlen(key));
+    if (f) std::fclose(f);
+    return kb / 1024.0;
+  };
+  int seg = std::getenv("PATINA_MEM_SEG") ? std::atoi(std::getenv("PATINA_MEM_SEG")) : 700;
+  Mesh hi = makeUVSphere(seg, seg / 2, 0.5f);
+  Bvh bvh;
+  bvh.build(hi);
+  retopo::FlowOptions o;
+  o.quadsPerM2 = 4000;
+  o.passes = 1;
+  o.variants = std::getenv("PATINA_MEM_VARIANTS") ? std::atoi(std::getenv("PATINA_MEM_VARIANTS")) : 1;
+  double before = rss("VmRSS:");
+  retopo::Result r = retopo::flowQuads(hi, bvh, {}, {}, {}, o);
+  std::fprintf(stderr, "  %u triangles, %d variants: %d quads, peak %.0f MB over %.0f MB before (%.2f KB per triangle per variant)\n",
+               hi.faceCount(), o.variants, r.quads, rss("VmHWM:") - before, before,
+               (rss("VmHWM:") - before) * 1024.0 / hi.faceCount() / o.variants);
+  CHECK(r.quads > 0);
+}

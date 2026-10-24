@@ -601,7 +601,6 @@ class App {
   uint32_t retopoStampId = 0;
   uint64_t retopoStatsVersion = ~0ull;
   int retopoPatchCount = 0;
-  double retopoArea = 0;             // of the model, m² (for the quad estimate)
   void drawRetopoWindow();
   void retopoMenu();
   void retopoContextBar();

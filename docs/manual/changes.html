@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.8 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.9 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -41,7 +41,7 @@
 <a href="translating.html">Translating Patina</a>
 <a href="commands.html">Command reference</a>
 <a href="changes.html" class="cur">What&#x27;s new</a>
-<div class="toc"><a href="#1-2-8-2026-10-24">1.2.8 (2026-10-24)</a><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
+<div class="toc"><a href="#1-2-9-2026-10-24">1.2.9 (2026-10-24)</a><a href="#1-2-8-2026-10-24">1.2.8 (2026-10-24)</a><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
 <main>
 <article>
 <!-- title: What's new -->
@@ -49,6 +49,17 @@
 <h1>What's new</h1>
 <p>What changed in each version of Patina, newest first. The same list comes with Patina as <code>CHANGELOG.md</code>.</p>
 <p>What changed in each version, newest first. The manual (Help › Manual, or <code>docs/manual</code>) explains how to use each feature, and docs/ROADMAP.md lists every feature with the version it came in.</p>
+<h2 id="1-2-9-2026-10-24">1.2.9 (2026-10-24)</h2>
+<h3 id="added">Added</h3>
+<ul><li>
+<b>Red marks</b> (Retopology window › Show, and the arrow beside the Retopology preview button) hides the red crosses over the quads. Its tooltip says what they mark: parts too thin for the quads, tight spots patched where zones meet, and, with Mirror on, places where the two sides of the model differ. MCP: <code>retopo_view</code> <code>marks</code>.
+</li></ul>
+<h3 id="fixed">Fixed</h3>
+<ul><li>
+<b>Retopology could take all the memory and close Patina.</b> A zone set to a high resolution over most of a big model (a million quads asked for) ran six tries side by side, each of up to 25 GB, and the live preview started it by itself when a project opened. The tries now share a memory budget: only as many run at once as fit, and a zone that can't fit at all is not tried; the window says why. A zone asking for more than 250,000 quads isn't tried either (QuadriFlow ran 20 minutes on one asking for a million and gave none): the window says to lower its resolution. The live preview doesn't start for more than 150,000 quads (Make quads still makes them), and the window warns when the settings ask for that many. Memory freed after a build goes back to the system. MCP: <code>retopo_info</code> <code>quads_asked</code>.
+</li><li>
+<b>The camera didn't move with the Note tool.</b> A middle drag, Alt + drag and the wheel did nothing while it was chosen. Now only a click on the model or on a pin goes to the notes.
+</li></ul>
 <h2 id="1-2-8-2026-10-24">1.2.8 (2026-10-24)</h2>
 <h3 id="changed">Changed</h3>
 <ul><li>
@@ -64,7 +75,7 @@ With names beside the icons, the tool strip of the Blender and Guided layouts is
 </li><li>
 The Outliner says the layers are the object's, for all of its texture sets (each layer paints every set).
 </li></ul>
-<h3 id="fixed">Fixed</h3>
+<h3 id="fixed-2">Fixed</h3>
 <ul><li>
 <b>The layer buttons ran off the panel</b> with names beside the icons. They go on to a new row now.
 </li><li>
@@ -100,7 +111,7 @@ The borders between the areas are dragged to resize them, and the sizes and tabs
 </li><li>
 <b>Undo keeps much more, in less memory.</b> Older undo steps are now compressed into RAM, while the latest ones stay on the graphics card for instant undo. <i>Edit › Preferences › Undo</i> sets the number of steps, the RAM undo may use (default: a quarter of your computer's memory, 1 to 8 GB), and how much stays on the graphics card. Past the RAM limit, the oldest steps are dropped. Undo is never written to disk, to spare your SSD. Claude uses <code>undo_settings</code>.
 </li></ul>
-<h3 id="fixed-2">Fixed</h3>
+<h3 id="fixed-2-2">Fixed</h3>
 <ul><li>
 <b>On a big model, only the latest UV edit could be undone.</b> With "Keep paint" on, a UV edit copies every layer: 4.9 GB for a character with seven texture sets. Each object's history could hold 1 GB on the graphics card, so every UV edit pushed out the one before. Now that copy is compressed to about 131 MB, and the steps before it stay. The limit also covered each object separately, so a scene of eight objects could hold 8 GB of graphics memory; it now covers them all together.
 </li><li>
@@ -115,7 +126,7 @@ The borders between the areas are dragged to resize them, and the sizes and tabs
 <b>"Send to Blender" was refused after the mesh changed in Blender, even when Patina hadn't changed a UV.</b> The add-on said "Patina changed its UVs ... Patina sent 60930 loops but ... has 60916" and kept the old textures. Now, when Patina sends back the UVs it was given, the textures load: they fit every face you didn't change. A warning says the mesh changed, and that sending it to Patina again paints the changed faces too (the paint carries over). When Patina did change the UVs, the textures still wait, as before.
 </li></ul>
 <h2 id="1-2-6-2026-10-23">1.2.6 (2026-10-23)</h2>
-<h3 id="fixed-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2">Fixed</h3>
 <ul><li>
 <b>Blender got another model's UVs, and textures sent from Patina never arrived.</b> When Claude Desktop (or another MCP client) started <code>patina --mcp</code> before any Patina window was open, that hidden Patina took port 7860. A Patina window opened afterward moved to 7861, which is the port Blender's add-on listens on. So Blender's requests went to the hidden Patina, which answered with its startup sphere: "Patina sent 8064 loops but ... has 60993". And the window's "Send to Blender" reached itself: "unknown command 'patina_textures_updated'". Now:
 <ul><li>
@@ -129,7 +140,7 @@ a Patina asked for an object it has no link to says so, instead of sending its o
 The manual's tip for two windows suggested <code>--port 7861</code>, Blender's port. It says <code>--port 7862</code> now.
 </li></ul>
 <h2 id="1-2-5-2026-10-23">1.2.5 (2026-10-23)</h2>
-<h3 id="fixed-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>A brush set to UV projection could stop painting.</b> After a few strokes, or after the camera moved, strokes in the 3D view put nothing on the layer, and the status line said "Nothing to paint". A fill or a Screen stroke made it work again until the next camera move. Such a brush checks which spots the camera sees, but Patina drew the picture of the view it checks against only for Screen brushes, so it used an old one. It draws it for these brushes too now.
 </li><li>
@@ -138,7 +149,7 @@ The manual's tip for two windows suggested <code>--port 7861</code>, Blender's p
 "Nothing to paint" no longer shows after a stroke that did paint with a library material.
 </li></ul>
 <h2 id="1-2-4-2026-10-22">1.2.4 (2026-10-22)</h2>
-<h3 id="fixed-2-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>The path tracer showed the triangles of smooth models where light grazes them.</b> Under a hard light, the line between light and shadow on a nose, a cheek or a shoulder ran in triangle-shaped steps, though the Lit view and Blender's viewport were smooth. This is the "shadow terminator" problem. Light was cut off at each flat triangle's own horizon, and shadow rays leaving the flat triangles hit their neighbors. Now light fades out at the smooth surface's horizon, and rays leave from the smooth surface the normals describe, as Blender's Cycles does. A normal map's light fades out smoothly too. Renders under soft light don't change.
 </li></ul>
@@ -151,14 +162,14 @@ The manual's tip for two windows suggested <code>--port 7861</code>, Blender's p
 </li><li>
 <b>A size slider for the material tiles</b> (Ctrl+mouse wheel over them does it too). Patina remembers the view and the size.
 </li></ul>
-<h3 id="fixed-2-2-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>Adding a model could replace the one you had.</b> After you opened a project, Patina still took it for the sphere it starts with. <i>Add a Model to the Scene</i> then put the new model in place of a one-object project, and a model dropped on the window opened instead of asking. Blender's <i>Add to the Patina Scene</i> replaced the scene too. Now only the untouched starting sphere gives way.
 </li><li>
 <b>Material tiles ran off the side of the panel.</b> The panel didn't count the space around each tile or the scrollbar, so at some widths the last column was cut off. A long name could also widen its tile. The tiles fit now, and long names end with "...". The same fix applies to the smart materials, smart masks and brushes.
 </li></ul>
 <h2 id="1-2-2-2026-10-22">1.2.2 (2026-10-22)</h2>
-<h3 id="fixed-2-2-2-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>Hair cards, leaves and lace from OBJ and FBX files came in solid.</b> Many game assets keep their cut-outs only in the color texture's alpha, and their file says nothing about opacity. Patina now makes that alpha the Opacity channel of the layer <i>From the model</i> when it has see-through and solid parts, and the status line says so. An alpha that is even all over is left out, because some assets keep gloss there. For a model you already brought in, select it and use <i>File › Bring In the Model's Textures</i> again.
 </li><li>
@@ -171,7 +182,7 @@ The layer's <i>Opacity</i> channel box and its <i>Channel opacity › Opacity</i
 <code>import_model_textures</code> takes <code>color_alpha</code>: <code>"opacity"</code> always uses the color texture's alpha, <code>"ignore"</code> never.
 </li></ul>
 <h2 id="1-2-1-2026-10-22">1.2.1 (2026-10-22)</h2>
-<h3 id="fixed-2-2-2-2-2-2-2">Fixed</h3>
+<h3 id="fixed-2-2-2-2-2-2-2-2">Fixed</h3>
 <ul><li>
 <b>Saving could close Patina.</b> A paint layer with clearcoat (painted with car paint, lacquer or another material that has it) made every save and every autosave stop the app.
 </li><li>

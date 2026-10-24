@@ -1291,7 +1291,7 @@ Retopology: makes the quads at the density set (retopo_density) on the surface o
 
 ### `retopo_info`
 
-Retopology: the patches, the density, the lines and strokes, and the last result.
+Retopology: the patches, the density, the lines and strokes, and the last result. quads_asked: about how many quads the settings ask for (zones and density counted); over 150,000 the live preview doesn't start (preview_too_big) and only retopo_build makes them.
 
 | argument | type | range, default | description |
 |---|---|---|---|
@@ -1306,6 +1306,7 @@ Retopology: what the viewport shows: the zones (in color, with their lines) or t
 | `lines_behind` | shown \| darkened \| hidden |  | Zone lines and flow strokes behind the model: shown through it, darkened, or hidden |
 | `loop_at` | array |  | Light up the edge loop nearest this point of the model (with loops on) |
 | `loops` | boolean |  | Show the quads' poles, and light up the edge loop under the pointer |
+| `marks` | boolean |  | Show the red crosses over the quads: parts too thin for them (left out), tight spots patched where zones meet, and (with mirror) where the two sides of the model differ. The build's problems say which. Default true |
 | `preview` | boolean |  | The app's Retopology preview: show these in its 3D view whatever tool is chosen, with a quick set of quads following each change |
 | `quads` | boolean |  | Show the quads of the last build |
 | `quads_only` | boolean |  | Show the quads alone, shaded, instead of the model |

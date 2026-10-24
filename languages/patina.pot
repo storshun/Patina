@@ -122,8 +122,8 @@ msgid "Window > Assistant: type what you want in plain words (\"make the creases
 msgstr ""
 
 #: src/engine/Features.cpp:34 src/ui/BlenderLayout.cpp:414
-#: src/ui/ContextMenus.cpp:209 src/ui/RetopoUI.cpp:582 src/ui/RetopoUI.cpp:752
-#: src/ui/RetopoUI.cpp:753
+#: src/ui/ContextMenus.cpp:209 src/ui/RetopoUI.cpp:590 src/ui/RetopoUI.cpp:760
+#: src/ui/RetopoUI.cpp:761
 msgid "Retopology"
 msgstr ""
 
@@ -1617,7 +1617,7 @@ msgstr ""
 msgid "Crumple"
 msgstr ""
 
-#: src/engine/MaterialLibrary.cpp:160 src/ui/RetopoUI.cpp:813
+#: src/engine/MaterialLibrary.cpp:160 src/ui/RetopoUI.cpp:820
 #: src/ui/Toolbars.cpp:156
 msgid "Lines"
 msgstr ""
@@ -2169,7 +2169,7 @@ msgstr ""
 #: src/ui/App.cpp:947 src/ui/AssistantPanel.cpp:358
 #: src/ui/AssistantPanel.cpp:495 src/ui/Guided.cpp:1163
 #: src/ui/LayersPanel.cpp:997 src/ui/ObjectsUI.cpp:216
-#: src/ui/ObjectsUI.cpp:267 src/ui/RetopoUI.cpp:1074 src/ui/Tools010.cpp:202
+#: src/ui/ObjectsUI.cpp:267 src/ui/RetopoUI.cpp:1081 src/ui/Tools010.cpp:202
 #: src/ui/Tools04.cpp:443
 msgid "Cancel"
 msgstr ""
@@ -2304,7 +2304,7 @@ msgstr ""
 msgid "Ask"
 msgstr ""
 
-#: src/ui/AssistantPanel.cpp:350 src/ui/RetopoUI.cpp:771
+#: src/ui/AssistantPanel.cpp:350 src/ui/RetopoUI.cpp:779
 #: src/ui/Tools027.cpp:28
 msgid "Open a model first."
 msgstr ""
@@ -3078,19 +3078,19 @@ msgstr ""
 msgid "Island Brush"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:196 src/ui/RetopoUI.cpp:596
+#: src/ui/ContextMenus.cpp:196 src/ui/RetopoUI.cpp:604
 msgid "Zone Lines"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:197 src/ui/RetopoUI.cpp:538 src/ui/RetopoUI.cpp:598
+#: src/ui/ContextMenus.cpp:197 src/ui/RetopoUI.cpp:538 src/ui/RetopoUI.cpp:606
 msgid "Zones"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:198 src/ui/RetopoUI.cpp:599
+#: src/ui/ContextMenus.cpp:198 src/ui/RetopoUI.cpp:607
 msgid "Flow Strokes"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:199 src/ui/RetopoUI.cpp:600
+#: src/ui/ContextMenus.cpp:199 src/ui/RetopoUI.cpp:608
 msgid "Density Brush"
 msgstr ""
 
@@ -3108,7 +3108,7 @@ msgstr ""
 msgid "Note"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:218 src/ui/RetopoUI.cpp:969 src/ui/Toolbars.cpp:256
+#: src/ui/ContextMenus.cpp:218 src/ui/RetopoUI.cpp:976 src/ui/Toolbars.cpp:256
 #: src/ui/Viewport3D.cpp:20
 msgid "Symmetry"
 msgstr ""
@@ -3159,15 +3159,15 @@ msgstr ""
 msgid "Swap the Colors"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:253 src/ui/RetopoUI.cpp:603
+#: src/ui/ContextMenus.cpp:253 src/ui/RetopoUI.cpp:611
 msgid "Making Quads..."
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:253 src/ui/RetopoUI.cpp:603
+#: src/ui/ContextMenus.cpp:253 src/ui/RetopoUI.cpp:611
 msgid "Make Quads"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:254 src/ui/RetopoUI.cpp:584
+#: src/ui/ContextMenus.cpp:254 src/ui/RetopoUI.cpp:592
 msgid "Retopology Window..."
 msgstr ""
 
@@ -3231,7 +3231,7 @@ msgstr ""
 msgid "Use Baked AO"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:293 src/ui/RetopoUI.cpp:589
+#: src/ui/ContextMenus.cpp:293 src/ui/RetopoUI.cpp:597
 msgid "Retopology Preview"
 msgstr ""
 
@@ -4103,7 +4103,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#: src/ui/Guided.cpp:946 src/ui/LayersPanel.cpp:147 src/ui/RetopoUI.cpp:1011
+#: src/ui/Guided.cpp:946 src/ui/LayersPanel.cpp:147 src/ui/RetopoUI.cpp:1018
 #: src/ui/StencilUI.cpp:63
 msgid "Show"
 msgstr ""
@@ -6713,7 +6713,7 @@ msgstr ""
 msgid "Hardness"
 msgstr ""
 
-#: src/ui/Panels.cpp:542 src/ui/RetopoUI.cpp:825 src/ui/Toolbars.cpp:162
+#: src/ui/Panels.cpp:542 src/ui/RetopoUI.cpp:832 src/ui/Toolbars.cpp:162
 #: src/ui/Toolbars.cpp:411
 msgid "Flow"
 msgstr ""
@@ -7355,7 +7355,7 @@ msgstr ""
 msgid "Paint with This Brush"
 msgstr ""
 
-#: src/ui/Panels.cpp:1339 src/ui/RetopoUI.cpp:795 src/ui/Tools04.cpp:702
+#: src/ui/Panels.cpp:1339 src/ui/RetopoUI.cpp:796 src/ui/Tools04.cpp:702
 msgid "Resolution"
 msgstr ""
 
@@ -9090,8 +9090,8 @@ msgstr ""
 msgid "Round the part (Shift+wheel: facing you)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:518 src/ui/RetopoUI.cpp:573 src/ui/RetopoUI.cpp:707
-#: src/ui/RetopoUI.cpp:1083
+#: src/ui/RetopoUI.cpp:518 src/ui/RetopoUI.cpp:581 src/ui/RetopoUI.cpp:715
+#: src/ui/RetopoUI.cpp:1090
 msgid "Making quads..."
 msgstr ""
 
@@ -9105,7 +9105,7 @@ msgid ""
 "The retopology tools show what they set anyway."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:540 src/ui/RetopoUI.cpp:830 src/ui/Toolbars.cpp:164
+#: src/ui/RetopoUI.cpp:540 src/ui/RetopoUI.cpp:837 src/ui/Toolbars.cpp:164
 #: src/ui/Tools04.cpp:344
 msgid "Density"
 msgstr ""
@@ -9131,187 +9131,208 @@ msgid "The quads shaded on their own, without the model"
 msgstr ""
 
 #: src/ui/RetopoUI.cpp:550
-msgid "Loops"
+msgid "Red marks"
 msgstr ""
 
 #: src/ui/RetopoUI.cpp:552
+msgid ""
+"Red crosses mark spots worth a look. The notes under the last build say what they are:\n"
+"- parts too thin for quads this size, so they are left out (fingers, strands of hair)\n"
+"- places where zones meet in a tight spot, patched\n"
+"- with Mirror on, places where the two sides of the model aren't the same\n"
+"They change nothing in the quads: switching them off only hides them."
+msgstr ""
+
+#: src/ui/RetopoUI.cpp:558
+msgid "Loops"
+msgstr ""
+
+#: src/ui/RetopoUI.cpp:560
 msgid ""
 "The poles as small crosses (blue: three edges, orange: five, red: more), and the edge loop\n"
 "under the pointer lit up all along, so you can see where each loop goes and where it ends."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:560
+#: src/ui/RetopoUI.cpp:568
 #, c-format
 msgid "Poles: %d with three edges (blue), %d with five (orange), %d other (red)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:562
+#: src/ui/RetopoUI.cpp:570
 #, c-format
 msgid "The loop under the pointer: %d edges, all the way round"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:563
+#: src/ui/RetopoUI.cpp:571
 #, c-format
 msgid "The loop under the pointer: %d edges"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:565
+#: src/ui/RetopoUI.cpp:573
 msgid "Point at the quads to light up an edge loop"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:569
+#: src/ui/RetopoUI.cpp:577
 #, c-format
 msgid "%u quads (a quick preview)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:569
+#: src/ui/RetopoUI.cpp:577
 #, c-format
 msgid "%u quads"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:570 src/ui/RetopoUI.cpp:1008
+#: src/ui/RetopoUI.cpp:578 src/ui/RetopoUI.cpp:1015
 msgid "No quads yet."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:573 src/ui/RetopoUI.cpp:707 src/ui/RetopoUI.cpp:1083
+#: src/ui/RetopoUI.cpp:581 src/ui/RetopoUI.cpp:715 src/ui/RetopoUI.cpp:1090
 msgid "Make quads"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:576
+#: src/ui/RetopoUI.cpp:584
 msgid "Retopology window..."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:597
+#: src/ui/RetopoUI.cpp:605
 msgid "Draw where the edge flow changes. Each line becomes an edge loop and splits the model into zones."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:598
+#: src/ui/RetopoUI.cpp:606
 msgid "Click a zone to set its resolution"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:599
+#: src/ui/RetopoUI.cpp:607
 msgid "A stroke inside a zone sets which way its quads run"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:600
+#: src/ui/RetopoUI.cpp:608
 msgid "Fine-tune the resolution where you paint"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:606
+#: src/ui/RetopoUI.cpp:614
 msgid "Export the Quads (.obj)..."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:607
+#: src/ui/RetopoUI.cpp:615
 msgid "Send the Quads to Blender"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:610 src/ui/RetopoUI.cpp:1023
+#: src/ui/RetopoUI.cpp:618 src/ui/RetopoUI.cpp:1030
 #, c-format
 msgid "Sent the quads to Blender as %s"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:612
+#: src/ui/RetopoUI.cpp:620
 msgid "Use the Quads as the Model..."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:614
+#: src/ui/RetopoUI.cpp:622
 msgid "Clear Zone Lines"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:615
+#: src/ui/RetopoUI.cpp:623
 msgid "Clear Flow Strokes"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:621
+#: src/ui/RetopoUI.cpp:629
 msgid "Reset Resolutions and Density"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:636
+#: src/ui/RetopoUI.cpp:644
 #, c-format
 msgid "Zone resolution x%.2g"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:645
+#: src/ui/RetopoUI.cpp:653
 msgid ""
 "How many quads per m² this zone gets, compared with the rest (2: twice as many). Its quads\n"
 "change size at the zone's lines, in a row of three-to-one steps."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:683
+#: src/ui/RetopoUI.cpp:691
 #, c-format
 msgid "Paints x%.2g"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:685
+#: src/ui/RetopoUI.cpp:693
 msgid ""
 "How many times the quads per m² the brush paints (2: twice as many quads there, 0.5: half).\n"
 "Ctrl paints it back to normal (x1). Zones have a resolution of their own as well."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:689 src/ui/RetopoUI.cpp:842
+#: src/ui/RetopoUI.cpp:697 src/ui/RetopoUI.cpp:849
 #, c-format
 msgid "Zone %d"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:693
+#: src/ui/RetopoUI.cpp:701
 msgid "Click a zone to set its resolution."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:696
+#: src/ui/RetopoUI.cpp:704
 msgid "Draw on the model where the flow changes. Start or end on a line to meet it; end at the start to close. Shift+click: a line right round an arm, a leg, the neck. Ctrl+click: take away."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:698 src/ui/RetopoUI.cpp:836
+#: src/ui/RetopoUI.cpp:706 src/ui/RetopoUI.cpp:843
 msgid "Strokes make edge loops"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:701
+#: src/ui/RetopoUI.cpp:709
 msgid "Draw where edge loops run in a zone. Ctrl+click a stroke to take it away."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:702
+#: src/ui/RetopoUI.cpp:710
 msgid "Draw which way the quads run in a zone. Ctrl+click a stroke to take it away."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:708
+#: src/ui/RetopoUI.cpp:716
 msgid "Make the quads now (they also follow each change as a quick preview)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:712
+#: src/ui/RetopoUI.cpp:720
 msgid "Retopology window"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:712
+#: src/ui/RetopoUI.cpp:720
 msgid "All the retopology settings"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:725
+#: src/ui/RetopoUI.cpp:733
 #, c-format
 msgid "%d quads in %.1f s: %.1f%% of the vertices have four edges"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:790
+#: src/ui/RetopoUI.cpp:791
 msgid "Patina makes the quads along the model's shape. Draw zone lines where the edge flow should change; give a zone more or fewer quads; stroke the way its quads should run. The more you set, the closer they follow you."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:797
+#: src/ui/RetopoUI.cpp:798
 msgid "Quads per m²"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:801
+#: src/ui/RetopoUI.cpp:803
 #, c-format
 msgid "Quads about %.2g cm across; about %.0f quads over the model"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:803
-msgid "Model units are meters. Zones and the density brush raise or lower it where they are."
+#: src/ui/RetopoUI.cpp:805
+msgid ""
+"Model units are meters. Zones and the density brush raise or lower it where they are\n"
+"(the count includes them)."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:805
+#: src/ui/RetopoUI.cpp:809
+msgid ""
+"That's a great many quads: no live preview, and Make quads may take minutes and many GB of memory.\n"
+"Check the zones' resolutions (Zone tool) and Quads per m²."
+msgstr ""
+
+#: src/ui/RetopoUI.cpp:812
 msgid "Zones and flow"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:814
+#: src/ui/RetopoUI.cpp:821
 msgid ""
 "Zone lines: draw on the model where the edge flow should change (round the eyes, the mouth, the\n"
 "cranium, the base of the ears). Each line becomes an edge loop; closed ones split off zones.\n"
@@ -9323,149 +9344,149 @@ msgid ""
 "darker and new lines don't snap to them."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:823 src/ui/Toolbars.cpp:160
+#: src/ui/RetopoUI.cpp:830 src/ui/Toolbars.cpp:160
 msgid "Zone"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:823
+#: src/ui/RetopoUI.cpp:830
 msgid "Click a zone to choose it and set its resolution"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:826
+#: src/ui/RetopoUI.cpp:833
 msgid ""
 "Flow strokes: draw inside a zone where its edge loops should run. Each stroke becomes an edge loop but\n"
 "doesn't make a zone. With Strokes make edge loops unticked, strokes only turn the quads their way (the\n"
 "quads keep their size, so a circle of flow round a small spot gets poles). Ctrl+click a stroke to take it away."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:830
+#: src/ui/RetopoUI.cpp:837
 msgid "Fine-tune the resolution where you paint (Ctrl: back to normal)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:833
+#: src/ui/RetopoUI.cpp:840
 msgid "Paints"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:840
+#: src/ui/RetopoUI.cpp:847
 #, c-format
 msgid "%zu lines, %d zones, %zu flow strokes"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:846
+#: src/ui/RetopoUI.cpp:853
 msgid "With the Zone tool, click a zone to set its resolution."
-msgstr ""
-
-#: src/ui/RetopoUI.cpp:849
-#, c-format
-msgid "Zones with their own resolution (%zu)"
-msgstr ""
-
-#: src/ui/RetopoUI.cpp:854
-msgid "Choose"
 msgstr ""
 
 #: src/ui/RetopoUI.cpp:856
 #, c-format
-msgid "Zone %d: x%.2g"
+msgid "Zones with their own resolution (%zu)"
 msgstr ""
 
 #: src/ui/RetopoUI.cpp:861
-msgid "Clear lines"
+msgid "Choose"
 msgstr ""
 
 #: src/ui/RetopoUI.cpp:863
-msgid "Clear strokes"
+#, c-format
+msgid "Zone %d: x%.2g"
+msgstr ""
+
+#: src/ui/RetopoUI.cpp:868
+msgid "Clear lines"
 msgstr ""
 
 #: src/ui/RetopoUI.cpp:870
+msgid "Clear strokes"
+msgstr ""
+
+#: src/ui/RetopoUI.cpp:877
 msgid "Reset resolutions"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:896
+#: src/ui/RetopoUI.cpp:903
 msgid "Confirm lines"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:899
+#: src/ui/RetopoUI.cpp:906
 msgid ""
 "Confirms every line drawn so far: they turn darker and new lines don't snap to them (draw\n"
 "close to them in tight folds without being pulled on). They still make zones and edge loops.\n"
 "Ctrl+Shift+click a line with the Lines tool to confirm or unconfirm just that one."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:904
+#: src/ui/RetopoUI.cpp:911
 msgid "Unconfirm all"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:908
+#: src/ui/RetopoUI.cpp:915
 #, c-format
 msgid "%zu confirmed"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:910
+#: src/ui/RetopoUI.cpp:917
 msgid "Snap line ends"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:912
+#: src/ui/RetopoUI.cpp:919
 msgid ""
 "A new line that starts or ends near another line meets it exactly (a white ring shows where).\n"
 "Off: the ends stay where you draw them, for tight folds (lips, fingers, toes, the crotch).\n"
 "Confirmed lines are never snapped to. A line still closes when it ends where it began."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:915
+#: src/ui/RetopoUI.cpp:922
 msgid "Shown"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:915
+#: src/ui/RetopoUI.cpp:922
 msgid "Darkened"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:915
+#: src/ui/RetopoUI.cpp:922
 msgid "Hidden"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:918
+#: src/ui/RetopoUI.cpp:925
 msgid "Lines behind the model"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:924
+#: src/ui/RetopoUI.cpp:931
 msgid ""
 "How the lines and strokes on the far side of the model are drawn: shown as if the model\n"
 "were glass, darkened (thin and faint), or hidden."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:927
+#: src/ui/RetopoUI.cpp:934
 msgid "Zones for thin parts"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:936
+#: src/ui/RetopoUI.cpp:943
 msgid "No thin part could be given a zone"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:939
+#: src/ui/RetopoUI.cpp:946
 #, c-format
 msgid "Gave %d thin part a zone"
 msgid_plural "Gave %d thin parts zones"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ui/RetopoUI.cpp:942
+#: src/ui/RetopoUI.cpp:949
 #, c-format
 msgid "%s; %d left (too thin, or no clean ring round them)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:947
+#: src/ui/RetopoUI.cpp:954
 msgid ""
 "Finds the parts too thin for the quads (fingers, toes: fewer than about four quads would go\n"
 "round them), draws a line round each where it meets the rest, and gives it a resolution for\n"
 "about six quads round. Thin sheets (locks of hair) are left as they are. One undo step."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:950
+#: src/ui/RetopoUI.cpp:957
 msgid "Rings between two lines"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:952
+#: src/ui/RetopoUI.cpp:959
 msgid ""
 "A zone between two lines (round an eye or a mouth, along an arm) is filled with rings of quads\n"
 "that follow both lines, and a zone inside such a ring (an eyeball, the inside of the lips) is\n"
@@ -9473,22 +9494,22 @@ msgid ""
 "the zone beside it. Off: all those zones are made as the others are."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:956
+#: src/ui/RetopoUI.cpp:963
 msgid "Fewer poles"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:958
+#: src/ui/RetopoUI.cpp:965
 msgid ""
 "After the quads are made, the number of quads along each run of edges is worked out again so\n"
 "that a three-edged and a five-edged pole close together cancel out. The new quads are kept\n"
 "only when they have fewer poles and no more folded faces. Off: the quads as first made."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:961
+#: src/ui/RetopoUI.cpp:968
 msgid "Keep quads away from changes"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:963
+#: src/ui/RetopoUI.cpp:970
 msgid ""
 "On (the default): a change (a line, a stroke, the density, a zone's resolution) makes only the\n"
 "quads within a few quads of it again. The rest stay exactly as they were, joined to the new ones\n"
@@ -9497,12 +9518,12 @@ msgid ""
 "out different anywhere."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:975
+#: src/ui/RetopoUI.cpp:982
 #, c-format
 msgid "Mirror %s"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:979
+#: src/ui/RetopoUI.cpp:986
 msgid ""
 "Lines, flow strokes, the density brush and zone resolutions are mirrored across the model's\n"
 "middle (the same as the Sym buttons). The quads are made on one side (the one with more lines)\n"
@@ -9510,178 +9531,183 @@ msgid ""
 "within half a quad of the middle gives way to that loop there."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:985
+#: src/ui/RetopoUI.cpp:992
 msgid "Middle deadzone (cm)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:988
+#: src/ui/RetopoUI.cpp:995
 msgid ""
 "A line or stroke that comes this close to the middle is taken to meet it there, and joins its mirror\n"
 "image (like the clipping of Blender's mirror modifier). A stroke drawn across the middle keeps\n"
 "its longer side, mirrored."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:993
+#: src/ui/RetopoUI.cpp:1000
 msgid "Quads"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:997
+#: src/ui/RetopoUI.cpp:1004
 #, c-format
 msgid "%d quads, %zu vertices; %.1f s"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:998
+#: src/ui/RetopoUI.cpp:1005
 #, c-format
 msgid "Poles: %.1f%% with three edges, %.1f%% with five, %.1f%% other; %.0f%% quads"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1001
+#: src/ui/RetopoUI.cpp:1008
 msgid ""
 "Poles go where the shape needs them, where zones of different resolution meet, and at the\n"
 "corners of the loops you draw. On a closed, ball-like piece, the three-edge poles\n"
 "outnumber the five-edge ones by eight."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1014
+#: src/ui/RetopoUI.cpp:1021
 msgid "Use the quads"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1017
+#: src/ui/RetopoUI.cpp:1024
 msgid "Export .obj..."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1020 src/ui/ViewPie.cpp:92
+#: src/ui/RetopoUI.cpp:1027 src/ui/ViewPie.cpp:92
 msgid "Send to Blender"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1027
+#: src/ui/RetopoUI.cpp:1034
 msgid "A new object next to the linked one, in the same place (sending again updates it)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1028
+#: src/ui/RetopoUI.cpp:1035
 msgid "Link a Blender object first (Send to Patina in Blender)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1029
+#: src/ui/RetopoUI.cpp:1036
 msgid "Use the quads as the model..."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1031
+#: src/ui/RetopoUI.cpp:1038
 msgid ""
 "Opens the quads as the model you paint, with new UVs, and bakes this high-poly onto them\n"
 "(normals, ambient occlusion); the layers come along (a bake-down). Your zones and strokes\n"
 "stay with the high-poly for next time."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1037
+#: src/ui/RetopoUI.cpp:1044
 msgid "Use the quads as the model?"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1041
+#: src/ui/RetopoUI.cpp:1048
 msgid "Bring the layers along (bake them down)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1043
+#: src/ui/RetopoUI.cpp:1050
 msgid "Every layer moves onto the quads' UVs, measured where the two surfaces meet (Bake > Bake Down)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1046
+#: src/ui/RetopoUI.cpp:1053
 msgid "The quads are saved as an .obj next to the high-poly and opened with new UVs; the high-poly is baked onto them and every layer comes along. The result is a new project: this one stays as it was saved."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1050
+#: src/ui/RetopoUI.cpp:1057
 msgid "The quads are saved as an .obj next to the high-poly and opened with new UVs; the high-poly is baked onto them. The layers start afresh - save the project first if you want to keep this one."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1052
+#: src/ui/RetopoUI.cpp:1059
 msgid "The quads are saved as an .obj next to the high-poly and opened with new UVs; the high-poly is baked onto them. The layers start afresh."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1054 src/ui/RetopoUI.cpp:1060
+#: src/ui/RetopoUI.cpp:1061 src/ui/RetopoUI.cpp:1067
 msgid "Use them"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1056 src/ui/Tools04.cpp:714
+#: src/ui/RetopoUI.cpp:1063 src/ui/Tools04.cpp:714
 msgid "bake the layers down"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1065
+#: src/ui/RetopoUI.cpp:1072
 #, c-format
 msgid "The quads are the model now (%s); the bake failed: %s"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1067
+#: src/ui/RetopoUI.cpp:1074
 #, c-format
 msgid "The quads are the model now (%s), with the high-poly baked onto them"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1090
+#: src/ui/RetopoUI.cpp:1097
 msgid ""
 "Keeps the quads (the live preview is made the same way: when it is up to date, this keeps it\n"
 "at once; otherwise the quads are made now)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1094
+#: src/ui/RetopoUI.cpp:1101
 msgid "Remake all"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1094
+#: src/ui/RetopoUI.cpp:1101
 msgid "Making all the quads again..."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1101
+#: src/ui/RetopoUI.cpp:1108
 msgid ""
 "Makes all the quads again, not only those near what changed (Keep quads away from changes):\n"
 "the cleanest quads for everything as it is now, though any part may come out different"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1104
+#: src/ui/RetopoUI.cpp:1111
 msgid "Live preview"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1107
+#: src/ui/RetopoUI.cpp:1114
 msgid ""
 "The quads are made again by themselves a moment after you change something (a line, a stroke,\n"
 "a zone's resolution, the density), and shown faintly. Make quads keeps them."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1110
+#: src/ui/RetopoUI.cpp:1117
 #, c-format
 msgid "Updating the preview... %.0f s"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1110
+#: src/ui/RetopoUI.cpp:1117
 #, c-format
 msgid "Making the quads... %.0f s"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1114
+#: src/ui/RetopoUI.cpp:1121
 #, c-format
 msgid "Preview: %d quads, %.1f%% four-edged"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1115
+#: src/ui/RetopoUI.cpp:1122
 #, c-format
 msgid "Preview: %d quads, %.1f%% four-edged (changed since)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1116
+#: src/ui/RetopoUI.cpp:1123
 #, c-format
 msgid "%d quads, %.1f%% four-edged"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1116
+#: src/ui/RetopoUI.cpp:1123
 #, c-format
 msgid "%d quads, %.1f%% four-edged (changed since)"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1119
+#: src/ui/RetopoUI.cpp:1126
 #, c-format
 msgid "Only the quads near what changed were made again: %d faces kept as they were"
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1121
+#: src/ui/RetopoUI.cpp:1128
 msgid "No quads yet"
+msgstr ""
+
+#: src/ui/RetopoUI.cpp:1131
+#, c-format
+msgid "No live preview for about %.0f quads: Make quads makes them"
 msgstr ""
 
 #: src/ui/StencilUI.cpp:22

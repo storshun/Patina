@@ -450,6 +450,10 @@ class Engine {
     std::string meshPath;            // where the patches are kept between sessions (by this mesh)
     uint64_t savedVersion = 0;
     double changedAt = 0;
+    // (1.2.9) the quads asked for over the model (zones and the density brush counted), for inputsVersion
+    double quadsAsked = 0;
+    uint64_t quadsAskedInputs = 0;
+    bool previewTooBig = false;  // the live preview didn't start: too many quads for one (Make quads does it)
   } retopoData;
   RetopoState& retopo();  // the state for the open mesh
   // 0.16: the edge loop of the quads nearest this point of the model is shown (none: -1); returns its edges
@@ -486,6 +490,8 @@ class Engine {
   void retopoTick();      // from tick(): a finished build, a pending save
   // per vertex: the density brush times the resolution of the zones around it
   std::vector<float> retopoDensity();                 // the density brush times the zones' resolutions, per vertex
+  double retopoQuadsAsked();                          // (1.2.9) about how many quads the settings ask for
+  static constexpr double kRetopoPreviewMaxQuads = 150000;  // (more: no live preview, only Make quads)
   std::vector<float> retopoFaceResolution();          // per face, its zone's resolution (empty: all 1)
   // 0.17: zones for the parts too thin for the quads (fingers, strands): lines round them and resolutions
   // for about quadsAround quads round each; one undo step. Returns what was found (and added).

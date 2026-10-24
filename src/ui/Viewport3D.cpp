@@ -185,7 +185,7 @@ void App::drawViewport(bool fullscreen) {
         mixIn(b);
       }
     mixIn(uint64_t(pw) << 32 | uint32_t(ph)), mixIn(vo.retopoKey), mixIn(vo.retopoLinesKey), mixIn(vo.retopoQuadsKey);
-    mixIn(vo.retopoLoopsKey), mixIn(uint64_t(vo.mode)), mixIn(uint64_t(vo.retopoView)), mixIn(vo.retopoShowQuads | vo.retopoQuadsOnly << 1);
+    mixIn(vo.retopoLoopsKey), mixIn(uint64_t(vo.mode)), mixIn(uint64_t(vo.retopoView)), mixIn(vo.retopoShowQuads | vo.retopoQuadsOnly << 1 | vo.retopoShowMarks << 2);
     mixIn(vo.hoverFace), mixIn(uint64_t(vo.retopoLinesBehind)), mixIn(uint64_t(engine.doc.undo.count()) << 32 | engine.doc.undo.position());
   }
   if (!(engine.drawingStroke && viewKey == lastViewKey && viewportRT.color.id())) {
@@ -241,7 +241,7 @@ void App::drawViewport(bool fullscreen) {
   if (compareOverlay(origin, avail, pw, ph, hovered)) hovered = active = false;
   // ---- stencil overlay; holding the stencil key hands the mouse to the stencil
   if (stencilOverlay(origin, avail, hovered)) hovered = active = false;
-  // ---- note pins (the Note tool takes the clicks)
+  // ---- note pins (with the Note tool, a click on a pin edits it)
   if (notesOverlay(origin, avail, hovered) && tool == ViewportTool::Note) hovered = active = false;
 
   // ---- camera navigation

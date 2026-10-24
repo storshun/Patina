@@ -183,6 +183,23 @@ def main():
         time.sleep(0.4)
         check(s("set_view")["wireframe"] == v0["wireframe"], "Esc closes it")
         check(steps() <= n0 + 2, "the pie paints nothing (%d -> %d history steps)" % (n0, steps()))
+        # ---- (1.2.9) the Note tool keeps the camera: middle drag, Alt + left drag and the wheel
+        s("set_tool", tool="note")
+        s("set_camera", yaw=0.7, pitch=0.4, ortho=False)
+        s.x.drag([vp(0.5, 0.6)] + [(vp(0.5, 0.6)[0] + 6 * i, vp(0.5, 0.6)[1]) for i in range(1, 8)], b=2, dt=0.04)
+        c = cam()
+        check(angle(c["yaw"], 0.7) > 0.05, "Note tool: a middle drag turns the view (yaw %.3f)" % c["yaw"])
+        y0 = c["yaw"]
+        s.x.drag([vp(0.5, 0.6)] + [(vp(0.5, 0.6)[0] + 6 * i, vp(0.5, 0.6)[1]) for i in range(1, 8)], b=1, dt=0.04, mods=("Alt_L",))
+        c = cam()
+        check(angle(c["yaw"], y0) > 0.05, "Note tool: Alt + left drag turns it too (yaw %.3f)" % c["yaw"])
+        d0 = c["distance"]
+        s.x.move(*vp(0.5, 0.6))
+        for _ in range(3):
+            s.x.click(*vp(0.5, 0.6), b=4)
+        time.sleep(0.3)
+        check(cam()["distance"] < d0 * 0.95, "Note tool: the wheel zooms (%.3f, was %.3f)" % (cam()["distance"], d0))
+        s("set_tool", tool="paint")
         # ---- MCP: set_camera view=previous
         s("set_camera", yaw=0.9, pitch=0.3)
         s("set_camera", view="top")

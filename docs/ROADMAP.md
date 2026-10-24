@@ -520,6 +520,7 @@ from the custom brushes folder ... That should be part of 1.2."
 | T27 | **Undo in RAM, compressed**: copies past the graphics card's budget are packed on idle ticks, never on disk; Preferences › Undo (steps, RAM, card), MCP `undo_settings` | Every UV edit on a big model can be undone | **1.2.7** |
 | T28 | **Quick retopology edits**: a change makes new quads only on the part of the model round it (about 1 s instead of 21 on a 190k-face character), with the quad count that worked remembered | Retopology by hand-guided edits stays interactive | **1.2.8** |
 | T29 | **A clearer workspace**: the 3D view bar's settings as single fields with their icons inside; fields at most 13 em wide; the Blender layout's step colors and Material Edit tab; wrapping layer buttons | Less noise, nothing off screen | **1.2.8** |
+| T30 | **Retopology within memory**: QuadriFlow's tries share a memory budget; zones over 250,000 quads or too big for free memory are refused with a clear message; no live preview over 150,000 quads; freed memory returned (MCP `retopo_info` `quads_asked`). Also: the camera moves with the Note tool; a Red marks switch | A big zone can't take all the memory and close Patina | **1.2.9** |
 
 Shipped in **1.2.0** (2026-10-21). How it works: each object is a Document of its own; Engine::doc is the active one
 and the others wait in Engine::objects_ (they move in and out, so GpuMesh moves now). A mesh stays in its own space;

@@ -547,6 +547,14 @@ void App::retopoShowSettings(bool inBar) {
   changed |= ImGui::Checkbox(L_("Alone"), &vo.retopoQuadsOnly);
   if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", T_("The quads shaded on their own, without the model"));
   ImGui::SameLine();
+  changed |= ImGui::Checkbox(L_("Red marks"), &vo.retopoShowMarks);
+  if (ImGui::IsItemHovered())
+    ImGui::SetTooltip("%s", T_("Red crosses mark spots worth a look. The notes under the last build say what they are:\n"
+                               "- parts too thin for quads this size, so they are left out (fingers, strands of hair)\n"
+                               "- places where zones meet in a tight spot, patched\n"
+                               "- with Mirror on, places where the two sides of the model aren't the same\n"
+                               "They change nothing in the quads: switching them off only hides them."));
+  ImGui::SameLine();
   changed |= ImGui::Checkbox(L_("Loops"), &vo.retopoLoops);
   if (ImGui::IsItemHovered())
     ImGui::SetTooltip("%s", T_("The poles as small crosses (blue: three edges, orange: five, red: more), and the edge loop\n"
@@ -775,13 +783,6 @@ void App::retopoPanel() {
   const auto& zones = engine.retopoZones();
   if (retopoStatsVersion != S.version && !retopoStrokeActive) {  // not every frame of a stroke
     retopoStatsVersion = S.version;
-    auto dens = engine.retopoDensity();
-    retopoArea = 0;
-    for (uint32_t f = 0; f < m.faceCount(); ++f) {
-      float dsum = 0;
-      for (uint32_t l = m.faceStart[f]; l < m.faceStart[f + 1]; ++l) dsum += dens[m.loopVert[l]];
-      retopoArea += m.faceArea3D(f) * dsum / float(m.faceStart[f + 1] - m.faceStart[f]);
-    }
     retopoPatchCount = S.zoneCount;
   }
   // (0.22) everything but the Make quads row scrolls: that row stays at the foot of the window
@@ -798,9 +799,15 @@ void App::retopoPanel() {
                        ImGuiSliderFlags_Logarithmic))
     engine.retopoChanged();
   float edge = 1.f / std::sqrt(std::max(S.quadsPerM2, 1e-3f));
-  ImGui::TextDisabled(T_("Quads about %.2g cm across; about %.0f quads over the model"), edge * 100.f, retopoArea * S.quadsPerM2);
+  const double asked = retopoStrokeActive ? S.quadsAsked : engine.retopoQuadsAsked();  // (not every frame of a stroke)
+  ImGui::TextDisabled(T_("Quads about %.2g cm across; about %.0f quads over the model"), edge * 100.f, asked);
   if (ImGui::IsItemHovered())
-    ImGui::SetTooltip("%s", T_("Model units are meters. Zones and the density brush raise or lower it where they are."));
+    ImGui::SetTooltip("%s", T_("Model units are meters. Zones and the density brush raise or lower it where they are\n"
+                               "(the count includes them)."));
+  if (asked > Engine::kRetopoPreviewMaxQuads)
+    ImGui::TextColored(ImVec4(1.f, 0.7f, 0.3f, 1.f), "%s",
+                       T_("That's a great many quads: no live preview, and Make quads may take minutes and many GB of memory.\n"
+                          "Check the zones' resolutions (Zone tool) and Quads per m²."));
   // ---- tools
   ImGui::SeparatorText(T_("Zones and flow"));
   auto toolButton = [&](const char* label, ViewportTool t, const char* tip) {
@@ -1120,6 +1127,8 @@ void App::retopoPanel() {
   } else {
     ImGui::TextDisabled("%s", T_("No quads yet"));
   }
+  if (!building && S.previewTooBig && S.livePreview)
+    ImGui::TextDisabled(T_("No live preview for about %.0f quads: Make quads makes them"), engine.retopoQuadsAsked());
 }
 
 }  // namespace patina

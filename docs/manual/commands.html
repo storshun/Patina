@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.8 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.9 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -978,7 +978,7 @@
 <tr><td><code>relax</code></td><td>integer</td><td>0 to 500, default 30</td><td>Smoothing passes of the quads' inner vertices (patches method): more evens the quads out, too many pulls them off sharp features</td></tr>
 </tbody></table>
 <h3 id="retopo-info"><code>retopo_info</code></h3>
-<p>Retopology: the patches, the density, the lines and strokes, and the last result.</p>
+<p>Retopology: the patches, the density, the lines and strokes, and the last result. quads_asked: about how many quads the settings ask for (zones and density counted); over 150,000 the live preview doesn't start (preview_too_big) and only retopo_build makes them.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>line_points</code></td><td>boolean</td><td></td><td>Also every zone line's points</td></tr>
 </tbody></table>
@@ -988,6 +988,7 @@
 <tr><td><code>lines_behind</code></td><td>shown \</td><td>darkened \</td><td>hidden</td><td></td><td>Zone lines and flow strokes behind the model: shown through it, darkened, or hidden</td></tr>
 <tr><td><code>loop_at</code></td><td>array</td><td></td><td>Light up the edge loop nearest this point of the model (with loops on)</td></tr>
 <tr><td><code>loops</code></td><td>boolean</td><td></td><td>Show the quads' poles, and light up the edge loop under the pointer</td></tr>
+<tr><td><code>marks</code></td><td>boolean</td><td></td><td>Show the red crosses over the quads: parts too thin for them (left out), tight spots patched where zones meet, and (with mirror) where the two sides of the model differ. The build's problems say which. Default true</td></tr>
 <tr><td><code>preview</code></td><td>boolean</td><td></td><td>The app's Retopology preview: show these in its 3D view whatever tool is chosen, with a quick set of quads following each change</td></tr>
 <tr><td><code>quads</code></td><td>boolean</td><td></td><td>Show the quads of the last build</td></tr>
 <tr><td><code>quads_only</code></td><td>boolean</td><td></td><td>Show the quads alone, shaded, instead of the model</td></tr>

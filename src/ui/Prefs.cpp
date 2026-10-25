@@ -157,7 +157,10 @@ void App::initKeymap(KeymapPreset preset) {
       {"stencil.toggle", N_("Stencil on / off"), N_("Painting"), S | ImGuiKey_T, S | ImGuiKey_T, 0, 0},
       {"view.focus", N_("Hide panels (distraction-free)"), N_("View"), ImGuiKey_Tab, C | ImGuiKey_Space, 0, 0},
       {"view.frame", N_("Frame mesh"), N_("View"), ImGuiKey_F, ImGuiKey_Home, 0, 0},
-      {"view.frame_alt", N_("Frame mesh (alternative)"), N_("View"), 0, ImGuiKey_KeypadDecimal, 0, 0},
+      {"view.frame_alt", N_("Frame mesh (alternative)"), N_("View"), 0, 0, 0, 0},
+      // (1.2.11) Shift+F; Numpad . in the Blender keymap, as Blender's View Selected (it framed the mesh before)
+      {"view.frame_selected", N_("Frame the selection (the model when nothing is selected)"), N_("View"), S | ImGuiKey_F,
+       ImGuiKey_KeypadDecimal, 0, 0},
       {"view.help", N_("Shortcuts window"), N_("View"), ImGuiKey_F1, ImGuiKey_F1, 0, 0},
       {"view.compare", N_("Split / compare view on / off"), N_("View"), ImGuiKey_Backslash, ImGuiKey_Backslash, 0, 0},
       {"view.compare_snapshot", N_("Compare: take a snapshot of the textures"), N_("View"), S | ImGuiKey_Backslash, S | ImGuiKey_Backslash, 0, 0},
@@ -207,7 +210,8 @@ void App::loadKeymap() {
       KeymapPreset preset;
       const char* oldDefault;
     };
-    static const Changed changed[] = {{4, "tool.blur", KeymapPreset::Blender, "U"}};
+    static const Changed changed[] = {{4, "tool.blur", KeymapPreset::Blender, "U"},
+                                      {5, "view.frame_alt", KeymapPreset::Blender, "KeypadDecimal"}};  // (1.2.11: View Selected)
     int version = j.value("version", 3);
     for (auto& a : keymap) {
       if (!bindings.contains(a.id) || !bindings[a.id].is_string()) continue;
@@ -226,7 +230,7 @@ void App::loadKeymap() {
 void App::saveKeymap() {
   json b = json::object();
   for (auto& a : keymap) b[a.id] = chordName(a.chord);
-  json j = {{"version", 4}, {"preset", keymapPreset == KeymapPreset::Blender ? "blender" : "patina"}, {"bindings", b}};
+  json j = {{"version", 5}, {"preset", keymapPreset == KeymapPreset::Blender ? "blender" : "patina"}, {"bindings", b}};
   if (!paths::writeFileAtomic(paths::ensureDir(paths::configDir()) / "keymap.json", j.dump(1)))
     setStatus(T_("Could not save keymap.json"));
 }

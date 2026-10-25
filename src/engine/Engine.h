@@ -206,6 +206,8 @@ class Engine {
   bool bakeDown(Mesh&& low, const std::string& lowPath, Document::BakeDownOptions o, json* report,
                 std::string* err = nullptr);
   void frameMesh();
+  // (1.2.11) the selected faces fill the 3D view (as Blender's View Selected); none selected: frameMesh. False then.
+  bool frameSelection();
   // (0.38) Side, top and bottom views (the numpad, the axis gizmo, Alt while orbiting, set_camera's view presets)
   // remember the view before them; viewBack() goes back to it, and a second time to the side view again.
   // `ortho`: the side view is orthographic until the camera turns away from it (Blender's Auto Perspective).

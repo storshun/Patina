@@ -1639,12 +1639,13 @@ Newer features that can be switched off (Preferences > Features). Without argume
 
 ### `frame_object`
 
-Frames an object in the 3D view (1.2), or the whole scene (all: true).
+Frames an object in the 3D view (1.2), the whole scene (all: true), or (1.2.11) the active object's selected faces (selection: true, as Shift+F / Blender's View Selected; the whole object when none are selected, framed_selection false then).
 
 | argument | type | range, default | description |
 |---|---|---|---|
 | `all` | boolean |  | The whole scene |
 | `object` | string |  | The object: its name as list_objects gives it, or its index (default: the active one) |
+| `selection` | boolean |  | The selected faces of the active object |
 
 ### `import_brushes`
 

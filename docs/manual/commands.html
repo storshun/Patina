@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.10 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.11 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -1222,10 +1222,11 @@
 <tr><td><code>on</code></td><td>boolean</td><td></td><td>Switch it on or off</td></tr>
 </tbody></table>
 <h3 id="frame-object"><code>frame_object</code></h3>
-<p>Frames an object in the 3D view (1.2), or the whole scene (all: true).</p>
+<p>Frames an object in the 3D view (1.2), the whole scene (all: true), or (1.2.11) the active object's selected faces (selection: true, as Shift+F / Blender's View Selected; the whole object when none are selected, framed_selection false then).</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>all</code></td><td>boolean</td><td></td><td>The whole scene</td></tr>
 <tr><td><code>object</code></td><td>string</td><td></td><td>The object: its name as list_objects gives it, or its index (default: the active one)</td></tr>
+<tr><td><code>selection</code></td><td>boolean</td><td></td><td>The selected faces of the active object</td></tr>
 </tbody></table>
 <h3 id="import-brushes"><code>import_brushes</code></h3>
 <p>Copies brush images (PNG, JPEG, TGA, BMP, GIF, PSD, EXR) or Photoshop brush files (.abr: each sampled tip a brush) into the user's brushes folder, in a folder named category if given (the Brushes panel's group), and makes brushes of them (1.2). A tip that is dark on a light ground paints with its dark part, light on dark with the light part, one with transparency with its opaque part. select: paint with the first one.</p>

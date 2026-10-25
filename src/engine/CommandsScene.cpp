@@ -196,10 +196,20 @@ void Engine::registerSceneCommands() {
          }});
 
   R.add({"frame_object",
-         "Frames an object in the 3D view (1.2), or the whole scene (all: true).",
-         schema({{"object", prop("string", kObjectArg)}, {"all", prop("boolean", "The whole scene")}}),
+         "Frames an object in the 3D view (1.2), the whole scene (all: true), or (1.2.11) the active object's "
+         "selected faces (selection: true, as Shift+F / Blender's View Selected; the whole object when none are "
+         "selected, framed_selection false then).",
+         schema({{"object", prop("string", kObjectArg)},
+                 {"all", prop("boolean", "The whole scene")},
+                 {"selection", prop("boolean", "The selected faces of the active object")}}),
          [](CommandContext& c, const json& a) {
            Engine& e = c.engine;
+           if (a.value("selection", false)) {
+             bool framed = e.frameSelection();
+             json r = e.camera.toJson();
+             r["framed_selection"] = framed;
+             return r;
+           }
            if (a.value("all", false)) {
              e.camera.frame(e.sceneBounds());
            } else {

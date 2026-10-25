@@ -7,7 +7,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Patina 1.2.10\n"
+"Project-Id-Version: Patina 1.2.11\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
@@ -73,7 +73,7 @@ msgstr ""
 msgid "Subsurface"
 msgstr ""
 
-#: src/engine/Features.cpp:9 src/ui/ViewPie.cpp:50
+#: src/engine/Features.cpp:9 src/ui/ViewPie.cpp:51
 msgid "Command palette"
 msgstr ""
 
@@ -924,7 +924,7 @@ msgstr ""
 #: src/engine/MaterialLibrary.cpp:83 src/engine/MaterialLibrary.cpp:94
 #: src/engine/MaterialLibrary.cpp:113 src/engine/MaterialLibrary.cpp:127
 #: src/engine/MaterialLibrary.cpp:152 src/ui/Palette.cpp:113
-#: src/ui/Palette.cpp:114 src/ui/Palette.cpp:118 src/ui/Prefs.cpp:707
+#: src/ui/Palette.cpp:114 src/ui/Palette.cpp:118 src/ui/Prefs.cpp:711
 #: src/ui/Tools04.cpp:794
 msgid "Layout"
 msgstr ""
@@ -1960,7 +1960,7 @@ msgid "Low-poly model"
 msgstr ""
 
 #: src/ui/App.cpp:130 src/ui/Palette.cpp:138 src/ui/Prefs.cpp:95
-#: src/ui/Tools04.cpp:385 src/ui/ViewPie.cpp:54
+#: src/ui/Tools04.cpp:385 src/ui/ViewPie.cpp:55
 msgid "Render image"
 msgstr ""
 
@@ -2580,7 +2580,7 @@ msgstr ""
 #: src/ui/BlenderLayout.cpp:44 src/ui/ContextMenus.cpp:189
 #: src/ui/ContextMenus.cpp:204 src/ui/Guided.cpp:49 src/ui/MaskStackUI.cpp:72
 #: src/ui/Prefs.cpp:107 src/ui/Toolbars.cpp:137 src/ui/Toolbars.cpp:138
-#: src/ui/UVEditor.cpp:788 src/ui/ViewPie.cpp:207
+#: src/ui/UVEditor.cpp:788 src/ui/ViewPie.cpp:209
 msgid "Paint"
 msgstr ""
 
@@ -2600,17 +2600,17 @@ msgstr ""
 #: src/ui/Prefs.cpp:144 src/ui/Prefs.cpp:145 src/ui/Prefs.cpp:148
 #: src/ui/Prefs.cpp:149 src/ui/Prefs.cpp:150 src/ui/Prefs.cpp:151
 #: src/ui/Prefs.cpp:152 src/ui/Prefs.cpp:153 src/ui/Prefs.cpp:158
-#: src/ui/Prefs.cpp:159 src/ui/Prefs.cpp:160 src/ui/Prefs.cpp:161
-#: src/ui/Prefs.cpp:162 src/ui/Prefs.cpp:163 src/ui/Prefs.cpp:172
-#: src/ui/Tools04.cpp:360 src/ui/UVEditor.cpp:597 src/ui/ViewPie.cpp:39
-#: src/ui/ViewPie.cpp:172 src/ui/ViewPie.cpp:177 src/ui/ViewPie.cpp:179
-#: src/ui/ViewPie.cpp:181 src/ui/ViewPie.cpp:184 src/ui/ViewPie.cpp:186
-#: src/ui/ViewPie.cpp:187
+#: src/ui/Prefs.cpp:159 src/ui/Prefs.cpp:160 src/ui/Prefs.cpp:162
+#: src/ui/Prefs.cpp:164 src/ui/Prefs.cpp:165 src/ui/Prefs.cpp:166
+#: src/ui/Prefs.cpp:175 src/ui/Tools04.cpp:360 src/ui/UVEditor.cpp:597
+#: src/ui/ViewPie.cpp:40 src/ui/ViewPie.cpp:174 src/ui/ViewPie.cpp:179
+#: src/ui/ViewPie.cpp:181 src/ui/ViewPie.cpp:183 src/ui/ViewPie.cpp:186
+#: src/ui/ViewPie.cpp:188 src/ui/ViewPie.cpp:189
 msgid "View"
 msgstr ""
 
 #: src/ui/BlenderLayout.cpp:219 src/ui/Guided.cpp:397 src/ui/Guided.cpp:1067
-#: src/ui/Panels.cpp:311 src/ui/Prefs.cpp:164 src/ui/Prefs.cpp:718
+#: src/ui/Panels.cpp:311 src/ui/Prefs.cpp:167 src/ui/Prefs.cpp:722
 #: src/ui/Tools04.cpp:770 src/ui/Tools04.cpp:787
 msgid "Blender"
 msgstr ""
@@ -2699,7 +2699,7 @@ msgid "Step"
 msgstr ""
 
 #: src/ui/BlenderLayout.cpp:410 src/ui/ObjectsUI.cpp:102
-#: src/ui/Palette.cpp:132 src/ui/Toolbars.cpp:288 src/ui/ViewPie.cpp:218
+#: src/ui/Palette.cpp:132 src/ui/Toolbars.cpp:288 src/ui/ViewPie.cpp:220
 msgid "Object"
 msgstr ""
 
@@ -2892,7 +2892,7 @@ msgstr ""
 msgid "No Layer Paints Here"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:87 src/ui/Prefs.cpp:692 src/ui/Tools027.cpp:64
+#: src/ui/ContextMenus.cpp:87 src/ui/Prefs.cpp:696 src/ui/Tools027.cpp:64
 #: src/ui/Tools034.cpp:48 src/ui/Tools04.cpp:440
 #, c-format
 msgid "%.0f%%"
@@ -2991,7 +2991,7 @@ msgstr ""
 
 #: src/ui/ContextMenus.cpp:148 src/ui/FaceSetsUI.cpp:147
 #: src/ui/FaceSetsUI.cpp:200 src/ui/Toolbars.cpp:147 src/ui/Tools027.cpp:82
-#: src/ui/UVEditor.cpp:535 src/ui/UVEditor.cpp:1331 src/ui/ViewPie.cpp:214
+#: src/ui/UVEditor.cpp:535 src/ui/UVEditor.cpp:1331 src/ui/ViewPie.cpp:216
 msgid "Select"
 msgstr ""
 
@@ -3047,28 +3047,28 @@ msgid "Tool"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:189 src/ui/Prefs.cpp:108 src/ui/Toolbars.cpp:139
-#: src/ui/ViewPie.cpp:208
+#: src/ui/ViewPie.cpp:210
 msgid "Erase"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:190 src/ui/MaskStackUI.cpp:70
 #: src/ui/MaskStackUI.cpp:73 src/ui/Prefs.cpp:109 src/ui/Toolbars.cpp:140
-#: src/ui/ViewPie.cpp:209
+#: src/ui/ViewPie.cpp:211
 msgid "Blur"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:190 src/ui/Prefs.cpp:111 src/ui/Toolbars.cpp:141
-#: src/ui/ViewPie.cpp:210
+#: src/ui/ViewPie.cpp:212
 msgid "Smudge"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:191 src/ui/Prefs.cpp:110 src/ui/Toolbars.cpp:143
-#: src/ui/ViewPie.cpp:211
+#: src/ui/ViewPie.cpp:213
 msgid "Clone"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:191 src/ui/MaskStackUI.cpp:72
-#: src/ui/Toolbars.cpp:144 src/ui/ViewPie.cpp:212
+#: src/ui/Toolbars.cpp:144 src/ui/ViewPie.cpp:214
 msgid "Fill"
 msgstr ""
 
@@ -3080,10 +3080,10 @@ msgstr ""
 msgid "Select Faces"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:194 src/ui/ContextMenus.cpp:287
+#: src/ui/ContextMenus.cpp:194 src/ui/ContextMenus.cpp:289
 #: src/ui/Guided.cpp:918 src/ui/Toolbars.cpp:148 src/ui/Toolbars.cpp:507
-#: src/ui/UVEditor.cpp:561 src/ui/UVEditor.cpp:842 src/ui/ViewPie.cpp:186
-#: src/ui/ViewPie.cpp:215
+#: src/ui/UVEditor.cpp:561 src/ui/UVEditor.cpp:842 src/ui/ViewPie.cpp:188
+#: src/ui/ViewPie.cpp:217
 msgid "Seams"
 msgstr ""
 
@@ -3113,11 +3113,11 @@ msgstr ""
 #: src/ui/Prefs.cpp:122 src/ui/Prefs.cpp:123 src/ui/Prefs.cpp:124
 #: src/ui/Prefs.cpp:125 src/ui/Prefs.cpp:126 src/ui/Prefs.cpp:127
 #: src/ui/Toolbars.cpp:146 src/ui/Toolbars.cpp:431 src/ui/Tools010.cpp:142
-#: src/ui/ViewPie.cpp:263 src/ui/ViewPie.cpp:264 src/ui/ViewPie.cpp:265
+#: src/ui/ViewPie.cpp:265 src/ui/ViewPie.cpp:266 src/ui/ViewPie.cpp:267
 msgid "UV"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:215 src/ui/Toolbars.cpp:299 src/ui/ViewPie.cpp:217
+#: src/ui/ContextMenus.cpp:215 src/ui/Toolbars.cpp:299 src/ui/ViewPie.cpp:219
 msgid "Note"
 msgstr ""
 
@@ -3168,7 +3168,7 @@ msgstr ""
 msgid "Surface 3D"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:240 src/ui/ContextMenus.cpp:351
+#: src/ui/ContextMenus.cpp:240 src/ui/ContextMenus.cpp:353
 msgid "Swap the Colors"
 msgstr ""
 
@@ -3188,241 +3188,245 @@ msgstr ""
 msgid "Frame the Model"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:271
+#: src/ui/ContextMenus.cpp:265 src/ui/UVEditor.cpp:598
+msgid "Frame the Selection"
+msgstr ""
+
+#: src/ui/ContextMenus.cpp:273
 msgid "Front"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:271
+#: src/ui/ContextMenus.cpp:273
 msgid "Back"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:271 src/ui/StencilUI.cpp:116
+#: src/ui/ContextMenus.cpp:273 src/ui/StencilUI.cpp:116
 msgid "Right"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:272 src/ui/StencilUI.cpp:116
+#: src/ui/ContextMenus.cpp:274 src/ui/StencilUI.cpp:116
 msgid "Left"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:272
+#: src/ui/ContextMenus.cpp:274
 msgid "Top"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:272
+#: src/ui/ContextMenus.cpp:274
 msgid "Bottom"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:277
+#: src/ui/ContextMenus.cpp:279
 msgid "Orthographic"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:278
+#: src/ui/ContextMenus.cpp:280
 msgid "Back to Your View"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:280
+#: src/ui/ContextMenus.cpp:282
 msgid "View Mode"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:286 src/ui/Toolbars.cpp:506 src/ui/ViewPie.cpp:184
+#: src/ui/ContextMenus.cpp:288 src/ui/Toolbars.cpp:506 src/ui/ViewPie.cpp:186
 msgid "Wireframe"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:288
+#: src/ui/ContextMenus.cpp:290
 msgid "Tint UV Islands"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:289
+#: src/ui/ContextMenus.cpp:291
 msgid "Note Pins"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:290
+#: src/ui/ContextMenus.cpp:292
 msgid "Environment Background"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:291
+#: src/ui/ContextMenus.cpp:293
 msgid "Use Baked AO"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:293 src/ui/RetopoUI.cpp:597
+#: src/ui/ContextMenus.cpp:295 src/ui/RetopoUI.cpp:597
 msgid "Retopology Preview"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:294
+#: src/ui/ContextMenus.cpp:296
 msgid "Axis Gizmo"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:296
+#: src/ui/ContextMenus.cpp:298
 msgid "Isolate the Current Texture Set"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:299
+#: src/ui/ContextMenus.cpp:301
 msgid "Hide the Panels"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:301
+#: src/ui/ContextMenus.cpp:303
 msgid "UI Scale"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:309
+#: src/ui/ContextMenus.cpp:311
 msgid "Navigation"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:313
+#: src/ui/ContextMenus.cpp:315
 msgid "Ctrl+right-drag always resizes the brush; the wheel always zooms."
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:317
+#: src/ui/ContextMenus.cpp:319
 msgid "Reset the Layout"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:326 src/ui/LayersPanel.cpp:1256
+#: src/ui/ContextMenus.cpp:328 src/ui/LayersPanel.cpp:1256
 msgid "(opened)"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:328
+#: src/ui/ContextMenus.cpp:330
 msgid "Go Back to Here"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:329 src/ui/PenUI.cpp:63 src/ui/Prefs.cpp:97
-#: src/ui/Prefs.cpp:810 src/ui/ViewPie.cpp:55
+#: src/ui/ContextMenus.cpp:331 src/ui/PenUI.cpp:63 src/ui/Prefs.cpp:97
+#: src/ui/Prefs.cpp:814 src/ui/ViewPie.cpp:56
 msgid "Undo"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:330 src/ui/Prefs.cpp:98 src/ui/ViewPie.cpp:56
+#: src/ui/ContextMenus.cpp:332 src/ui/Prefs.cpp:98 src/ui/ViewPie.cpp:57
 msgid "Redo"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:332
+#: src/ui/ContextMenus.cpp:334
 msgid "Clear the History"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:333
+#: src/ui/ContextMenus.cpp:335
 msgid "Frees its memory; the steps can't be undone after."
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:334 src/ui/ContextMenus.cpp:410
+#: src/ui/ContextMenus.cpp:336 src/ui/ContextMenus.cpp:412
 #: src/ui/PenUI.cpp:180 src/ui/Toolbars.cpp:586 src/ui/Toolbars.cpp:587
 #: src/ui/Tools010.cpp:253 src/ui/Tools030.cpp:124 src/ui/Tools034.cpp:81
 msgid "Clear"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:334
+#: src/ui/ContextMenus.cpp:336
 msgid "History cleared"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:349
+#: src/ui/ContextMenus.cpp:351
 msgid "Use as the Primary Color"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:350 src/ui/LayersPanel.cpp:1343
+#: src/ui/ContextMenus.cpp:352 src/ui/LayersPanel.cpp:1343
 msgid "Use as the Secondary Color"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:355
+#: src/ui/ContextMenus.cpp:357
 msgid "Add to the Swatches"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:357
+#: src/ui/ContextMenus.cpp:359
 msgid "Copy the Hex Code"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:360
+#: src/ui/ContextMenus.cpp:362
 msgid "Paste a Hex Code"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:367 src/ui/LayersPanel.cpp:1344
+#: src/ui/ContextMenus.cpp:369 src/ui/LayersPanel.cpp:1344
 msgid "Replace with the Primary Color"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:368
+#: src/ui/ContextMenus.cpp:370
 msgid "Move Left"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:369
+#: src/ui/ContextMenus.cpp:371
 msgid "Move Right"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:370 src/ui/LayersPanel.cpp:1174
+#: src/ui/ContextMenus.cpp:372 src/ui/LayersPanel.cpp:1174
 #: src/ui/LayersPanel.cpp:1345 src/ui/MaskStackUI.cpp:230
 #: src/ui/MaskStackUI.cpp:243 src/ui/ObjectsUI.cpp:207 src/ui/StencilUI.cpp:43
 #: src/ui/Tools035.cpp:54
 msgid "Remove"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:374
+#: src/ui/ContextMenus.cpp:376
 msgid "Clear the Recent Colors"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:384
+#: src/ui/ContextMenus.cpp:386
 msgid "Go There"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:388 src/ui/NotesUI.cpp:260 src/ui/Panels.cpp:203
+#: src/ui/ContextMenus.cpp:390 src/ui/NotesUI.cpp:260 src/ui/Panels.cpp:203
 #: src/ui/Prefs.cpp:97 src/ui/Prefs.cpp:98 src/ui/Prefs.cpp:99
 msgid "Edit"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:392
+#: src/ui/ContextMenus.cpp:394
 msgid "Reopen"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:392
+#: src/ui/ContextMenus.cpp:394
 msgid "Resolve"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:393
+#: src/ui/ContextMenus.cpp:395
 msgid "Copy the Text"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:395 src/ui/LayersPanel.cpp:160
+#: src/ui/ContextMenus.cpp:397 src/ui/LayersPanel.cpp:160
 #: src/ui/LayersPanel.cpp:887 src/ui/LayersPanel.cpp:888
 #: src/ui/NotesUI.cpp:161 src/ui/Tools030.cpp:84
 msgid "Delete"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:399
+#: src/ui/ContextMenus.cpp:401
 msgid "Copy the Log"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:404
+#: src/ui/ContextMenus.cpp:406
 msgid "Copy the Errors and Warnings"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:412
+#: src/ui/ContextMenus.cpp:414
 msgid "List the Commands"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:417 src/ui/LayersPanel.cpp:113
+#: src/ui/ContextMenus.cpp:419 src/ui/LayersPanel.cpp:113
 #: src/ui/Panels.cpp:210
 msgid "New Layer"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:424
+#: src/ui/ContextMenus.cpp:426
 msgid "Open All Folders"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:426
+#: src/ui/ContextMenus.cpp:428
 msgid "Close All Folders"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:428 src/ui/LayersPanel.cpp:211
+#: src/ui/ContextMenus.cpp:430 src/ui/LayersPanel.cpp:211
 msgid "Show All Layers (End Solo)"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:432
+#: src/ui/ContextMenus.cpp:434
 msgid "Import a Folder of Maps..."
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:433
+#: src/ui/ContextMenus.cpp:435
 msgid "New Procedural Material..."
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:443
+#: src/ui/ContextMenus.cpp:445
 msgid "Open Your Materials Folder"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:447
+#: src/ui/ContextMenus.cpp:449
 msgid "Open Your Brushes Folder"
 msgstr ""
 
@@ -3732,11 +3736,11 @@ msgstr ""
 msgid "Not exported yet"
 msgstr ""
 
-#: src/ui/Guided.cpp:395 src/ui/Prefs.cpp:713
+#: src/ui/Guided.cpp:395 src/ui/Prefs.cpp:717
 msgid "Guided"
 msgstr ""
 
-#: src/ui/Guided.cpp:396 src/ui/Prefs.cpp:716
+#: src/ui/Guided.cpp:396 src/ui/Prefs.cpp:720
 msgid "Full"
 msgstr ""
 
@@ -4362,7 +4366,7 @@ msgstr ""
 msgid "File names, layered PSD files, one layer or its mask, the baked maps"
 msgstr ""
 
-#: src/ui/Guided.cpp:1109 src/ui/ViewPie.cpp:52
+#: src/ui/Guided.cpp:1109 src/ui/ViewPie.cpp:53
 msgid "Export again"
 msgstr ""
 
@@ -5269,7 +5273,7 @@ msgstr ""
 msgid "Blend"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:1027 src/ui/ViewPie.cpp:39
+#: src/ui/LayersPanel.cpp:1027 src/ui/ViewPie.cpp:40
 msgid "Channels"
 msgstr ""
 
@@ -5961,7 +5965,7 @@ msgstr ""
 msgid "Remove the stack"
 msgstr ""
 
-#: src/ui/NotesUI.cpp:26 src/ui/NotesUI.cpp:123 src/ui/ViewPie.cpp:630
+#: src/ui/NotesUI.cpp:26 src/ui/NotesUI.cpp:123 src/ui/ViewPie.cpp:632
 msgid "(empty)"
 msgstr ""
 
@@ -6208,15 +6212,15 @@ msgstr ""
 msgid "Blender: the panels where Blender has them"
 msgstr ""
 
-#: src/ui/Palette.cpp:115 src/ui/Palette.cpp:116 src/ui/Prefs.cpp:696
+#: src/ui/Palette.cpp:115 src/ui/Palette.cpp:116 src/ui/Prefs.cpp:700
 msgid "Theme"
 msgstr ""
 
-#: src/ui/Palette.cpp:115 src/ui/Prefs.cpp:697
+#: src/ui/Palette.cpp:115 src/ui/Prefs.cpp:701
 msgid "Patina"
 msgstr ""
 
-#: src/ui/Palette.cpp:116 src/ui/Prefs.cpp:697
+#: src/ui/Palette.cpp:116 src/ui/Prefs.cpp:701
 msgid "Vivid Dark"
 msgstr ""
 
@@ -6252,11 +6256,11 @@ msgstr ""
 msgid "Window"
 msgstr ""
 
-#: src/ui/Palette.cpp:134 src/ui/Prefs.cpp:648
+#: src/ui/Palette.cpp:134 src/ui/Prefs.cpp:652
 msgid "Preferences"
 msgstr ""
 
-#: src/ui/Palette.cpp:135 src/ui/Prefs.cpp:283 src/ui/Prefs.cpp:653
+#: src/ui/Palette.cpp:135 src/ui/Prefs.cpp:287 src/ui/Prefs.cpp:657
 msgid "Keyboard shortcuts"
 msgstr ""
 
@@ -6265,7 +6269,7 @@ msgid "Help: shortcuts and usage"
 msgstr ""
 
 #: src/ui/Palette.cpp:137 src/ui/Prefs.cpp:92 src/ui/Tools030.cpp:27
-#: src/ui/ViewPie.cpp:51
+#: src/ui/ViewPie.cpp:52
 msgid "Export textures"
 msgstr ""
 
@@ -6355,7 +6359,7 @@ msgstr ""
 #: src/ui/Panels.cpp:107 src/ui/Panels.cpp:1751 src/ui/Prefs.cpp:89
 #: src/ui/Prefs.cpp:90 src/ui/Prefs.cpp:91 src/ui/Prefs.cpp:92
 #: src/ui/Prefs.cpp:93 src/ui/Prefs.cpp:94 src/ui/Prefs.cpp:95
-#: src/ui/Prefs.cpp:96 src/ui/Prefs.cpp:165 src/ui/Tools030.cpp:201
+#: src/ui/Prefs.cpp:96 src/ui/Prefs.cpp:168 src/ui/Tools030.cpp:201
 #: src/ui/Tools04.cpp:393
 msgid "File"
 msgstr ""
@@ -6978,7 +6982,7 @@ msgstr ""
 msgid "Metal override"
 msgstr ""
 
-#: src/ui/Panels.cpp:634 src/ui/Panels.cpp:1507 src/ui/Prefs.cpp:729
+#: src/ui/Panels.cpp:634 src/ui/Panels.cpp:1507 src/ui/Prefs.cpp:733
 #: src/ui/Tools04.cpp:430
 msgid "off"
 msgstr ""
@@ -7515,7 +7519,7 @@ msgstr ""
 msgid "Draws the other texture sets as dim ghosts in the viewport, and strokes only paint the current one"
 msgstr ""
 
-#: src/ui/Panels.cpp:1393 src/ui/Toolbars.cpp:454 src/ui/ViewPie.cpp:81
+#: src/ui/Panels.cpp:1393 src/ui/Toolbars.cpp:454 src/ui/ViewPie.cpp:82
 msgid "Set lock"
 msgstr ""
 
@@ -7524,7 +7528,7 @@ msgid "A stroke only paints the texture set it starts on"
 msgstr ""
 
 #: src/ui/Panels.cpp:1396 src/ui/Prefs.cpp:114 src/ui/UVEditor.cpp:806
-#: src/ui/ViewPie.cpp:214
+#: src/ui/ViewPie.cpp:216
 msgid "Select faces"
 msgstr ""
 
@@ -7673,7 +7677,7 @@ msgstr ""
 msgid "Texture sets changed - Blender gets the material slots with the next send"
 msgstr ""
 
-#: src/ui/Panels.cpp:1517 src/ui/Prefs.cpp:164
+#: src/ui/Panels.cpp:1517 src/ui/Prefs.cpp:167
 msgid "Send textures to Blender"
 msgstr ""
 
@@ -7816,7 +7820,7 @@ msgstr ""
 msgid "Baked maps are written when they are baked (Bake menu)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1673 src/ui/Prefs.cpp:352 src/ui/Tools030.cpp:66
+#: src/ui/Panels.cpp:1673 src/ui/Prefs.cpp:356 src/ui/Tools030.cpp:66
 msgid "(none)"
 msgstr ""
 
@@ -8048,7 +8052,7 @@ msgstr ""
 msgid "Hold I over the model: quick color pick, release to keep painting. Alt + right-click picks too"
 msgstr ""
 
-#: src/ui/Panels.cpp:1874 src/ui/Prefs.cpp:678
+#: src/ui/Panels.cpp:1874 src/ui/Prefs.cpp:682
 msgid "Hold Ctrl while painting to paint with the secondary color"
 msgstr ""
 
@@ -8450,7 +8454,7 @@ msgstr ""
 msgid "Middle click (orbit / pan)"
 msgstr ""
 
-#: src/ui/PenUI.cpp:63 src/ui/ViewPie.cpp:70
+#: src/ui/PenUI.cpp:63 src/ui/ViewPie.cpp:71
 msgid "Swap colors"
 msgstr ""
 
@@ -8641,15 +8645,15 @@ msgstr ""
 msgid "Add menu (layers, folders, smart materials)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:101 src/ui/ViewPie.cpp:58
+#: src/ui/Prefs.cpp:101 src/ui/ViewPie.cpp:59
 msgid "New paint layer"
 msgstr ""
 
-#: src/ui/Prefs.cpp:102 src/ui/ViewPie.cpp:59
+#: src/ui/Prefs.cpp:102 src/ui/ViewPie.cpp:60
 msgid "Group into a folder"
 msgstr ""
 
-#: src/ui/Prefs.cpp:103 src/ui/ViewPie.cpp:60
+#: src/ui/Prefs.cpp:103 src/ui/ViewPie.cpp:61
 msgid "Duplicate layer"
 msgstr ""
 
@@ -8657,7 +8661,7 @@ msgstr ""
 msgid "Make an instance (linked duplicate)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:105 src/ui/ViewPie.cpp:62
+#: src/ui/Prefs.cpp:105 src/ui/ViewPie.cpp:63
 msgid "Delete layer"
 msgstr ""
 
@@ -8670,9 +8674,9 @@ msgstr ""
 #: src/ui/Prefs.cpp:113 src/ui/Prefs.cpp:114 src/ui/Prefs.cpp:115
 #: src/ui/Prefs.cpp:116 src/ui/Prefs.cpp:117 src/ui/Prefs.cpp:118
 #: src/ui/Prefs.cpp:119 src/ui/Prefs.cpp:120 src/ui/Prefs.cpp:121
-#: src/ui/Prefs.cpp:146 src/ui/Prefs.cpp:166 src/ui/Prefs.cpp:169
-#: src/ui/Prefs.cpp:170 src/ui/Prefs.cpp:171 src/ui/Toolbars.cpp:124
-#: src/ui/ViewPie.cpp:229 src/ui/ViewPie.cpp:231 src/ui/ViewPie.cpp:240
+#: src/ui/Prefs.cpp:146 src/ui/Prefs.cpp:169 src/ui/Prefs.cpp:172
+#: src/ui/Prefs.cpp:173 src/ui/Prefs.cpp:174 src/ui/Toolbars.cpp:124
+#: src/ui/ViewPie.cpp:231 src/ui/ViewPie.cpp:233 src/ui/ViewPie.cpp:242
 msgid "Tools"
 msgstr ""
 
@@ -8700,11 +8704,11 @@ msgstr ""
 msgid "Retopology: zone lines"
 msgstr ""
 
-#: src/ui/Prefs.cpp:119 src/ui/ViewPie.cpp:220
+#: src/ui/Prefs.cpp:119 src/ui/ViewPie.cpp:222
 msgid "Retopology: choose a zone"
 msgstr ""
 
-#: src/ui/Prefs.cpp:120 src/ui/ViewPie.cpp:221
+#: src/ui/Prefs.cpp:120 src/ui/ViewPie.cpp:223
 msgid "Retopology: flow strokes"
 msgstr ""
 
@@ -8720,7 +8724,7 @@ msgstr ""
 msgid "Select all faces, or none when some are selected"
 msgstr ""
 
-#: src/ui/Prefs.cpp:124 src/ui/ViewPie.cpp:263
+#: src/ui/Prefs.cpp:124 src/ui/ViewPie.cpp:265
 msgid "Select no faces"
 msgstr ""
 
@@ -8744,11 +8748,11 @@ msgstr ""
 msgid "Swap primary / secondary color"
 msgstr ""
 
-#: src/ui/Prefs.cpp:130 src/ui/ViewPie.cpp:71
+#: src/ui/Prefs.cpp:130 src/ui/ViewPie.cpp:72
 msgid "Brush smaller"
 msgstr ""
 
-#: src/ui/Prefs.cpp:131 src/ui/ViewPie.cpp:72
+#: src/ui/Prefs.cpp:131 src/ui/ViewPie.cpp:73
 msgid "Brush bigger"
 msgstr ""
 
@@ -8852,7 +8856,7 @@ msgstr ""
 msgid "Stencil: hold and drag to move, Shift+drag to rotate, wheel to scale"
 msgstr ""
 
-#: src/ui/Prefs.cpp:157 src/ui/ViewPie.cpp:86
+#: src/ui/Prefs.cpp:157 src/ui/ViewPie.cpp:87
 msgid "Stencil on / off"
 msgstr ""
 
@@ -8860,7 +8864,7 @@ msgstr ""
 msgid "Hide panels (distraction-free)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:159 src/ui/ViewPie.cpp:88
+#: src/ui/Prefs.cpp:159 src/ui/ViewPie.cpp:89
 msgid "Frame mesh"
 msgstr ""
 
@@ -8868,232 +8872,236 @@ msgstr ""
 msgid "Frame mesh (alternative)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:161
+#: src/ui/Prefs.cpp:162
+msgid "Frame the selection (the model when nothing is selected)"
+msgstr ""
+
+#: src/ui/Prefs.cpp:164
 msgid "Shortcuts window"
 msgstr ""
 
-#: src/ui/Prefs.cpp:162
+#: src/ui/Prefs.cpp:165
 msgid "Split / compare view on / off"
 msgstr ""
 
-#: src/ui/Prefs.cpp:163
+#: src/ui/Prefs.cpp:166
 msgid "Compare: take a snapshot of the textures"
 msgstr ""
 
-#: src/ui/Prefs.cpp:165
+#: src/ui/Prefs.cpp:168
 msgid "Add a model to the scene (an object with its own layers)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:166
+#: src/ui/Prefs.cpp:169
 msgid "Object tool: pick, move, turn and scale the scene's objects (again: the next of the three)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:169
+#: src/ui/Prefs.cpp:172
 msgid "Object tool: move the object with the mouse (X, Y, Z: one axis; click: keep it)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:170
+#: src/ui/Prefs.cpp:173
 msgid "Object tool: turn the object about the line of sight (X, Y, Z: an axis; click: keep it)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:171
+#: src/ui/Prefs.cpp:174
 msgid "Object tool: scale the object evenly (X, Y, Z: along one axis; click: keep it)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:172
+#: src/ui/Prefs.cpp:175
 msgid "Only the active object (Local view) on / off"
 msgstr ""
 
-#: src/ui/Prefs.cpp:187
+#: src/ui/Prefs.cpp:190
 #, c-format
 msgid "%s keyboard shortcuts"
 msgstr ""
 
-#: src/ui/Prefs.cpp:231
+#: src/ui/Prefs.cpp:235
 msgid "Could not save keymap.json"
 msgstr ""
 
-#: src/ui/Prefs.cpp:288
+#: src/ui/Prefs.cpp:292
 msgid "Keymap"
 msgstr ""
 
-#: src/ui/Prefs.cpp:298
+#: src/ui/Prefs.cpp:302
 msgid ""
 "Blender: the keys Blender uses for the same actions (S samples a color, F resizes the brush,\n"
 "Shift+D duplicates, Shift+A adds...). Switching also sets the mouse navigation;\n"
 "change it back in Edit > Preferences. Your own changes to the keys are replaced."
 msgstr ""
 
-#: src/ui/Prefs.cpp:301
+#: src/ui/Prefs.cpp:305
 #, c-format
 msgid "Click a shortcut, then press the new key combination. Esc cancels, Backspace clears it. Saved to %s."
 msgstr ""
 
-#: src/ui/Prefs.cpp:304
+#: src/ui/Prefs.cpp:308
 msgid "Reset all to defaults"
 msgstr ""
 
-#: src/ui/Prefs.cpp:309
+#: src/ui/Prefs.cpp:313
 #, c-format
 msgid "(defaults of the %s keymap)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:329
+#: src/ui/Prefs.cpp:333
 msgid "Action"
 msgstr ""
 
-#: src/ui/Prefs.cpp:330
+#: src/ui/Prefs.cpp:334
 msgid "Shortcut"
 msgstr ""
 
-#: src/ui/Prefs.cpp:352
+#: src/ui/Prefs.cpp:356
 msgid "press a key..."
 msgstr ""
 
-#: src/ui/Prefs.cpp:357
+#: src/ui/Prefs.cpp:361
 msgid "Also used by another action"
 msgstr ""
 
-#: src/ui/Prefs.cpp:360
+#: src/ui/Prefs.cpp:364
 msgid "reset"
 msgstr ""
 
-#: src/ui/Prefs.cpp:656
+#: src/ui/Prefs.cpp:660
 msgid "Blender keymap"
 msgstr ""
 
-#: src/ui/Prefs.cpp:656
+#: src/ui/Prefs.cpp:660
 msgid "Patina keymap"
 msgstr ""
 
-#: src/ui/Prefs.cpp:661
+#: src/ui/Prefs.cpp:665
 msgid "Blender's keys: S samples a color, X flips colors, F / Shift+F set brush size / opacity (G / Shift+G flow / hardness, Ctrl+F the angle), Shift+A adds a layer, Shift+D duplicates, Ctrl+G groups, Numpad / solos, Home frames, Ctrl+Space hides the panels. Choosing a keymap also sets the navigation below."
 msgstr ""
 
-#: src/ui/Prefs.cpp:665
+#: src/ui/Prefs.cpp:669
 msgid "Patina's own keys (see Help > Shortcuts & usage). Choosing a keymap also sets the navigation below."
 msgstr ""
 
-#: src/ui/Prefs.cpp:668
+#: src/ui/Prefs.cpp:672
 msgid "Edit individual shortcuts..."
 msgstr ""
 
-#: src/ui/Prefs.cpp:670
+#: src/ui/Prefs.cpp:674
 msgid "Show all shortcuts"
 msgstr ""
 
-#: src/ui/Prefs.cpp:671
+#: src/ui/Prefs.cpp:675
 msgid "Mouse"
 msgstr ""
 
-#: src/ui/Prefs.cpp:680
+#: src/ui/Prefs.cpp:684
 msgid "Side, top and bottom views are orthographic"
 msgstr ""
 
-#: src/ui/Prefs.cpp:682
+#: src/ui/Prefs.cpp:686
 msgid ""
 "The numpad, the axis gizmo and Alt while orbiting show them without perspective, until you\n"
 "turn away (Blender's Auto Perspective). Numpad 0 goes back to the view you had before."
 msgstr ""
 
-#: src/ui/Prefs.cpp:685
+#: src/ui/Prefs.cpp:689
 msgid "Turn to the side views (instead of jumping)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:686
+#: src/ui/Prefs.cpp:690
 msgid "A click on the axis gizmo turns the view in a quarter second."
 msgstr ""
 
-#: src/ui/Prefs.cpp:689
+#: src/ui/Prefs.cpp:693
 msgid "Display"
 msgstr ""
 
-#: src/ui/Prefs.cpp:692
+#: src/ui/Prefs.cpp:696
 msgid "UI scale"
 msgstr ""
 
-#: src/ui/Prefs.cpp:702
+#: src/ui/Prefs.cpp:706
 msgid ""
 "KDE Plasma's Vivid Dark: navy panels and a cyan accent. The same colors as the\n"
 "\"Vivid Dark\" Blender theme, so the two programs look alike."
 msgstr ""
 
-#: src/ui/Prefs.cpp:704
+#: src/ui/Prefs.cpp:708
 msgid "Patina's own: gray panels and a copper accent."
 msgstr ""
 
-#: src/ui/Prefs.cpp:720 src/ui/Tools04.cpp:803
+#: src/ui/Prefs.cpp:724 src/ui/Tools04.cpp:803
 msgid ""
 "Arranged as Blender is: the steps as workspace tabs, the Outliner and the Properties\n"
 "editor at the right, the asset shelf under the 3D view."
 msgstr ""
 
-#: src/ui/Prefs.cpp:723
+#: src/ui/Prefs.cpp:727
 msgid "Names beside the toolbar icons"
 msgstr ""
 
-#: src/ui/Prefs.cpp:726
+#: src/ui/Prefs.cpp:730
 msgid "Saving"
 msgstr ""
 
-#: src/ui/Prefs.cpp:729
+#: src/ui/Prefs.cpp:733
 msgid "Autosave every"
 msgstr ""
 
-#: src/ui/Prefs.cpp:729
+#: src/ui/Prefs.cpp:733
 #, c-format
 msgid "%d min"
 msgstr ""
 
-#: src/ui/Prefs.cpp:731
+#: src/ui/Prefs.cpp:735
 msgid ""
 "A copy of your work goes to the cache folder this often while there are unsaved changes,\n"
 "written in the background. After a crash, Patina offers to bring it back."
 msgstr ""
 
-#: src/ui/Prefs.cpp:738
+#: src/ui/Prefs.cpp:742
 msgid "Features"
 msgstr ""
 
-#: src/ui/Prefs.cpp:744
+#: src/ui/Prefs.cpp:748
 msgid "Newer features. Switch off any that get in your way; they can come back at any time."
 msgstr ""
 
-#: src/ui/Prefs.cpp:763
+#: src/ui/Prefs.cpp:767
 #, c-format
 msgid "Saved to %s"
 msgstr ""
 
-#: src/ui/Prefs.cpp:783
+#: src/ui/Prefs.cpp:787
 msgid "Patina - error"
 msgstr ""
 
-#: src/ui/Prefs.cpp:790
+#: src/ui/Prefs.cpp:794
 msgid "Copy message"
 msgstr ""
 
-#: src/ui/Prefs.cpp:792
+#: src/ui/Prefs.cpp:796
 msgid "OK"
 msgstr ""
 
-#: src/ui/Prefs.cpp:815
+#: src/ui/Prefs.cpp:819
 msgid "Undo steps"
 msgstr ""
 
-#: src/ui/Prefs.cpp:816
+#: src/ui/Prefs.cpp:820
 msgid "How many steps each object's history keeps (default 100)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:821
+#: src/ui/Prefs.cpp:825
 msgid "Undo memory (RAM)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:821
+#: src/ui/Prefs.cpp:825
 #, c-format
 msgid "%.1f GB"
 msgstr ""
 
-#: src/ui/Prefs.cpp:824
+#: src/ui/Prefs.cpp:828
 #, c-format
 msgid ""
 "Older undo steps are compressed into RAM. Past this much, the oldest steps are dropped,\n"
@@ -9101,22 +9109,22 @@ msgid ""
 "(1 to 8 GB): %.1f GB. Undo is never written to disk, to spare your SSD."
 msgstr ""
 
-#: src/ui/Prefs.cpp:830
+#: src/ui/Prefs.cpp:834
 msgid "Instant undo (graphics card)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:830
+#: src/ui/Prefs.cpp:834
 #, c-format
 msgid "%d MB"
 msgstr ""
 
-#: src/ui/Prefs.cpp:833
+#: src/ui/Prefs.cpp:837
 msgid ""
 "The latest steps keep their copies on the graphics card, so they undo at once (default 1024 MB).\n"
 "Past this much, older steps are compressed into RAM: they undo a moment slower."
 msgstr ""
 
-#: src/ui/Prefs.cpp:835
+#: src/ui/Prefs.cpp:839
 #, c-format
 msgid "Now: %.0f MB on the graphics card, %.0f MB compressed"
 msgstr ""
@@ -9646,7 +9654,7 @@ msgstr ""
 msgid "Export .obj..."
 msgstr ""
 
-#: src/ui/RetopoUI.cpp:1026 src/ui/ViewPie.cpp:92
+#: src/ui/RetopoUI.cpp:1026 src/ui/ViewPie.cpp:94
 msgid "Send to Blender"
 msgstr ""
 
@@ -9942,16 +9950,16 @@ msgstr ""
 msgid "Stencil  %.0f%%  %.0f deg"
 msgstr ""
 
-#: src/ui/Toolbars.cpp:101 src/ui/ViewPie.cpp:529
+#: src/ui/Toolbars.cpp:101 src/ui/ViewPie.cpp:531
 #, c-format
 msgid "Shortcut: %s"
 msgstr ""
 
-#: src/ui/Toolbars.cpp:101 src/ui/ViewPie.cpp:529
+#: src/ui/Toolbars.cpp:101 src/ui/ViewPie.cpp:531
 msgid "No Shortcut"
 msgstr ""
 
-#: src/ui/Toolbars.cpp:102 src/ui/ViewPie.cpp:530
+#: src/ui/Toolbars.cpp:102 src/ui/ViewPie.cpp:532
 msgid "Change Shortcut..."
 msgstr ""
 
@@ -10003,7 +10011,7 @@ msgid ""
 "A click toggles one edge; Shift+click continues from the last seam's end."
 msgstr ""
 
-#: src/ui/Toolbars.cpp:150 src/ui/ViewPie.cpp:216
+#: src/ui/Toolbars.cpp:150 src/ui/ViewPie.cpp:218
 msgid "Island"
 msgstr ""
 
@@ -10152,7 +10160,7 @@ msgstr ""
 msgid "Dabs placed in texture space"
 msgstr ""
 
-#: src/ui/Toolbars.cpp:447 src/ui/ViewPie.cpp:79
+#: src/ui/Toolbars.cpp:447 src/ui/ViewPie.cpp:80
 msgid "Topology lock"
 msgstr ""
 
@@ -10162,7 +10170,7 @@ msgid ""
 "Parts that touch or overlap on screen but are separate pieces of mesh stay clean."
 msgstr ""
 
-#: src/ui/Toolbars.cpp:451 src/ui/ViewPie.cpp:80
+#: src/ui/Toolbars.cpp:451 src/ui/ViewPie.cpp:81
 msgid "Island lock"
 msgstr ""
 
@@ -10262,8 +10270,8 @@ msgid ""
 "faces, or every face of its material slot (the same Blender material)"
 msgstr ""
 
-#: src/ui/Toolbars.cpp:580 src/ui/Toolbars.cpp:581 src/ui/ViewPie.cpp:64
-#: src/ui/ViewPie.cpp:265
+#: src/ui/Toolbars.cpp:580 src/ui/Toolbars.cpp:581 src/ui/ViewPie.cpp:65
+#: src/ui/ViewPie.cpp:267
 msgid "Make island"
 msgstr ""
 
@@ -11586,7 +11594,7 @@ msgstr ""
 msgid "Transparent background"
 msgstr ""
 
-#: src/ui/Tools04.cpp:409 src/ui/ViewPie.cpp:181 src/ui/Viewport3D.cpp:22
+#: src/ui/Tools04.cpp:409 src/ui/ViewPie.cpp:183 src/ui/Viewport3D.cpp:22
 msgid "Path traced"
 msgstr ""
 
@@ -12584,10 +12592,6 @@ msgstr ""
 msgid "Face Sets..."
 msgstr ""
 
-#: src/ui/UVEditor.cpp:598
-msgid "Frame the Selection"
-msgstr ""
-
 #: src/ui/UVEditor.cpp:599
 msgid "Frame 0-1"
 msgstr ""
@@ -12892,7 +12896,7 @@ msgstr ""
 msgid "Back view"
 msgstr ""
 
-#: src/ui/ViewGizmo.cpp:250 src/ui/ViewPie.cpp:83
+#: src/ui/ViewGizmo.cpp:250 src/ui/ViewPie.cpp:84
 msgid "Back to your view"
 msgstr ""
 
@@ -12908,335 +12912,339 @@ msgstr ""
 msgid "No view to go back to: go to a side, top or bottom view first (numpad, the axis gizmo)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:39
+#: src/ui/ViewPie.cpp:40
 msgid "Edit mode"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:39
+#: src/ui/ViewPie.cpp:40
 msgid "Quick Favorites"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:53
+#: src/ui/ViewPie.cpp:54
 msgid "Save incremental"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:57
+#: src/ui/ViewPie.cpp:58
 msgid "Add menu"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:61
+#: src/ui/ViewPie.cpp:62
 msgid "Make an instance"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:63
+#: src/ui/ViewPie.cpp:64
 msgid "Solo the layer"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:65 src/ui/ViewPie.cpp:264
+#: src/ui/ViewPie.cpp:66 src/ui/ViewPie.cpp:266
 msgid "Select all"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:66 src/ui/ViewPie.cpp:263
+#: src/ui/ViewPie.cpp:67 src/ui/ViewPie.cpp:265
 msgid "Clear selection"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:67
+#: src/ui/ViewPie.cpp:68
 msgid "Grow selection"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:68
+#: src/ui/ViewPie.cpp:69
 msgid "Shrink selection"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:69
+#: src/ui/ViewPie.cpp:70
 msgid "Unpin islands"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:73
+#: src/ui/ViewPie.cpp:74
 msgid "Brush size"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:74
+#: src/ui/ViewPie.cpp:75
 msgid "Brush opacity"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:75
+#: src/ui/ViewPie.cpp:76
 msgid "Brush flow"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:76
+#: src/ui/ViewPie.cpp:77
 msgid "Brush hardness"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:77
+#: src/ui/ViewPie.cpp:78
 msgid "Brush angle"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:78
+#: src/ui/ViewPie.cpp:79
 msgid "X mirror"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:82
+#: src/ui/ViewPie.cpp:83
 msgid "Isolate the texture set"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:84
+#: src/ui/ViewPie.cpp:85
 msgid "Record a macro"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:85
+#: src/ui/ViewPie.cpp:86
 msgid "Play the macro"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:87
+#: src/ui/ViewPie.cpp:88
 msgid "Hide panels"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:89
-msgid "Shortcuts"
-msgstr ""
-
 #: src/ui/ViewPie.cpp:90
-msgid "Compare view"
+msgid "Frame selection"
 msgstr ""
 
 #: src/ui/ViewPie.cpp:91
+msgid "Shortcuts"
+msgstr ""
+
+#: src/ui/ViewPie.cpp:92
+msgid "Compare view"
+msgstr ""
+
+#: src/ui/ViewPie.cpp:93
 msgid "Compare snapshot"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:172
+#: src/ui/ViewPie.cpp:174
 msgid "Lit"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:172
+#: src/ui/ViewPie.cpp:174
 msgid "The material, lit by the environment: the usual view"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:177 src/ui/Viewport3D.cpp:22
+#: src/ui/ViewPie.cpp:179 src/ui/Viewport3D.cpp:22
 msgid "Solid"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:177
+#: src/ui/ViewPie.cpp:179
 msgid "The shape alone: light gray, lit, no textures"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:179
+#: src/ui/ViewPie.cpp:181
 msgid "Unlit"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:179
+#: src/ui/ViewPie.cpp:181
 msgid "The colors without the light (the base color); again: the view before"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:182
+#: src/ui/ViewPie.cpp:184
 msgid "Real shadows, reflections and bounced light; cleaner the longer nothing changes"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:184
+#: src/ui/ViewPie.cpp:186
 msgid "The mesh's edges over the model"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:186
+#: src/ui/ViewPie.cpp:188
 msgid "The UV seams in red"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:187
+#: src/ui/ViewPie.cpp:189
 msgid "Retopo preview"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:188
+#: src/ui/ViewPie.cpp:190
 msgid "The retopology's zones and quads over the model, whatever tool is chosen"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:195
+#: src/ui/ViewPie.cpp:197
 #, c-format
 msgid "Show %s (again: the view before)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:195
+#: src/ui/ViewPie.cpp:197
 msgid "View mode"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:207
+#: src/ui/ViewPie.cpp:209
 msgid "The Paint tool"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:208
+#: src/ui/ViewPie.cpp:210
 msgid "The Erase tool"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:209
+#: src/ui/ViewPie.cpp:211
 msgid "The Blur tool"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:210
+#: src/ui/ViewPie.cpp:212
 msgid "The Smudge tool"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:211
+#: src/ui/ViewPie.cpp:213
 msgid "The Clone tool (Ctrl+click sets the source)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:212
+#: src/ui/ViewPie.cpp:214
 msgid "Polygon fill: a face, an island, a part..."
 msgstr ""
 
-#: src/ui/ViewPie.cpp:213
+#: src/ui/ViewPie.cpp:215
 msgid "Picker"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:213
+#: src/ui/ViewPie.cpp:215
 msgid "The color picker"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:215
+#: src/ui/ViewPie.cpp:217
 msgid "Mark and clear UV seams"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:216
+#: src/ui/ViewPie.cpp:218
 msgid "The Island brush: paint a part, then make it an island"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:217
+#: src/ui/ViewPie.cpp:219
 msgid "Pin a comment to the model"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:218
+#: src/ui/ViewPie.cpp:220
 msgid "The Object tool: pick, move, turn and scale the scene's objects"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:219 src/ui/ViewPie.cpp:240
+#: src/ui/ViewPie.cpp:221 src/ui/ViewPie.cpp:242
 msgid "Retopo: lines"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:219
+#: src/ui/ViewPie.cpp:221
 msgid "Retopology: zone lines (the Lines tool)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:220
+#: src/ui/ViewPie.cpp:222
 msgid "Retopo: zones"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:221
+#: src/ui/ViewPie.cpp:223
 msgid "Retopo: flow"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:222
+#: src/ui/ViewPie.cpp:224
 msgid "Retopo: density"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:222
+#: src/ui/ViewPie.cpp:224
 msgid "Retopology: the density brush"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:231 src/ui/ViewPie.cpp:240
+#: src/ui/ViewPie.cpp:233 src/ui/ViewPie.cpp:242
 msgid "Retopo: edge loops"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:231
+#: src/ui/ViewPie.cpp:233
 msgid "Retopology: strokes that make edge loops (the Flow tool)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:241
+#: src/ui/ViewPie.cpp:243
 msgid "Retopology: strokes that make edge loops (the Flow tool); again: zone lines"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:242
+#: src/ui/ViewPie.cpp:244
 msgid "Retopology: zone lines (the Lines tool); again: strokes that make edge loops"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:264
+#: src/ui/ViewPie.cpp:266
 msgid "Select every face"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:266
+#: src/ui/ViewPie.cpp:268
 msgid "Unwrap the painted / selected faces as one upright UV island"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:310
+#: src/ui/ViewPie.cpp:312
 msgid "Add a favorite"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:310
+#: src/ui/ViewPie.cpp:312
 msgid "Choose what goes here (right-click any toolbar button to add it)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:349 src/ui/ViewPie.cpp:518
+#: src/ui/ViewPie.cpp:351 src/ui/ViewPie.cpp:520
 msgid "Remove from Quick Favorites"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:356
+#: src/ui/ViewPie.cpp:358
 msgid "Add to Quick Favorites"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:356
+#: src/ui/ViewPie.cpp:358
 msgid "Quick Favorites Are Full (Remove One First)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:358
+#: src/ui/ViewPie.cpp:360
 #, c-format
 msgid "Added to Quick Favorites (%s)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:364
+#: src/ui/ViewPie.cpp:366
 #, c-format
 msgid "Quick Favorites: place %d of 8"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:368
+#: src/ui/ViewPie.cpp:370
 msgid "Search: a tool, a view, a shortcut..."
 msgstr ""
 
-#: src/ui/ViewPie.cpp:384
+#: src/ui/ViewPie.cpp:386
 #, c-format
 msgid "Quick Favorites: %s"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:418
+#: src/ui/ViewPie.cpp:420
 msgid "Empty this place"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:471
+#: src/ui/ViewPie.cpp:473
 #, c-format
 msgid "%s pie: %s"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:517
+#: src/ui/ViewPie.cpp:519
 msgid "Replace..."
 msgstr ""
 
-#: src/ui/ViewPie.cpp:590
+#: src/ui/ViewPie.cpp:592
 msgid "Click an item (Esc: close)"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:601
+#: src/ui/ViewPie.cpp:603
 msgid "Pie menus"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:609
+#: src/ui/ViewPie.cpp:611
 msgid "no key"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:614
+#: src/ui/ViewPie.cpp:616
 #, c-format
 msgid "Hold the key over the 3D view, point at an item and let go (or tap the key, then click). %s: the view. %s: the channels. %s: the edit modes. %s: Quick Favorites, the eight below. Right-click a toolbar button or a pie item to add it."
 msgstr ""
 
-#: src/ui/ViewPie.cpp:619
+#: src/ui/ViewPie.cpp:621
 #, c-format
 msgid "Hold %s over the 3D view, point at an item and let go (or tap it, then click)."
 msgstr ""
 
-#: src/ui/ViewPie.cpp:630
+#: src/ui/ViewPie.cpp:632
 #, c-format
 msgid "%d. %s"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:634
+#: src/ui/ViewPie.cpp:636
 msgid "Choose what goes here"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:642
+#: src/ui/ViewPie.cpp:644
 msgid "Reset Quick Favorites"
 msgstr ""
 

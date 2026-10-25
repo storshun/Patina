@@ -852,6 +852,7 @@ void App::drawViewport(bool fullscreen) {
     if (keyPressed("brush.smaller", true)) P.brush.size = std::max(1.f, P.brush.size / 1.15f);
     if (keyPressed("brush.bigger", true)) P.brush.size = std::min(2000.f, P.brush.size * 1.15f);
     if (keyPressed("view.frame") || keyPressed("view.frame_alt")) engine.frameMesh();
+    if (keyPressed("view.frame_selected")) engine.frameSelection();
     // the side views jump (0.38: and are remembered, orthographic with autoOrtho; Numpad 0 goes back)
     auto numpadView = [&](const char* name) {
       float y, p;

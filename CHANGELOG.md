@@ -3,6 +3,21 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.11 (2026-10-25)
+
+### Added
+
+- **Frame the selection in the 3D view**, as Blender's View Selected: the selected faces fill the view, or the whole
+  model when nothing is selected. It's **Shift+F** in the Patina keymap and **Numpad .** in the Blender keymap
+  (Numpad . framed the whole model before). It's also in the view pie (**Z**, down right) and the View menu, as
+  **Frame the Selection**. MCP: `frame_object` `selection`.
+
+### Changed
+
+- The view pie's down-right item is now Frame selection. The retopology preview it had is still on the bar over the
+  3D view and in the View menu.
+- The manual's pie menus section now says "radial menus" too, so a search for either finds it.
+
 ## 1.2.10 (2026-10-25)
 
 ### Added

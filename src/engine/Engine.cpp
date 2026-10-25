@@ -95,6 +95,22 @@ void Engine::frameMesh() {
   else camera.frame(sceneBounds());  // (1.2) the whole scene
 }
 
+bool Engine::frameSelection() {
+  if (!doc.hasMesh()) return false;
+  const Mesh& m = doc.mesh;
+  AABB b;
+  const mat4 w = doc.toWorld();
+  for (uint32_t f : doc.selectedFaces())
+    for (uint32_t l = m.faceStart[f]; l < m.faceStart[f + 1]; ++l) b.add(vec3(w * vec4(m.positions[m.loopVert[l]], 1.f)));
+  if (!b.valid()) {
+    frameMesh();
+    return false;
+  }
+  camera.frame(b);
+  camera.updateClip(sceneBounds());  // (the rest of the model stays inside the view's depth)
+  return true;
+}
+
 void Engine::snapView(float yaw, float pitch, bool ortho, const Camera* before) {
   ViewMemory& M = viewMemory;
   checkViewSnap();

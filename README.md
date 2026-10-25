@@ -266,7 +266,23 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.10 (2026-10-25)
+### 1.2.11 (2026-10-25)
+
+#### Added
+
+- **Frame the selection in the 3D view**, as Blender's View Selected: the selected faces fill the view, or the whole
+  model when nothing is selected. It's **Shift+F** in the Patina keymap and **Numpad .** in the Blender keymap
+  (Numpad . framed the whole model before). It's also in the view pie (**Z**, down right) and the View menu, as
+  **Frame the Selection**. MCP: `frame_object` `selection`.
+
+#### Changed
+
+- The view pie's down-right item is now Frame selection. The retopology preview it had is still on the bar over the
+  3D view and in the View menu.
+- The manual's pie menus section now says "radial menus" too, so a search for either finds it.
+
+<details>
+<summary><b>1.2.10 (2026-10-25)</b></summary>
 
 #### Added
 
@@ -292,6 +308,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
 - **Linux install:** `install.sh` now installs every shipped data folder. Before, it copied only materials, the
   Blender add-on, Patina Web and the samples, so an installed Patina had no built-in smart materials, recipes, fonts
   or translations. Running the new `install.sh` adds them; your own library is left alone.
+
+</details>
 
 <details>
 <summary><b>1.2.9 (2026-10-24)</b></summary>

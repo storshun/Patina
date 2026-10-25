@@ -522,6 +522,7 @@ from the custom brushes folder ... That should be part of 1.2."
 | T29 | **A clearer workspace**: the 3D view bar's settings as single fields with their icons inside; fields at most 13 em wide; the Blender layout's step colors and Material Edit tab; wrapping layer buttons | Less noise, nothing off screen | **1.2.8** |
 | T30 | **Retopology within memory**: QuadriFlow's tries share a memory budget; zones over 250,000 quads or too big for free memory are refused with a clear message; no live preview over 150,000 quads; freed memory returned (MCP `retopo_info` `quads_asked`). Also: the camera moves with the Note tool; a Red marks switch | A big zone can't take all the memory and close Patina | **1.2.9** |
 | T31 | **Tabs that stay, face sets as vertex groups**: a pin keeps the Blender layout's Properties tab when a tool or workspace is chosen; the Face Sets panel with an active set, Add/Remove Selection, Select/Deselect/Deselect All, a trash per row, emptied sets kept; clearer names; A selects all or none in the 3D view with any tool | Less tab switching; face sets as Blender users expect | **1.2.10** |
+| T32 | **Frame the selection**: Shift+F (Patina) / Numpad . (Blender keymap), the view pie's down-right item, the View menu, MCP `frame_object` `selection` | Zoom straight to the part you work on | **1.2.11** |
 
 Shipped in **1.2.0** (2026-10-21). How it works: each object is a Document of its own; Engine::doc is the active one
 and the others wait in Engine::objects_ (they move in and out, so GpuMesh moves now). A mesh stays in its own space;

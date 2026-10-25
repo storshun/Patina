@@ -200,6 +200,27 @@ def main():
         time.sleep(0.3)
         check(cam()["distance"] < d0 * 0.95, "Note tool: the wheel zooms (%.3f, was %.3f)" % (cam()["distance"], d0))
         s("set_tool", tool="paint")
+        # ---- (1.2.11) frame the selection: Shift+F, the view pie's down-right item, frame_object selection
+        s("new_project", primitive="sphere", resolution=512)
+        s.settle(3)
+        s("set_camera", view="front", frame=True, ortho=False)
+        whole = cam()["distance"]
+        s("select_faces", mode="set", faces=[0, 1, 2])
+        s.x.move(*vp(0.5, 0.6))
+        time.sleep(0.2)
+        s.x.key("Shift_L", True)
+        s.x.key("f")
+        s.x.key("Shift_L", False)
+        time.sleep(0.4)
+        c = cam()
+        check(c["distance"] < whole * 0.4, "Shift+F frames the three selected faces (distance %.3f, the whole model %.3f)" % (c["distance"], whole))
+        s("set_camera", view="front", frame=True)
+        pie(7)
+        check(cam()["distance"] < whole * 0.4, "the view pie's Frame selection (down right) does too (%.3f)" % cam()["distance"])
+        s("select_faces", mode="clear")
+        r = s("frame_object", selection=True)
+        check(r["framed_selection"] is False and abs(r["distance"] - whole) < whole * 0.05,
+              "nothing selected: the whole model (%.3f)" % r["distance"])
         # ---- MCP: set_camera view=previous
         s("set_camera", yaw=0.9, pitch=0.3)
         s("set_camera", view="top")
@@ -220,6 +241,19 @@ def main():
         c = s("set_camera")
         check(near_view(c, -math.pi / 2, 1.5699) and c["ortho"],
               "Blender preset: Alt + middle drag snaps (to the top view here: yaw %.3f pitch %.3f)" % (c["yaw"], c["pitch"]))
+        # (1.2.11) the Blender keymap: Numpad . frames the selection, as Blender's View Selected
+        s("open_window", window="preferences", keymap="blender")
+        s.x.key("Escape")
+        s.settle(3)
+        s("set_camera", view="front", frame=True, ortho=False)
+        whole = s("set_camera")["distance"]
+        s("select_faces", mode="set", faces=[0])
+        s.x.move(*vp(0.5, 0.6))
+        time.sleep(0.2)
+        s.x.key("KP_Decimal")
+        time.sleep(0.4)
+        d = s("set_camera")["distance"]
+        check(d < whole * 0.9, "Blender preset: Numpad . frames the selection (a side of the cube) (%.3f, the whole model %.3f)" % (d, whole))
     finally:
         s.close()
     print("view navigation: %d failed" % len(failures) if failures else "view navigation: all checks passed")

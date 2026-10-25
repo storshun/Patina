@@ -1,6 +1,7 @@
 // (0.38) The view pie, after Blender's Z pie: hold Z over the 3D view, point toward an item and let go (or tap Z,
 // then click one). (0.40) Four pies, eight items each round the pointer:
-// - Z the view, laid out as Blender's shading pie: Wireframe left, Solid right, Lit down, Path traced up;
+// - Z the view, laid out as Blender's shading pie: Wireframe left, Solid right, Lit down, Path traced up; (1.2.11)
+//   Frame selection down right;
 // - Shift+Z the channels (base color, normal, roughness...);
 // - ` (the key under Esc) the edit modes: the tools;
 // - Q Quick Favorites, as Blender's Q menu: eight items of the user's own. A right-click on a toolbar button or on a
@@ -29,7 +30,7 @@ const float kSlotAngle[8] = {kPi, 0.f, kPi * 0.5f, -kPi * 0.5f, -kPi * 0.75f, -k
 // the fixed pies' items, in slot order (the Quick Favorites are App::favorites)
 const char* const kPieIds[3][8] = {
     {"view.wireframe", "view.solid", "view.lit", "view.path_traced", "view.unlit", "view.seams", "mode.uv_checker",
-     "view.retopo_preview"},
+     "view.frame_selected"},  // (1.2.11: in place of the retopology preview, which has its button on the 3D view bar)
     {"mode.basecolor", "mode.normal", "mode.roughness", "mode.metallic", "mode.height", "mode.emissive", "mode.ao",
      "mode.mask"},
     {"tool.paint", "tool.select", "tool.island", "tool.seams", "tool.erase", "tool.fill", "tool.zone_line", "tool.flow_loops"}};
@@ -86,6 +87,7 @@ const ActionLook kLooks[] = {
     {"stencil.toggle", N_("Stencil on / off"), "mask"},
     {"view.focus", N_("Hide panels"), "view"},
     {"view.frame", N_("Frame mesh"), "frame"},
+    {"view.frame_selected", N_("Frame selection"), "frame"},
     {"view.help", N_("Shortcuts"), nullptr},
     {"view.compare", N_("Compare view"), "view"},
     {"view.compare_snapshot", N_("Compare snapshot"), "view"},

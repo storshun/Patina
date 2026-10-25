@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.10 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.11 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -147,7 +147,8 @@ something else.</p>
 <table>
   <tr><th>Action</th><th>Key</th><th>Blender</th></tr>
   <tr><td>Orbit / pan / zoom</td><td>Middle drag / <kbd>Shift</kbd> + middle / <kbd>Ctrl</kbd> + middle or the wheel</td><td>Same</td></tr>
-  <tr><td>Frame the model</td><td><kbd>Home</kbd> or Numpad <kbd>.</kbd></td><td>Same (View All / View Selected)</td></tr>
+  <tr><td>Frame the model</td><td><kbd>Home</kbd></td><td>Same (View All)</td></tr>
+  <tr><td>Frame the selection (the model when nothing is selected; also the view pie, down right)</td><td>Numpad <kbd>.</kbd></td><td>Same (View Selected)</td></tr>
   <tr><td>Front / right / top (opposite with <kbd>Ctrl</kbd>)</td><td>Numpad <kbd>1</kbd> <kbd>3</kbd> <kbd>7</kbd></td><td>Same</td></tr>
   <tr><td>Orthographic on/off</td><td>Numpad <kbd>5</kbd></td><td>Same</td></tr>
   <tr><td>Snap to the nearest side view while orbiting</td><td><kbd>Alt</kbd> + middle drag, or hold <kbd>Alt</kbd> during one</td><td>Same</td></tr>
@@ -178,7 +179,7 @@ Blender in both keymaps. See <a href="shortcuts.html#uv-editor">the UV editor ta
 picks the color under the cursor immediately, and the brush then paints that flat color instead of the library
 material. Click a material again to go back to it.</div>
 <div class="callout gotcha"><span class="t"><kbd>F</kbd> no longer frames the model</span>In the Blender keymap
-<kbd>F</kbd> resizes the brush. Use <kbd>Home</kbd> or Numpad <kbd>.</kbd> to frame.</div>
+<kbd>F</kbd> resizes the brush. Use <kbd>Home</kbd> to frame the model, and Numpad <kbd>.</kbd> or the view pie (<kbd>Z</kbd>, down right) to frame the selection.</div>
 <div class="callout gotcha"><span class="t">Tab does not hide the panels</span>In Blender <kbd>Tab</kbd> switches modes,
 so the Blender keymap uses <kbd>Ctrl</kbd>+<kbd>Space</kbd> for the distraction-free view.</div>
 <div class="callout gotcha"><span class="t"><kbd>U</kbd> no longer selects Blur</span>In 0.3.1 <kbd>U</kbd> was the Blur

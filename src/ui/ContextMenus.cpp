@@ -262,6 +262,8 @@ void App::viewMenuItems() {
   Document& d = engine.doc;
   Camera& cam = engine.camera;
   if (ImGui::MenuItem(L_("Frame the Model"), keyLabel("view.frame"))) engine.frameMesh();
+  if (ImGui::MenuItem(L_("Frame the Selection"), keyLabel("view.frame_selected"), false, !d.selectedFaces().empty()))
+    engine.frameSelection();
   ImGui::Separator();
   struct V {
     const char* name;

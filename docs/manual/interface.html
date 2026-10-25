@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.10 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.11 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -260,18 +260,19 @@ again from there. With the Blender preset, <kbd>Alt</kbd> + middle drag snaps fr
 orbit with <kbd>Alt</kbd> + left (or the right button in the ZBrush preset), <kbd>Shift</kbd> does the snapping.
 <kbd>Numpad 0</kbd> goes back to where the orbit began.</p>
 
-<h3 id="view-pie">Pie menus</h3>
+<h3 id="view-pie">Pie menus (radial menus)</h3>
 <div class="two">
   <figure><img src="img/view_pie.png" alt="The view pie round the pointer, Solid chosen"><figcaption>Hold <kbd>Z</kbd>,
     point at an item, let go. Here: Solid.</figcaption></figure>
   <figure><img src="img/view_solid.png" alt="The Solid view: the model in light gray"><figcaption>The Solid view: the
     shape alone, without textures.</figcaption></figure>
 </div>
-<p>Four pies open round the pointer over the 3D view, eight items each. Hold the key, move toward an item and let go.
+<p>Pie menus, also called radial menus, open in a ring round the pointer, as in Blender. There are four of them over
+the 3D view, with eight items each. Hold the key, move toward an item and let go.
 Or tap the key and click an item. <kbd>Esc</kbd> closes a pie, and so does a right-click away from the items.</p>
 <table>
   <tr><th>Key</th><th>Pie</th><th>What is in it</th></tr>
-  <tr><td><kbd>Z</kbd></td><td>View</td><td>How the model shows: lit, solid, unlit, path traced, wireframe, seams, the UV checker, the retopology preview.</td></tr>
+  <tr><td><kbd>Z</kbd></td><td>View</td><td>How the model shows: lit, solid, unlit, path traced, wireframe, seams, the UV checker; and Frame selection.</td></tr>
   <tr><td><kbd>Shift</kbd>+<kbd>Z</kbd></td><td>Channels</td><td>One channel at a time: base color, normal, roughness, metallic, height, emissive, AO, the layer mask.</td></tr>
   <tr><td><kbd>`</kbd> (under <kbd>Esc</kbd>)</td><td>Edit mode</td><td>The tools: paint, erase, fill, select, seams, the Island brush, the retopology lines and edge loops.</td></tr>
   <tr><td><kbd>Q</kbd></td><td>Quick Favorites</td><td>Eight items you choose (see <a href="#quick-favorites">Quick Favorites</a>).</td></tr>
@@ -286,7 +287,7 @@ Or tap the key and click an item. <kbd>Esc</kbd> closes a pie, and so does a rig
   <tr><td>Up left</td><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.5"/><path d="M12 3 V5 M12 19 V21 M3 12 H5 M19 12 H21 M5.6 5.6 L7 7 M17 17 L18.4 18.4 M5.6 18.4 L7 17 M17 7 L18.4 5.6"/><path d="M4 4 L20 20" stroke="#E8852C" stroke-width="2"/></svg> Unlit</td><td>The colors without the light (the base color). Again: the view mode before.</td></tr>
   <tr><td>Up right</td><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 17 C8 15 13 9 20.5 6.5" stroke="#E8852C" stroke-width="2"/><path d="M5.9 13.4 L8.1 16.3 M9.9 10.4 L11.9 13.4 M14.5 7.3 L16.1 10.5"/></svg> Seams</td><td>The UV seams on or off.</td></tr>
   <tr><td>Down left</td><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><rect x="4" y="4" width="8" height="8" fill="currentColor" fill-opacity="0.55" stroke="none"/><rect x="12" y="12" width="8" height="8" fill="#E8852C" stroke="none"/><path d="M12 4 V20 M4 12 H20"/></svg> UV Checker</td><td>The checker pattern, to see stretching. Again: the view mode before.</td></tr>
-  <tr><td>Down right</td><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15.9 5.25 L8.1 9.75 M8.1 5.25 L15.9 9.75 M8.1 9.75 V18.75 M4.2 12 L12 16.5 M15.9 9.75 V18.75 M12 16.5 L19.8 12" stroke="#E8852C" stroke-width="1.5"/><path d="M12 3 L19.8 7.5 V16.5 L12 21 L4.2 16.5 V7.5 Z M4.2 7.5 L12 12 L19.8 7.5 M12 12 V21"/></svg> Retopo preview</td><td>The retopology's zones and quads on or off, whatever tool is chosen.</td></tr>
+  <tr><td>Down right</td><td><svg class="ic" aria-hidden="true" width="1.35em" height="1.35em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8 V3.5 H8 M16 3.5 H20.5 V8 M20.5 16 V20.5 H16 M8 20.5 H3.5 V16"/><circle cx="12" cy="12" r="4.5" stroke="#E8852C" stroke-width="2"/></svg> Frame selection</td><td>The selected faces fill the view, as Blender's View Selected (the whole model when nothing is selected). Before 1.2.11 this place had the retopology preview, which is on the bar over the 3D view.</td></tr>
 </table>
 <div class="two">
   <figure><img src="img/pie_edit.png" alt="The edit mode pie: the tools round the pointer"><figcaption><kbd>`</kbd>: the

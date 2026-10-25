@@ -46,7 +46,7 @@ def main():
         # ---- MCP: the pies and their keys
         r = s("pie_menus", catalog=True)
         check([i["id"] for i in r["pies"]["view"]] == ["view.wireframe", "view.solid", "view.lit", "view.path_traced", "view.unlit",
-                                                       "view.seams", "mode.uv_checker", "view.retopo_preview"], "the view pie's items")
+                                                       "view.seams", "mode.uv_checker", "view.frame_selected"], "the view pie's items")
         check(r["keys"] == {"view": "Z", "channels": "Shift+Z", "edit": "`", "favorites": "Q"}, "the keys (%s)" % r["keys"])
         ids = {c["id"] for c in r["catalog"]}
         check({"tool.paint", "mode.roughness", "view.wireframe", "sym.x", "file.render", "brush.flow"} <= ids and

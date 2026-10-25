@@ -364,6 +364,16 @@ json App::layoutCommand(const json& a) {
       else setLayoutMode(true), setGuidedStep(si.step);
     }
   }
+  // (1.2.10) the Blender layout's Properties tab, and its pin
+  static const char* kProps[] = {"step", "object", "layer", "texture_set", "face_sets", "retopology", "history", "notes", "console"};
+  static_assert(sizeof kProps / sizeof *kProps == (size_t)PropsTab::Count);
+  if (a.contains("properties_tab")) {
+    std::string want = a.at("properties_tab");
+    auto it = std::find(std::begin(kProps), std::end(kProps), want);
+    if (it == std::end(kProps)) throw std::runtime_error("properties_tab: no tab called '" + want + "'");
+    blui.props = (PropsTab)(it - std::begin(kProps));
+  }
+  if (a.contains("pin_properties")) blui.propsPinned = a.at("pin_properties").get<bool>(), saveSession(true);
   json steps = json::array();
   static const char* kState[] = {"todo", "done", "look"};
   for (auto& si : kSteps) {
@@ -374,7 +384,9 @@ json App::layoutCommand(const json& a) {
   return json{{"layout", guided ? "guided" : layoutMode == LayoutMode::Blender ? "blender" : "full"},
               {"theme", ui::theme().id},
               {"step", info(guidedStep).id},
-              {"steps", steps}};
+              {"steps", steps},
+              {"properties_tab", kProps[(int)blui.props]},
+              {"pin_properties", blui.propsPinned}};
 }
 
 void App::layoutSwitch() {
@@ -583,7 +595,7 @@ void App::blenderFollowTool() {
   if (retopologyTool(tool)) {
     if (guidedStep != GuidedStep::Model) setGuidedStep(GuidedStep::Model);
     guidedLastTool = tool;
-    blui.props = PropsTab::Retopology;
+    if (!blui.propsPinned) blui.props = PropsTab::Retopology;
   } else if (paintTool(tool) && guidedStep != GuidedStep::Paint) {
     setBlenderStep(GuidedStep::Paint);
   } else if (uvTool(tool) && guidedStep != GuidedStep::UVs) {
@@ -593,7 +605,7 @@ void App::blenderFollowTool() {
 
 void App::setBlenderStep(GuidedStep s) {
   setGuidedStep(s);  // (its tools; a view mode the last step chose goes back)
-  blui.props = s == GuidedStep::Paint ? PropsTab::Layer : PropsTab::Step;
+  if (!blui.propsPinned) blui.props = s == GuidedStep::Paint ? PropsTab::Layer : PropsTab::Step;  // (1.2.10: unless pinned)
 }
 
 void App::drawGuided() {

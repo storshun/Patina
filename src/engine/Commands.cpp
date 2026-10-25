@@ -1306,7 +1306,7 @@ void Engine::registerCommands() {
                  {"lock_topology", prop("boolean", "Topology lock: a stroke only paints the connected part of the mesh it starts on")},
                  {"lock_island", prop("boolean", "Island lock: a stroke only paints the UV island it starts on")},
                  {"lock_set", prop("boolean", "Set lock: a stroke only paints the texture set (or material slot) it starts on")},
-                 {"lock_face_set", prop("boolean", "(1.2) Face set lock: a stroke only paints the face set it starts on")},
+                 {"lock_face_set", prop("boolean", "(1.2) Lock Face Sets: a stroke only paints the face set it starts on")},
                  {"mask_value", num("number", "The value the brush paints into a mask, or into a baked map layer (its map's value: "
                                               "ambient occlusion 1 = no shadow, curvature 0.5 = flat, thickness 1 = thick)", 0, 1)}}),
          [](CommandContext& c, const json& a) {

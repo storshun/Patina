@@ -6,6 +6,8 @@
 # (web libraries only when a new one comes with --web). Folders (extracted builds) and other files stay put.
 # (1.0) --release also keeps this version in the builds folder's "releases": the Linux and Windows packages, the
 # source, the add-on and their checksums, which no later version moves away.
+# (1.2.10) --release also copies them to the backup drive's "releases" (PATINA_BACKUP, default
+# /run/media/$USER/T7_USB_SSD/Dev/Patina); when the drive is not plugged in it says so and goes on.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -62,4 +64,17 @@ if ((RELEASE)); then
   done
   (cd "$REL" && sha256sum "${RNAMES[@]}" > "patina-$VERSION-SHA256SUMS.txt")
   echo "release: patina-$VERSION-SHA256SUMS.txt"
+
+  BACKUP="${PATINA_BACKUP:-/run/media/$USER/T7_USB_SSD/Dev/Patina}"
+  if [[ -d "$BACKUP" ]]; then
+    mkdir -p "$BACKUP/releases"
+    for n in "${RNAMES[@]}" "patina-$VERSION-SHA256SUMS.txt"; do
+      if cmp -s "$REL/$n" "$BACKUP/releases/$n"; then echo "already on the backup drive: $n"; continue; fi
+      cp -- "$REL/$n" "$BACKUP/releases/$n"
+      echo "backup: $n"
+    done
+    (cd "$BACKUP/releases" && sha256sum -c --quiet "patina-$VERSION-SHA256SUMS.txt") && echo "backup checked: $BACKUP/releases"
+  else
+    echo "!! backup drive not found ($BACKUP): this release is not backed up there" >&2
+  fi
 fi

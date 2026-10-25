@@ -182,7 +182,7 @@ void Engine::registerSelectCommands() {
 
   R.add({"make_face_set",
          "Makes face sets (1.2). from selection (default) or faces: one set of those faces, named name (they leave "
-         "the sets they were in). from material, island or connected: a set for each material slot, UV island or "
+         "the sets they were in; (1.2.10) a set left with no faces stays, empty, until delete_face_set). from material, island or connected: a set for each material slot, UV island or "
          "connected part (replacing the sets there were). One undo step.",
          schema({{"from", propEnum({"selection", "faces", "material", "island", "connected"}, "What the sets are made of (default selection)")},
                  {"faces", prop("array", "from faces: the face indices")},
@@ -251,7 +251,7 @@ void Engine::registerSelectCommands() {
   R.add({"edit_face_set",
          "Changes a face set (1.2): its name, color, hidden (its faces leave the 3D view, the brush and picking; "
          "renders and exports keep them), and its faces: add or remove \"selection\" or a list of face indices "
-         "(faces added leave the sets they were in). One undo step.",
+         "(faces added leave the sets they were in; (1.2.10) a set left with no faces stays, empty). One undo step.",
          schema({{"set", prop("string", "The face set: its name or id")},
                  {"name", prop("string", "A new name")},
                  {"color", prop("array", "[r,g,b] 0..1")},
@@ -284,10 +284,7 @@ void Engine::registerSelectCommands() {
              for (uint32_t f : facesArg(e, a["remove"]))
                if (of[f] == s.id) of[f] = 0;
            uint32_t id = s.id;
-           // (other sets left without faces go; this one stays even empty)
-           sets.erase(std::remove_if(sets.begin(), sets.end(),
-                                     [&](const Document::FaceSet& x) { return x.id != id && std::find(of.begin(), of.end(), x.id) == of.end(); }),
-                      sets.end());
+           // (1.2.10: sets left without faces stay, empty: only delete_face_set takes a set away)
            d.setFaceSets(std::move(sets), std::move(of), "Change a face set");
            return faceSetJson(d, *d.findFaceSet(id));
          }});
@@ -316,11 +313,12 @@ void Engine::registerSelectCommands() {
 
   R.add({"use_face_set",
          "Does something with a face set's faces in one go (1.2): select (the selection becomes them), add_to_selection, "
+         "(1.2.10) deselect (they leave the selection), "
          "hide, show, isolate (hide every other set and the faces in none; again: show_all), show_all, fill (the "
          "selected layer gets the paint material on them, as the polygon fill does) or mask (the selected layer's "
          "mask: white on them, black elsewhere). One undo step.",
          schema({{"set", prop("string", "The face set: its name or id (not needed for show_all)")},
-                 {"action", propEnum({"select", "add_to_selection", "hide", "show", "isolate", "show_all", "fill", "mask"}, "What to do")}},
+                 {"action", propEnum({"select", "add_to_selection", "deselect", "hide", "show", "isolate", "show_all", "fill", "mask"}, "What to do")}},
                 {"action"}),
          [](CommandContext& c, const json& a) {
            Engine& e = c.engine;
@@ -338,6 +336,7 @@ void Engine::registerSelectCommands() {
            auto faces = d.faceSetFaces(id);
            if (act == "select" || act == "add_to_selection")
              return applySelection(e, faces, act == "select" ? "set" : "add", "Select a face set");
+           if (act == "deselect") return applySelection(e, faces, "remove", "Deselect a face set");
            if (act == "hide" || act == "show" || act == "isolate") {
              auto sets = d.faceSets;
              for (auto& s : sets) s.hidden = act == "isolate" ? s.id != id : s.id == id ? act == "hide" : s.hidden;
@@ -359,7 +358,7 @@ void Engine::registerSelectCommands() {
              if (!d.maskFromFaces(d.selected, faces, "Mask from a face set")) throw CommandError("could not make the mask");
              return json{{"faces", faces.size()}, {"layer", d.selected}};
            }
-           throw CommandError("action: select, add_to_selection, hide, show, isolate, show_all, fill or mask");
+           throw CommandError("action: select, add_to_selection, deselect, hide, show, isolate, show_all, fill or mask");
          }});
 }
 

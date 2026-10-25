@@ -11,7 +11,11 @@ PREFIX="${PREFIX:-$HOME/.local}"
 sizes=(16 24 32 48 64 128 256 512)
 files=(bin/patina share/applications/patina.desktop share/icons/hicolor/scalable/apps/patina.svg)
 for s in "${sizes[@]}"; do files+=("share/icons/hicolor/${s}x${s}/apps/patina.png"); done
-dirs=(share/patina/materials share/patina/blender share/patina/web share/patina/samples share/doc/patina)
+# (1.2.10) every shipped data folder: before, only these four were copied, so an installed Patina had no smart
+# materials, recipes, fonts, translations, examples or clients
+data=(materials smart_materials recipes fonts languages blender web samples examples clients)
+dirs=(share/doc/patina)
+for d in "${data[@]}"; do dirs+=("share/patina/$d"); done
 
 if [[ "${1:-}" == "--uninstall" ]]; then
   for f in "${files[@]}"; do rm -fv "$PREFIX/$f"; done
@@ -27,7 +31,7 @@ mkdir -p "$PREFIX/bin" "$PREFIX/share/applications" "$PREFIX/share/doc"
 install -m 755 "$here/bin/patina" "$PREFIX/bin/patina"
 # replace only the shipped data; ~/.local/share/patina/user (your materials and brushes) is left alone
 mkdir -p "$PREFIX/share/patina"
-for d in materials blender web samples; do
+for d in "${data[@]}"; do
   rm -rf "$PREFIX/share/patina/$d"
   [[ -d "$here/share/patina/$d" ]] && cp -r "$here/share/patina/$d" "$PREFIX/share/patina/$d"
 done

@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.9 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.10 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -228,7 +228,7 @@
 <tr><td><code>follow_path</code></td><td>boolean</td><td></td><td>Rotate dabs along the stroke</td></tr>
 <tr><td><code>hardness</code></td><td>number</td><td>0 to 1</td><td>Edge: 0 soft falloff, 1 hard edge</td></tr>
 <tr><td><code>lazy_radius</code></td><td>number</td><td>0 to 100</td><td>Lazy mouse: the stroke trails the cursor by this many pixels, for smooth lines</td></tr>
-<tr><td><code>lock_face_set</code></td><td>boolean</td><td></td><td>(1.2) Face set lock: a stroke only paints the face set it starts on</td></tr>
+<tr><td><code>lock_face_set</code></td><td>boolean</td><td></td><td>(1.2) Lock Face Sets: a stroke only paints the face set it starts on</td></tr>
 <tr><td><code>lock_island</code></td><td>boolean</td><td></td><td>Island lock: a stroke only paints the UV island it starts on</td></tr>
 <tr><td><code>lock_set</code></td><td>boolean</td><td></td><td>Set lock: a stroke only paints the texture set (or material slot) it starts on</td></tr>
 <tr><td><code>lock_topology</code></td><td>boolean</td><td></td><td>Topology lock: a stroke only paints the connected part of the mesh it starts on</td></tr>
@@ -1206,7 +1206,7 @@
 <tr><td><code>object</code></td><td>string</td><td></td><td>The object: its name as list_objects gives it, or its index (default: the active one)</td></tr>
 </tbody></table>
 <h3 id="edit-face-set"><code>edit_face_set</code></h3>
-<p>Changes a face set (1.2): its name, color, hidden (its faces leave the 3D view, the brush and picking; renders and exports keep them), and its faces: add or remove "selection" or a list of face indices (faces added leave the sets they were in). One undo step.</p>
+<p>Changes a face set (1.2): its name, color, hidden (its faces leave the 3D view, the brush and picking; renders and exports keep them), and its faces: add or remove "selection" or a list of face indices (faces added leave the sets they were in; (1.2.10) a set left with no faces stays, empty). One undo step.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>add</code></td><td></td><td></td><td>"selection" or face indices to put in it</td></tr>
 <tr><td><code>color</code></td><td>array</td><td></td><td>[r,g,b] 0..1</td></tr>
@@ -1263,9 +1263,11 @@
 <tr><td><code>point</code> <i>(required)</i></td><td>array</td><td></td><td>[x,y] normalized viewport point (0..1, 0,0 top left)</td></tr>
 </tbody></table>
 <h3 id="layout"><code>layout</code></h3>
-<p>(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: model, uvs, bake, paint, export), full (every panel docked) or (1.2.7) blender (arranged as Blender is: the steps as workspace tabs, the Outliner and a Properties editor with vertical tabs, an asset shelf), and (1.2.7) its theme: patina (gray and copper) or vivid_dark (KDE Plasma's Vivid Dark: navy and cyan, as the Vivid Dark Blender theme). With no arguments it only reports. Returns the layout, the theme, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few words: the same marks the step bar shows. Only with the window open (not headless).</p>
+<p>(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: model, uvs, bake, paint, export), full (every panel docked) or (1.2.7) blender (arranged as Blender is: the steps as workspace tabs, the Outliner and a Properties editor with vertical tabs, an asset shelf), and (1.2.7) its theme: patina (gray and copper) or vivid_dark (KDE Plasma's Vivid Dark: navy and cyan, as the Vivid Dark Blender theme). With no arguments it only reports. Returns the layout, the theme, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few words: the same marks the step bar shows, and (1.2.10) the Blender layout's Properties tab and its pin. Only with the window open (not headless).</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>mode</code></td><td>guided \</td><td>full \</td><td>blender</td><td></td><td>Switch to this layout</td></tr>
+<tr><td><code>pin_properties</code></td><td>boolean</td><td></td><td>(1.2.10) Pin the Properties tab (the pin above its tabs): true keeps the tab when a tool or a workspace is chosen; false (default) shows the tool's tab (Select: Step, Paint: Layer, a retopology tool: Retopology)</td></tr>
+<tr><td><code>properties_tab</code></td><td>step \</td><td>object \</td><td>layer \</td><td>texture_set \</td><td>face_sets \</td><td>retopology \</td><td>history \</td><td>notes \</td><td>console</td><td></td><td>(1.2.10) The Blender layout's Properties tab to show</td></tr>
 <tr><td><code>step</code></td><td>model \</td><td>uvs \</td><td>bake \</td><td>paint \</td><td>export</td><td></td><td>Go to this step (switches to the Guided layout; in the Blender layout, its workspace tab)</td></tr>
 <tr><td><code>theme</code></td><td>patina \</td><td>vivid_dark</td><td></td><td>Switch to this theme (Edit &gt; Preferences &gt; Display)</td></tr>
 </tbody></table>
@@ -1301,7 +1303,7 @@
 <tr><td><code>path</code></td><td>string</td><td></td><td>Job file path (.json)</td></tr>
 </tbody></table>
 <h3 id="make-face-set"><code>make_face_set</code></h3>
-<p>Makes face sets (1.2). from selection (default) or faces: one set of those faces, named name (they leave the sets they were in). from material, island or connected: a set for each material slot, UV island or connected part (replacing the sets there were). One undo step.</p>
+<p>Makes face sets (1.2). from selection (default) or faces: one set of those faces, named name (they leave the sets they were in; (1.2.10) a set left with no faces stays, empty, until delete_face_set). from material, island or connected: a set for each material slot, UV island or connected part (replacing the sets there were). One undo step.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>color</code></td><td>array</td><td></td><td>[r,g,b] 0..1: its color (default: one of its own)</td></tr>
 <tr><td><code>faces</code></td><td>array</td><td></td><td>from faces: the face indices</td></tr>
@@ -1444,9 +1446,9 @@
 <tr><td><code>steps</code></td><td>integer</td><td>10 to 1000, default 100</td><td>Steps each object's history keeps. More: undo further back; fewer: less memory</td></tr>
 </tbody></table>
 <h3 id="use-face-set"><code>use_face_set</code></h3>
-<p>Does something with a face set's faces in one go (1.2): select (the selection becomes them), add_to_selection, hide, show, isolate (hide every other set and the faces in none; again: show_all), show_all, fill (the selected layer gets the paint material on them, as the polygon fill does) or mask (the selected layer's mask: white on them, black elsewhere). One undo step.</p>
+<p>Does something with a face set's faces in one go (1.2): select (the selection becomes them), add_to_selection, (1.2.10) deselect (they leave the selection), hide, show, isolate (hide every other set and the faces in none; again: show_all), show_all, fill (the selected layer gets the paint material on them, as the polygon fill does) or mask (the selected layer's mask: white on them, black elsewhere). One undo step.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
-<tr><td><code>action</code> <i>(required)</i></td><td>select \</td><td>add_to_selection \</td><td>hide \</td><td>show \</td><td>isolate \</td><td>show_all \</td><td>fill \</td><td>mask</td><td></td><td>What to do</td></tr>
+<tr><td><code>action</code> <i>(required)</i></td><td>select \</td><td>add_to_selection \</td><td>deselect \</td><td>hide \</td><td>show \</td><td>isolate \</td><td>show_all \</td><td>fill \</td><td>mask</td><td></td><td>What to do</td></tr>
 <tr><td><code>set</code></td><td>string</td><td></td><td>The face set: its name or id (not needed for show_all)</td></tr>
 </tbody></table>
 <h3 id="uv-relax"><code>uv_relax</code></h3>

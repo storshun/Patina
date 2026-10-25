@@ -3,6 +3,33 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.10 (2026-10-25)
+
+### Added
+
+- **A pin for the Properties tabs** (Blender layout): the pin above the tabs keeps the tab you chose when you pick a
+  tool or a workspace. Unpinned, as before, the Select tool shows the Step tab and the Paint tool the Layer tab. MCP:
+  `layout` `pin_properties` and `properties_tab`.
+- **A** selects every face, or none when some are selected, in the 3D view with any tool, as in the UV editor.
+  Before, it worked in the 3D view only with the Select and Island tools.
+
+### Changed
+
+- **The Face Sets panel works like Blender's vertex groups.** A click on a set makes it the active set. Under the
+  list, **Add Selection** and **Remove Selection** change its faces, and **Select**, **Deselect** and
+  **Deselect All** change the selection. Each row has a trash button that deletes the set.
+- A set whose faces all move to another set now stays, empty, with its name and color. Before, it disappeared, so
+  **Create from Selection** seemed to rename and recolor it.
+- Clearer names: **Create from Selection**, **Create Sets From...**, **Show by Color**, **Lock Face Sets** and
+  **Show Only These Faces**. **Show All** is always under the Create buttons, and in each set's right-click menu too.
+  MCP: `use_face_set` `deselect`.
+
+### Fixed
+
+- **Linux install:** `install.sh` now installs every shipped data folder. Before, it copied only materials, the
+  Blender add-on, Patina Web and the samples, so an installed Patina had no built-in smart materials, recipes, fonts
+  or translations. Running the new `install.sh` adds them; your own library is left alone.
+
 ## 1.2.9 (2026-10-24)
 
 ### Added

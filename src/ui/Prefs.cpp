@@ -120,7 +120,7 @@ void App::initKeymap(KeymapPreset preset) {
       {"tool.flow", N_("Retopology: flow strokes"), N_("Tools"), 0, 0, 0, 0},
       {"tool.density", N_("Retopology: density brush"), N_("Tools"), 0, 0, 0, 0},
       {"island.make", N_("Make an island from the painted / selected faces"), N_("UV"), ImGuiKey_Enter, ImGuiKey_U, 0, 0},
-      {"select.all", N_("Select all faces (Select / Island tool)"), N_("UV"), ImGuiKey_A, ImGuiKey_A, 0, 0},
+      {"select.all", N_("Select all faces, or none when some are selected"), N_("UV"), ImGuiKey_A, ImGuiKey_A, 0, 0},
       {"select.none", N_("Select no faces"), N_("UV"), A | ImGuiKey_A, A | ImGuiKey_A, 0, 0},
       {"select.grow", N_("Grow the face selection"), N_("UV"), C | ImGuiKey_KeypadAdd, C | ImGuiKey_KeypadAdd, 0, 0},
       {"select.shrink", N_("Shrink the face selection"), N_("UV"), C | ImGuiKey_KeypadSubtract, C | ImGuiKey_KeypadSubtract, 0, 0},

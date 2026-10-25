@@ -36,8 +36,8 @@ Fixing those is a matter of a few clicks.</p>
 </div>
 <p>Each stroke is one undo step (<i>Island Brush</i> in the History panel), so <kbd>Ctrl</kbd>+<kbd>Z</kbd> takes a
 stray stroke back. Hold <kbd>Ctrl</kbd> to remove faces from the painted area, and use <kbd>Ctrl</kbd>+Numpad <kbd>+</kbd> /
-<kbd>-</kbd> to grow or shrink it by one ring of faces. <kbd>A</kbd> selects every face and <kbd>Alt</kbd>+<kbd>A</kbd>
-clears the selection. The bar above the viewport has <b>Make island</b>, <b>Clear</b>, the orientation and the density
+<kbd>-</kbd> to grow or shrink it by one ring of faces. <kbd>A</kbd> selects every face, or none when some are selected, with any tool (1.2.10), and
+<kbd>Alt</kbd>+<kbd>A</kbd> clears the selection. The bar above the viewport has <b>Make island</b>, <b>Clear</b>, the orientation and the density
 target. If the painted area falls into several separate pieces (for example the brow and the eyes, which are separate
 parts of the mesh), each piece becomes its own island.</p>
 <p id="island-reach">Two buttons on the same bar choose what a dab takes. <b>Surface</b> (the default) takes the faces
@@ -154,23 +154,29 @@ is in one set at most. Sets are for the parts you paint, fill or mask again and 
 coat. The <b>Face Sets</b> panel (UV › Face Sets, a tab beside Properties) has them.</p>
 <div class="two">
   <figure><img src="img/face_sets_panel.png" alt="The Face Sets panel"><figcaption>The Face Sets panel: a row for each
-  set, with its eye, its color and its faces.</figcaption></figure>
+  set, with its eye, its color, its faces and its trash; the active set's buttons under the list.</figcaption></figure>
   <figure><img src="img/face_sets_view.png" alt="The Face Sets view"><figcaption>The Face Sets view: each set in its
   color.</figcaption></figure>
 </div>
+<p>The panel works like Blender's vertex groups (1.2.10). One set is <b>active</b>: its row is lit, and the buttons under
+the list work on it.</p>
 <ul>
-  <li><b>New from the selection</b> makes a set of the selected faces. They leave the sets they were in.</li>
-  <li><b>Make sets from...</b> makes a set for each material slot, UV island or connected part, in place of the sets
+  <li><b>Create from Selection</b> makes a new set of the selected faces. They leave the sets they were in. Those sets
+    stay, with their names and colors, even when no faces are left in them.</li>
+  <li><b>Create Sets From...</b> makes a set for each material slot, UV island or connected part, in place of the sets
     there were.</li>
-  <li><b>Click</b> a set to select its faces (<kbd>Shift</kbd> adds them). <b>Double-click</b> renames it, and the
-    color swatch changes its color.</li>
+  <li><b>Click</b> a set to make it the active set. <b>Double-click</b> renames it, and the color swatch changes its
+    color. The <b>trash</b> at the end of the row deletes the set. Its faces stay on the model, in no set.</li>
+  <li>Under the list: <b>Add Selection</b> puts the selected faces in the active set, and <b>Remove Selection</b> takes
+    them out. <b>Select</b> adds its faces to the selection, <b>Deselect</b> takes them out of it, and
+    <b>Deselect All</b> clears the selection.</li>
   <li>The <b>eye</b> hides a set. Its faces leave the 3D view, the brush and picking, so you can paint what is under
-    them. Renders and exports keep them. <b>Show all</b> brings them all back.</li>
-  <li><b>Right-click</b> a set to show it alone, fill it with the paint material, mask the selected layer with it, or
-    add the selected faces to it or take them out.</li>
-  <li><b>Face set lock</b> keeps a stroke inside the set it starts on. It is on the panel and on the bar over the 3D
+    them. Renders and exports keep them. <b>Show All</b> brings them all back.</li>
+  <li><b>Right-click</b> a set for the same actions and more: <b>Show Only These Faces</b>, <b>Show All</b>, fill it
+    with the paint material, mask the selected layer with it, rename or delete it.</li>
+  <li><b>Lock Face Sets</b> keeps a stroke inside the set it starts on. It is on the panel and on the bar over the 3D
     view with the other locks.</li>
-  <li><b>Show their colors</b> switches to the <i>Face Sets</i> view. The UV editor tints each set's faces in its color
+  <li><b>Show by Color</b> switches to the <i>Face Sets</i> view. The UV editor tints each set's faces in its color
     too.</li>
 </ul>
 <p>Face sets follow their faces when the mesh changes: a bake-down onto a low-poly model, a reduction, a remodeled mesh

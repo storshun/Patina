@@ -725,6 +725,7 @@ class App {
   void openFaceSets() { showFaceSets = true, faceSetsFocus = true; }
   bool showFaceSets = true, faceSetsFocus = false;
   int faceSetRename = 0;
+  uint32_t faceSetActive = 0;       // (1.2.10) the set the buttons under the list work on (its row lit), as Blender's active vertex group
   bool faceSetRenameOpen = false;
   std::string faceSetRenameText;    // the model export window: 0 every object shown, 1 the active one
   bool exportAllObjects = false;  // the texture export window: every object's maps
@@ -885,6 +886,7 @@ class App {
     float rightW = 420.f, outlinerH = 560.f, shelfH = 230.f, sidebarW = 310.f;  // (at UI scale 1)
     float uvShare = 0.45f;          // the UV editor's part of the width beside the 3D view (UVs step)
     PropsTab props = PropsTab::Step;
+    bool propsPinned = false;       // (1.2.10) the Properties tab stays when a tool or workspace is chosen
     SideTab side = SideTab::Brush;
     bool sideOpen = true;
     ShelfKind shelf = ShelfKind::Materials;

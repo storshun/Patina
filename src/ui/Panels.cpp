@@ -439,8 +439,9 @@ void App::handleShortcuts() {
     } catch (std::exception&) {
     }
   };
-  if (keyPressed("select.all") && faceTool) sel("all");
-  if (keyPressed("select.none") && faceTool) sel("clear");
+  // (1.2.10) A with any tool, as in the UV editor and Blender: everything, or nothing when some faces are selected
+  if (keyPressed("select.all") && d.hasMesh()) sel(d.selectedFaces().empty() ? "all" : "clear");
+  if (keyPressed("select.none") && d.hasMesh()) sel("clear");
   if (keyPressed("select.grow", true)) sel("grow");
   if (keyPressed("select.shrink", true)) sel("shrink");
   // (0.37.1) Alt+P unpins here too, not only in the UV editor

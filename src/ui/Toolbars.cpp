@@ -456,7 +456,7 @@ void App::viewportBar() {
                 "Works together with the topology and island locks."),
              "brush.lock_set");
     if (engine.features.on("face_sets") && !engine.doc.faceSets.empty())  // (1.2)
-      toggle("lock_face_set", "face_sets", T_("Face set lock"), P.lockFaceSet,
+      toggle("lock_face_set", "face_sets", T_("Lock Face Sets"), P.lockFaceSet,
              T_("A stroke only paints the face set it starts on (Face Sets panel).\n"
                 "Works together with the other locks."),
              nullptr);

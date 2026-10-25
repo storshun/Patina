@@ -779,7 +779,6 @@ void App::retopoPanel() {
     ImGui::TextWrapped("%s", T_("Open a model first."));
     return;
   }
-  const Mesh& m = d.mesh;
   const auto& zones = engine.retopoZones();
   if (retopoStatsVersion != S.version && !retopoStrokeActive) {  // not every frame of a stroke
     retopoStatsVersion = S.version;

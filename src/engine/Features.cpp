@@ -197,8 +197,8 @@ const std::vector<FeatureInfo>& Features::all() {
           "Enter keeps it and a right-click or Esc puts it back. The keys are in the keymap. Off: the gizmo only."),
        true, "1.2.3"},
       {"face_sets", N_("Face sets"),
-       N_("Named, colored groups of faces kept in the project (the Face Sets panel): one click selects, hides, shows "
-          "alone, fills or masks one, the Face set lock keeps strokes inside one, the Face sets view shows them, and "
+       N_("Named, colored groups of faces kept in the project (the Face Sets panel): select, hide, show only "
+          "one set's faces, fill or mask with one, Lock Face Sets keeps strokes inside one, the Face sets view shows them, and "
           "Blender's sculpt face sets come in with the model. Off: no panel, the lock and the view are gone."),
        true, "1.2"},
   };

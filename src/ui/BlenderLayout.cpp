@@ -427,6 +427,17 @@ void App::drawPropertiesEditor() {
                     ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
   ImGui::PopStyleVar();
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, pad));
+  // (1.2.10) the pin: the tab chosen stays when a tool or a workspace is chosen
+  if (iconButton("props.pin", blui.propsPinned ? "pin" : "unpin", T_("Keep This Tab"),
+                 blui.propsPinned ? IconState::Chosen : IconState::Normal, bw,
+                 blui.propsPinned ? T_("Pinned: the tab stays as it is when you choose a tool or a workspace. Click to unpin.")
+                                  : T_("Unpinned: choosing a tool or a workspace shows its tab (Select: the Step tab, Paint: "
+                                       "the Layer tab). Click to keep the tab you choose."),
+                 nullptr, false, bw)) {
+    blui.propsPinned = !blui.propsPinned;
+    saveSession(true);
+  }
+  ImGui::Dummy(ImVec2(0, pad));
   for (auto& t : tabs) {
     if (!t.on) continue;
     std::string tip = t.tab == PropsTab::Step ? F_("%s: %s", T_(t.name), T_(kStepTabs[(int)guidedStep].name)) : std::string(T_(t.name));
@@ -603,6 +614,7 @@ void App::blenderSessionLoad(const json& j) {
   blui.props = (PropsTab)std::clamp(j.value("properties_tab", (int)blui.props), 0, (int)PropsTab::Count - 1);
   blui.side = (SideTab)std::clamp(j.value("sidebar_tab", (int)blui.side), 0, (int)SideTab::Count - 1);
   blui.sideOpen = j.value("sidebar_open", blui.sideOpen);
+  blui.propsPinned = j.value("properties_pinned", blui.propsPinned);
   blui.shelf = (ShelfKind)std::clamp(j.value("shelf_catalog", (int)blui.shelf), 0, (int)ShelfKind::Brushes);
   blui.brushCategory = j.value("brush_category", blui.brushCategory);
   blui.setsOpen = j.value("sets_open", blui.setsOpen);
@@ -613,7 +625,8 @@ json App::blenderSessionSave() const {
   return json{{"right", blui.rightW},          {"outliner", blui.outlinerH},   {"shelf", blui.shelfH},
               {"sidebar", blui.sidebarW},      {"uv_share", blui.uvShare},     {"properties_tab", (int)blui.props},
               {"sidebar_tab", (int)blui.side}, {"sidebar_open", blui.sideOpen}, {"shelf_catalog", (int)blui.shelf},
-              {"brush_category", blui.brushCategory}, {"sets_open", blui.setsOpen}, {"layers_open", blui.layersOpen}};
+              {"brush_category", blui.brushCategory}, {"sets_open", blui.setsOpen}, {"layers_open", blui.layersOpen},
+              {"properties_pinned", blui.propsPinned}};
 }
 
 }  // namespace patina

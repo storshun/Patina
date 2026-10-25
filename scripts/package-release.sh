@@ -47,6 +47,12 @@ cp "$ROOT/third_party/tinyexr/LICENSE.miniz" "$STAGE/share/doc/patina/LICENSE.mi
 cp "$ROOT/third_party/ufbx/LICENSE" "$STAGE/share/doc/patina/LICENSE.ufbx"
 cp "$ROOT/third_party/llama.cpp/LICENSE" "$STAGE/share/doc/patina/LICENSE.llama.cpp"
 
+# (1.2.10) install.sh copies every shipped data folder: a new one must be added to its list
+for d in "$STAGE"/share/patina/*/; do
+  d="$(basename "$d")"
+  grep -q "^data=(.*\b$d\b" "$STAGE/install.sh" || { echo "install.sh does not install share/patina/$d" >&2; exit 1; }
+done
+
 tar -C "$OUT" -czf "$OUT/$NAME.tar.gz" "$NAME"
 git -C "$ROOT" archive --format=tar.gz --prefix="patina-$VERSION/" -o "$OUT/patina-$VERSION-src.tar.gz" HEAD
 ( cd "$OUT" && sha256sum "$NAME.tar.gz" "patina-$VERSION-src.tar.gz" > SHA256SUMS )

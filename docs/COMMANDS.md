@@ -251,7 +251,7 @@ Selects a brush preset and/or overrides parameters. Sizes are in viewport pixels
 | `follow_path` | boolean |  | Rotate dabs along the stroke |
 | `hardness` | number | 0 to 1 | Edge: 0 soft falloff, 1 hard edge |
 | `lazy_radius` | number | 0 to 100 | Lazy mouse: the stroke trails the cursor by this many pixels, for smooth lines |
-| `lock_face_set` | boolean |  | (1.2) Face set lock: a stroke only paints the face set it starts on |
+| `lock_face_set` | boolean |  | (1.2) Lock Face Sets: a stroke only paints the face set it starts on |
 | `lock_island` | boolean |  | Island lock: a stroke only paints the UV island it starts on |
 | `lock_set` | boolean |  | Set lock: a stroke only paints the texture set (or material slot) it starts on |
 | `lock_topology` | boolean |  | Topology lock: a stroke only paints the connected part of the mesh it starts on |
@@ -1617,7 +1617,7 @@ A copy of an object (1.2), with its layers and textures, right after it in the l
 
 ### `edit_face_set`
 
-Changes a face set (1.2): its name, color, hidden (its faces leave the 3D view, the brush and picking; renders and exports keep them), and its faces: add or remove "selection" or a list of face indices (faces added leave the sets they were in). One undo step.
+Changes a face set (1.2): its name, color, hidden (its faces leave the 3D view, the brush and picking; renders and exports keep them), and its faces: add or remove "selection" or a list of face indices (faces added leave the sets they were in; (1.2.10) a set left with no faces stays, empty). One undo step.
 
 | argument | type | range, default | description |
 |---|---|---|---|
@@ -1703,11 +1703,13 @@ The layers that paint the spot of the model under a viewport point (what the 3D 
 
 ### `layout`
 
-(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: model, uvs, bake, paint, export), full (every panel docked) or (1.2.7) blender (arranged as Blender is: the steps as workspace tabs, the Outliner and a Properties editor with vertical tabs, an asset shelf), and (1.2.7) its theme: patina (gray and copper) or vivid_dark (KDE Plasma's Vivid Dark: navy and cyan, as the Vivid Dark Blender theme). With no arguments it only reports. Returns the layout, the theme, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few words: the same marks the step bar shows. Only with the window open (not headless).
+(0.46) The window's layout: guided (the work in five steps along the top, each a screen with what it needs: model, uvs, bake, paint, export), full (every panel docked) or (1.2.7) blender (arranged as Blender is: the steps as workspace tabs, the Outliner and a Properties editor with vertical tabs, an asset shelf), and (1.2.7) its theme: patina (gray and copper) or vivid_dark (KDE Plasma's Vivid Dark: navy and cyan, as the Vivid Dark Blender theme). With no arguments it only reports. Returns the layout, the theme, the Guided step shown, and each step's state (done, look: needs a look, todo) with why, in a few words: the same marks the step bar shows, and (1.2.10) the Blender layout's Properties tab and its pin. Only with the window open (not headless).
 
 | argument | type | range, default | description |
 |---|---|---|---|
 | `mode` | guided \| full \| blender |  | Switch to this layout |
+| `pin_properties` | boolean |  | (1.2.10) Pin the Properties tab (the pin above its tabs): true keeps the tab when a tool or a workspace is chosen; false (default) shows the tool's tab (Select: Step, Paint: Layer, a retopology tool: Retopology) |
+| `properties_tab` | step \| object \| layer \| texture_set \| face_sets \| retopology \| history \| notes \| console |  | (1.2.10) The Blender layout's Properties tab to show |
 | `step` | model \| uvs \| bake \| paint \| export |  | Go to this step (switches to the Guided layout; in the Blender layout, its workspace tab) |
 | `theme` | patina \| vivid_dark |  | Switch to this theme (Edit > Preferences > Display) |
 
@@ -1762,7 +1764,7 @@ Saves the recorded steps as a job file (the format of `patina run`): to 'path', 
 
 ### `make_face_set`
 
-Makes face sets (1.2). from selection (default) or faces: one set of those faces, named name (they leave the sets they were in). from material, island or connected: a set for each material slot, UV island or connected part (replacing the sets there were). One undo step.
+Makes face sets (1.2). from selection (default) or faces: one set of those faces, named name (they leave the sets they were in; (1.2.10) a set left with no faces stays, empty, until delete_face_set). from material, island or connected: a set for each material slot, UV island or connected part (replacing the sets there were). One undo step.
 
 | argument | type | range, default | description |
 |---|---|---|---|
@@ -1966,11 +1968,11 @@ For tests: where a widget was last drawn in the window (x, y, width, height in w
 
 ### `use_face_set`
 
-Does something with a face set's faces in one go (1.2): select (the selection becomes them), add_to_selection, hide, show, isolate (hide every other set and the faces in none; again: show_all), show_all, fill (the selected layer gets the paint material on them, as the polygon fill does) or mask (the selected layer's mask: white on them, black elsewhere). One undo step.
+Does something with a face set's faces in one go (1.2): select (the selection becomes them), add_to_selection, (1.2.10) deselect (they leave the selection), hide, show, isolate (hide every other set and the faces in none; again: show_all), show_all, fill (the selected layer gets the paint material on them, as the polygon fill does) or mask (the selected layer's mask: white on them, black elsewhere). One undo step.
 
 | argument | type | range, default | description |
 |---|---|---|---|
-| `action` *(required)* | select \| add_to_selection \| hide \| show \| isolate \| show_all \| fill \| mask |  | What to do |
+| `action` *(required)* | select \| add_to_selection \| deselect \| hide \| show \| isolate \| show_all \| fill \| mask |  | What to do |
 | `set` | string |  | The face set: its name or id (not needed for show_all) |
 
 ### `uv_relax`

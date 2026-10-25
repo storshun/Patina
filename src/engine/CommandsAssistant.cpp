@@ -293,12 +293,18 @@ void Engine::registerAssistantCommands() {
          "(1.2.7) its theme: patina (gray and copper) or "
          "vivid_dark (KDE Plasma's Vivid Dark: navy and cyan, as the Vivid Dark Blender theme). With no arguments it "
          "only reports. Returns the layout, the theme, the Guided step shown, and each step's state (done, look: needs "
-         "a look, todo) with why, in a few words: the same marks the step bar shows. Only with the window open (not "
+         "a look, todo) with why, in a few words: the same marks the step bar shows, and (1.2.10) the Blender "
+         "layout's Properties tab and its pin. Only with the window open (not "
          "headless).",
          schema({{"mode", propEnum({"guided", "full", "blender"}, "Switch to this layout")},
                  {"step", propEnum({"model", "uvs", "bake", "paint", "export"},
                                    "Go to this step (switches to the Guided layout; in the Blender layout, its workspace tab)")},
-                 {"theme", propEnum({"patina", "vivid_dark"}, "Switch to this theme (Edit > Preferences > Display)")}}),
+                 {"theme", propEnum({"patina", "vivid_dark"}, "Switch to this theme (Edit > Preferences > Display)")},
+                 {"properties_tab", propEnum({"step", "object", "layer", "texture_set", "face_sets", "retopology", "history", "notes", "console"},
+                                             "(1.2.10) The Blender layout's Properties tab to show")},
+                 {"pin_properties", prop("boolean", "(1.2.10) Pin the Properties tab (the pin above its tabs): true keeps the "
+                                                    "tab when a tool or a workspace is chosen; false (default) shows the "
+                                                    "tool's tab (Select: Step, Paint: Layer, a retopology tool: Retopology)")}}),
          [](CommandContext& c, const json& a) {
            if (!c.engine.layoutHook) return json{{"available", false}, {"why", "Patina runs without its window"}};
            return c.engine.layoutHook(a);

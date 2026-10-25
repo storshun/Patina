@@ -2,7 +2,7 @@
 """(1.2) Loops and face sets in the real window (a hidden display, synthetic mouse and keys): with the Select tool,
 Alt+click by an edge of a torus selects a loop of quads right round it, Ctrl+Alt+click the ring the other way, an
 Alt+drag still turns the view; Alt+click in the UV editor selects a loop too; the Face Sets panel makes a set of the
-selection, its eye hides it from the 3D view, a click on its row selects its faces; the Select tool's Connected grows
+selection, (1.2.10) a click on its row makes it the active set and the buttons under the list add, remove, select and deselect, an emptied set stays, its trash deletes it, its eye hides it from the 3D view, Show All; the Select tool's Connected grows
 the selection; no two widgets share an ID.
 
     python3 tests/gui/test_face_sets.py [path/to/patina]
@@ -84,24 +84,101 @@ def main():
         click(s, "btn.facesets.new")
         s.settle(3)
         sets = s("list_face_sets")["face_sets"]
-        check(len(sets) == 1 and sets[0]["faces"] == n, "New from the selection: a face set of it (%s)" % [x["faces"] for x in sets])
-        s("select_faces", mode="clear")
+        check(len(sets) == 1 and sets[0]["faces"] == n, "Create from Selection: a face set of it (%s)" % [x["faces"] for x in sets])
         name = sets[0]["name"] if sets else ""
+        # (1.2.10) as Blender's vertex groups: a click on the row makes it active, Select adds its faces
+        s("select_faces", mode="clear")
         click(s, "facesets.row." + name)
         s.settle(3)
-        check(selected(s) == n, "a click on its row selects its faces (%d)" % selected(s))
+        check(selected(s) == 0, "a click on its row only makes it the active set (%d selected)" % selected(s))
+        click(s, "facesets.select")
+        s.settle(3)
+        check(selected(s) == n, "Select selects its faces (%d)" % selected(s))
+        s("select_faces", mode="add", faces=[0, 1])
+        click(s, "facesets.deselect")
+        s.settle(3)
+        check(selected(s) == 2, "Deselect takes only its faces out of the selection (%d left)" % selected(s))
+        click(s, "facesets.deselect_all")
+        s.settle(3)
+        check(selected(s) == 0, "Deselect All clears it")
+        # Add Selection, Remove Selection
+        s("select_faces", mode="set", faces=[0, 1, 2])
+        click(s, "facesets.assign")
+        s.settle(3)
+        check(s("list_face_sets")["face_sets"][0]["faces"] == n + 3, "Add Selection puts the selected faces in it")
+        click(s, "facesets.remove")
+        s.settle(3)
+        check(s("list_face_sets")["face_sets"][0]["faces"] == n, "Remove Selection takes them out")
+        # a new set of all its faces: the first set stays, empty, with its name and color
+        before = s("list_face_sets")["face_sets"][0]
+        s("use_face_set", set=before["id"], action="select")
+        click(s, "btn.facesets.new")
+        s.settle(3)
+        sets = s("list_face_sets")["face_sets"]
+        check(len(sets) == 2 and sets[0]["name"] == before["name"] and sets[0]["color"] == before["color"] and sets[0]["faces"] == 0,
+              "Create from Selection of all its faces: the first set stays, empty, with its name and color (%s)"
+              % [(x["name"], x["faces"]) for x in sets])
+        click(s, "btn.facesets.delete." + name)
+        s.settle(3)
+        sets = s("list_face_sets")["face_sets"]
+        check([x["name"] for x in sets] == [sets[0]["name"]] and name not in [x["name"] for x in sets],
+              "its trash button deletes the set (%s)" % [x["name"] for x in sets])
+        s("undo")
+        s.settle(2)
+        name = s("list_face_sets")["face_sets"][0]["name"]
+        s("make_face_set", **{"from": "connected"})
+        s.settle(2)
+        name = s("list_face_sets")["face_sets"][0]["name"]
         # its eye: the check box left of the row
         r = rect(s, "facesets.row." + name)
         box = rect(s, "facesets.list")
         s.x.click(box[0] + 18, (r[1] + r[3]) / 2)
         s.settle(3)
         check(s("list_face_sets")["face_sets"][0]["hidden"], "its eye hides it")
+        click(s, "facesets.show_all")
+        s.settle(3)
+        check(not s("list_face_sets")["face_sets"][0]["hidden"], "Show All, always under the Create buttons, shows it again")
+        # ---- (1.2.10) the Blender layout's Properties pin: a tool chosen shows its tab, unless pinned
+        s("layout", mode="blender", pin_properties=False, properties_tab="face_sets")
+        s.settle(4)
+        s("set_tool", tool="paint")
+        s.settle(3)
+        check(s("layout")["properties_tab"] == "layer", "unpinned: the Paint tool shows the Layer tab")
+        s("layout", properties_tab="face_sets")
+        s.settle(2)
+        click(s, "btn.props.pin")
+        check(s("layout")["pin_properties"] is True, "the pin above the tabs pins the Properties tab")
+        s("set_tool", tool="select")
+        s.settle(3)
+        s("set_tool", tool="paint")
+        s.settle(3)
+        check(s("layout")["properties_tab"] == "face_sets", "pinned: Select, then Paint, and the Face Sets tab stays")
+        click(s, "btn.props.pin")
+        check(s("layout")["pin_properties"] is False, "a second click unpins it")
+        s("layout", mode="full")
+        s("set_tool", tool="select")
+        s.settle(4)
         # ---- Connected
         s("use_face_set", action="show_all")
         s("select_faces", mode="set", faces=[0])
         click(s, "btn.select.linked")
         s.settle(3)
         check(selected(s) == 1536, "Connected grows the selection to the whole torus (%d)" % selected(s))
+        # (1.2.10) A in the 3D view, with any tool: all, then none
+        s("set_tool", tool="paint")
+        s.x.move(*vp(0.5, 0.5))
+        time.sleep(0.3)
+        s.x.key("a")
+        s.settle(3)
+        check(selected(s) == 0, "A with some faces selected: none (Paint tool) (%d)" % selected(s))
+        s.x.key("a")
+        s.settle(3)
+        check(selected(s) == 1536, "A again: every face (%d)" % selected(s))
+        s.x.key("Alt_L", True)
+        s.x.key("a")
+        s.x.key("Alt_L", False)
+        s.settle(3)
+        check(selected(s) == 0, "Alt+A: none (%d)" % selected(s))
         for lang in ("x-test", "en"):
             s("language_set", code=lang)
             s.settle(10)

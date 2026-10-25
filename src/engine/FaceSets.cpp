@@ -99,10 +99,8 @@ uint32_t Document::addFaceSet(const std::vector<uint32_t>& faces, const std::str
   for (uint32_t f : faces)
     if (f < of.size()) of[f] = s.id;
   sets.push_back(s);
-  // (sets left without faces go)
-  sets.erase(std::remove_if(sets.begin(), sets.end(),
-                            [&](const FaceSet& x) { return x.id != s.id && std::find(of.begin(), of.end(), x.id) == of.end(); }),
-             sets.end());
+  // (1.2.10) a set its faces all left stays, empty, with its name and color, as a Blender vertex group: only Delete
+  // takes a set away (before, it went, and the new set seemed to replace it)
   setFaceSets(std::move(sets), std::move(of), "Make a face set");
   return s.id;
 }

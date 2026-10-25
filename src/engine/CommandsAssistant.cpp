@@ -263,11 +263,11 @@ void Engine::registerAssistantCommands() {
          "texel_density, symmetry (the mesh symmetry check), high_poly (bake from a high-poly mesh), bake_down (1.1: the layers onto a low-poly model), "
          "new_texture_set (a texture set from the selection), texture_set (the Texture Set panel), blender (the "
          "Blender link), preferences, shortcuts, macros, material_editor (a library material to edit or copy, or a "
-         "new one with a generator), mesh_check (what is wrong with the model, and fixes), export_model (the model with its textures), reduce (fewer polygons), batch (recipes on many files), transform (units, size, turn, origin); and (0.36) a panel brought to the front: layers, properties, materials, brushes, console, history, notes, colors; about, help (shortcuts), welcome, pen_test. Only with the window open (not headless).",
+         "new one with a generator), mesh_check (what is wrong with the model, and fixes), export_model (the model with its textures), reduce (fewer polygons), batch (recipes on many files), transform (units, size, turn, origin); and (0.36) a panel brought to the front: layers, properties, materials, brushes, console, history, notes, colors; about, help (shortcuts), welcome, pen_test; and (1.2.12) tutorial: Patina in 5 Minutes, the guided tutorial, in the browser (the result says which page). Only with the window open (not headless).",
          schema({{"window", propEnum({"export", "render", "texel_density", "symmetry", "high_poly", "bake_down", "new_texture_set",
                                       "texture_set", "blender", "preferences", "shortcuts", "macros", "retopology", "mesh_check", "export_model", "reduce", "batch", "transform", "collision", "lightmap",
                                       "material_editor", "layers", "properties", "materials", "brushes", "console",
-                                      "history", "notes", "colors", "about", "help", "welcome", "pen_test", "face_sets"},
+                                      "history", "notes", "colors", "about", "help", "welcome", "pen_test", "face_sets", "tutorial"},
                                      "The window")},
                  {"preset", propEnum({"blender", "gltf", "unreal", "unity"}, "export: the map layout to start with")},
                  {"what", propEnum({"all", "layer", "mask"}, "export: all layers, only the selected layer, or its mask")},
@@ -282,8 +282,15 @@ void Engine::registerAssistantCommands() {
            std::string w = a.at("window");
            e.lastOpenedWindow = w;
            if (!e.openWindow) return json{{"opened", false}, {"window", w}, {"why", "Patina runs without its window"}};
+           e.lastOpenedPage.clear();
            e.openWindow(w, a);
-           return json{{"opened", true}, {"window", w}};
+           json r{{"opened", true}, {"window", w}};
+           if (w == "tutorial") {  // (1.2.12) the page, or why it isn't there
+             r["opened"] = !e.lastOpenedPage.empty();
+             r["page"] = e.lastOpenedPage;
+             if (e.lastOpenedPage.empty()) r["why"] = "docs/tutorial/index.html was not found next to Patina's data";
+           }
+           return r;
          }});
 
   R.add({"layout",

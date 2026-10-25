@@ -359,6 +359,7 @@ class App {
   bool uvRunOnSelection(const char* cmd, json args, const char* status = nullptr);
   bool envDrag = false;
   bool showWelcomeOnStart = true;
+  bool tutorialDismissed = false;   // (1.2.12) the welcome window's Patina in 5 Minutes button hidden for good
   std::string keymapCapture;    // action waiting for a new key in the shortcut editor
   bool keymapScrollTo = false;  // ... scrolled to (Change shortcut on a toolbar button)
   std::string prefsScrollTo;    // (0.36) open_window preferences {section}: scrolled to it

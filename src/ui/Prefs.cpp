@@ -479,6 +479,7 @@ void App::loadSession() {
     }
     autoReloadMesh = j.value("auto_reload_mesh", autoReloadMesh);
     showWelcomeOnStart = j.value("show_welcome", showWelcomeOnStart);
+    tutorialDismissed = j.value("tutorial_dismissed", tutorialDismissed);
     // the tool windows open when Patina last closed (their places are in layout.ini; Retopology is open,
     // as a tab, until closed)
     // 0.22: how lines behind the model are drawn, and whether new lines' ends snap
@@ -594,6 +595,7 @@ void App::saveSession(bool force) {
                             {"ground", engine.viewOptions.pathTrace.ground}, {"clamp", engine.viewOptions.pathTrace.clamp}}},
             {"auto_reload_mesh", autoReloadMesh},
             {"show_welcome", showWelcomeOnStart},
+            {"tutorial_dismissed", tutorialDismissed},
             {"retopo_lines_behind", engine.viewOptions.retopoLinesBehind},
             {"retopo_preview", engine.viewOptions.retopoPreview},
             {"axis_gizmo", engine.viewOptions.axisGizmo},

@@ -289,6 +289,7 @@ class Engine {
   // 0.12: opens one of the GUI's windows (export, render, texel density...); unset when headless
   std::function<void(const std::string& window, const nlohmann::json& args)> openWindow;
   std::string lastOpenedWindow;  // what open_window was last asked for (get_state, tests)
+  std::string lastOpenedPage;    // (1.2.12) the local page (manual, tutorial, Patina Web) last opened in the browser
   // GUI hook (0.46): the `layout` command (the Guided or Full layout, the Guided step; the steps' states); unset when
   // headless
   std::function<nlohmann::json(const nlohmann::json& args)> layoutHook;

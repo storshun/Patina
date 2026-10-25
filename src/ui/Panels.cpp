@@ -4,6 +4,7 @@
 #include <imgui_internal.h>
 #include <imgui_stdlib.h>
 
+#include <cstdlib>
 #include <cstring>
 #include <filesystem>
 
@@ -337,6 +338,7 @@ void App::drawMenuBar() {
     ImGui::EndMenu();
   }
   if (menuHeader(engine, "help", L_("Help"))) {
+    if (ImGui::MenuItem(L_("Patina in 5 Minutes (Tutorial)"))) openLocalPage("tutorial");  // (1.2.12)
     if (ImGui::MenuItem(L_("Manual (Opens in Your Browser)"))) openLocalPage("manual");
     if (ImGui::MenuItem(L_("What's New (The Change Log)"))) openLocalPage("manual:changes");  // (1.2)
     if (ImGui::MenuItem(L_("Shortcuts & Usage"), "F1")) showHelp = true;
@@ -1982,11 +1984,15 @@ void App::importBrushesUI(const std::vector<std::string>& files) {
 
 bool App::confirmDiscard() { return !engine.sceneDirty(); }
 
-// Opens the offline manual or Patina Web in the system browser (file:// URL).
+// Opens the offline manual, (1.2.12) the Patina in 5 Minutes tutorial or Patina Web in the system browser (file:// URL).
+// With PATINA_NO_BROWSER set (the window tests) the page is only found and noted (Engine::lastOpenedPage).
 void App::openLocalPage(const std::string& which) {
   fs::path d = paths::dataDir();
   std::vector<fs::path> cands;
-  if (which.rfind("manual", 0) == 0) {
+  if (which == "tutorial") {
+    cands = {d / "docs" / "tutorial" / "index.html", d / ".." / "doc" / "patina" / "tutorial" / "index.html",
+             d / "tutorial" / "index.html"};
+  } else if (which.rfind("manual", 0) == 0) {
     // "manual" or "manual:<page>" (a page of it, such as manual:translating)
     std::string page = which.size() > 7 ? which.substr(7) + ".html" : std::string("index.html");
     cands = {d / "docs" / "manual" / page, d / ".." / "doc" / "patina" / "manual" / page, d / "manual" / page};
@@ -2003,12 +2009,16 @@ void App::openLocalPage(const std::string& which) {
 #endif
     for (size_t i = 0; i < url.size(); ++i)
       if (url[i] == ' ') url.replace(i, 1, "%20");
-    if (SDL_OpenURL(url.c_str())) setStatus(F_("Opened %s in your browser", p.c_str()));
+    engine.lastOpenedPage = p;
+    if (std::getenv("PATINA_NO_BROWSER")) setStatus(F_("Opened %s in your browser", p.c_str()));
+    else if (SDL_OpenURL(url.c_str())) setStatus(F_("Opened %s in your browser", p.c_str()));
     else setStatus(F_("Could not open a browser: %s  (%s)", SDL_GetError(), p.c_str()));
     return;
   }
-  setStatus(which.rfind("manual", 0) == 0 ? T_("Manual not found (expected docs/manual/index.html next to the materials)")
-                                          : T_("Patina Web not found (build it with scripts/build_web.py)"));
+  engine.lastOpenedPage.clear();
+  setStatus(which == "tutorial"               ? T_("The tutorial was not found (expected docs/tutorial/index.html next to the materials)")
+            : which.rfind("manual", 0) == 0 ? T_("Manual not found (expected docs/manual/index.html next to the materials)")
+                                            : T_("Patina Web not found (build it with scripts/build_web.py)"));
 }
 
 void App::drawAbout() {

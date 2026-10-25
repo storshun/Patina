@@ -845,6 +845,7 @@ json Engine::state() {
   s["atlas_resolution"] = doc.tex.resolution();
   s["texture_tiles"] = doc.mesh.tiles.active() ? doc.mesh.tiles.count() : 0;
   s["last_window"] = lastOpenedWindow;
+  s["last_page"] = lastOpenedPage;  // (1.2.12) the local page last opened in the browser
   s["layers"] = doc.layerStackJson();
   s["selected_layer"] = doc.selected;
   s["edit_mask"] = doc.editMask;

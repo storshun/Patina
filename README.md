@@ -266,7 +266,19 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.11 (2026-10-25)
+### 1.2.12 (2026-10-25)
+
+#### Added
+
+- **Patina in 5 Minutes**, a guided tutorial that comes with Patina. It has sixteen short chapters with real
+  screenshots: connect Blender and Claude, import, add objects, unwrap, bake, paint layers, brushes, your own materials,
+  smart materials and export. Each chapter shows the long way and the pie, and Play runs it like a short video.
+  - The welcome window has one button that opens it in your browser. The **x** beside the button hides it for good.
+  - It is always in **Help › Patina in 5 Minutes (Tutorial)** and in the command palette.
+  - The manual's first page links to it. MCP: `open_window` `tutorial`.
+
+<details>
+<summary><b>1.2.11 (2026-10-25)</b></summary>
 
 #### Added
 
@@ -280,6 +292,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
 - The view pie's down-right item is now Frame selection. The retopology preview it had is still on the bar over the
   3D view and in the View menu.
 - The manual's pie menus section now says "radial menus" too, so a search for either finds it.
+
+</details>
 
 <details>
 <summary><b>1.2.10 (2026-10-25)</b></summary>

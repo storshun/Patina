@@ -164,6 +164,7 @@ void App::openWindowByName(const std::string& w, const json& a) {
   else if (w == "about") showAbout = true;
   else if (w == "help") showHelp = true;
   else if (w == "welcome") showWelcome = true;
+  else if (w == "tutorial") openLocalPage("tutorial");  // (1.2.12)
   else if (w == "pen_test") showPenTest = true;
   else if (w == "material_editor") {
     if (auto* e = engine.materials.find(a.value("material", std::string())); e && e->def.type == MaterialType::Procedural) {
@@ -739,6 +740,33 @@ void App::drawWelcome() {
   }
   ImGui::TextWrapped("%s", T_("Paint materials onto 3D models, regardless of their UVs. Open a model to start, or try the "
                               "sample."));
+  // (1.2.12) the guided tutorial, one button, until it is dismissed (it stays in the Help menu)
+  if (!tutorialDismissed) {
+    ImGui::Spacing();
+    const ui::Theme& th = ui::theme();
+    const float fh = ImGui::GetFrameHeight() * 1.5f, gap = ImGui::GetStyle().ItemSpacing.x;
+    ImGui::PushStyleColor(ImGuiCol_Button, th.accentDeep);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, mixColor(th.accentDeep, th.accentLight, 0.25f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, mixColor(th.accentDeep, th.accentLight, 0.4f));
+    ImGui::PushStyleColor(ImGuiCol_Text, th.onAccent);
+    if (ImGui::Button(L_("Patina in 5 Minutes: the guided tutorial (opens in your browser)"),
+                      ImVec2(ImGui::GetContentRegionAvail().x - fh - gap, fh)))
+      openLocalPage("tutorial");
+    ImGui::PopStyleColor(4);
+    {
+      ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
+      engine.uiRects["welcome.tutorial"] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
+    }
+    ImGui::SetItemTooltip("%s", T_("Sixteen short chapters with real screenshots: import, objects, UVs, baking, layers, brushes, "
+                                   "your own materials, smart materials and export. The long way and the pie for each step."));
+    ImGui::SameLine(0, gap);
+    if (ImGui::Button("x##tutorial_dismiss", ImVec2(fh, fh))) tutorialDismissed = true, saveSession(true);
+    {
+      ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
+      engine.uiRects["welcome.tutorial_dismiss"] = {a.x, a.y, b.x - a.x, b.y - a.y};
+    }
+    ImGui::SetItemTooltip("%s", T_("Hide this button for good. The tutorial stays in Help > Patina in 5 Minutes (Tutorial)."));
+  }
   ImGui::Spacing();
   float w = (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().ItemSpacing.x) * 0.5f;
   ImGui::BeginGroup();

@@ -1786,7 +1786,7 @@ Measures how far the mesh is from mirror-symmetric across X (Blender's X): every
 
 ### `open_window`
 
-Opens one of Patina's windows, set up for what was asked: export (textures, with a preset), render, texel_density, symmetry (the mesh symmetry check), high_poly (bake from a high-poly mesh), bake_down (1.1: the layers onto a low-poly model), new_texture_set (a texture set from the selection), texture_set (the Texture Set panel), blender (the Blender link), preferences, shortcuts, macros, material_editor (a library material to edit or copy, or a new one with a generator), mesh_check (what is wrong with the model, and fixes), export_model (the model with its textures), reduce (fewer polygons), batch (recipes on many files), transform (units, size, turn, origin); and (0.36) a panel brought to the front: layers, properties, materials, brushes, console, history, notes, colors; about, help (shortcuts), welcome, pen_test. Only with the window open (not headless).
+Opens one of Patina's windows, set up for what was asked: export (textures, with a preset), render, texel_density, symmetry (the mesh symmetry check), high_poly (bake from a high-poly mesh), bake_down (1.1: the layers onto a low-poly model), new_texture_set (a texture set from the selection), texture_set (the Texture Set panel), blender (the Blender link), preferences, shortcuts, macros, material_editor (a library material to edit or copy, or a new one with a generator), mesh_check (what is wrong with the model, and fixes), export_model (the model with its textures), reduce (fewer polygons), batch (recipes on many files), transform (units, size, turn, origin); and (0.36) a panel brought to the front: layers, properties, materials, brushes, console, history, notes, colors; about, help (shortcuts), welcome, pen_test; and (1.2.12) tutorial: Patina in 5 Minutes, the guided tutorial, in the browser (the result says which page). Only with the window open (not headless).
 
 | argument | type | range, default | description |
 |---|---|---|---|
@@ -1797,7 +1797,7 @@ Opens one of Patina's windows, set up for what was asked: export (textures, with
 | `preset` | blender \| gltf \| unreal \| unity |  | export: the map layout to start with |
 | `section` | language \| http \| features \| pies \| undo |  | preferences: scrolled to this section |
 | `what` | all \| layer \| mask |  | export: all layers, only the selected layer, or its mask |
-| `window` *(required)* | export \| render \| texel_density \| symmetry \| high_poly \| bake_down \| new_texture_set \| texture_set \| blender \| preferences \| shortcuts \| macros \| retopology \| mesh_check \| export_model \| reduce \| batch \| transform \| collision \| lightmap \| material_editor \| layers \| properties \| materials \| brushes \| console \| history \| notes \| colors \| about \| help \| welcome \| pen_test \| face_sets |  | The window |
+| `window` *(required)* | export \| render \| texel_density \| symmetry \| high_poly \| bake_down \| new_texture_set \| texture_set \| blender \| preferences \| shortcuts \| macros \| retopology \| mesh_check \| export_model \| reduce \| batch \| transform \| collision \| lightmap \| material_editor \| layers \| properties \| materials \| brushes \| console \| history \| notes \| colors \| about \| help \| welcome \| pen_test \| face_sets \| tutorial |  | The window |
 
 ### `path_trace`
 

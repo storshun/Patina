@@ -178,7 +178,8 @@ class Session:
         if session is not False and not os.path.exists(sp):  # (session=False: a first start, no session.json)
             with open(sp, "w") as f:
                 json.dump(dict({"show_welcome": bool(welcome)}, **(session or {})), f)  # (session: preferences)
-        env = dict(os.environ, HOME=self.home, DISPLAY=display, SDL_VIDEO_DRIVER="x11")
+        # (1.2.12) PATINA_NO_BROWSER: the manual or the tutorial is only found, never opened in a real browser
+        env = dict(os.environ, HOME=self.home, DISPLAY=display, SDL_VIDEO_DRIVER="x11", PATINA_NO_BROWSER="1")
         env.pop("WAYLAND_DISPLAY", None)  # on that X display, never on the desktop's Wayland session
         for attempt in range(3):
             self.proc = subprocess.Popen([binary, "--port", str(port)], env=env, stdout=subprocess.DEVNULL,

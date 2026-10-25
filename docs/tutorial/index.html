@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Patina in 5 Minutes</title>
+<!-- (1.2.12) The guided tutorial, shipped with Patina: the welcome window and Help › Patina in 5 Minutes open it.
+     The fonts are Patina's own: ../../fonts in the Windows folder and the source tree, ../../../patina/fonts in a
+     Linux install (share/doc/patina/tutorial). -->
+<style>
+/* Layout: a fixed top bar (title, countdown, step-colored progress), the screenshot stage beside a side card,
+   a fixed bottom bar (Back, Next, Play, key recap). One dark look on purpose: Patina's Vivid Dark theme. */
+@font-face { font-family: "DejaVu Sans"; src: local("DejaVu Sans"), url("../../fonts/DejaVuSans.ttf") format("truetype"), url("../../../patina/fonts/DejaVuSans.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "DejaVu Sans"; src: local("DejaVu Sans Bold"), url("../../fonts/DejaVuSans-Bold.ttf") format("truetype"), url("../../../patina/fonts/DejaVuSans-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "DejaVu Sans Mono"; src: local("DejaVu Sans Mono"), url("../../fonts/DejaVuSansMono.ttf") format("truetype"), url("../../../patina/fonts/DejaVuSansMono.ttf") format("truetype"); font-display: swap; }
+:root {
+  color-scheme: dark;
+  --menubar: #121A28; --window: #182030; --child: #151D2B; --popup: #161E2E; --border: #2A3550;
+  --frame: #222C44; --frame-hover: #2C3854; --frame-active: #33405F; --button: #26314B; --button-hover: #2F3C5C;
+  --text: #D3DAE3; --dim: #8B919D; --accent: #00A1C5; --accent-deep: #007C98; --accent-dim: #12384A;
+  --accent-light: #5FD4EE; --on-accent: #FFFFFF; --warn: #E8A23A;
+  --model: #5A8ED8; --uvs: #2CB2A6; --bake: #9A72DA; --paint: #E8852C; --export: #62B862;
+  --radius: 5px;
+  --ui: "DejaVu Sans", Verdana, "Bitstream Vera Sans", system-ui, sans-serif;
+  --mono: "DejaVu Sans Mono", "Bitstream Vera Sans Mono", Menlo, Consolas, monospace;
+  --step: var(--accent);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--window); color: var(--text); font: 14px/1.5 var(--ui); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--menubar); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
+b { color: #fff; font-weight: 700; }
+code, .k { font-family: var(--mono); }
+
+/* ---------- top bar */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--menubar); border-bottom: 1px solid var(--border);
+  padding-block: 8px 0; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.top-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.brand h1 { margin: 0; font-size: 17px; letter-spacing: .01em; text-wrap: balance; }
+.brand .ver { color: var(--dim); font-size: 12px; }
+.spacer { flex: 1; }
+.clock { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 20px; padding: 2px 10px; border-radius: var(--radius);
+  background: var(--frame); border: 1px solid var(--border); min-width: 84px; text-align: center; }
+.clock.run { color: var(--accent-light); border-color: var(--accent-deep); }
+.seg-btn { background: var(--button); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 10px; cursor: pointer; font-size: 13px; }
+.seg-btn:hover { background: var(--button-hover); }
+.seg-btn[aria-pressed="true"] { background: var(--accent-deep); color: var(--on-accent); border-color: var(--accent-deep); }
+.progress { display: flex; gap: 2px; margin-top: 8px; height: 22px; align-items: stretch; }
+.progress button { border: 0; padding: 0; cursor: pointer; background: transparent; position: relative; min-width: 6px; }
+.progress button i { position: absolute; left: 0; right: 0; bottom: 4px; height: 5px; border-radius: 2px; background: var(--c); opacity: .35; }
+.progress button.done i { opacity: .75; }
+.progress button.on i { opacity: 1; height: 8px; bottom: 3px; box-shadow: 0 0 0 1px var(--menubar), 0 0 0 2px var(--c); }
+.progress button .fill { position: absolute; left: 0; bottom: 3px; height: 8px; border-radius: 2px; background: #fff; opacity: .55; width: 0; }
+
+/* ---------- main */
+main { padding-block: 16px 96px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.lesson { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 16px; max-width: 1880px; margin: 0 auto; align-items: start; }
+@media (max-width: 1100px) { .lesson { grid-template-columns: minmax(0, 1fr) 340px; } }
+@media (max-width: 860px) { .lesson { grid-template-columns: minmax(0, 1fr); } }
+
+.stage-wrap { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.stage { position: relative; width: 100%; aspect-ratio: 16 / 10; max-width: 100%; max-height: calc(100vh - 280px); min-height: 260px; background: #0d131e; border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; }
+.shot { position: absolute; left: 0; top: 0; transform-origin: 0 0; transition: transform .45s ease; }
+.shot img { display: block; max-width: none; user-select: none; -webkit-user-drag: none; }
+.ring { position: absolute; border: 2px solid var(--accent-light); border-radius: 6px; box-shadow: 0 0 0 3px rgba(0,161,197,.28), 0 0 18px rgba(95,212,238,.35); pointer-events: none; }
+.ring.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(0,161,197,.18), 0 0 26px rgba(95,212,238,.5); } }
+.ring .tag { position: absolute; left: -2px; top: -24px; white-space: nowrap; font: 700 11px/1 var(--ui); background: var(--accent-deep); color: var(--on-accent);
+  padding: 4px 6px; border-radius: 4px; }
+.ring.below .tag { top: auto; bottom: -24px; }
+.keys-on-shot { position: absolute; left: 12px; bottom: 12px; display: flex; gap: 6px; flex-wrap: wrap; max-width: calc(100% - 24px); pointer-events: none; }
+.kchip { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: var(--radius); background: rgba(18,26,40,.92);
+  border: 1px solid var(--frame-active); box-shadow: 0 2px 0 #0a0f18; font: 700 14px/1 var(--mono); color: #fff; }
+.kchip small { font: 400 12px/1 var(--ui); color: var(--dim); }
+.caption { color: var(--dim); font-size: 12.5px; min-height: 1.5em; }
+.views { display: flex; gap: 6px; flex-wrap: wrap; }
+.views button { width: 92px; height: 56px; border-radius: 4px; border: 1px solid var(--border); background: var(--child) center/cover no-repeat; cursor: pointer; padding: 0; }
+.views button[aria-current="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+/* ---------- side card */
+.card { background: var(--child); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.chip-step { align-self: flex-start; display: inline-flex; gap: 8px; align-items: center; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--step); border: 1px solid var(--step); border-radius: 999px; padding: 2px 10px 2px 4px; }
+.chip-step .n { background: var(--step); color: #0d131e; border-radius: 999px; min-width: 20px; height: 20px; display: grid; place-items: center; font-weight: 700; letter-spacing: 0; }
+.card h2 { margin: 0; font-size: 20px; line-height: 1.25; text-wrap: balance; }
+.budget { font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.opt { color: var(--warn); border: 1px solid var(--warn); border-radius: 4px; padding: 1px 6px; font-size: 11px; margin-left: 6px; }
+ol.lines, ul.facts { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+ol.lines li::marker { color: var(--step); font-weight: 700; }
+ul.facts { color: var(--dim); }
+ul.facts b { color: var(--text); }
+.result { border-left: 3px solid var(--step); padding: 4px 10px; color: var(--text); background: rgba(255,255,255,.02); }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); }
+.tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 6px 12px; cursor: pointer; color: var(--dim); }
+.tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--step); }
+.tabpanel { display: grid; gap: 8px; }
+.nopie { align-self: flex-start; font-size: 11px; color: var(--dim); background: var(--frame); border: 1px solid var(--border); border-radius: 4px; padding: 1px 7px; }
+.check { font-size: 11px; color: var(--warn); border: 1px dashed var(--warn); border-radius: 4px; padding: 0 6px; }
+.note { font-size: 12.5px; color: var(--dim); }
+.note.bl { border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; }
+.cmd { font-family: var(--mono); font-size: 12.5px; background: #0d131e; border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; overflow-x: auto; white-space: pre; }
+.why, .watch { padding: 8px 10px; border-radius: 4px; font-size: 13.5px; }
+.why { background: var(--popup); border: 1px solid var(--border); }
+.why::before { content: "Why  "; font-weight: 700; color: var(--accent-light); }
+.watch { background: rgba(232,162,58,.08); border: 1px solid rgba(232,162,58,.45); }
+.watch::before { content: "Watch out  "; font-weight: 700; color: var(--warn); }
+.favs { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 4px 10px; font-size: 12.5px; margin: 0; padding: 0; list-style: none; }
+.favs li { background: var(--frame); border-radius: 4px; padding: 3px 8px; }
+.favs li span { color: var(--dim); font-family: var(--mono); margin-right: 6px; }
+.k { display: inline-block; padding: 0 5px; border: 1px solid var(--frame-active); border-bottom-width: 2px; border-radius: 4px; background: var(--frame); font-size: 12.5px; line-height: 1.5; color: #fff; white-space: nowrap; }
+
+/* ---------- bottom bar */
+.bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--menubar); border-top: 1px solid var(--border);
+  padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bottom-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; max-width: 1880px; margin: 0 auto; }
+.btn { background: var(--button); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 14px; cursor: pointer; }
+.btn:hover { background: var(--button-hover); }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn.next { background: var(--step); border-color: var(--step); color: #0d131e; font-weight: 700; }
+.btn.next:hover { filter: brightness(1.08); }
+.btn.play[aria-pressed="true"] { background: var(--accent-deep); border-color: var(--accent-deep); color: var(--on-accent); }
+.recap { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; color: var(--dim); font-size: 12.5px; }
+.recap .lbl { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+.hint { color: var(--dim); font-size: 11.5px; }
+@media (max-width: 860px) { .hint { display: none; } main { padding-bottom: 150px; } }
+
+/* ---------- the end: recap and challenge */
+.allkeys { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px 12px; font-size: 12.5px; }
+.allkeys div { display: flex; gap: 8px; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 3px; }
+.allkeys span { color: var(--dim); }
+
+/* ---------- overview artboard */
+.overview { max-width: 1880px; margin: 0 auto; }
+.overview h2 { font-size: 18px; margin: 0 0 4px; }
+.overview p { margin: 0 0 14px; color: var(--dim); }
+.board { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.mini { background: var(--child); border: 1px solid var(--border); border-top: 3px solid var(--c); border-radius: var(--radius); overflow: hidden; cursor: pointer; text-align: left; padding: 0; display: flex; flex-direction: column; }
+.mini:hover { border-color: var(--c); }
+.mini .th { aspect-ratio: 16/10; background: #0d131e center/cover no-repeat; }
+.mini .meta { padding: 8px 10px; display: grid; gap: 4px; }
+.mini .row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--dim); }
+.mini .row b { font-size: 13.5px; }
+.mini .lines { font-size: 12px; color: var(--dim); margin: 0; padding-left: 16px; }
+.mini .tagp { color: var(--c); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+@media (prefers-reduced-motion: reduce) { .shot { transition: none; } .ring.pulse { animation: none; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-row">
+    <div class="brand"><h1>Patina in 5 Minutes</h1><span class="ver">Screens from Patina 1.2.11 · Guided layout · Vivid Dark</span></div>
+    <div class="spacer"></div>
+    <button class="seg-btn" id="ovBtn" aria-pressed="false" type="button">Overview</button>
+    <div class="clock" id="clock" aria-label="Time left" role="timer">5:00</div>
+  </div>
+  <nav class="progress" id="progress" aria-label="Chapters"></nav>
+</header>
+
+<main>
+  <section class="lesson" id="lesson" aria-live="polite">
+    <div class="stage-wrap">
+      <div class="stage" id="stage"><div class="shot" id="shot"><img id="img" alt=""></div><div class="keys-on-shot" id="keysOnShot"></div></div>
+      <div class="caption" id="caption"></div>
+      <div class="views" id="views" aria-label="Screenshots in this chapter"></div>
+    </div>
+    <aside class="card" id="card"></aside>
+  </section>
+  <section class="overview" id="overview" hidden>
+    <h2>All chapters</h2>
+    <p>One card for each chapter, for review. Click a card to open its chapter.</p>
+    <div class="board" id="board"></div>
+  </section>
+</main>
+
+<footer class="bottom">
+  <div class="bottom-row">
+    <button class="btn" id="back" type="button">Back</button>
+    <button class="btn next" id="next" type="button">Next</button>
+    <button class="btn play" id="play" type="button" aria-pressed="false">Play</button>
+    <div class="recap" id="recap"></div>
+    <span class="hint">→ or Space: next · ←: back</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+const C = { accent: "#00A1C5", model: "#5A8ED8", uvs: "#2CB2A6", bake: "#9A72DA", paint: "#E8852C", export: "#62B862" };
+const STEP = { accent: "Start", model: "Model", uvs: "UVs", bake: "Bake", paint: "Paint", export: "Export" };
+const SIZE = {"00_hero":[1500,940],"00_start":[1600,960],"01_add_to_quick_favorites":[270,229],"01_pie_q_tutorial_set":[533,274],"01_prefs_display":[524,866],"02_blender_menu":[349,150],"03_blender_link_panel":[399,360],"03_full_blender_link":[1600,960],"04_file_menu":[358,415],"04_model_step":[1600,960],"05_model_two_objects":[1600,960],"06_objects_list":[381,157],"06_paint_step_object":[1600,960],"07_pie_edit_island":[445,274],"07_pie_view_uvchecker":[458,274],"07_uv_checker_view":[582,805],"07_uv_menu":[281,395],"07_uvs_step":[1600,960],"08_ao_view":[1207,833],"08_bake_menu":[281,210],"08_bake_step_done":[1600,960],"08_pie_channels_ao":[467,274],"09_edit_new_layer_menu":[542,300],"09_paint_step_layers":[1600,960],"09_pie_q_addmenu":[533,274],"09_q_add_menu_open":[360,360],"10_brush_bar":[880,34],"10_brushes_shelf":[355,260],"11_material_editor":[444,764],"11_material_editor_bottom":[444,764],"11_material_rightclick":[271,199],"11_materials_shelf_user":[762,260],"12_builtin_applied":[1600,960],"12_grime_layer_list":[390,476],"12_grime_mask_settings":[390,476],"12_smart_masks_shelf":[762,260],"12_smart_shelf_builtin":[762,260],"13_folder_rightclick_menu":[284,477],"13_hat_folder_stack":[390,476],"13_save_dialog":[494,157],"13_smart_shelf_yours":[762,260],"13_used_on_crate":[1600,960],"14_export_step":[1600,960],"16_retopo_menu":[262,315]};
+// the Quick Favorites pie (01_pie_q_tutorial_set): left, right, down, up, up-left, up-right, down-left, down-right
+const QP = [[30,122,73,30],[327,122,176,30],[166,214,98,30],[176,30,78,30],[45,57,106,30],[276,57,127,30],[30,187,124,30],[277,187,117,30]];
+const q = (slot, label) => ({ src: "01_pie_q_tutorial_set", rings: [[...QP[slot], label]], keys: [["Q", "hold"]], cap: "Hold Q over the 3D view. Move toward the item and release." });
+const SAME = "The same command is in the pie. Use the pie from now on.";
+const K = s => s.split(" ").map(x => `<span class="k">${x}</span>`).join(" ");
+
+const CH = [
+ { id: "ch-00-result", step: "accent", t: 10, title: "What you will make",
+   lines: [], result: "In 5 minutes, you will texture this model in Patina. You will connect Blender and Claude, import, add objects, unwrap, bake, paint layers, make your own material, use and make smart materials, and export.",
+   facts: ["<b>Suzanne</b>: the built-in smart material <b>Scratched painted steel</b>, with a painted gold brow.", "<b>The hat and the crate</b>: your own smart material <b>Teal Tile Wear</b>, made from your own material <b>Teal Hex Tiles</b>."],
+   views: [{ src: "00_hero", cap: "The finished scene, rendered in Patina with File › Render Image… (path traced)." }],
+   recap: [["F12", "Render image"]] },
+
+ { id: "ch-01-setup", step: "accent", t: 20, title: "Set up the window and your pie", defaultTab: "long",
+   long: { lines: ["Open <b>Edit › Preferences…</b>.", "In <b>Display</b>, set <b>Theme</b> to <b>Vivid Dark</b>.", "Set <b>Layout</b> to <b>Guided</b>.", "In <b>Pie menus</b>, set the eight Quick Favorites below."],
+     extra: `<ul class="favs"><li><span>1</span>Open</li><li><span>2</span>Add a model to the scene</li><li><span>3</span>Add menu</li><li><span>4</span>Object</li><li><span>5</span>Make island</li><li><span>6</span>Send to Blender</li><li><span>7</span>Export textures</li><li><span>8</span>Render image</li></ul>
+       <div class="note">Another way: right-click a toolbar button or a pie item › <b>Add to Quick Favorites</b>.</div>`,
+     views: [{ src: "01_prefs_display", focus: [0,280,524,350], rings: [[6,556,210,26,"Theme"],[6,584,250,26,"Layout","below"],[6,362,468,112,"Pie menus"]], cap: "Edit › Preferences…: Pie menus and Display." },
+             { src: "01_add_to_quick_favorites", rings: [[27,127,182,19,"Add to Quick Favorites"]], keys: [["RMB", "on a toolbar button"]], cap: "Right-click a toolbar button › Add to Quick Favorites." }] },
+   fast: { lines: ["Hold Q over the 3D view.", "Move toward an item and release. Or tap Q and click the item.", "Press Esc to close a pie."],
+     note: "This is your Quick Favorites pie.",
+     views: [{ src: "01_pie_q_tutorial_set", keys: [["Q", "hold"]], cap: "Your eight Quick Favorites, round the pointer." }] },
+   why: "The Guided layout shows only what each step needs.",
+   recap: [["Q", "Quick Favorites"], ["F1", "Shortcut sheet"]] },
+
+ { id: "ch-02-blender", step: "export", t: 15, title: "Connect Blender",
+   lines: ["In Blender, install <code>patina_bridge.zip</code> as an add-on.", "In Blender's 3D view, press N. Open the <b>Patina</b> tab.", "Click <b>Launch Patina</b>.", "Select a mesh. Click <b>Send to Patina</b>."],
+   result: "The mesh opens in Patina with its UVs and seams.",
+   long: { lines: ["To send the textures back, click <b>Blender › Send Textures to Blender</b> (Ctrl+B).", "Or tick <b>Blender › Auto-Send After Changes</b>."],
+     views: [{ src: "02_blender_menu", rings: [[60,30,282,19,"Send Textures to Blender"],[60,50,282,19,""]], keys: [["Ctrl", ""], ["B", ""]], cap: "The Blender menu in Patina." }] },
+   fast: { lines: ["Hold Q › <b>Send to Blender</b>."], note: SAME, views: [q(5, "Send to Blender")] },
+   why: "Blender gets a material named Patina_&lt;object&gt; with all the maps.",
+   watch: "Apply modifiers that add faces, such as Subdivision Surface or Mirror, before you send.",
+   recap: [["N", "Blender sidebar"], ["Ctrl+B", "Send textures"], ["Q", "Send to Blender"]] },
+
+ { id: "ch-03-claude", step: "export", t: 15, title: "Connect Claude with MCP",
+   long: { lines: ["Click <b>Full</b> at the right of the menu bar.", "Open the <b>Blender Link</b> tab.", "Under <b>Claude</b>, click <b>Connect to Claude app</b>.", "Quit the Claude app and open it again.", "Click <b>Guided</b> to go back."],
+     views: [{ src: "03_full_blender_link", rings: [[1494,2,35,19,"Full"],[1203,435,397,502,"Blender Link"]], cap: "The Full layout, with the Blender Link tab in front." },
+             { src: "03_blender_link_panel", rings: [[7,311,134,22,"Connect to Claude app"]], cap: "Under Claude: Connect to Claude app." }] },
+   fast: { nopie: true, lines: ["In a terminal, run this command:"], cmd: "patina --setup-claude",
+     extra: `<div class="note">For Claude Code, run this command:</div><div class="cmd">claude mcp add patina -- ~/.local/bin/patina --mcp</div>`,
+     views: [{ src: "03_blender_link_panel", rings: [[7,311,134,22,"The same as patina --setup-claude"]], cap: "The terminal command does the same as this button." }] },
+   why: "Claude can then use Patina's tools in your open window.",
+   watch: "Keep a Patina window open. If no window is open, Claude starts a Patina without a window.",
+   recap: [["patina --setup-claude", "Claude app"]] },
+
+ { id: "ch-04-import", step: "model", t: 15, title: "Import a model",
+   long: { lines: ["In the <b>Model</b> step, click <b>Open a model or project…</b> or <b>Open the sample (Suzanne)</b>.", "Or use <b>File › Open…</b> (Ctrl+O). Or drop the file on the window.", "If the <b>Check</b> list shows problems, click <b>Fix everything that can be fixed</b>."],
+     views: [{ src: "00_start", focus: [700,20,900,520], rings: [[1218,144,374,31,"Open a model or project…"],[1218,181,374,30,""]], cap: "The Model step before a model is open." },
+             { src: "04_file_menu", rings: [[2,42,346,19,"Open…"]], keys: [["Ctrl", ""], ["O", ""]], cap: "File › Open…" },
+             { src: "04_model_step", focus: [760,60,840,520], rings: [[1218,277,90,18,""],[1218,326,174,23,"Fix everything that can be fixed"]], cap: "Suzanne is open. The Check list shows 4 holes." }] },
+   fast: { lines: ["Hold Q › <b>Open</b>."], note: SAME, views: [q(0, "Open")] },
+   facts: ["Patina opens .glb .gltf .obj .fbx .stl .3mf .ply.", "The model's own textures become the layer <b>From the model</b>."],
+   why: "The model's own look comes in as a layer, so you start from it, not from gray.",
+   watch: "Holes are normal on clothes and open shells. Fix them only on solid models.",
+   recap: [["Ctrl+O", "Open"], ["Q", "Open"]] },
+
+ { id: "ch-05-add-mesh", step: "model", t: 15, title: "Add a mesh to the scene",
+   long: { lines: ["In the <b>Model</b> step, click <b>Add a model to the scene…</b>.", "Or use <b>File › Add a Model to the Scene…</b> (Ctrl+Shift+I)."],
+     views: [{ src: "05_model_two_objects", rings: [[1316,222,157,27,"Add a model to the scene…"],[1218,288,374,44,"Objects"]], cap: "The hat is a second object." },
+             { src: "04_file_menu", rings: [[2,62,346,19,"Add a Model to the Scene…"]], keys: [["Ctrl", ""], ["Shift", ""], ["I", ""]], cap: "File › Add a Model to the Scene…" }] },
+   fast: { lines: ["Hold Q › <b>Add a model to the scene</b>."], note: SAME, views: [q(1, "Add a model to the scene")] },
+   facts: ["Each mesh becomes an <b>object</b> with its own layers, texture set, and undo history."],
+   why: "A body, its clothes, and its hat each get their own textures.",
+   recap: [["Ctrl+Shift+I", "Add a model"], ["Q", "Add a model"]] },
+
+ { id: "ch-06-objects", step: "model", t: 15, title: "Choose and move objects",
+   lines: ["Go to the <b>Paint</b> step.", "Click a row in the <b>Objects</b> list. That object becomes active."],
+   long: { lines: ["Click the <b>Object</b> tool (W). Drag the gizmo.", "Or press G, R, or S. Then press X, Y, or Z for one axis.", "Open <b>Placement</b> to type exact values."],
+     views: [{ src: "06_paint_step_object", rings: [[6,340,36,36,"Object (W)"],[1218,175,361,109,"Objects"],[1218,288,364,22,"Placement","below"]], keys: [["W", "Object tool"], ["G", ""], ["R", ""], ["S", ""]], cap: "The hat is active. The Object tool shows its gizmo." },
+             { src: "06_objects_list", rings: [[10,38,361,109,"Click a row"]], cap: "The Objects list at the top right of the Paint step." }] },
+   fast: { lines: ["Hold Q › <b>Object</b>."], note: SAME, views: [q(3, "Object")] },
+   facts: ["<b>/</b> shows only the active object (Local view)."],
+   watch: "A stroke that starts on another object does nothing. Make that object active first.",
+   recap: [["W", "Object tool"], ["G R S", "Move, turn, scale"], ["/", "Local view"]] },
+
+ { id: "ch-07-uvs", step: "uvs", t: 30, title: "UVs", defaultTab: "fast",
+   long: { lines: ["Go to the <b>UVs</b> step.", "Click <b>Unwrap automatically</b> for hard surface. Click <b>Unwrap along the seams</b> for characters and cloth.", "Then click <b>Pack the islands</b>."],
+     note: "The menu path is <b>UV › Unwrap</b> and <b>UV › Pack Islands</b>.",
+     views: [{ src: "07_uvs_step", focus: [660,60,940,560], rings: [[1218,272,374,30,"Unwrap automatically"],[1218,307,141,25,""],[1365,307,96,25,"Pack the islands"],[1216,337,226,22,""]], cap: "The UVs step, with the UV editor beside the 3D view." },
+             { src: "07_uv_menu", rings: [[62,30,212,19,"Unwrap"],[62,70,212,19,"Pack Islands"]], cap: "The UV menu." }] },
+   fast: { lines: ["Hold ` › <b>Island</b>.", "Paint over one part of the model.", "Press Enter. Or hold Q › <b>Make island</b>."], note: SAME,
+     views: [{ src: "07_pie_edit_island", rings: [[175,214,76,30,"Island"]], keys: [["`", "hold"]], cap: "The Edit mode pie (the key under Esc)." }, q(4, "Make island")] },
+   check: { lines: ["Hold Z › <b>UV Checker</b>. Squares that stay square show good UVs.", "Hold Z › <b>UV Checker</b> again to go back."],
+     views: [{ src: "07_pie_view_uvchecker", rings: [[73,187,104,30,"UV Checker"]], keys: [["Z", "hold"]], cap: "The View pie." },
+             { src: "07_uv_checker_view", cap: "The UV checker on the model." }] },
+   why: "Patina paints across UV seams. The exported textures still need clean UVs.",
+   watch: "Keep <b>Keep the paint when the UVs change</b> ticked when the model has paint.",
+   recap: [["`", "Edit mode pie"], ["Enter", "Make island"], ["Z", "View pie"]] },
+
+ { id: "ch-08-bake", step: "bake", t: 15, title: "Bake the mesh maps", defaultTab: "fast",
+   long: { lines: ["Go to the <b>Bake</b> step.", "Tick <b>Ambient occlusion</b> and <b>Curvature</b>.", "Click <b>Bake</b>. Or use <b>Bake › All Mesh Maps</b>."],
+     views: [{ src: "08_bake_step_done", focus: [700,60,900,540], rings: [[1216,186,200,23,"Ambient occlusion"],[1216,214,200,23,"Curvature","below"],[1218,297,374,31,"Bake"]], cap: "The Bake step. Both maps show baked." },
+             { src: "08_bake_menu", rings: [[62,90,212,19,"All Mesh Maps"]], cap: "The Bake menu." }] },
+   fast: { nopie: true, lines: ["Click <b>Bake</b> in the <b>Bake</b> step.", "Check the result: hold Shift+Z › <b>AO (baked)</b>."],
+     views: [{ src: "08_pie_channels_ao", rings: [[77,187,101,30,"AO (baked)"]], keys: [["Shift", ""], ["Z", "hold"]], cap: "The Channels pie." },
+             { src: "08_ao_view", cap: "The baked ambient occlusion on Suzanne." }] },
+   why: "Smart masks use these maps to find edges and cavities.",
+   watch: "Bake again after big UV or mesh changes. The step shows a warning mark when a bake is old.",
+   recap: [["Shift+Z", "Channels pie"]] },
+
+ { id: "ch-09-layers", step: "paint", t: 25, title: "How layers work", defaultTab: "fast",
+   facts: ["The top of the list is the top of the stack.", "<b>Paint</b> layers hold strokes. <b>Fill</b> layers cover the model with one material. <b>Adjustment</b> layers change all layers below. <b>Folders</b> hold layers.", "A mask controls where a layer shows. White shows the layer. Black hides it.", "Each layer has an <b>Opacity</b> and a <b>Blend</b> mode."],
+   long: { lines: ["Click <b>Edit › New Layer › Fill Layer with a Black Mask</b>.", "Or use the icons on the bar over the layer list."],
+     views: [{ src: "09_edit_new_layer_menu", rings: [[36,87,276,19,"New Layer"],[318,127,212,19,"Fill Layer with a Black Mask"]], cap: "Edit › New Layer." },
+             { src: "09_paint_step_layers", focus: [700,60,900,540], rings: [[1218,281,121,23,"Layer bar"],[1218,309,361,136,"Layers of Suzanne","below"]], cap: "Gold brow: a gold fill layer. Its black mask is painted white on the brow." }] },
+   fast: { lines: ["Hold Q › <b>Add menu</b> › <b>Fill Layer with a Black Mask</b>.", "Ctrl+L adds a paint layer.", "Check the mask: hold Shift+Z › <b>Layer Mask</b>."], note: SAME,
+     views: [{ src: "09_pie_q_addmenu", rings: [[166,214,98,30,"Add menu"]], keys: [["Q", "hold"]], cap: "Quick Favorites › Add menu." },
+             { src: "09_q_add_menu_open", rings: [[33,102,216,19,"Fill Layer with a Black Mask"]], cap: "The Add menu opens at the pointer." }],
+     blender: "Blender keymap: Shift+A opens the Add menu." },
+   watch: "If a stroke paints nothing, read the line in the corner of the 3D view. The layer can be hidden, or its opacity can be 0.",
+   recap: [["Q", "Add menu"], ["Ctrl+L", "Paint layer"], ["Shift+Z", "Layer Mask"]] },
+
+ { id: "ch-10-brushes", step: "paint", t: 15, title: "Brushes", defaultTab: "fast",
+   long: { lines: ["Click a brush on the brushes shelf under the 3D view.", "Set size, hardness, opacity, flow, and spacing on the bar over the 3D view."],
+     views: [{ src: "10_brushes_shelf", rings: [[4,52,77,74,"Basic Hard"]], cap: "The brushes shelf." },
+             { src: "10_brush_bar", rings: [[4,4,448,27,"Size · Hardness · Flow · Opacity · Spacing"]], cap: "The bar over the 3D view." }] },
+   fast: { lines: ["Hold ` › <b>Paint</b> or <b>Erase</b>.", "Press [ and ] for size.", "Ctrl+right-drag sets size (left-right) and hardness (up-down).", "Shift+X turns on the X mirror."], note: SAME,
+     views: [{ src: "07_pie_edit_island", rings: [[30,122,71,30,"Paint"],[71,57,73,30,"Erase"]], keys: [["`", "hold"], ["[", ""], ["]", ""], ["Shift", ""], ["X", "mirror"]], cap: "The Edit mode pie." }],
+     blender: "Blender keymap: F sets the size. Shift+F sets the opacity." },
+   why: "One stroke paints all channels of the material: color, roughness, metallic, height, and normal.",
+   recap: [["[ ]", "Size"], ["Ctrl+RMB drag", "Size, hardness"], ["Shift+X", "X mirror"]] },
+
+ { id: "ch-11-materials", step: "paint", t: 30, title: "Materials, and make your own material", defaultTab: "long",
+   lines: ["Drag a material from the <b>Materials</b> shelf onto the model. Patina adds a fill layer above the selected layer.", "Or right-click a material › <b>Add as Fill Layer</b>."],
+   long: { label: "Make your own", lines: ["On the <b>Materials</b> shelf, click <b>New procedural…</b>. Type a <b>Name</b>.", "Choose a <b>Generator</b>: <b>Hexagon tiles</b>. Set the colors and values.", "In <b>Wear and wobble</b>, set <b>Grime</b> and <b>Worn edges</b>. Click <b>Save to library</b>."],
+     note: "Patina has 74 generators. The sphere and the tile change as you work.",
+     views: [{ src: "11_materials_shelf_user", rings: [[415,40,106,22,"New procedural…"],[212,97,96,92,"Your material"]], cap: "Teal Hex Tiles on the shelf. It has no orange P badge." },
+             { src: "11_material_editor", rings: [[8,62,198,22,"Name"],[8,243,190,22,"Generator"]], cap: "The Material Editor: name Teal Hex Tiles, generator Hexagon tiles." },
+             { src: "11_material_editor_bottom", rings: [[6,392,432,78,"Wear and wobble"],[8,732,92,22,"Save to library"]], cap: "Scroll down: Grime, Worn edges, and Save to library." },
+             { src: "11_material_rightclick", rings: [[41,91,190,19,"Add as Fill Layer"]], keys: [["RMB", "on a material"]], cap: "Right-click a material." }] },
+   fast: { nopie: true, lines: ["Use the <b>Materials</b> shelf: drag the material onto the model."],
+     views: [{ src: "11_material_rightclick", rings: [[41,91,190,19,"Add as Fill Layer"]], cap: "The shortest path: right-click › Add as Fill Layer." }] },
+   result: "Your material shows on the shelf without the orange <b>P</b> badge. Its category is <b>User</b>.",
+   why: "Your material works on any model, and <b>Add Patina's materials to Blender</b> puts it in Blender's Asset Browser too.",
+   recap: [["RMB", "Material menu"]] },
+
+ { id: "ch-12-smart-use", step: "paint", t: 25, title: "Use a smart material", defaultTab: "fast",
+   facts: ["A smart material is a saved folder of layers: fill layers with smart masks, and adjustment layers.", "Smart masks come from the model's shape (edges, cavities, occlusion), so one smart material fits any model."],
+   long: { lines: ["Select the top layer. Open the <b>Smart materials</b> shelf.", "Click <b>Scratched painted steel</b>, or drag it onto the model.", "Open the folder. Select <b>Grime</b>. Move <b>Level</b> to change where the dirt goes."],
+     note: "It arrives as one folder. Patina bakes the maps that its masks need. To change a material, drag a material onto a fill layer. Its smart mask stays.",
+     views: [{ src: "12_smart_shelf_builtin", rings: [[8,97,96,92,"Scratched painted steel"]], cap: "The Smart materials shelf." },
+             { src: "12_builtin_applied", focus: [80,60,1520,640], rings: [[1218,309,361,160,"One folder"]], cap: "Suzanne in Scratched painted steel, under the Gold brow layer." },
+             { src: "12_grime_mask_settings", rings: [[6,279,362,22,"Smart mask: Cavity"],[6,307,362,22,"Level","below"]], cap: "Grime: its smart mask and its Level." }] },
+   fast: { lines: ["Hold Q › <b>Add menu</b> › <b>Smart Material</b> › <b>Scratched painted steel</b>.", "Hold Shift+Z › <b>Layer Mask</b> to see the mask while you move <b>Level</b>."], note: SAME,
+     views: [{ src: "09_q_add_menu_open", rings: [[33,207,216,19,"Smart Material"]], keys: [["Q", "hold"]], cap: "The Add menu › Smart Material." },
+             { src: "08_pie_channels_ao", rings: [[306,187,103,30,"Layer Mask"]], keys: [["Shift", ""], ["Z", "hold"]], cap: "The Channels pie › Layer Mask." }] },
+   why: "You get a finished, worn look in one click, and you can still change every layer in it.",
+   watch: "New layers go into the selected folder. Select a layer outside the folder before you add a layer for something else.",
+   recap: [["Q", "Add menu"], ["Shift+Z", "Layer Mask"]] },
+
+ { id: "ch-13-smart-make", step: "paint", t: 30, title: "Make your own smart material", defaultTab: "long",
+   long: { lines: ["Make the hat active. Click <b>Folder</b> on the layer bar. Name it Teal Tile Wear.",
+                   "With the folder selected, add three fill layers: <b>Teal Hex Tiles</b>, <b>Steel Scratched</b>, and <b>Mud</b>.",
+                   "For each layer, click the material on the <b>Materials</b> shelf. Then click <b>Fill layer</b> on the layer bar.",
+                   "Give <b>Steel Scratched</b> the <b>Edges</b> smart mask. Give <b>Mud</b> the <b>Occlusion</b> smart mask.",
+                   "Right-click the folder › <b>Save as Smart Material…</b>. Keep <b>Include painted textures and masks</b> off. Click <b>Save</b>.",
+                   "Make the crate active. Click <b>Teal Tile Wear</b> on the <b>Smart materials</b> shelf."],
+     views: [{ src: "13_hat_folder_stack", rings: [[104,207,27,27,"Folder"],[31,207,27,27,"Fill layer"],[8,237,361,227,"Teal Tile Wear","below"]], cap: "The hat's folder: Teal Hex Tiles, Bare steel (Edges), Dirt (Occlusion)." },
+             { src: "12_smart_masks_shelf", rings: [[8,61,150,58,"Edges"],[320,61,150,58,"Occlusion"]], cap: "The Smart masks shelf." },
+             { src: "13_folder_rightclick_menu", rings: [[8,405,270,19,"Save as Smart Material…"]], keys: [["RMB", "on the folder"]], cap: "Right-click the folder." },
+             { src: "13_save_dialog", rings: [[8,63,218,20,"Off"],[8,127,112,22,"Save"]], cap: "Save smart material." },
+             { src: "13_smart_shelf_yours", rings: [[8,97,96,92,"Teal Tile Wear"]], cap: "Your smart material on the shelf." },
+             { src: "13_used_on_crate", focus: [80,60,1520,640], rings: [[1218,108,361,109,"Crate is active"]], cap: "One click puts Teal Tile Wear on the crate." }] },
+   fast: { lines: ["Hold Q › <b>Add menu</b> › <b>Folder</b>. Then add a <b>Fill Layer</b> for each layer.", "Hold Q › <b>Add menu</b> › <b>Smart Material</b> › <b>Teal Tile Wear</b>."], note: SAME,
+     views: [{ src: "09_q_add_menu_open", rings: [[33,162,216,19,"Folder"],[33,207,216,19,"Smart Material"]], keys: [["Q", "hold"]], cap: "The Add menu." }] },
+   note0: "This follows the manual's walkthrough (Guide: masks and smart materials): make the folder first, then add the layers into it.",
+   why: "You make a look once and put it on every model, and the masks follow each model's shape.",
+   watch: "Keep hand-painted layers out of the folder. Painted strokes fit only the UVs of the model they were painted on.",
+   recap: [["RMB", "Folder menu"], ["Q", "Add menu"]] },
+
+ { id: "ch-14-export", step: "export", t: 15, title: "Export", defaultTab: "fast",
+   long: { lines: ["Go to the <b>Export</b> step.", "For a model from Blender, click <b>Send the textures to Blender</b>.", "For image files, set <b>For</b>, <b>Size</b>, and <b>Folder</b>. Click <b>Export the textures</b> (Ctrl+E).", "Save with <b>Save the project…</b> (Ctrl+S)."],
+     note: "The list above the button shows each file, its channels, and its color space. Exported images are flat. Only the project keeps the layers.",
+     views: [{ src: "14_export_step", focus: [700,60,900,860], rings: [[1218,274,234,80,"For · Size · Folder"],[1218,734,374,31,"Export the textures"],[1218,825,96,22,"Save the project…","below"],[1218,220,236,24,""]], keys: [["Ctrl", ""], ["E", ""]],
+       cap: "This crate did not come from Blender, so the Blender button says Send this model to Blender as a new object." }] },
+   fast: { lines: ["Hold Q › <b>Export textures</b>. Or hold Q › <b>Send to Blender</b>."], note: SAME, views: [q(6, "Export textures")] },
+   watch: "<b>Export the textures</b> writes the maps of the active object only. For all objects, click <b>Every export option…</b> and choose <b>Every object's</b>.",
+   recap: [["Ctrl+E", "Export"], ["Ctrl+S", "Save"], ["Q", "Export textures"]] },
+
+ { id: "ch-15-done", step: "accent", t: 5, title: "Done: recap and challenge",
+   end: true,
+   result: "Challenge: Make a second material. Make a smart material from it, and put it on a new model. Render it with F12 (Q › <b>Render image</b>) and share it.",
+   views: [{ src: "00_hero", keys: [["F12", "Render image"]], cap: "Your scene. Render it and share it." }],
+   recap: [["F12", "Render"], ["Q", "Render image"]] },
+
+ { id: "side-quest-retopology", step: "model", t: 0, optional: true, title: "Side quest: Retopology", defaultTab: "long",
+   long: { lines: ["Open the <b>Retopology</b> menu. Use <b>Zone Lines</b>, <b>Zones</b>, <b>Flow Strokes</b>, and <b>Density Brush</b>.", "Draw zone lines where the edge flow changes.", "Click <b>Make Quads</b>.", "Then click <b>Send the Quads to Blender</b> or <b>Use the Quads as the Model…</b>."],
+     note: "The Retopology window opens in the Full layout.",
+     views: [{ src: "16_retopo_menu", rings: [[62,68,196,19,"Zone Lines"],[62,153,196,19,"Make Quads"]], cap: "The Retopology menu." }] },
+   fast: { lines: ["Hold ` › <b>Retopo: lines</b> or <b>Retopo: edge loops</b>."], note: SAME,
+     views: [{ src: "07_pie_edit_island", rings: [[39,187,111,30,"Retopo: lines"],[271,187,144,30,"Retopo: edge loops"]], keys: [["`", "hold"]], cap: "The Edit mode pie." }] },
+   recap: [["`", "Retopo tools"]] }
+];
+const MAIN = CH.filter(c => !c.optional);
+const TOTAL = MAIN.reduce((a, c) => a + c.t, 0);   // 295 s
+const startAt = i => CH.slice(0, i).filter(c => !c.optional).reduce((a, c) => a + c.t, 0);
+
+// ---------- state
+let cur = 0, tab = "long", view = 0, playing = false, tStart = 0, chElapsed = 0, raf = 0;
+const $ = id => document.getElementById(id);
+const stage = $("stage"), shot = $("shot"), img = $("img");
+
+function viewsFor(c, t) {
+  const v = [];
+  if (c.views) v.push(...c.views);
+  const side = c[t] || c.long || c.fast;
+  if (side && side.views) v.push(...side.views);
+  if (c.check) v.push(...c.check.views);
+  return v;
+}
+function fmt(s) { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+
+function renderProgress() {
+  const p = $("progress"); p.innerHTML = "";
+  CH.forEach((c, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.style.flex = c.optional ? "0 0 26px" : String(c.t); b.style.setProperty("--c", C[c.step]);
+    b.title = (c.optional ? "Optional: " : (i + ". ")) + c.title + (c.t ? " (" + c.t + " s)" : "");
+    b.setAttribute("aria-label", b.title);
+    b.innerHTML = '<i></i><span class="fill"></span>';
+    if (c.optional) b.querySelector("i").style.background = "repeating-linear-gradient(90deg," + C.model + " 0 4px,transparent 4px 7px)";
+    b.onclick = () => go(i);
+    p.appendChild(b);
+  });
+}
+function markProgress() {
+  [...$("progress").children].forEach((b, i) => {
+    b.classList.toggle("on", i === cur); b.classList.toggle("done", i < cur && !CH[i].optional);
+    if (i === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+    b.querySelector(".fill").style.width = i === cur && playing && CH[i].t ? Math.min(100, chElapsed / CH[i].t * 100) + "%" : "0";
+  });
+}
+
+const KEYS = [["Ctrl+Shift+I"], ["Ctrl+right-drag"], ["Ctrl+B"], ["Ctrl+O"], ["Ctrl+E"], ["Ctrl+S"], ["Ctrl+L"], ["Shift+Z"], ["Shift+X"], ["Shift+A"], ["Shift+F"],
+  ["F12"], ["F1"], ["Enter"], ["Esc"]];
+const PHRASES = [[/Hold Q\b/g, "Hold " + K("Q")], [/hold Q\b/g, "hold " + K("Q")], [/Hold Z\b/g, "Hold " + K("Z")], [/Hold ` /g, "Hold " + K("`") + " "],
+  [/tap Q\b/g, "tap " + K("Q")], [/press N\b/g, "press " + K("N")], [/\(W\)/g, "(" + K("W") + ")"], [/press G, R, or S/g, "press " + K("G") + ", " + K("R") + ", or " + K("S")],
+  [/press X, Y, or Z/g, "press " + K("X") + ", " + K("Y") + ", or " + K("Z")], [/Press \[ and \]/g, "Press " + K("[") + " and " + K("]")], [/^<b>\/<\/b>/, K("/")]];
+function keyify(t) {
+  KEYS.forEach(([k]) => { t = t.split(k).join("\u0000" + k + "\u0001"); });
+  t = t.replace(/\u0000([^\u0001]*)\u0001/g, (m, k) => k.includes("+") && !k.includes("right") ? k.split("+").map(x => K(x)).join("+") : K(k));
+  PHRASES.forEach(([re, r]) => { t = t.replace(re, r); });
+  return t;
+}
+function lineList(arr) { return arr && arr.length ? '<ol class="lines">' + arr.map(l => "<li>" + keyify(l) + "</li>").join("") + "</ol>" : ""; }
+function renderCard() {
+  const c = CH[cur], col = C[c.step];
+  document.documentElement.style.setProperty("--step", col);
+  const num = c.optional ? "+" : String(cur);
+  let h = `<span class="chip-step"><span class="n">${num}</span>${STEP[c.step]}${c.optional ? "" : ""}</span>`;
+  h += `<h2>${c.title}${c.optional ? '<span class="opt">Optional</span>' : ""}</h2>`;
+  h += `<div class="budget">${c.optional ? "Not in the 5 minutes" : c.t + " s · starts at " + fmt(TOTAL + 5 - startAt(cur)) + " left"}</div>`;
+  if (c.note0) h += `<div class="note">${c.note0}</div>`;
+  if (c.facts) h += '<ul class="facts">' + c.facts.map(f => "<li>" + keyify(f) + "</li>").join("") + "</ul>";
+  h += lineList(c.lines);
+  if (c.long || c.fast) {
+    h += `<div class="tabs" role="tablist">
+      <button role="tab" type="button" id="tab-long" aria-selected="${tab === "long"}">Long way</button>
+      <button role="tab" type="button" id="tab-fast" aria-selected="${tab === "fast"}">Fast way</button></div>`;
+    const s = c[tab];
+    h += '<div class="tabpanel" role="tabpanel">';
+    if (s.nopie) h += '<span class="nopie">No pie yet</span>';
+    h += lineList(s.lines);
+    if (s.cmd) h += `<div class="cmd">${s.cmd}</div>`;
+    if (s.extra) h += s.extra;
+    if (s.note) h += `<div class="note">${s.note}</div>`;
+    if (s.blender) h += `<div class="note bl">${keyify(s.blender)}</div>`;
+    h += "</div>";
+  }
+  if (c.check) h += '<div class="note" style="color:var(--text)"><b>Check</b></div>' + lineList(c.check.lines);
+  if (c.result) h += `<div class="result">${keyify(c.result)}</div>`;
+  if (c.end) {
+    const seen = new Map();
+    MAIN.forEach(x => (x.recap || []).forEach(([k, d]) => { if (!seen.has(k + d)) seen.set(k + d, [k, d]); }));
+    h += '<div class="allkeys">' + [...seen.values()].map(([k, d]) => `<div><span>${d}</span>${K(k)}</div>`).join("") + "</div>";
+  }
+  if (c.why) h += `<div class="why">${c.why}</div>`;
+  if (c.watch) h += `<div class="watch">${c.watch}</div>`;
+  $("card").innerHTML = h;
+  const tl = $("tab-long"), tf = $("tab-fast");
+  if (tl) { tl.onclick = () => setTab("long"); tf.onclick = () => setTab("fast"); }
+  $("recap").innerHTML = '<span class="lbl">Keys</span>' + (c.recap || []).map(([k, d]) => `${K(k)} <span>${d}</span>`).join('<span aria-hidden="true">·</span>');
+  $("back").disabled = cur === 0;
+  $("next").textContent = cur === CH.length - 1 ? "Start again" : (CH[cur + 1].optional ? "Side quest" : "Next");
+}
+
+function renderViews() {
+  const v = viewsFor(CH[cur], tab), box = $("views"); box.innerHTML = "";
+  if (v.length < 2) return;
+  v.forEach((x, i) => {
+    const b = document.createElement("button"); b.type = "button";
+    b.style.backgroundImage = `url(shots/${x.src}.webp)`;
+    b.setAttribute("aria-label", "Screenshot " + (i + 1) + ": " + (x.cap || x.src));
+    b.setAttribute("aria-current", String(i === view));
+    b.onclick = () => { view = i; showView(); renderViewMarks(); };
+    box.appendChild(b);
+  });
+}
+function renderViewMarks() { [...$("views").children].forEach((b, i) => b.setAttribute("aria-current", String(i === view))); }
+
+function showView() {
+  const v = viewsFor(CH[cur], tab)[view] || viewsFor(CH[cur], tab)[0];
+  if (!v) return;
+  const [W, H] = SIZE[v.src];
+  if (img.dataset.src !== v.src) { img.src = `shots/${v.src}.webp`; img.dataset.src = v.src; }
+  img.width = W; img.height = H; img.alt = v.cap || "";
+  shot.querySelectorAll(".ring").forEach(r => r.remove());
+  (v.rings || []).forEach(([x, y, w, h, label, where]) => {
+    const r = document.createElement("div"); r.className = "ring pulse";
+    r.style.cssText = `left:${x - 3}px;top:${y - 3}px;width:${w + 6}px;height:${h + 6}px`;
+    if (y < 30 || where === "below") r.classList.add("below");
+    if (label) { const t = document.createElement("span"); t.className = "tag"; t.textContent = label; r.appendChild(t); }
+    shot.appendChild(r);
+  });
+  $("keysOnShot").innerHTML = (v.keys || []).map(([k, d]) => `<span class="kchip">${k}${d ? `<small>${d}</small>` : ""}</span>`).join("");
+  $("caption").textContent = v.cap || "";
+  fit(v);
+}
+function fit(v) {
+  v = v || viewsFor(CH[cur], tab)[view];
+  if (!v) return;
+  const [W, H] = SIZE[v.src];
+  const f = v.focus || [0, 0, W, H];
+  const sw = stage.clientWidth, sh = stage.clientHeight, pad = 24;
+  const s = Math.min((sw - pad * 2) / f[2], (sh - pad * 2) / f[3], v.focus ? 3 : (W < 900 ? 1.6 : 2));
+  let tx = sw / 2 - (f[0] + f[2] / 2) * s, ty = sh / 2 - (f[1] + f[3] / 2) * s;
+  // keep the image's edges inside the stage when it is bigger than the stage
+  if (W * s > sw) tx = Math.min(0, Math.max(sw - W * s, tx)); else tx = (sw - W * s) / 2;
+  if (H * s > sh) ty = Math.min(0, Math.max(sh - H * s, ty)); else ty = (sh - H * s) / 2;
+  shot.style.transform = `translate(${tx}px,${ty}px) scale(${s})`;
+  shot.querySelectorAll(".tag").forEach(t => t.style.transform = `scale(${1 / s})`, 0);
+  shot.querySelectorAll(".tag").forEach(t => { t.style.transformOrigin = "0 100%"; });
+  shot.querySelectorAll(".ring").forEach(r => { r.style.borderWidth = (2 / s) + "px"; r.style.borderRadius = (6 / s) + "px"; });
+}
+
+function setTab(t) { tab = t; view = 0; renderCard(); renderViews(); showView(); }
+function go(i, keepPlay) {
+  cur = (i + CH.length) % CH.length;
+  const c = CH[cur];
+  tab = c.long || c.fast ? (c.defaultTab || (cur === 1 ? "long" : "fast")) : "long";
+  if (c.long && !c.fast) tab = "long";
+  view = 0; chElapsed = 0; tStart = performance.now();
+  renderCard(); renderViews(); showView(); markProgress(); clock();
+  if (!keepPlay && playing && c.optional) setPlay(false);
+  if (location.hash.slice(1) !== c.id) history.replaceState(null, "", "#" + c.id);
+  showOverview(false);
+}
+function clock() {
+  const c = CH[cur];
+  const left = c.optional ? 0 : TOTAL + 5 - startAt(cur) - (playing ? chElapsed : 0);
+  const el = $("clock"); el.textContent = c.optional ? "+" : fmt(left); el.classList.toggle("run", playing);
+}
+function tick(now) {
+  if (!playing) return;
+  const c = CH[cur];
+  chElapsed = (now - tStart) / 1000;
+  const v = viewsFor(c, tab);
+  if (v.length > 1 && c.t) { const want = Math.min(v.length - 1, Math.floor(chElapsed / (c.t / v.length))); if (want !== view) { view = want; showView(); renderViewMarks(); } }
+  if (c.t && chElapsed >= c.t) {
+    if (cur + 1 < CH.length && !CH[cur + 1].optional) { go(cur + 1, true); }
+    else { setPlay(false); }
+  }
+  markProgress(); clock();
+  raf = requestAnimationFrame(tick);
+}
+function setPlay(on) {
+  playing = on; const b = $("play"); b.setAttribute("aria-pressed", String(on)); b.textContent = on ? "Pause" : "Play";
+  if (on) { if (CH[cur].optional || cur === CH.length - 1) go(0, true); tStart = performance.now() - chElapsed * 1000; cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); }
+  else cancelAnimationFrame(raf);
+  clock(); markProgress();
+}
+
+// ---------- overview artboard
+function renderBoard() {
+  const b = $("board");
+  b.innerHTML = CH.map((c, i) => {
+    const v = viewsFor(c, c.defaultTab || "fast")[0] || viewsFor(c, "long")[0];
+    const lines = (c.lines || []).concat((c[c.defaultTab || "long"] || {}).lines || []).slice(0, 3);
+    return `<button type="button" class="mini" style="--c:${C[c.step]}" data-i="${i}">
+      <div class="th" style="background-image:url(shots/${v.src}.webp)"></div>
+      <div class="meta"><span class="tagp">${c.optional ? "Optional" : STEP[c.step]}</span>
+      <div class="row"><b>${c.optional ? "+" : i}. ${c.title}</b><span>${c.t ? c.t + " s" : ""}</span></div>
+      ${lines.length ? '<ol class="lines">' + lines.map(l => "<li>" + l + "</li>").join("") + "</ol>" : ""}</div></button>`;
+  }).join("");
+  b.querySelectorAll(".mini").forEach(m => m.onclick = () => go(+m.dataset.i));
+}
+function showOverview(on) {
+  $("overview").hidden = !on; $("lesson").hidden = on; $("ovBtn").setAttribute("aria-pressed", String(on));
+  if (on) { setPlay(false); if (location.hash !== "#overview") history.replaceState(null, "", "#overview"); }
+}
+
+// ---------- wiring
+$("back").onclick = () => go(cur - 1);
+$("next").onclick = () => go(cur + 1);
+$("play").onclick = () => setPlay(!playing);
+$("ovBtn").onclick = () => showOverview($("overview").hidden);
+document.addEventListener("keydown", e => {
+  if (e.target.closest && e.target.closest("input,textarea")) return;
+  if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); go(cur + 1); }
+  else if (e.key === "ArrowLeft") { e.preventDefault(); go(cur - 1); }
+});
+new ResizeObserver(() => fit()).observe(stage);
+renderProgress(); renderBoard();
+const h = location.hash.slice(1);
+if (h === "overview") { go(0); showOverview(true); }
+else { const i = CH.findIndex(c => c.id === h); go(i >= 0 ? i : 0); }
+})();
+</script>
+</body>
+</html>

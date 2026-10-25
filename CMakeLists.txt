@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(Patina VERSION 1.2.11 LANGUAGES C CXX)
+project(Patina VERSION 1.2.12 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -253,6 +253,7 @@ if(WIN32)
   install(DIRECTORY blender/patina_bridge DESTINATION blender)
   install(FILES README.md CHANGELOG.md docs/BRIDGE.md docs/COMMANDS.md docs/WISHLIST.md DESTINATION docs)
   install(DIRECTORY docs/manual DESTINATION docs PATTERN src EXCLUDE)
+  install(DIRECTORY docs/tutorial DESTINATION docs)   # (1.2.12) Patina in 5 Minutes
   install(DIRECTORY web/dist/ DESTINATION web OPTIONAL)   # Patina Web (scripts/build_web.py)
   install(DIRECTORY samples DESTINATION .)
   install(FILES clients/python/patina_api.py DESTINATION clients/python)
@@ -272,6 +273,7 @@ foreach(_sz 16 24 32 48 64 128 256 512)
 endforeach()
 install(FILES README.md CHANGELOG.md docs/BRIDGE.md docs/COMMANDS.md docs/WISHLIST.md DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/patina)
 install(DIRECTORY docs/manual DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/patina PATTERN src EXCLUDE)
+install(DIRECTORY docs/tutorial DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/patina)   # (1.2.12) Patina in 5 Minutes
 install(DIRECTORY web/dist/ DESTINATION ${CMAKE_INSTALL_DATADIR}/patina/web OPTIONAL)   # Patina Web (scripts/build_web.py)
 install(DIRECTORY samples DESTINATION ${CMAKE_INSTALL_DATADIR}/patina)
 install(FILES clients/python/patina_api.py DESTINATION ${CMAKE_INSTALL_DATADIR}/patina/clients/python)

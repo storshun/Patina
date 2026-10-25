@@ -143,6 +143,7 @@ void App::buildPaletteEntries() {
     add(T_("Window"), T_("Bake down to a low-poly model"), "", [this] { showBakeDown = true; });
   add(T_("Window"), T_("Material editor"), "", [this] { showMaterialEditor = true; });
   add(T_("Window"), T_("Welcome"), "", [this] { showWelcome = true; });
+  add(T_("Help"), T_("Patina in 5 Minutes (the tutorial, in your browser)"), "", [this] { openLocalPage("tutorial"); });
   add(T_("Window"), T_("About Patina"), "", [this] { showAbout = true; });
   if (engine.features.on("symmetry_check")) add(T_("Window"), T_("Mesh symmetry check"), "", [this] { showSymmetry = true; });
   if (engine.features.on("auto_texture"))

@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.12 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.13 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -242,6 +242,7 @@
 <tr><td><code>size</code></td><td>number</td><td>1 to 1000</td><td>Diameter in screen pixels</td></tr>
 <tr><td><code>size_jitter</code></td><td>number</td><td>0 to 1</td><td>Random size per dab: 1 = anything from nothing to full size</td></tr>
 <tr><td><code>spacing</code></td><td>number</td><td>0.01 to 3</td><td>Distance between dabs as a share of the diameter: small is smooth, large is dotted</td></tr>
+<tr><td><code>tool</code></td><td>paint \</td><td>erase \</td><td>blur \</td><td>clone \</td><td>smudge</td><td></td><td>(1.2.13) Change this tool's own brush instead of the current tool's (feature tool_brushes; get_state tool_brushes lists them). The current tool stays</td></tr>
 </tbody></table>
 <h3 id="save-brush-preset"><code>save_brush_preset</code></h3>
 <p>Saves the current brush settings as a user preset.</p>
@@ -251,7 +252,7 @@
 <tr><td><code>name</code></td><td>string</td><td></td><td>Display name</td></tr>
 </tbody></table>
 <h3 id="set-tool"><code>set_tool</code></h3>
-<p>Selects the active tool (in the window: also the tools that are not brushes, such as select, seams, island, note and the retopology tools).</p>
+<p>Selects the active tool (in the window: also the tools that are not brushes, such as select, seams, island, note and the retopology tools). (1.2.13) Paint, erase, blur, clone and smudge each keep their own brush (feature tool_brushes): set_tool brings the tool's brush, set_brush then changes it.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>blur_radius</code></td><td>number</td><td>1 to 64, default 6</td><td>Blur tool radius in texels: larger smooths more</td></tr>
 <tr><td><code>fill_mode</code></td><td>face \</td><td>uv_island \</td><td>connected \</td><td>mesh \</td><td>selection</td><td></td><td>Polygon fill mode</td></tr>
@@ -283,7 +284,7 @@
 </tbody></table>
 <h2 id="painting">Painting</h2>
 <h3 id="paint-stroke"><code>paint_stroke</code></h3>
-<p>Paints one stroke with the current brush/material/tool onto the selected layer (or its mask). Points are [x,y] or [x,y,pressure]. space 'normalized' = 0..1 of the 3D viewport (origin top-left), 'viewport' = pixels, 'uv' = texture coordinates (0..1, origin bottom-left; brush size in texels). Optional brush/material/tool objects are applied first (persistently).</p>
+<p>Paints one stroke with the current brush/material/tool onto the selected layer (or its mask). Points are [x,y] or [x,y,pressure]. space 'normalized' = 0..1 of the 3D viewport (origin top-left), 'viewport' = pixels, 'uv' = texture coordinates (0..1, origin bottom-left; brush size in texels). Optional brush/material/tool objects are applied first (persistently); (1.2.13) a tool comes first and brings its own brush (feature tool_brushes), so brush arguments change that tool's brush.</p>
 <table><thead><tr><th>argument</th><th>type</th><th>range, default</th><th>description</th></tr></thead><tbody>
 <tr><td><code>brush</code></td><td>object</td><td></td><td>set_brush arguments</td></tr>
 <tr><td><code>material</code></td><td>object</td><td></td><td>set_paint_material arguments</td></tr>

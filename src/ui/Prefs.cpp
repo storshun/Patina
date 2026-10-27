@@ -512,6 +512,9 @@ void App::loadSession() {
       std::string id = j.value("brush_id", std::string());
       if (!id.empty()) engine.selectBrush(id);
       P.brush.fromJson(j["brush"]);
+      // (1.2.13) the other tools' brushes; the one above is the brush of the tool in brush_slot
+      engine.toolBrushesFromJson(j.value("tool_brushes", json::object()),
+                                 Engine::brushSlotNamed(j.value("brush_slot", std::string("paint"))));
     }
     if (j.contains("material")) {
       std::string id = j.value("material_id", std::string());
@@ -612,6 +615,8 @@ void App::saveSession(bool force) {
             {"assistant_history", assistant.history},
             {"brush_id", engine.selectedBrushId},
             {"brush", P.brush.toJson()},
+            {"brush_slot", Engine::brushSlotName(engine.brushSlot)},
+            {"tool_brushes", engine.toolBrushesJson()},
             {"material_id", engine.selectedMaterialId},
             {"material", P.material.toJson()},
             {"tool", (int)tool},

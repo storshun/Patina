@@ -75,6 +75,9 @@ class BrushLibrary {
   // GPU alpha texture for a tip (cached by shape/seed/image). Returns 0 for "round".
   GLuint alphaTexture(const BrushAlpha& a);
   GLuint previewTexture(const BrushPreset& p);  // alpha thumbnail (64x64)
+  // (1.2.13) the tip as a grayscale image on the CPU (at most 256 pixels wide; row 0 = the top, v = 1), for the brush
+  // cursor's outline. nullptr for "round" (a circle) or a tip that can't be read.
+  const Image* alphaPixels(const BrushAlpha& a);
   std::vector<std::string> shapes() const;
 
  private:
@@ -84,6 +87,7 @@ class BrushLibrary {
   struct Cached {
     BrushAlpha key;
     Texture2D tex;
+    Image cpu;  // (1.2.13) alphaPixels: read back once
   };
   std::vector<std::unique_ptr<Cached>> alphas_;
 };

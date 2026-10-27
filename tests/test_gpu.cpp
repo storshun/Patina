@@ -58,11 +58,11 @@ bool isRed(vec4 c) { return c.x > 0.6f && c.y < 0.25f && c.z < 0.25f; }
 void freshSphere(Engine& e) {
   run("new_project", {{"primitive", "sphere"}, {"resolution", 512}});
   run("set_camera", {{"view", "front"}, {"frame", true}});
+  run("set_tool", {{"tool", "paint"}});  // (1.2.13) first: set_brush sets the brush of the tool in use
   run("set_brush", {{"preset", "basic_hard"}, {"size", 60}, {"hardness", 0.9}, {"flow", 1.0}, {"opacity", 1.0}});
   run("set_paint_material", {{"id", ""}, {"color", {1, 0, 0}}, {"roughness", 0.4}, {"metallic", 0}, {"opacity", 1.0},
                              {"sheen", 0.0}, {"coat", 0.0}, {"subsurface", 0.0}});
   run("set_paint_channels", {{"channels", {"all"}}});
-  run("set_tool", {{"tool", "paint"}});
   (void)e;
 }
 
@@ -3951,4 +3951,67 @@ TEST(gpu, bakes_out_of_date_after_uv_edit) {
   CHECK(h1 != h0 && d.bakesOutOfDate() == 3);
   d.rebakeOutOfDate();
   CHECK(d.bakesOutOfDate() == 0);
+}
+
+// (1.2.13) Each brush tool keeps its own brush: a jar or splatter tip on Paint does not follow the eraser, a tool
+// used the first time starts round, set_brush {tool} changes another tool's brush, the session keeps them all, and
+// with the feature off every tool shares one brush as before.
+TEST(gpu, tool_brushes) {
+  Engine* e = engine();
+  if (!e) return;
+  freshSphere(*e);
+  for (auto& tb : e->toolBrushes) tb = Engine::ToolBrush{};  // (earlier tests used the other tools)
+  CHECK(e->brushSlot == 0);
+  run("set_brush", {{"alpha", "splatter"}, {"size", 70}});
+  CHECK(e->painter.brush.alpha.shape == "splatter");
+  run("set_tool", {{"tool", "smudge"}});  // used the first time: round, at the paint brush's size
+  CHECK(e->painter.brush.alpha.shape == "round");
+  CHECK(std::abs(e->painter.brush.size - 70.f) < 0.01f);
+  run("set_brush", {{"size", 22}});
+  run("set_tool", {{"tool", "erase"}});
+  CHECK(e->painter.brush.alpha.shape == "round");
+  run("set_tool", {{"tool", "paint"}});
+  CHECK(e->painter.brush.alpha.shape == "splatter" && std::abs(e->painter.brush.size - 70.f) < 0.01f);
+  // another tool's brush, the current one left alone
+  json r = run("set_brush", {{"tool", "smudge"}, {"hardness", 0.25}});
+  CHECK(r.value("tool", std::string()) == "smudge");
+  CHECK(e->painter.brush.alpha.shape == "splatter" && e->painter.tool == PaintTool::Paint);
+  json st = run("get_state");
+  CHECK(st["brush"].value("tool", std::string()) == "paint");
+  CHECK(std::abs(st["tool_brushes"]["smudge"].value("hardness", 0.f) - 0.25f) < 1e-4f);
+  CHECK(std::abs(st["tool_brushes"]["smudge"].value("size", 0.f) - 22.f) < 0.01f);
+  // paint_stroke {tool, brush}: the brush arguments go to that tool's brush
+  run("paint_stroke", {{"points", {{0.5, 0.5}}}, {"tool", "erase"}, {"brush", {{"size", 33}}}});
+  CHECK(e->painter.tool == PaintTool::Erase && std::abs(e->painter.brush.size - 33.f) < 0.01f);
+  run("set_tool", {{"tool", "paint"}});
+  CHECK(std::abs(e->painter.brush.size - 70.f) < 0.01f);
+  // session.json: every tool's brush, and which one painter.brush is
+  json saved = e->toolBrushesJson();
+  CHECK(saved.contains("paint") && saved.contains("erase") && saved.contains("smudge"));
+  e->toolBrushesFromJson(saved, Engine::brushSlotNamed("paint"));
+  run("set_tool", {{"tool", "erase"}});
+  CHECK(std::abs(e->painter.brush.size - 33.f) < 0.01f && e->painter.brush.alpha.shape == "round");
+  run("set_tool", {{"tool", "paint"}});
+  // the feature off: one brush for every tool
+  e->features.set("tool_brushes", false);
+  run("set_tool", {{"tool", "erase"}});
+  CHECK(e->painter.brush.alpha.shape == "splatter");
+  bool refused = false;
+  try {
+    run("set_brush", {{"tool", "blur"}, {"size", 5}});
+  } catch (std::exception&) {
+    refused = true;
+  }
+  CHECK(refused);
+  run("set_tool", {{"tool", "paint"}});
+  e->features.set("tool_brushes", true);
+  // the cursor's tip on the CPU: the star is bright in the middle, dark in a corner; round has none
+  BrushAlpha star;
+  star.shape = "star";
+  const Image* img = e->brushes.alphaPixels(star);
+  CHECK(img && img->width > 16 && img->width <= 256);
+  if (img) CHECK(img->at(img->width / 2, img->height / 2)[0] > 0.8f && img->at(1, 1)[0] < 0.1f);
+  BrushAlpha round;
+  CHECK(e->brushes.alphaPixels(round) == nullptr);
+  run("set_brush", {{"alpha", "round"}});
 }

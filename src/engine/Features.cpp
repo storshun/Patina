@@ -201,6 +201,16 @@ const std::vector<FeatureInfo>& Features::all() {
           "one set's faces, fill or mask with one, Lock Face Sets keeps strokes inside one, the Face sets view shows them, and "
           "Blender's sculpt face sets come in with the model. Off: no panel, the lock and the view are gone."),
        true, "1.2"},
+      {"tool_brushes", N_("A brush for each tool"),
+       N_("Paint, Erase, Blur, Clone and Smudge each keep their own brush: its tip, size, hardness and the rest. Choose "
+          "a jar tip for painting and the eraser keeps its round one. A tool used the first time starts from a plain "
+          "round brush; the pen's eraser end uses the Erase brush. Off: one brush for every tool, as before 1.2.13."),
+       true, "1.2.13"},
+      {"tip_cursor", N_("The brush cursor shows the tip"),
+       N_("Over the 3D view the brush cursor is the outline of the brush's tip (its alpha), turned and squashed as the "
+          "dabs are, with a dithered fill that shows where the brush paints and how it fades out at a soft edge. Off: "
+          "a circle with a faint ring for the hardness, as before 1.2.13."),
+       true, "1.2.13"},
   };
   return list;
 }

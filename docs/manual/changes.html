@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.12 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.13 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -41,7 +41,7 @@
 <a href="translating.html">Translating Patina</a>
 <a href="commands.html">Command reference</a>
 <a href="changes.html" class="cur">What&#x27;s new</a>
-<div class="toc"><a href="#1-2-12-2026-10-25">1.2.12 (2026-10-25)</a><a href="#1-2-11-2026-10-25">1.2.11 (2026-10-25)</a><a href="#1-2-10-2026-10-25">1.2.10 (2026-10-25)</a><a href="#1-2-9-2026-10-24">1.2.9 (2026-10-24)</a><a href="#1-2-8-2026-10-24">1.2.8 (2026-10-24)</a><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
+<div class="toc"><a href="#1-2-13-2026-10-27">1.2.13 (2026-10-27)</a><a href="#1-2-12-2026-10-25">1.2.12 (2026-10-25)</a><a href="#1-2-11-2026-10-25">1.2.11 (2026-10-25)</a><a href="#1-2-10-2026-10-25">1.2.10 (2026-10-25)</a><a href="#1-2-9-2026-10-24">1.2.9 (2026-10-24)</a><a href="#1-2-8-2026-10-24">1.2.8 (2026-10-24)</a><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
 <main>
 <article>
 <!-- title: What's new -->
@@ -49,8 +49,26 @@
 <h1>What's new</h1>
 <p>What changed in each version of Patina, newest first. The same list comes with Patina as <code>CHANGELOG.md</code>.</p>
 <p>What changed in each version, newest first. The manual (Help › Manual, or <code>docs/manual</code>) explains how to use each feature, and docs/ROADMAP.md lists every feature with the version it came in.</p>
-<h2 id="1-2-12-2026-10-25">1.2.12 (2026-10-25)</h2>
+<h2 id="1-2-13-2026-10-27">1.2.13 (2026-10-27)</h2>
 <h3 id="added">Added</h3>
+<ul><li>
+<b>A brush for each tool.</b> Paint, Erase, Blur, Clone and Smudge each keep their own brush: its tip, size, hardness, flow, spacing and dynamics. A jar or grunge tip on Paint no longer comes along when you switch to Erase.
+<ul><li>
+A tool used the first time starts from a plain round brush (Basic Hard; Basic Soft for Blur and Smudge) at the size of the brush you had.
+</li><li>
+The pen's eraser end erases with the Erase brush.
+</li><li>
+The Brush panel says whose brush it shows ("The Erase tool's brush"). Patina remembers every tool's brush.
+</li><li>
+It is on by default. <b>Preferences › Features › A brush for each tool</b> turns it off: one brush for every tool, as before.
+</li><li>
+MCP: <code>set_brush</code> <code>tool</code> changes another tool's brush, <code>get_state</code> <code>tool_brushes</code> lists them, and <code>paint_stroke</code> <code>tool</code> uses that tool's brush.
+</li></ul>
+</li><li>
+<b>The brush cursor shows the tip.</b> Over the 3D view and the UV editor's paint mode, the cursor is the outline of the brush's tip, turned and squashed as the dabs are, instead of a circle. Inside it, a dither shows where the brush paints and how it fades: a soft brush thins out toward its rim, a hard one stays dense to the edge. A thin dark ring keeps the outline readable on light models. <b>Preferences › Features › The brush cursor shows the tip</b> brings back the circle.
+</li></ul>
+<h2 id="1-2-12-2026-10-25">1.2.12 (2026-10-25)</h2>
+<h3 id="added-2">Added</h3>
 <ul><li>
 <b>Patina in 5 Minutes</b>, a guided tutorial that comes with Patina. It has sixteen short chapters with real screenshots: connect Blender and Claude, import, add objects, unwrap, bake, paint layers, brushes, your own materials, smart materials and export. Each chapter shows the long way and the pie, and Play runs it like a short video.
 <ul><li>
@@ -62,7 +80,7 @@ The manual's first page links to it. MCP: <code>open_window</code> <code>tutoria
 </li></ul>
 </li></ul>
 <h2 id="1-2-11-2026-10-25">1.2.11 (2026-10-25)</h2>
-<h3 id="added-2">Added</h3>
+<h3 id="added-2-2">Added</h3>
 <ul><li>
 <b>Frame the selection in the 3D view</b>, as Blender's View Selected: the selected faces fill the view, or the whole model when nothing is selected. It's <b>Shift+F</b> in the Patina keymap and <b>Numpad .</b> in the Blender keymap (Numpad . framed the whole model before). It's also in the view pie (<b>Z</b>, down right) and the View menu, as <b>Frame the Selection</b>. MCP: <code>frame_object</code> <code>selection</code>.
 </li></ul>
@@ -73,7 +91,7 @@ The view pie's down-right item is now Frame selection. The retopology preview it
 The manual's pie menus section now says "radial menus" too, so a search for either finds it.
 </li></ul>
 <h2 id="1-2-10-2026-10-25">1.2.10 (2026-10-25)</h2>
-<h3 id="added-2-2">Added</h3>
+<h3 id="added-2-2-2">Added</h3>
 <ul><li>
 <b>A pin for the Properties tabs</b> (Blender layout): the pin above the tabs keeps the tab you chose when you pick a tool or a workspace. Unpinned, as before, the Select tool shows the Step tab and the Paint tool the Layer tab. MCP: <code>layout</code> <code>pin_properties</code> and <code>properties_tab</code>.
 </li><li>
@@ -92,7 +110,7 @@ Clearer names: <b>Create from Selection</b>, <b>Create Sets From...</b>, <b>Show
 <b>Linux install:</b> <code>install.sh</code> now installs every shipped data folder. Before, it copied only materials, the Blender add-on, Patina Web and the samples, so an installed Patina had no built-in smart materials, recipes, fonts or translations. Running the new <code>install.sh</code> adds them; your own library is left alone.
 </li></ul>
 <h2 id="1-2-9-2026-10-24">1.2.9 (2026-10-24)</h2>
-<h3 id="added-2-2-2">Added</h3>
+<h3 id="added-2-2-2-2">Added</h3>
 <ul><li>
 <b>Red marks</b> (Retopology window › Show, and the arrow beside the Retopology preview button) hides the red crosses over the quads. Its tooltip says what they mark: parts too thin for the quads, tight spots patched where zones meet, and, with Mirror on, places where the two sides of the model differ. MCP: <code>retopo_view</code> <code>marks</code>.
 </li></ul>

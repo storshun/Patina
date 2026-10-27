@@ -50,6 +50,23 @@ seams too.</p>
   <figure><img src="img/seams_tool.png" alt="Seams tool with wireframe"><figcaption>Seams tool with the wireframe and seam overlays on.</figcaption></figure>
 </div>
 
+<h2 id="tool-brushes">A brush for each tool</h2>
+<p>Paint, Erase, Blur, Clone and Smudge each keep their own brush (1.2.13): its tip, size, hardness, flow, spacing and
+dynamics. Give Paint a jar or grunge tip and the eraser keeps its plain round one; switch back and the jar tip is still
+on Paint. Choosing a preset in the Brushes tab, or changing a setting, changes the brush of the tool you have.</p>
+<ul>
+  <li>A tool used the first time starts from a plain round brush, <i>Basic Hard</i> (<i>Basic Soft</i> for Blur and
+    Smudge), at the size of the brush you had.</li>
+  <li>The top of the Brush panel says whose brush it shows, for example <i>The Erase tool's brush</i>.</li>
+  <li>The pen's eraser end erases with the Erase brush, and the tool's own brush comes back when you lift the pen.</li>
+  <li>Patina remembers every tool's brush between sessions.</li>
+</ul>
+<figure><img src="img/tool_brushes.png" alt="The Paint tool's jar brush and the Erase tool's round brush" style="max-width:640px"><figcaption>Left: the
+Paint tool with a splatter tip. Right: the Erase tool keeps its round brush.</figcaption></figure>
+<p>To share one brush between all the tools again, as before 1.2.13, switch off <b>Edit › Preferences › Features ›
+A brush for each tool</b>. Claude sets another tool's brush with <code>set_brush</code> and <code>tool</code>, and
+<code>get_state</code> lists them in <code>tool_brushes</code>.</p>
+
 <h2>Brush settings</h2>
 <p>The viewport bar holds the settings you change most: size, hardness, flow, opacity, spacing, projection mode and the
 <a href="#stroke-locks">topology and island locks</a>. When the viewport is narrow, the bar continues on a second row. The
@@ -66,6 +83,15 @@ seams too.</p>
   <tr><td>Angle / Roundness</td><td>Rotation and squash of the tip. <i>Follow path</i> (under Dynamics) turns the tip along the stroke.</td></tr>
   <tr><td>Dynamics</td><td>Size, angle and flow jitter, scatter, <b>lazy mouse</b> (the brush trails behind the cursor for smooth lines), and what pen pressure controls.</td></tr>
 </table>
+<h3 id="brush-cursor">The brush cursor</h3>
+<p>Over the model and in the UV editor's paint mode, the cursor shows the brush as it will paint (1.2.13). Its line is
+the outline of the tip, turned by the brush's angle and squashed by its roundness, so a star, a splatter or an image tip
+shows its own shape. Inside it, a dither of dots shows how much one dab paints at each spot: dense where the brush paints
+fully, thinning out across a soft edge. A soft brush shows the whole area it blurs into; a hard brush stays dense to the
+line. A thin dark ring outside the line keeps it readable on light models.</p>
+<figure><img src="img/tip_cursor.png" alt="The brush cursor for a round soft, a round hard, a star and a splatter tip" style="max-width:640px"><figcaption>The
+cursor for a soft round brush, a hard round brush, a star and a splatter tip.</figcaption></figure>
+<p><b>Edit › Preferences › Features › The brush cursor shows the tip</b> brings back the plain circle.</p>
 <p>The <b>Brushes</b> tab has 27 presets in six groups: Basic, Artistic, Weathering, Stamps, Projection and Utility. <i>Save preset</i> in Properties stores the current settings as your own preset.</p>
 <figure><img src="img/brushes_panel.png" alt="Brush presets"></figure>
 

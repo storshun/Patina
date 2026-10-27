@@ -116,6 +116,13 @@ class App {
   RenderTarget viewportRT, uvRT;
   vec2 lastViewportSize{1280, 800};
   ImVec2 lastViewportOrigin{0, 0};  // window coordinates of the 3D view (pen injection)
+  // (1.2.13) the brush cursor as the outline of the tip with a dithered fill for where and how strongly it paints
+  // (Features: tip_cursor). Drawn 1:1 from a texture made again when the brush or its size on screen changes.
+  Texture2D tipCursorTex;
+  std::string tipCursorKey;
+  int tipCursorRes = 0;  // the texture's side in pixels
+  float tipCursorScale = 1.f;  // screen pixels per texture pixel (big brushes are made at most 512 wide)
+  void drawTipCursor(ImDrawList* dl, ImVec2 center, float radius, ImU32 color);
   float uiScale = 1.f;
   PenInput pen;                  // tablet + mouse samples at the device rate
   bool showPenTest = false;

@@ -2088,3 +2088,75 @@ def run_036b(s):
     for _ in range(14):
         s.x.button(5, True); s.x.button(5, False); time.sleep(0.05)
     s.shot("develop_panel", crop=CROP_LAYERS, settle=1.0)
+
+
+def run_1213(s):
+    """Patina 1.2.13: a brush for each tool (the Paint tool's splatter brush and the Erase tool's round one, each with
+    the Brush panel saying whose it is) and the tip cursor (soft and hard round, a star, a splatter) over a painted
+    plane."""
+    print("1.2.13: tool brushes, the tip cursor")
+    s("new_project", primitive="plane", resolution=1024)
+    s("set_camera", view="top", frame=True)
+    s("set_view", mode="material", seams=False, wireframe=False)
+    layout(s)
+    s("add_layer", type="fill", material={"id": "patina_paint_chipped_red", "scale": 2})
+    s("add_layer", type="paint", name="Paint")
+    s("set_tool", tool="paint")
+    s("set_brush", preset="basic_hard", size=150, alpha="splatter", hardness=0.8, angle=0, roundness=1)
+    panel(s, "properties")
+    c = vp(0.5, 0.5)
+
+    def cursor_crop(name, half=110):
+        s.x.move(*c)
+        s.settle(8, 0.6)
+        s.shot(name, crop=(int(c[0] - half), int(c[1] - half), int(c[0] + half), int(c[1] + half)))
+        return os.path.join(s.out, name + ".png")
+
+    def brush_head(name):
+        h = rect(s, "props.brush_header")
+        w = rect(s, "window.Properties")
+        s.shot(name, crop=(w[0], h[1] - 4, w[2], h[3] + 104))
+        return os.path.join(s.out, name + ".png")
+
+    shots = []
+    s.x.move(*c)
+    s.x.key("b")
+    s.settle(6)
+    shots += [cursor_crop("_tb_paint_cursor"), brush_head("_tb_paint_head")]
+    s.x.move(*c)
+    s.x.key("e")
+    s.settle(6)
+    shots += [cursor_crop("_tb_erase_cursor"), brush_head("_tb_erase_head")]
+    s.x.move(*c)
+    s.x.key("b")
+    s.settle(4)
+    from PIL import Image
+    ims = [Image.open(os.path.join(s.out, n + ".png")) for n in ("_tb_paint_cursor", "_tb_paint_head", "_tb_erase_cursor", "_tb_erase_head")]
+    W = max(ims[0].width, ims[1].width)
+    pad = 10
+    sheet = Image.new("RGB", (2 * W + 3 * pad, ims[0].height + ims[1].height + 3 * pad + 24), (27, 28, 31))
+    from PIL import ImageDraw
+    d = ImageDraw.Draw(sheet)
+    for col, (cur, head, title) in enumerate(((ims[0], ims[1], "Paint (B): a splatter tip"),
+                                              (ims[2], ims[3], "Erase (E): its own round brush"))):
+        x = pad + col * (W + pad)
+        d.text((x + 2, pad), title, fill=(225, 225, 225))
+        sheet.paste(cur, (x + (W - cur.width) // 2, pad + 24))
+        sheet.paste(head, (x, 2 * pad + 24 + cur.height))
+    sheet.save(os.path.join(s.out, "tool_brushes.png"), optimize=True)
+    # the tip cursor: four brushes
+    cells = []
+    for name, args, title in (("_tc_soft", dict(alpha="round", hardness=0.0), "Round, hardness 0"),
+                              ("_tc_hard", dict(alpha="round", hardness=0.9), "Round, hardness 0.9"),
+                              ("_tc_star", dict(alpha="star", hardness=0.6, angle=15), "Star, angle 15"),
+                              ("_tc_splatter", dict(alpha="splatter", hardness=0.8), "Splatter")):
+        s("set_brush", size=170, roundness=1, **args)
+        cells.append((cursor_crop(name, 105), title))
+    compose(cells, os.path.join(s.out, "tip_cursor.png"), cols=4)
+    s("set_brush", alpha="round", hardness=0.8, angle=0)
+    for n in ("_tb_paint_cursor", "_tb_paint_head", "_tb_erase_cursor", "_tb_erase_head", "_tc_soft", "_tc_hard",
+              "_tc_star", "_tc_splatter"):
+        try:
+            os.remove(os.path.join(s.out, n + ".png"))
+        except OSError:
+            pass

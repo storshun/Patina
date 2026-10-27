@@ -107,6 +107,8 @@ if(Python3_FOUND AND XVFB_EXECUTABLE AND TARGET patina)
   set_tests_properties(gui_baked_layers PROPERTIES TIMEOUT 300)
   add_test(NAME gui_slider_typing COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_slider_typing.py $<TARGET_FILE:patina>)
   set_tests_properties(gui_slider_typing PROPERTIES TIMEOUT 300)
+  add_test(NAME gui_tool_brushes COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_tool_brushes.py $<TARGET_FILE:patina>)
+  set_tests_properties(gui_tool_brushes PROPERTIES TIMEOUT 300)
 endif()
 
 # Patina Web: the island pipeline (web/src/islands.js) runs in Node without a browser

@@ -287,6 +287,7 @@ if __name__ == "__main__":
     ap.add_argument("--only0470", action="store_true", help="only the scenes for 0.47 (the steps' colors, UV menu, export)")
     ap.add_argument("--only1100", action="store_true", help="only the scenes for 1.1 (the bake-down)")
     ap.add_argument("--only1200", action="store_true", help="only the scenes for 1.2 (objects, face sets, brushes)")
+    ap.add_argument("--only1213", action="store_true", help="only the scenes for 1.2.13 (tool brushes, the tip cursor)")
     ap.add_argument("--only0110", action="store_true", help="only the scenes for 0.11 (the Patina Assistant; needs "
                                                            "PATINA_ASSISTANT_MODEL=<the .gguf>)")
     a = ap.parse_args()
@@ -359,6 +360,13 @@ if __name__ == "__main__":
         s = Session(a.bin, a.out)
         try:
             manual_scenes.run_1100(s)
+        finally:
+            s.close()
+        raise SystemExit(0)
+    if a.only1213:
+        s = Session(a.bin, a.out)
+        try:
+            manual_scenes.run_1213(s)
         finally:
             s.close()
         raise SystemExit(0)

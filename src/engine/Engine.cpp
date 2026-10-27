@@ -80,6 +80,87 @@ void Engine::selectBrush(const std::string& id) {
   }
 }
 
+int Engine::brushSlotOf(PaintTool t) {
+  switch (t) {
+    case PaintTool::Paint: return 0;
+    case PaintTool::Erase: return 1;
+    case PaintTool::Blur: return 2;
+    case PaintTool::Clone: return 3;
+    case PaintTool::Smudge: return 4;
+    default: return -1;
+  }
+}
+
+PaintTool Engine::brushSlotTool(int slot) {
+  static const PaintTool k[kBrushSlots] = {PaintTool::Paint, PaintTool::Erase, PaintTool::Blur, PaintTool::Clone,
+                                           PaintTool::Smudge};
+  return k[std::clamp(slot, 0, kBrushSlots - 1)];
+}
+
+const char* Engine::brushSlotName(int slot) {
+  static const char* k[kBrushSlots] = {"paint", "erase", "blur", "clone", "smudge"};
+  return k[std::clamp(slot, 0, kBrushSlots - 1)];
+}
+
+int Engine::brushSlotNamed(const std::string& name) {
+  for (int s = 0; s < kBrushSlots; ++s)
+    if (name == brushSlotName(s)) return s;
+  return -1;
+}
+
+void Engine::useToolBrush(PaintTool t) {
+  int s = brushSlotOf(t);
+  if (s < 0 || s == brushSlot || painter.active() || !features.on("tool_brushes")) return;
+  toolBrushes[brushSlot] = {true, painter.brush, selectedBrushId};
+  ToolBrush& next = toolBrushes[s];
+  if (!next.set) {
+    // the first time: a plain round tip, not the last tool's jar alpha; the size, projection and lazy mouse carry on
+    const char* id = (t == PaintTool::Blur || t == PaintTool::Smudge) ? "basic_soft" : "basic_hard";
+    const BrushPreset* p = brushes.find(id);
+    BrushPreset b = p ? *p : BrushPreset{};
+    b.size = painter.brush.size;
+    b.projection = painter.brush.projection;
+    b.backfaceCulling = painter.brush.backfaceCulling;
+    b.occlusion = painter.brush.occlusion;
+    b.lazyRadius = painter.brush.lazyRadius;
+    next = {true, b, p ? std::string(id) : std::string()};
+  }
+  painter.brush = next.brush;
+  selectedBrushId = next.presetId;
+  brushSlot = s;
+}
+
+json Engine::toolBrushesJson() const {
+  json j = json::object();
+  for (int s = 0; s < kBrushSlots; ++s) {
+    if (s == brushSlot) {
+      j[brushSlotName(s)] = painter.brush.toJson();
+      j[brushSlotName(s)]["preset"] = selectedBrushId;
+    } else if (toolBrushes[s].set) {
+      j[brushSlotName(s)] = toolBrushes[s].brush.toJson();
+      j[brushSlotName(s)]["preset"] = toolBrushes[s].presetId;
+    }
+  }
+  return j;
+}
+
+void Engine::toolBrushesFromJson(const json& j, int slot) {
+  brushSlot = std::clamp(slot, 0, kBrushSlots - 1);
+  for (int s = 0; s < kBrushSlots; ++s) {
+    toolBrushes[s] = ToolBrush{};
+    if (s == brushSlot || !j.is_object() || !j.contains(brushSlotName(s)) || !j[brushSlotName(s)].is_object()) continue;
+    const json& b = j[brushSlotName(s)];
+    std::string id = b.value("preset", std::string());
+    const BrushPreset* p = id.empty() ? nullptr : brushes.find(id);
+    ToolBrush tb;
+    tb.set = true;
+    if (p) tb.brush = *p;
+    tb.brush.fromJson(b);
+    tb.presetId = p ? id : std::string();
+    toolBrushes[s] = tb;
+  }
+}
+
 void Engine::selectMaterial(const std::string& id) {
   if (auto* e = materials.find(id)) {
     MaterialRef ref = painter.material;
@@ -856,6 +937,8 @@ json Engine::state() {
   s["brush"]["lock_topology"] = painter.lockTopology;
   s["brush"]["lock_island"] = painter.lockIsland;
   s["brush"]["lock_set"] = painter.lockSet;
+  s["brush"]["tool"] = features.on("tool_brushes") ? json(brushSlotName(brushSlot)) : json("every");  // (1.2.13) whose brush it is (Features: tool_brushes)
+  s["tool_brushes"] = features.on("tool_brushes") ? toolBrushesJson() : json::object();
   s["material"] = painter.material.toJson();
   static const char* tools[] = {"paint", "erase", "fill", "picker", "blur", "clone", "smudge"};
   s["tool"] = tools[(int)painter.tool];

@@ -7,7 +7,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Patina 1.2.12\n"
+"Project-Id-Version: Patina 1.2.13\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
@@ -19,57 +19,57 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Patina-Language-Name: \n"
 
-#: src/engine/Channels.h:25 src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:17
+#: src/engine/Channels.h:25 src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:19
 msgid "Base Color"
 msgstr ""
 
 #: src/engine/Channels.h:26 src/ui/LayersPanel.cpp:1150
-#: src/ui/MaskStackUI.cpp:177 src/ui/Panels.cpp:622 src/ui/Panels.cpp:1431
-#: src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:17
+#: src/ui/MaskStackUI.cpp:177 src/ui/Panels.cpp:628 src/ui/Panels.cpp:1437
+#: src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:19
 msgid "Roughness"
 msgstr ""
 
-#: src/engine/Channels.h:27 src/ui/LayersPanel.cpp:1151 src/ui/Panels.cpp:623
-#: src/ui/Panels.cpp:1432 src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:17
+#: src/engine/Channels.h:27 src/ui/LayersPanel.cpp:1151 src/ui/Panels.cpp:629
+#: src/ui/Panels.cpp:1438 src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:19
 msgid "Metallic"
 msgstr ""
 
-#: src/engine/Channels.h:28 src/ui/MaskStackUI.cpp:177 src/ui/Panels.cpp:624
-#: src/ui/Panels.cpp:1191 src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:18
+#: src/engine/Channels.h:28 src/ui/MaskStackUI.cpp:177 src/ui/Panels.cpp:630
+#: src/ui/Panels.cpp:1197 src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:20
 msgid "Height"
 msgstr ""
 
 #: src/engine/Channels.h:29 src/ui/LayersPanel.cpp:1025
-#: src/ui/MaskStackUI.cpp:255 src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:17
+#: src/ui/MaskStackUI.cpp:255 src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:19
 msgid "Normal"
 msgstr ""
 
-#: src/engine/Channels.h:30 src/ui/Panels.cpp:625 src/ui/Panels.cpp:1267
-#: src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:18
+#: src/engine/Channels.h:30 src/ui/Panels.cpp:631 src/ui/Panels.cpp:1273
+#: src/ui/UVEditor.cpp:16 src/ui/Viewport3D.cpp:20
 msgid "Emissive"
 msgstr ""
 
 #: src/engine/Channels.h:31 src/ui/AssistantPanel.cpp:72
 #: src/ui/BakedLayersUI.cpp:59 src/ui/LayersPanel.cpp:1023
-#: src/ui/MaskStackUI.cpp:257 src/ui/Panels.cpp:544 src/ui/Panels.cpp:1258
-#: src/ui/Panels.cpp:1434 src/ui/Toolbars.cpp:413 src/ui/UVEditor.cpp:18
-#: src/ui/Viewport3D.cpp:21
+#: src/ui/MaskStackUI.cpp:257 src/ui/Panels.cpp:550 src/ui/Panels.cpp:1264
+#: src/ui/Panels.cpp:1440 src/ui/Toolbars.cpp:413 src/ui/UVEditor.cpp:18
+#: src/ui/Viewport3D.cpp:23
 msgid "Opacity"
 msgstr ""
 
 #: src/engine/Channels.h:32 src/engine/MaterialLibrary.cpp:104
-#: src/ui/Panels.cpp:1260 src/ui/Panels.cpp:1435 src/ui/UVEditor.cpp:18
-#: src/ui/Viewport3D.cpp:21
+#: src/ui/Panels.cpp:1266 src/ui/Panels.cpp:1441 src/ui/UVEditor.cpp:18
+#: src/ui/Viewport3D.cpp:23
 msgid "Sheen"
 msgstr ""
 
-#: src/engine/Channels.h:33 src/ui/Panels.cpp:1262 src/ui/Panels.cpp:1436
-#: src/ui/UVEditor.cpp:18 src/ui/Viewport3D.cpp:21
+#: src/engine/Channels.h:33 src/ui/Panels.cpp:1268 src/ui/Panels.cpp:1442
+#: src/ui/UVEditor.cpp:18 src/ui/Viewport3D.cpp:23
 msgid "Clearcoat"
 msgstr ""
 
-#: src/engine/Channels.h:34 src/ui/Panels.cpp:1264 src/ui/Panels.cpp:1437
-#: src/ui/UVEditor.cpp:18 src/ui/Viewport3D.cpp:21
+#: src/engine/Channels.h:34 src/ui/Panels.cpp:1270 src/ui/Panels.cpp:1443
+#: src/ui/UVEditor.cpp:18 src/ui/Viewport3D.cpp:23
 msgid "Subsurface"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgstr ""
 msgid "The material editor names each generator's settings (dropdowns for its styles) and adds grime, worn edges and warp to every procedural material; the mask stack gains Pattern (any material as a mask), Grow / shrink and Edges; the Gradient and Drips smart masks; and cells, cracks, ridges and streaks for noise."
 msgstr ""
 
-#: src/engine/Features.cpp:50 src/ui/Panels.cpp:1533
+#: src/engine/Features.cpp:50 src/ui/Panels.cpp:1539
 msgid "Materials in Blender"
 msgstr ""
 
@@ -411,6 +411,22 @@ msgstr ""
 msgid "Named, colored groups of faces kept in the project (the Face Sets panel): select, hide, show only one set's faces, fill or mask with one, Lock Face Sets keeps strokes inside one, the Face sets view shows them, and Blender's sculpt face sets come in with the model. Off: no panel, the lock and the view are gone."
 msgstr ""
 
+#: src/engine/Features.cpp:204
+msgid "A brush for each tool"
+msgstr ""
+
+#: src/engine/Features.cpp:205
+msgid "Paint, Erase, Blur, Clone and Smudge each keep their own brush: its tip, size, hardness and the rest. Choose a jar tip for painting and the eraser keeps its round one. A tool used the first time starts from a plain round brush; the pen's eraser end uses the Erase brush. Off: one brush for every tool, as before 1.2.13."
+msgstr ""
+
+#: src/engine/Features.cpp:209
+msgid "The brush cursor shows the tip"
+msgstr ""
+
+#: src/engine/Features.cpp:210
+msgid "Over the 3D view the brush cursor is the outline of the brush's tip (its alpha), turned and squashed as the dabs are, with a dithered fill that shows where the brush paints and how it fades out at a soft edge. Off: a circle with a faint ring for the hardness, as before 1.2.13."
+msgstr ""
+
 #: src/engine/Layer.cpp:218 src/ui/Guided.cpp:941 src/ui/Tools04.cpp:516
 msgid "Ambient occlusion"
 msgstr ""
@@ -420,7 +436,7 @@ msgid "Curvature"
 msgstr ""
 
 #: src/engine/Layer.cpp:218 src/ui/Guided.cpp:944 src/ui/Panels.cpp:292
-#: src/ui/Panels.cpp:1667
+#: src/ui/Panels.cpp:1673
 msgid "Thickness"
 msgstr ""
 
@@ -585,7 +601,7 @@ msgstr ""
 msgid "Two-color weave"
 msgstr ""
 
-#: src/engine/MaterialLibrary.cpp:53 src/ui/Panels.cpp:1071
+#: src/engine/MaterialLibrary.cpp:53 src/ui/Panels.cpp:1077
 msgid "Tiles"
 msgstr ""
 
@@ -924,7 +940,7 @@ msgstr ""
 #: src/engine/MaterialLibrary.cpp:83 src/engine/MaterialLibrary.cpp:94
 #: src/engine/MaterialLibrary.cpp:113 src/engine/MaterialLibrary.cpp:127
 #: src/engine/MaterialLibrary.cpp:152 src/ui/Palette.cpp:113
-#: src/ui/Palette.cpp:114 src/ui/Palette.cpp:118 src/ui/Prefs.cpp:713
+#: src/ui/Palette.cpp:114 src/ui/Palette.cpp:118 src/ui/Prefs.cpp:718
 #: src/ui/Tools04.cpp:822
 msgid "Layout"
 msgstr ""
@@ -1266,7 +1282,7 @@ msgid "Painted scratches"
 msgstr ""
 
 #: src/engine/MaterialLibrary.cpp:117 src/ui/MaskStackUI.cpp:83
-#: src/ui/Panels.cpp:1023
+#: src/ui/Panels.cpp:1029
 msgid "Gradient"
 msgstr ""
 
@@ -1593,7 +1609,7 @@ msgid "Tilt"
 msgstr ""
 
 #: src/engine/MaterialLibrary.cpp:158 src/ui/MaskStackUI.cpp:47
-#: src/ui/MaskStackUI.cpp:272 src/ui/Panels.cpp:1755
+#: src/ui/MaskStackUI.cpp:272 src/ui/Panels.cpp:1761
 msgid "Kind"
 msgstr ""
 
@@ -2045,7 +2061,7 @@ msgstr ""
 msgid "Could not open %s"
 msgstr ""
 
-#: src/ui/App.cpp:196 src/ui/App.cpp:320 src/ui/Panels.cpp:1454
+#: src/ui/App.cpp:196 src/ui/App.cpp:320 src/ui/Panels.cpp:1460
 #, c-format
 msgid "Environment: %s"
 msgstr ""
@@ -2144,7 +2160,7 @@ msgstr ""
 msgid "Received '%s' from Blender: opened its project %s"
 msgstr ""
 
-#: src/ui/App.cpp:758 src/ui/Guided.cpp:1143 src/ui/Panels.cpp:1931
+#: src/ui/App.cpp:758 src/ui/Guided.cpp:1143 src/ui/Panels.cpp:1937
 msgid "untitled"
 msgstr ""
 
@@ -2482,7 +2498,7 @@ msgstr ""
 
 #: src/ui/BakedLayersUI.cpp:53 src/ui/FaceSetsUI.cpp:213
 #: src/ui/LayersPanel.cpp:984 src/ui/LayersPanel.cpp:1018
-#: src/ui/ObjectsUI.cpp:183 src/ui/Panels.cpp:1135 src/ui/Tools027.cpp:209
+#: src/ui/ObjectsUI.cpp:183 src/ui/Panels.cpp:1141 src/ui/Tools027.cpp:209
 #: src/ui/Tools030.cpp:94 src/ui/Tools04.cpp:247
 msgid "Name"
 msgstr ""
@@ -2579,13 +2595,13 @@ msgstr ""
 
 #: src/ui/BlenderLayout.cpp:44 src/ui/ContextMenus.cpp:189
 #: src/ui/ContextMenus.cpp:204 src/ui/Guided.cpp:49 src/ui/MaskStackUI.cpp:72
-#: src/ui/Prefs.cpp:107 src/ui/Toolbars.cpp:137 src/ui/Toolbars.cpp:138
-#: src/ui/UVEditor.cpp:788 src/ui/ViewPie.cpp:209
+#: src/ui/Panels.cpp:526 src/ui/Prefs.cpp:107 src/ui/Toolbars.cpp:137
+#: src/ui/Toolbars.cpp:138 src/ui/UVEditor.cpp:788 src/ui/ViewPie.cpp:209
 msgid "Paint"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:45 src/ui/Guided.cpp:51 src/ui/Panels.cpp:1678
-#: src/ui/Panels.cpp:1711 src/ui/Tools027.cpp:244
+#: src/ui/BlenderLayout.cpp:45 src/ui/Guided.cpp:51 src/ui/Panels.cpp:1684
+#: src/ui/Panels.cpp:1717 src/ui/Tools027.cpp:244
 msgid "Export"
 msgstr ""
 
@@ -2610,7 +2626,7 @@ msgid "View"
 msgstr ""
 
 #: src/ui/BlenderLayout.cpp:219 src/ui/Guided.cpp:397 src/ui/Guided.cpp:1067
-#: src/ui/Panels.cpp:312 src/ui/Prefs.cpp:167 src/ui/Prefs.cpp:724
+#: src/ui/Panels.cpp:312 src/ui/Prefs.cpp:167 src/ui/Prefs.cpp:729
 #: src/ui/Tools04.cpp:798 src/ui/Tools04.cpp:815
 msgid "Blender"
 msgstr ""
@@ -2658,7 +2674,7 @@ msgstr ""
 msgid "%d px"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:356 src/ui/Panels.cpp:1362
+#: src/ui/BlenderLayout.cpp:356 src/ui/Panels.cpp:1368
 msgid "Texture sets"
 msgstr ""
 
@@ -2678,7 +2694,7 @@ msgstr ""
 msgid "Set %d"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:370 src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1654
+#: src/ui/BlenderLayout.cpp:370 src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1660
 msgid "Texture set"
 msgstr ""
 
@@ -2707,12 +2723,12 @@ msgstr ""
 msgid "Layer"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:412 src/ui/Panels.cpp:1458
+#: src/ui/BlenderLayout.cpp:412 src/ui/Panels.cpp:1464
 msgid "Texture Set"
 msgstr ""
 
 #: src/ui/BlenderLayout.cpp:413 src/ui/FaceSetsUI.cpp:28
-#: src/ui/FaceSetsUI.cpp:29 src/ui/Viewport3D.cpp:22
+#: src/ui/FaceSetsUI.cpp:29 src/ui/Viewport3D.cpp:24
 msgid "Face Sets"
 msgstr ""
 
@@ -2725,7 +2741,7 @@ msgstr ""
 msgid "Notes"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:417 src/ui/Panels.cpp:1594
+#: src/ui/BlenderLayout.cpp:417 src/ui/Panels.cpp:1600
 msgid "Console"
 msgstr ""
 
@@ -2746,7 +2762,7 @@ msgstr ""
 msgid "%s: %s"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:469 src/ui/Panels.cpp:1496
+#: src/ui/BlenderLayout.cpp:469 src/ui/Panels.cpp:1502
 #, c-format
 msgid "%zu verts  %u faces  %zu tris  %u UV islands"
 msgstr ""
@@ -2756,7 +2772,7 @@ msgstr ""
 msgid "%d x %d texture set, %d of them"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:534 src/ui/Panels.cpp:682 src/ui/Panels.cpp:695
+#: src/ui/BlenderLayout.cpp:534 src/ui/Panels.cpp:688 src/ui/Panels.cpp:701
 msgid "Materials"
 msgstr ""
 
@@ -2764,21 +2780,21 @@ msgstr ""
 msgid "Smart"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:534 src/ui/Panels.cpp:1286
+#: src/ui/BlenderLayout.cpp:534 src/ui/Panels.cpp:1292
 msgid "Brushes"
 msgstr ""
 
 #: src/ui/BlenderLayout.cpp:552 src/ui/BlenderLayout.cpp:561
-#: src/ui/Panels.cpp:662 src/ui/UVEditor.cpp:628
+#: src/ui/Panels.cpp:668 src/ui/UVEditor.cpp:628
 msgid "All"
 msgstr ""
 
 #: src/ui/BlenderLayout.cpp:556 src/ui/LayersPanel.cpp:855
-#: src/ui/LayersPanel.cpp:856 src/ui/Panels.cpp:696
+#: src/ui/LayersPanel.cpp:856 src/ui/Panels.cpp:702
 msgid "Smart materials"
 msgstr ""
 
-#: src/ui/BlenderLayout.cpp:558 src/ui/Panels.cpp:697
+#: src/ui/BlenderLayout.cpp:558 src/ui/Panels.cpp:703
 msgid "Smart masks"
 msgstr ""
 
@@ -2880,7 +2896,7 @@ msgstr ""
 msgid "Alt+right-click"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:79 src/ui/Viewport3D.cpp:327
+#: src/ui/ContextMenus.cpp:79 src/ui/Viewport3D.cpp:419
 msgid "Picked color - the brush now paints these flat values"
 msgstr ""
 
@@ -2892,7 +2908,7 @@ msgstr ""
 msgid "No Layer Paints Here"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:87 src/ui/Prefs.cpp:698 src/ui/Tools027.cpp:64
+#: src/ui/ContextMenus.cpp:87 src/ui/Prefs.cpp:703 src/ui/Tools027.cpp:64
 #: src/ui/Tools034.cpp:48 src/ui/Tools04.cpp:441
 #, c-format
 msgid "%.0f%%"
@@ -2931,7 +2947,7 @@ msgstr ""
 msgid "Fill with the Paint Material"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:110 src/ui/Viewport3D.cpp:567
+#: src/ui/ContextMenus.cpp:110 src/ui/Viewport3D.cpp:659
 #, c-format
 msgid "Filled %zu faces"
 msgstr ""
@@ -2944,7 +2960,7 @@ msgstr ""
 msgid "Erase This UV Island"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:119 src/ui/Viewport3D.cpp:567
+#: src/ui/ContextMenus.cpp:119 src/ui/Viewport3D.cpp:659
 #, c-format
 msgid "Erased %zu faces"
 msgstr ""
@@ -2991,7 +3007,7 @@ msgstr ""
 
 #: src/ui/ContextMenus.cpp:148 src/ui/FaceSetsUI.cpp:147
 #: src/ui/FaceSetsUI.cpp:200 src/ui/Toolbars.cpp:147 src/ui/Tools027.cpp:82
-#: src/ui/UVEditor.cpp:535 src/ui/UVEditor.cpp:1331 src/ui/ViewPie.cpp:216
+#: src/ui/UVEditor.cpp:535 src/ui/UVEditor.cpp:1337 src/ui/ViewPie.cpp:216
 msgid "Select"
 msgstr ""
 
@@ -3034,7 +3050,7 @@ msgid "Ctrl+Alt+click (Select)"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:176 src/ui/UVEditor.cpp:964
-#: src/ui/Viewport3D.cpp:486
+#: src/ui/Viewport3D.cpp:578
 msgid "Loops and rings run through quads: this face isn't one"
 msgstr ""
 
@@ -3046,24 +3062,24 @@ msgstr ""
 msgid "Tool"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:189 src/ui/Prefs.cpp:108 src/ui/Toolbars.cpp:139
-#: src/ui/ViewPie.cpp:210
+#: src/ui/ContextMenus.cpp:189 src/ui/Panels.cpp:526 src/ui/Prefs.cpp:108
+#: src/ui/Toolbars.cpp:139 src/ui/ViewPie.cpp:210
 msgid "Erase"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:190 src/ui/MaskStackUI.cpp:70
-#: src/ui/MaskStackUI.cpp:73 src/ui/Prefs.cpp:109 src/ui/Toolbars.cpp:140
-#: src/ui/ViewPie.cpp:211
+#: src/ui/MaskStackUI.cpp:73 src/ui/Panels.cpp:526 src/ui/Prefs.cpp:109
+#: src/ui/Toolbars.cpp:140 src/ui/ViewPie.cpp:211
 msgid "Blur"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:190 src/ui/Prefs.cpp:111 src/ui/Toolbars.cpp:141
-#: src/ui/ViewPie.cpp:212
+#: src/ui/ContextMenus.cpp:190 src/ui/Panels.cpp:526 src/ui/Prefs.cpp:111
+#: src/ui/Toolbars.cpp:141 src/ui/ViewPie.cpp:212
 msgid "Smudge"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:191 src/ui/Prefs.cpp:110 src/ui/Toolbars.cpp:143
-#: src/ui/ViewPie.cpp:213
+#: src/ui/ContextMenus.cpp:191 src/ui/Panels.cpp:526 src/ui/Prefs.cpp:110
+#: src/ui/Toolbars.cpp:143 src/ui/ViewPie.cpp:213
 msgid "Clone"
 msgstr ""
 
@@ -3109,7 +3125,7 @@ msgstr ""
 
 #: src/ui/ContextMenus.cpp:206 src/ui/ContextMenus.cpp:236
 #: src/ui/LayersPanel.cpp:1158 src/ui/MaskStackUI.cpp:183
-#: src/ui/Panels.cpp:278 src/ui/Panels.cpp:628 src/ui/Panels.cpp:1539
+#: src/ui/Panels.cpp:278 src/ui/Panels.cpp:634 src/ui/Panels.cpp:1545
 #: src/ui/Prefs.cpp:122 src/ui/Prefs.cpp:123 src/ui/Prefs.cpp:124
 #: src/ui/Prefs.cpp:125 src/ui/Prefs.cpp:126 src/ui/Prefs.cpp:127
 #: src/ui/Toolbars.cpp:146 src/ui/Toolbars.cpp:431 src/ui/Tools010.cpp:142
@@ -3122,7 +3138,7 @@ msgid "Note"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:218 src/ui/RetopoUI.cpp:975 src/ui/Toolbars.cpp:256
-#: src/ui/Viewport3D.cpp:20
+#: src/ui/Viewport3D.cpp:22
 msgid "Symmetry"
 msgstr ""
 
@@ -3289,7 +3305,7 @@ msgid "Go Back to Here"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:331 src/ui/PenUI.cpp:63 src/ui/Prefs.cpp:97
-#: src/ui/Prefs.cpp:816 src/ui/ViewPie.cpp:56
+#: src/ui/Prefs.cpp:821 src/ui/ViewPie.cpp:56
 msgid "Undo"
 msgstr ""
 
@@ -3458,11 +3474,11 @@ msgstr ""
 msgid "Replaces the face sets there are"
 msgstr ""
 
-#: src/ui/FaceSetsUI.cpp:67 src/ui/Viewport3D.cpp:20
+#: src/ui/FaceSetsUI.cpp:67 src/ui/Viewport3D.cpp:22
 msgid "Material Slots"
 msgstr ""
 
-#: src/ui/FaceSetsUI.cpp:68 src/ui/Viewport3D.cpp:19
+#: src/ui/FaceSetsUI.cpp:68 src/ui/Viewport3D.cpp:21
 msgid "UV Islands"
 msgstr ""
 
@@ -3736,11 +3752,11 @@ msgstr ""
 msgid "Not exported yet"
 msgstr ""
 
-#: src/ui/Guided.cpp:395 src/ui/Prefs.cpp:719
+#: src/ui/Guided.cpp:395 src/ui/Prefs.cpp:724
 msgid "Guided"
 msgstr ""
 
-#: src/ui/Guided.cpp:396 src/ui/Prefs.cpp:722
+#: src/ui/Guided.cpp:396 src/ui/Prefs.cpp:727
 msgid "Full"
 msgstr ""
 
@@ -4012,11 +4028,11 @@ msgid_plural "%zu islands overlap others: paint shows twice there"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ui/Guided.cpp:868 src/ui/Tools027.cpp:98 src/ui/UVEditor.cpp:1322
+#: src/ui/Guided.cpp:868 src/ui/Tools027.cpp:98 src/ui/UVEditor.cpp:1328
 msgid "Fix"
 msgstr ""
 
-#: src/ui/Guided.cpp:868 src/ui/UVEditor.cpp:430 src/ui/UVEditor.cpp:1322
+#: src/ui/Guided.cpp:868 src/ui/UVEditor.cpp:430 src/ui/UVEditor.cpp:1328
 msgid "Overlaps fixed"
 msgstr ""
 
@@ -4162,7 +4178,7 @@ msgstr ""
 msgid "How thin the model is: ears, fins and cloth let light through"
 msgstr ""
 
-#: src/ui/Guided.cpp:946 src/ui/Panels.cpp:1462
+#: src/ui/Guided.cpp:946 src/ui/Panels.cpp:1468
 msgid "Mesh maps"
 msgstr ""
 
@@ -4170,8 +4186,8 @@ msgstr ""
 msgid "out of date"
 msgstr ""
 
-#: src/ui/Guided.cpp:953 src/ui/Guided.cpp:986 src/ui/Panels.cpp:1484
-#: src/ui/Panels.cpp:1485 src/ui/Panels.cpp:1486
+#: src/ui/Guided.cpp:953 src/ui/Guided.cpp:986 src/ui/Panels.cpp:1490
+#: src/ui/Panels.cpp:1491 src/ui/Panels.cpp:1492
 msgid "baked"
 msgstr ""
 
@@ -4252,7 +4268,7 @@ msgid "Send the textures to Blender"
 msgstr ""
 
 #: src/ui/Guided.cpp:1071 src/ui/Panels.cpp:316 src/ui/Panels.cpp:393
-#: src/ui/Panels.cpp:1521
+#: src/ui/Panels.cpp:1527
 msgid "Sent textures to Blender"
 msgstr ""
 
@@ -4294,19 +4310,19 @@ msgstr ""
 msgid "For"
 msgstr ""
 
-#: src/ui/Guided.cpp:1090 src/ui/Panels.cpp:1647
+#: src/ui/Guided.cpp:1090 src/ui/Panels.cpp:1653
 msgid "Blender (Principled BSDF)"
 msgstr ""
 
-#: src/ui/Guided.cpp:1090 src/ui/Panels.cpp:1647
+#: src/ui/Guided.cpp:1090 src/ui/Panels.cpp:1653
 msgid "glTF (metallicRoughness)"
 msgstr ""
 
-#: src/ui/Guided.cpp:1090 src/ui/Panels.cpp:1647
+#: src/ui/Guided.cpp:1090 src/ui/Panels.cpp:1653
 msgid "Unreal (ORM, DirectX normal)"
 msgstr ""
 
-#: src/ui/Guided.cpp:1090 src/ui/Panels.cpp:1647
+#: src/ui/Guided.cpp:1090 src/ui/Panels.cpp:1653
 msgid "Unity (MaskMap)"
 msgstr ""
 
@@ -4314,43 +4330,43 @@ msgstr ""
 msgid "Which maps are written and how they are packed: each engine wants its own (Unreal packs occlusion, roughness and metallic in one image and wants DirectX normals)"
 msgstr ""
 
-#: src/ui/Guided.cpp:1094 src/ui/MaskStackUI.cpp:267 src/ui/Panels.cpp:542
-#: src/ui/Panels.cpp:1654 src/ui/StencilUI.cpp:112 src/ui/Toolbars.cpp:406
+#: src/ui/Guided.cpp:1094 src/ui/MaskStackUI.cpp:267 src/ui/Panels.cpp:548
+#: src/ui/Panels.cpp:1660 src/ui/StencilUI.cpp:112 src/ui/Toolbars.cpp:406
 #: src/ui/Tools04.cpp:398
 msgid "Size"
 msgstr ""
 
-#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1654 src/ui/Tools027.cpp:217
+#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1660 src/ui/Tools027.cpp:217
 msgid "512"
 msgstr ""
 
-#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1654 src/ui/Tools027.cpp:217
+#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1660 src/ui/Tools027.cpp:217
 msgid "1024"
 msgstr ""
 
-#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1654 src/ui/Tools027.cpp:217
+#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1660 src/ui/Tools027.cpp:217
 msgid "2048"
 msgstr ""
 
-#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1654 src/ui/Tools027.cpp:217
+#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1660 src/ui/Tools027.cpp:217
 msgid "4096"
 msgstr ""
 
-#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1654
+#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1660
 msgid "8192"
 msgstr ""
 
-#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1654
+#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1660
 msgid "16384"
 msgstr ""
 
-#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1654
+#: src/ui/Guided.cpp:1094 src/ui/Panels.cpp:1660
 msgid "32768"
 msgstr ""
 
 #: src/ui/Guided.cpp:1096 src/ui/LayersPanel.cpp:66 src/ui/LayersPanel.cpp:848
 #: src/ui/LayersPanel.cpp:853 src/ui/LayersPanel.cpp:1054
-#: src/ui/Panels.cpp:1642 src/ui/Tools027.cpp:205
+#: src/ui/Panels.cpp:1648 src/ui/Tools027.cpp:205
 msgid "Folder"
 msgstr ""
 
@@ -4627,13 +4643,13 @@ msgstr ""
 msgid "Yours"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:97 src/ui/LayersPanel.cpp:757 src/ui/Panels.cpp:972
-#: src/ui/Viewport3D.cpp:230
+#: src/ui/LayersPanel.cpp:97 src/ui/LayersPanel.cpp:757 src/ui/Panels.cpp:978
+#: src/ui/Viewport3D.cpp:322
 msgid "Could not apply the smart material"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:98 src/ui/LayersPanel.cpp:758 src/ui/Panels.cpp:973
-#: src/ui/Viewport3D.cpp:231
+#: src/ui/LayersPanel.cpp:98 src/ui/LayersPanel.cpp:758 src/ui/Panels.cpp:979
+#: src/ui/Viewport3D.cpp:323
 #, c-format
 msgid "Added the smart material %s"
 msgstr ""
@@ -4805,7 +4821,7 @@ msgstr ""
 msgid "The material of %s"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:358 src/ui/Panels.cpp:802
+#: src/ui/LayersPanel.cpp:358 src/ui/Panels.cpp:808
 msgid "Drop on a fill layer to use it there"
 msgstr ""
 
@@ -5116,7 +5132,7 @@ msgstr ""
 msgid "Smart mask added to the mask effects of %s"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:770 src/ui/Panels.cpp:1048
+#: src/ui/LayersPanel.cpp:770 src/ui/Panels.cpp:1054
 #, c-format
 msgid "Smart mask on %s"
 msgstr ""
@@ -5166,7 +5182,7 @@ msgstr ""
 msgid "Save the Selected Layer as a Smart Material..."
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:867 src/ui/Panels.cpp:960
+#: src/ui/LayersPanel.cpp:867 src/ui/Panels.cpp:966
 msgid "Open the Smart Materials Folder"
 msgstr ""
 
@@ -5245,7 +5261,7 @@ msgid "Overlay"
 msgstr ""
 
 #: src/ui/LayersPanel.cpp:1025 src/ui/MaskStackUI.cpp:255
-#: src/ui/Panels.cpp:670
+#: src/ui/Panels.cpp:676
 msgid "Add"
 msgstr ""
 
@@ -5327,7 +5343,7 @@ msgid "Cooler (blue) to warmer (yellow)"
 msgstr ""
 
 #: src/ui/LayersPanel.cpp:1079 src/ui/LayersPanel.cpp:1161
-#: src/ui/Panels.cpp:633
+#: src/ui/Panels.cpp:639
 msgid "Tint"
 msgstr ""
 
@@ -5339,7 +5355,7 @@ msgstr ""
 msgid "Tone"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:1082 src/ui/Panels.cpp:1449
+#: src/ui/LayersPanel.cpp:1082 src/ui/Panels.cpp:1455
 msgid "Exposure"
 msgstr ""
 
@@ -5402,7 +5418,7 @@ msgstr ""
 msgid "Takes the shadows baked into the color out (scans, generated models): brightens what the ambient occlusion darkens. Bakes the ambient occlusion if it is not there."
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:1108 src/ui/Panels.cpp:1249 src/ui/Toolbars.cpp:422
+#: src/ui/LayersPanel.cpp:1108 src/ui/Panels.cpp:1255 src/ui/Toolbars.cpp:422
 msgid "Surface"
 msgstr ""
 
@@ -5414,7 +5430,7 @@ msgstr ""
 msgid "Metallic offset"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:1111 src/ui/Panels.cpp:638
+#: src/ui/LayersPanel.cpp:1111 src/ui/Panels.cpp:644
 msgid "Height offset"
 msgstr ""
 
@@ -5443,7 +5459,7 @@ msgid "Use current paint material"
 msgstr ""
 
 #: src/ui/LayersPanel.cpp:1158 src/ui/MaskStackUI.cpp:183
-#: src/ui/Panels.cpp:581 src/ui/Panels.cpp:628 src/ui/Tools010.cpp:142
+#: src/ui/Panels.cpp:587 src/ui/Panels.cpp:634 src/ui/Tools010.cpp:142
 msgid "Projection"
 msgstr ""
 
@@ -5452,30 +5468,30 @@ msgid "Tri-planar"
 msgstr ""
 
 #: src/ui/LayersPanel.cpp:1159 src/ui/MaskStackUI.cpp:184
-#: src/ui/ObjectsUI.cpp:287 src/ui/Panels.cpp:630 src/ui/StencilUI.cpp:66
+#: src/ui/ObjectsUI.cpp:287 src/ui/Panels.cpp:636 src/ui/StencilUI.cpp:66
 #: src/ui/Toolbars.cpp:613 src/ui/UVEditor.cpp:396 src/ui/UVEditor.cpp:994
 msgid "Scale"
 msgstr ""
 
 #: src/ui/LayersPanel.cpp:1160 src/ui/MaskStackUI.cpp:185
-#: src/ui/ObjectsUI.cpp:282 src/ui/ObjectsUI.cpp:285 src/ui/Panels.cpp:631
-#: src/ui/Panels.cpp:1448 src/ui/StencilUI.cpp:67
+#: src/ui/ObjectsUI.cpp:282 src/ui/ObjectsUI.cpp:285 src/ui/Panels.cpp:637
+#: src/ui/Panels.cpp:1454 src/ui/StencilUI.cpp:67
 msgid "Rotation"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:1162 src/ui/Panels.cpp:634
+#: src/ui/LayersPanel.cpp:1162 src/ui/Panels.cpp:640
 msgid "Rough scale"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:1163 src/ui/Panels.cpp:635
+#: src/ui/LayersPanel.cpp:1163 src/ui/Panels.cpp:641
 msgid "Rough offset"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:1164 src/ui/Panels.cpp:637
+#: src/ui/LayersPanel.cpp:1164 src/ui/Panels.cpp:643
 msgid "Height scale"
 msgstr ""
 
-#: src/ui/LayersPanel.cpp:1165 src/ui/Panels.cpp:639 src/ui/Panels.cpp:1193
+#: src/ui/LayersPanel.cpp:1165 src/ui/Panels.cpp:645 src/ui/Panels.cpp:1199
 msgid "Normal strength"
 msgstr ""
 
@@ -5583,24 +5599,24 @@ msgid "Edges (curvature)"
 msgstr ""
 
 #: src/ui/MaskStackUI.cpp:18 src/ui/MaskStackUI.cpp:20
-#: src/ui/MaskStackUI.cpp:82 src/ui/Panels.cpp:1016
+#: src/ui/MaskStackUI.cpp:82 src/ui/Panels.cpp:1022
 msgid "Cavity"
 msgstr ""
 
 #: src/ui/MaskStackUI.cpp:18 src/ui/MaskStackUI.cpp:20
-#: src/ui/MaskStackUI.cpp:82 src/ui/Panels.cpp:1017
+#: src/ui/MaskStackUI.cpp:82 src/ui/Panels.cpp:1023
 msgid "Occlusion"
 msgstr ""
 
 #: src/ui/MaskStackUI.cpp:18 src/ui/MaskStackUI.cpp:20
-#: src/ui/MaskStackUI.cpp:82 src/ui/Panels.cpp:1018
+#: src/ui/MaskStackUI.cpp:82 src/ui/Panels.cpp:1024
 msgid "Height gradient"
 msgstr ""
 
 #: src/ui/MaskStackUI.cpp:18 src/ui/MaskStackUI.cpp:20
 #: src/ui/MaskStackUI.cpp:62 src/ui/MaskStackUI.cpp:69
 #: src/ui/MaskStackUI.cpp:72 src/ui/MaskStackUI.cpp:82
-#: src/ui/MaskStackUI.cpp:196 src/ui/Panels.cpp:1019
+#: src/ui/MaskStackUI.cpp:196 src/ui/Panels.cpp:1025
 msgid "Noise"
 msgstr ""
 
@@ -5609,7 +5625,7 @@ msgid "Facing direction"
 msgstr ""
 
 #: src/ui/MaskStackUI.cpp:18 src/ui/MaskStackUI.cpp:20
-#: src/ui/MaskStackUI.cpp:54 src/ui/MaskStackUI.cpp:83 src/ui/Panels.cpp:1021
+#: src/ui/MaskStackUI.cpp:54 src/ui/MaskStackUI.cpp:83 src/ui/Panels.cpp:1027
 #: src/ui/Toolbars.cpp:571 src/ui/Tools010.cpp:151
 msgid "Material slot"
 msgstr ""
@@ -5751,7 +5767,7 @@ msgstr ""
 msgid "Grow"
 msgstr ""
 
-#: src/ui/MaskStackUI.cpp:73 src/ui/MaskStackUI.cpp:82 src/ui/Panels.cpp:1015
+#: src/ui/MaskStackUI.cpp:73 src/ui/MaskStackUI.cpp:82 src/ui/Panels.cpp:1021
 msgid "Edges"
 msgstr ""
 
@@ -5769,11 +5785,11 @@ msgid ""
 "Drag a material from the Materials panel onto the stack to add one."
 msgstr ""
 
-#: src/ui/MaskStackUI.cpp:83 src/ui/Panels.cpp:1022
+#: src/ui/MaskStackUI.cpp:83 src/ui/Panels.cpp:1028
 msgid "Thin parts"
 msgstr ""
 
-#: src/ui/MaskStackUI.cpp:83 src/ui/Panels.cpp:1024
+#: src/ui/MaskStackUI.cpp:83 src/ui/Panels.cpp:1030
 msgid "Drips"
 msgstr ""
 
@@ -5790,7 +5806,7 @@ msgid "A Pattern mask effect from it"
 msgstr ""
 
 #: src/ui/MaskStackUI.cpp:150 src/ui/Palette.cpp:189 src/ui/Tools010.cpp:153
-#: src/ui/Viewport3D.cpp:17
+#: src/ui/Viewport3D.cpp:19
 msgid "Material"
 msgstr ""
 
@@ -5810,7 +5826,7 @@ msgstr ""
 msgid "0 keeps the values as they are; more makes a sharper cut at Level"
 msgstr ""
 
-#: src/ui/MaskStackUI.cpp:192 src/ui/Panels.cpp:1055
+#: src/ui/MaskStackUI.cpp:192 src/ui/Panels.cpp:1061
 #, c-format
 msgid "Smart mask: %s"
 msgstr ""
@@ -5907,7 +5923,7 @@ msgstr ""
 msgid "No painted mask yet: + Mask on the layer row, then paint."
 msgstr ""
 
-#: src/ui/MaskStackUI.cpp:264 src/ui/Panels.cpp:1142 src/ui/Panels.cpp:1147
+#: src/ui/MaskStackUI.cpp:264 src/ui/Panels.cpp:1148 src/ui/Panels.cpp:1153
 msgid "Generator"
 msgstr ""
 
@@ -5915,7 +5931,7 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
-#: src/ui/MaskStackUI.cpp:269 src/ui/Panels.cpp:539 src/ui/Panels.cpp:1190
+#: src/ui/MaskStackUI.cpp:269 src/ui/Panels.cpp:545 src/ui/Panels.cpp:1196
 msgid "Seed"
 msgstr ""
 
@@ -6212,15 +6228,15 @@ msgstr ""
 msgid "Blender: the panels where Blender has them"
 msgstr ""
 
-#: src/ui/Palette.cpp:115 src/ui/Palette.cpp:116 src/ui/Prefs.cpp:702
+#: src/ui/Palette.cpp:115 src/ui/Palette.cpp:116 src/ui/Prefs.cpp:707
 msgid "Theme"
 msgstr ""
 
-#: src/ui/Palette.cpp:115 src/ui/Prefs.cpp:703
+#: src/ui/Palette.cpp:115 src/ui/Prefs.cpp:708
 msgid "Patina"
 msgstr ""
 
-#: src/ui/Palette.cpp:116 src/ui/Prefs.cpp:703
+#: src/ui/Palette.cpp:116 src/ui/Prefs.cpp:708
 msgid "Vivid Dark"
 msgstr ""
 
@@ -6256,11 +6272,11 @@ msgstr ""
 msgid "Window"
 msgstr ""
 
-#: src/ui/Palette.cpp:134 src/ui/Prefs.cpp:654
+#: src/ui/Palette.cpp:134 src/ui/Prefs.cpp:659
 msgid "Preferences"
 msgstr ""
 
-#: src/ui/Palette.cpp:135 src/ui/Prefs.cpp:287 src/ui/Prefs.cpp:659
+#: src/ui/Palette.cpp:135 src/ui/Prefs.cpp:287 src/ui/Prefs.cpp:664
 msgid "Keyboard shortcuts"
 msgstr ""
 
@@ -6302,7 +6318,7 @@ msgstr ""
 msgid "Patina in 5 Minutes (the tutorial, in your browser)"
 msgstr ""
 
-#: src/ui/Palette.cpp:147 src/ui/Panels.cpp:349 src/ui/Panels.cpp:2027
+#: src/ui/Palette.cpp:147 src/ui/Panels.cpp:349 src/ui/Panels.cpp:2033
 msgid "About Patina"
 msgstr ""
 
@@ -6364,7 +6380,7 @@ msgstr ""
 msgid "%zu more: keep typing"
 msgstr ""
 
-#: src/ui/Panels.cpp:108 src/ui/Panels.cpp:1753 src/ui/Prefs.cpp:89
+#: src/ui/Panels.cpp:108 src/ui/Panels.cpp:1759 src/ui/Prefs.cpp:89
 #: src/ui/Prefs.cpp:90 src/ui/Prefs.cpp:91 src/ui/Prefs.cpp:92
 #: src/ui/Prefs.cpp:93 src/ui/Prefs.cpp:94 src/ui/Prefs.cpp:95
 #: src/ui/Prefs.cpp:96 src/ui/Prefs.cpp:168 src/ui/Tools030.cpp:201
@@ -6538,7 +6554,7 @@ msgstr ""
 msgid "Preferences..."
 msgstr ""
 
-#: src/ui/Panels.cpp:245 src/ui/Panels.cpp:1493
+#: src/ui/Panels.cpp:245 src/ui/Panels.cpp:1499
 msgid "Mesh"
 msgstr ""
 
@@ -6618,7 +6634,7 @@ msgstr ""
 msgid "Painted the high-poly? Every layer moves onto its low-poly version, which becomes the model"
 msgstr ""
 
-#: src/ui/Panels.cpp:307 src/ui/Viewport3D.cpp:22
+#: src/ui/Panels.cpp:307 src/ui/Viewport3D.cpp:24
 msgid "Bake-Down Check"
 msgstr ""
 
@@ -6626,7 +6642,7 @@ msgstr ""
 msgid "Send Textures to Blender"
 msgstr ""
 
-#: src/ui/Panels.cpp:317 src/ui/Panels.cpp:1522
+#: src/ui/Panels.cpp:317 src/ui/Panels.cpp:1528
 #, c-format
 msgid "Send failed: %s"
 msgstr ""
@@ -6773,341 +6789,350 @@ msgstr ""
 msgid "Properties"
 msgstr ""
 
-#: src/ui/Panels.cpp:525
+#: src/ui/Panels.cpp:528
+#, c-format
+msgid "The %s tool's brush"
+msgstr ""
+
+#: src/ui/Panels.cpp:529
+msgid "Each brush tool keeps its own brush (Preferences > Features > A brush for each tool)"
+msgstr ""
+
+#: src/ui/Panels.cpp:531
 #, c-format
 msgid "Preset: %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:533
+#: src/ui/Panels.cpp:539
 msgid "Tip"
 msgstr ""
 
-#: src/ui/Panels.cpp:533
+#: src/ui/Panels.cpp:539
 msgid "image"
 msgstr ""
 
-#: src/ui/Panels.cpp:540
+#: src/ui/Panels.cpp:546
 msgid "Image tip..."
 msgstr ""
 
-#: src/ui/Panels.cpp:542 src/ui/Panels.cpp:569 src/ui/StencilUI.cpp:112
+#: src/ui/Panels.cpp:548 src/ui/Panels.cpp:575 src/ui/StencilUI.cpp:112
 #: src/ui/StencilUI.cpp:117
 #, c-format
 msgid "%.0f px"
 msgstr ""
 
-#: src/ui/Panels.cpp:543 src/ui/Toolbars.cpp:409
+#: src/ui/Panels.cpp:549 src/ui/Toolbars.cpp:409
 msgid "Hardness"
 msgstr ""
 
-#: src/ui/Panels.cpp:545 src/ui/RetopoUI.cpp:831 src/ui/Toolbars.cpp:162
+#: src/ui/Panels.cpp:551 src/ui/RetopoUI.cpp:831 src/ui/Toolbars.cpp:162
 #: src/ui/Toolbars.cpp:411
 msgid "Flow"
 msgstr ""
 
-#: src/ui/Panels.cpp:546 src/ui/Toolbars.cpp:415
+#: src/ui/Panels.cpp:552 src/ui/Toolbars.cpp:415
 msgid "Spacing"
 msgstr ""
 
-#: src/ui/Panels.cpp:547
+#: src/ui/Panels.cpp:553
 msgid "Angle"
 msgstr ""
 
-#: src/ui/Panels.cpp:548
+#: src/ui/Panels.cpp:554
 msgid "Roundness"
 msgstr ""
 
-#: src/ui/Panels.cpp:549
+#: src/ui/Panels.cpp:555
 msgid "Blur radius"
 msgstr ""
 
-#: src/ui/Panels.cpp:549
+#: src/ui/Panels.cpp:555
 #, c-format
 msgid "%.0f texels"
 msgstr ""
 
-#: src/ui/Panels.cpp:551
+#: src/ui/Panels.cpp:557
 msgid "Across UV seams"
 msgstr ""
 
-#: src/ui/Panels.cpp:552
+#: src/ui/Panels.cpp:558
 msgid "Blur and smudge carry on over UV seams onto the matching side of the neighboring island"
 msgstr ""
 
-#: src/ui/Panels.cpp:555
+#: src/ui/Panels.cpp:561
 msgid "Aligned clone"
 msgstr ""
 
-#: src/ui/Panels.cpp:557
+#: src/ui/Panels.cpp:563
 msgid ""
 "Aligned: the source keeps its offset across strokes.\n"
 "Off: every stroke starts sampling at the source point."
 msgstr ""
 
-#: src/ui/Panels.cpp:559
+#: src/ui/Panels.cpp:565
 #, c-format
 msgid "Source UV %.3f, %.3f (Ctrl+click to move)"
 msgstr ""
 
-#: src/ui/Panels.cpp:561
+#: src/ui/Panels.cpp:567
 msgid "Ctrl+click on the model or UV view to set the source"
 msgstr ""
 
-#: src/ui/Panels.cpp:563
+#: src/ui/Panels.cpp:569
 msgid "Dynamics"
 msgstr ""
 
-#: src/ui/Panels.cpp:564
+#: src/ui/Panels.cpp:570
 msgid "Follow path"
 msgstr ""
 
-#: src/ui/Panels.cpp:565
+#: src/ui/Panels.cpp:571
 msgid "Angle jitter"
 msgstr ""
 
-#: src/ui/Panels.cpp:566
+#: src/ui/Panels.cpp:572
 msgid "Size jitter"
 msgstr ""
 
-#: src/ui/Panels.cpp:567
+#: src/ui/Panels.cpp:573
 msgid "Flow jitter"
 msgstr ""
 
-#: src/ui/Panels.cpp:568
+#: src/ui/Panels.cpp:574
 msgid "Scatter"
 msgstr ""
 
-#: src/ui/Panels.cpp:569
+#: src/ui/Panels.cpp:575
 msgid "Lazy mouse"
 msgstr ""
 
-#: src/ui/Panels.cpp:570
+#: src/ui/Panels.cpp:576
 msgid "Pressure: size"
 msgstr ""
 
-#: src/ui/Panels.cpp:572
+#: src/ui/Panels.cpp:578
 msgid "flow"
 msgstr ""
 
-#: src/ui/Panels.cpp:574
+#: src/ui/Panels.cpp:580
 msgid "opacity"
 msgstr ""
 
-#: src/ui/Panels.cpp:575
+#: src/ui/Panels.cpp:581
 msgid "Pen tilt turns the tip"
 msgstr ""
 
-#: src/ui/Panels.cpp:577
+#: src/ui/Panels.cpp:583
 msgid "The tip points the way the pen leans (pens with tilt: Wacom Pro Pen, most Huion and XP-Pen pens)"
 msgstr ""
 
-#: src/ui/Panels.cpp:578
+#: src/ui/Panels.cpp:584
 msgid "Pen tablet settings..."
 msgstr ""
 
-#: src/ui/Panels.cpp:583 src/ui/StencilUI.cpp:56
+#: src/ui/Panels.cpp:589 src/ui/StencilUI.cpp:56
 msgid "Mode"
 msgstr ""
 
-#: src/ui/Panels.cpp:583
+#: src/ui/Panels.cpp:589
 msgid "Screen (view)"
 msgstr ""
 
-#: src/ui/Panels.cpp:583
+#: src/ui/Panels.cpp:589
 msgid "Surface 3D sphere"
 msgstr ""
 
-#: src/ui/Panels.cpp:583
+#: src/ui/Panels.cpp:589
 msgid "UV space"
 msgstr ""
 
-#: src/ui/Panels.cpp:584
+#: src/ui/Panels.cpp:590
 msgid "Backface culling"
 msgstr ""
 
-#: src/ui/Panels.cpp:585
+#: src/ui/Panels.cpp:591
 msgid "Occlusion (visible surfaces only)"
 msgstr ""
 
-#: src/ui/Panels.cpp:586
+#: src/ui/Panels.cpp:592
 msgid "Off = paint through the model onto hidden surfaces behind the cursor"
 msgstr ""
 
-#: src/ui/Panels.cpp:587
+#: src/ui/Panels.cpp:593
 msgid "Angle falloff"
 msgstr ""
 
-#: src/ui/Panels.cpp:588
+#: src/ui/Panels.cpp:594
 msgid "Fades paint on surfaces seen at grazing angles (0 = off)"
 msgstr ""
 
-#: src/ui/Panels.cpp:593
+#: src/ui/Panels.cpp:599
 msgid "preset name"
 msgstr ""
 
-#: src/ui/Panels.cpp:595
+#: src/ui/Panels.cpp:601
 msgid "Save preset"
 msgstr ""
 
-#: src/ui/Panels.cpp:601
+#: src/ui/Panels.cpp:607
 #, c-format
 msgid "Saved brush preset %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:606 src/ui/Toolbars.cpp:138
+#: src/ui/Panels.cpp:612 src/ui/Toolbars.cpp:138
 msgid "Paint material"
 msgstr ""
 
-#: src/ui/Panels.cpp:615
+#: src/ui/Panels.cpp:621
 msgid "Use flat color instead"
 msgstr ""
 
-#: src/ui/Panels.cpp:618
+#: src/ui/Panels.cpp:624
 msgid "Flat values (pick a library material to paint textures)"
 msgstr ""
 
-#: src/ui/Panels.cpp:621 src/ui/Panels.cpp:1430
+#: src/ui/Panels.cpp:627 src/ui/Panels.cpp:1436
 msgid "Base color"
 msgstr ""
 
-#: src/ui/Panels.cpp:628
+#: src/ui/Panels.cpp:634
 msgid "Tri-planar (object)"
 msgstr ""
 
-#: src/ui/Panels.cpp:628
+#: src/ui/Panels.cpp:634
 msgid "Screen (planar)"
 msgstr ""
 
-#: src/ui/Panels.cpp:629
+#: src/ui/Panels.cpp:635
 msgid "Tri-planar ignores UV layout entirely; Screen projects the material from the camera like a decal"
 msgstr ""
 
-#: src/ui/Panels.cpp:632
+#: src/ui/Panels.cpp:638
 msgid "Adjust"
 msgstr ""
 
-#: src/ui/Panels.cpp:636
+#: src/ui/Panels.cpp:642
 msgid "Metal override"
 msgstr ""
 
-#: src/ui/Panels.cpp:636 src/ui/Panels.cpp:1509 src/ui/Prefs.cpp:735
+#: src/ui/Panels.cpp:642 src/ui/Panels.cpp:1515 src/ui/Prefs.cpp:740
 #: src/ui/Tools04.cpp:431
 msgid "off"
 msgstr ""
 
-#: src/ui/Panels.cpp:640
+#: src/ui/Panels.cpp:646
 msgid "Emissive strength"
 msgstr ""
 
-#: src/ui/Panels.cpp:641
+#: src/ui/Panels.cpp:647
 msgid "Tri-planar blend"
 msgstr ""
 
-#: src/ui/Panels.cpp:643
+#: src/ui/Panels.cpp:649
 msgid "Smooth cross-fade"
 msgstr ""
 
-#: src/ui/Panels.cpp:643
+#: src/ui/Panels.cpp:649
 msgid "By height (crisp)"
 msgstr ""
 
-#: src/ui/Panels.cpp:645
+#: src/ui/Panels.cpp:651
 msgid "Tri-planar seams"
 msgstr ""
 
-#: src/ui/Panels.cpp:647
+#: src/ui/Panels.cpp:653
 msgid ""
 "Where the three projections meet on curved surfaces.\n"
 "By height: the raised parts of one projection win, so patterns don't show through\n"
 "each other (no ghosting). Smooth: a soft cross-fade, which can show a double pattern."
 msgstr ""
 
-#: src/ui/Panels.cpp:654
+#: src/ui/Panels.cpp:660
 msgid "Paint channels"
 msgstr ""
 
-#: src/ui/Panels.cpp:664
+#: src/ui/Panels.cpp:670
 msgid "Color only"
 msgstr ""
 
-#: src/ui/Panels.cpp:666
+#: src/ui/Panels.cpp:672
 msgid "Height only"
 msgstr ""
 
-#: src/ui/Panels.cpp:668
+#: src/ui/Panels.cpp:674
 msgid "Rough+Metal"
 msgstr ""
 
-#: src/ui/Panels.cpp:670
+#: src/ui/Panels.cpp:676
 msgid "Height mode"
 msgstr ""
 
-#: src/ui/Panels.cpp:670
+#: src/ui/Panels.cpp:676
 msgid "Replace"
 msgstr ""
 
-#: src/ui/Panels.cpp:670
+#: src/ui/Panels.cpp:676
 msgid "Max"
 msgstr ""
 
-#: src/ui/Panels.cpp:672
+#: src/ui/Panels.cpp:678
 msgid "Map value"
 msgstr ""
 
-#: src/ui/Panels.cpp:674
+#: src/ui/Panels.cpp:680
 msgid "Mask value"
 msgstr ""
 
-#: src/ui/Panels.cpp:695
+#: src/ui/Panels.cpp:701
 msgid "Click one to paint with it, or drag it onto a fill layer or into the layer stack."
 msgstr ""
 
-#: src/ui/Panels.cpp:696
+#: src/ui/Panels.cpp:702
 msgid "Ready-made layer stacks. Click one to add it, or drag it into the layer stack."
 msgstr ""
 
-#: src/ui/Panels.cpp:697
+#: src/ui/Panels.cpp:703
 msgid ""
 "Masks that follow the model's shape. Click one to give it to the selected layer,\n"
 "or drag it onto a layer."
 msgstr ""
 
-#: src/ui/Panels.cpp:707 src/ui/Panels.cpp:891
+#: src/ui/Panels.cpp:713 src/ui/Panels.cpp:897
 msgid "search"
 msgstr ""
 
-#: src/ui/Panels.cpp:711 src/ui/Panels.cpp:712
+#: src/ui/Panels.cpp:717 src/ui/Panels.cpp:718
 msgid "All categories"
 msgstr ""
 
-#: src/ui/Panels.cpp:719
+#: src/ui/Panels.cpp:725
 msgid "Import folder..."
 msgstr ""
 
-#: src/ui/Panels.cpp:721
+#: src/ui/Panels.cpp:727
 msgid ""
 "A folder of texture maps: base color, roughness, metallic, normal, height...\n"
 "Substance exports work too (packed ORM / MaskMap maps, several texture sets, EXR).\n"
 "You can also drag and drop the folder onto the window."
 msgstr ""
 
-#: src/ui/Panels.cpp:725
+#: src/ui/Panels.cpp:731
 msgid "New procedural..."
 msgstr ""
 
-#: src/ui/Panels.cpp:728
+#: src/ui/Panels.cpp:734
 msgid "My Material"
 msgstr ""
 
-#: src/ui/Panels.cpp:782 src/ui/Panels.cpp:817 src/ui/Panels.cpp:938
+#: src/ui/Panels.cpp:788 src/ui/Panels.cpp:823 src/ui/Panels.cpp:944
 msgid "Patina default library"
 msgstr ""
 
-#: src/ui/Panels.cpp:782 src/ui/Panels.cpp:817 src/ui/Panels.cpp:938
+#: src/ui/Panels.cpp:788 src/ui/Panels.cpp:823 src/ui/Panels.cpp:944
 msgid "your library"
 msgstr ""
 
-#: src/ui/Panels.cpp:816
+#: src/ui/Panels.cpp:822
 #, c-format
 msgid ""
 "%s\n"
@@ -7118,65 +7143,65 @@ msgid ""
 "Click to paint with it. Drag it onto a fill layer to use it there."
 msgstr ""
 
-#: src/ui/Panels.cpp:821
+#: src/ui/Panels.cpp:827
 msgid "Paint with This"
 msgstr ""
 
-#: src/ui/Panels.cpp:822
+#: src/ui/Panels.cpp:828
 msgid "Add as Fill Layer"
 msgstr ""
 
-#: src/ui/Panels.cpp:829
+#: src/ui/Panels.cpp:835
 msgid "Use on the Selected Fill Layer"
 msgstr ""
 
-#: src/ui/Panels.cpp:836 src/ui/Panels.cpp:958 src/ui/Panels.cpp:1317
+#: src/ui/Panels.cpp:842 src/ui/Panels.cpp:964 src/ui/Panels.cpp:1323
 msgid "Copy Its ID"
 msgstr ""
 
-#: src/ui/Panels.cpp:838
+#: src/ui/Panels.cpp:844
 msgid "Edit / Duplicate..."
 msgstr ""
 
-#: src/ui/Panels.cpp:842
+#: src/ui/Panels.cpp:848
 #, c-format
 msgid "%s (custom)"
 msgstr ""
 
-#: src/ui/Panels.cpp:850
+#: src/ui/Panels.cpp:856
 msgid "Normal Map Is DirectX (Green Down)"
 msgstr ""
 
-#: src/ui/Panels.cpp:855
+#: src/ui/Panels.cpp:861
 msgid "Tick when bumps look like dents. Unreal and DirectX exports use this convention."
 msgstr ""
 
-#: src/ui/Panels.cpp:857
+#: src/ui/Panels.cpp:863
 msgid "Delete from Library"
 msgstr ""
 
-#: src/ui/Panels.cpp:879
+#: src/ui/Panels.cpp:885
 #, c-format
 msgid "Updated material %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:881
+#: src/ui/Panels.cpp:887
 msgid "Could not update the material"
 msgstr ""
 
-#: src/ui/Panels.cpp:893
+#: src/ui/Panels.cpp:899
 msgid "Click to add one above the selected layer, or drag it to where you want it in the stack."
 msgstr ""
 
-#: src/ui/Panels.cpp:957
+#: src/ui/Panels.cpp:963
 msgid "Add Above the Selected Layer"
 msgstr ""
 
-#: src/ui/Panels.cpp:980
+#: src/ui/Panels.cpp:986
 msgid "Drop it in the layer stack"
 msgstr ""
 
-#: src/ui/Panels.cpp:986
+#: src/ui/Panels.cpp:992
 #, c-format
 msgid ""
 "%s\n"
@@ -7185,312 +7210,312 @@ msgid ""
 "Click to add it above the selected layer, or drag it into the layer stack."
 msgstr ""
 
-#: src/ui/Panels.cpp:987
+#: src/ui/Panels.cpp:993
 msgid "\n(includes painted textures)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1003
+#: src/ui/Panels.cpp:1009
 msgid "The sharp, outward edges: worn paint, scuffs"
 msgstr ""
 
-#: src/ui/Panels.cpp:1004
+#: src/ui/Panels.cpp:1010
 msgid "Creases and dents: dirt and grime gather there"
 msgstr ""
 
-#: src/ui/Panels.cpp:1005
+#: src/ui/Panels.cpp:1011
 msgid "Where light hardly reaches: dust, dark corners"
 msgstr ""
 
-#: src/ui/Panels.cpp:1006
+#: src/ui/Panels.cpp:1012
 msgid "From the bottom up: dirt from the ground, damp"
 msgstr ""
 
-#: src/ui/Panels.cpp:1007
+#: src/ui/Panels.cpp:1013
 msgid "Random patches: breaks up wear and color"
 msgstr ""
 
-#: src/ui/Panels.cpp:1008
+#: src/ui/Panels.cpp:1014
 msgid "Surfaces facing one way (up at first): dust, snow, moss"
 msgstr ""
 
-#: src/ui/Panels.cpp:1009
+#: src/ui/Panels.cpp:1015
 msgid "One material slot from Blender: a part of the model"
 msgstr ""
 
-#: src/ui/Panels.cpp:1010
+#: src/ui/Panels.cpp:1016
 msgid "Thin parts where light shines through: ears, fingers, leaves"
 msgstr ""
 
-#: src/ui/Panels.cpp:1011
+#: src/ui/Panels.cpp:1017
 msgid "Dark to light across the model, the way you choose: fades, two-tone parts"
 msgstr ""
 
-#: src/ui/Panels.cpp:1012
+#: src/ui/Panels.cpp:1018
 msgid "Streaks running down the sides: rain marks, rust runs, leaks"
 msgstr ""
 
-#: src/ui/Panels.cpp:1020
+#: src/ui/Panels.cpp:1026
 msgid "Facing up"
 msgstr ""
 
-#: src/ui/Panels.cpp:1028
+#: src/ui/Panels.cpp:1034
 #, c-format
 msgid "Click to give the selected layer (%s) a smart mask, or drag one onto any layer."
 msgstr ""
 
-#: src/ui/Panels.cpp:1029
+#: src/ui/Panels.cpp:1035
 msgid "Drag a smart mask onto a layer."
 msgstr ""
 
-#: src/ui/Panels.cpp:1039
+#: src/ui/Panels.cpp:1045
 msgid "Give It to the Selected Layer"
 msgstr ""
 
-#: src/ui/Panels.cpp:1040
+#: src/ui/Panels.cpp:1046
 msgid "New Fill Layer with This Mask"
 msgstr ""
 
-#: src/ui/Panels.cpp:1056
+#: src/ui/Panels.cpp:1062
 msgid "Drop it on a layer"
 msgstr ""
 
-#: src/ui/Panels.cpp:1060
+#: src/ui/Panels.cpp:1066
 #, c-format
 msgid "%s\n\nClick: on the selected layer. Drag: onto any layer."
 msgstr ""
 
-#: src/ui/Panels.cpp:1072
+#: src/ui/Panels.cpp:1078
 msgid "Pictures in a grid"
 msgstr ""
 
-#: src/ui/Panels.cpp:1075
+#: src/ui/Panels.cpp:1081
 msgid "List"
 msgstr ""
 
-#: src/ui/Panels.cpp:1076
+#: src/ui/Panels.cpp:1082
 msgid "Names in a list, each with a small picture"
 msgstr ""
 
-#: src/ui/Panels.cpp:1081 src/ui/Toolbars.cpp:406
+#: src/ui/Panels.cpp:1087 src/ui/Toolbars.cpp:406
 #, c-format
 msgid "Size %.0f"
 msgstr ""
 
-#: src/ui/Panels.cpp:1086
+#: src/ui/Panels.cpp:1092
 msgid "How big the pictures are (Ctrl+mouse wheel over them does it too)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1122
+#: src/ui/Panels.cpp:1128
 msgid "Material Editor"
 msgstr ""
 
-#: src/ui/Panels.cpp:1134
+#: src/ui/Panels.cpp:1140
 msgid "Id"
 msgstr ""
 
-#: src/ui/Panels.cpp:1136
+#: src/ui/Panels.cpp:1142
 msgid "Category"
 msgstr ""
 
-#: src/ui/Panels.cpp:1167
+#: src/ui/Panels.cpp:1173
 msgid "Color A"
 msgstr ""
 
-#: src/ui/Panels.cpp:1167
+#: src/ui/Panels.cpp:1173
 msgid "Color B"
 msgstr ""
 
-#: src/ui/Panels.cpp:1167
+#: src/ui/Panels.cpp:1173
 msgid "Color C"
 msgstr ""
 
-#: src/ui/Panels.cpp:1186
+#: src/ui/Panels.cpp:1192
 msgid "Roughness A/B"
 msgstr ""
 
-#: src/ui/Panels.cpp:1187
+#: src/ui/Panels.cpp:1193
 msgid "Metallic A/B"
 msgstr ""
 
-#: src/ui/Panels.cpp:1188
+#: src/ui/Panels.cpp:1194
 msgid "Pattern scale"
 msgstr ""
 
-#: src/ui/Panels.cpp:1189 src/ui/Tools034.cpp:52
+#: src/ui/Panels.cpp:1195 src/ui/Tools034.cpp:52
 msgid "Detail"
 msgstr ""
 
-#: src/ui/Panels.cpp:1192
+#: src/ui/Panels.cpp:1198
 msgid "Variation"
 msgstr ""
 
-#: src/ui/Panels.cpp:1195
+#: src/ui/Panels.cpp:1201
 msgid "Extra"
 msgstr ""
 
-#: src/ui/Panels.cpp:1196
+#: src/ui/Panels.cpp:1202
 msgid ""
 "Generator specific: rust/chipped paint x = coverage; tiles x = mortar, y = aspect, z = brick offset;\n"
 "scratched metal x = scratch count; two-tone x = bias, y = softness"
 msgstr ""
 
-#: src/ui/Panels.cpp:1225
+#: src/ui/Panels.cpp:1231
 #, c-format
 msgid "default (%g)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1236
+#: src/ui/Panels.cpp:1242
 msgid "Wear and wobble"
 msgstr ""
 
-#: src/ui/Panels.cpp:1237
+#: src/ui/Panels.cpp:1243
 msgid "Grime"
 msgstr ""
 
-#: src/ui/Panels.cpp:1238
+#: src/ui/Panels.cpp:1244
 msgid "Dirt settles in the low parts: grout, gaps, grooves, cracks"
 msgstr ""
 
-#: src/ui/Panels.cpp:1239
+#: src/ui/Panels.cpp:1245
 msgid "Grime color"
 msgstr ""
 
-#: src/ui/Panels.cpp:1240
+#: src/ui/Panels.cpp:1246
 msgid "Worn edges"
 msgstr ""
 
-#: src/ui/Panels.cpp:1241
+#: src/ui/Panels.cpp:1247
 msgid "Raised edges wear to a lighter color and get a little smoother"
 msgstr ""
 
-#: src/ui/Panels.cpp:1242
+#: src/ui/Panels.cpp:1248
 msgid "Edge color"
 msgstr ""
 
-#: src/ui/Panels.cpp:1243
+#: src/ui/Panels.cpp:1249
 msgid "Warp"
 msgstr ""
 
-#: src/ui/Panels.cpp:1244
+#: src/ui/Panels.cpp:1250
 msgid "Wobbles the pattern: wavy stripes, uneven bricks, hand-drawn lines"
 msgstr ""
 
-#: src/ui/Panels.cpp:1245
+#: src/ui/Panels.cpp:1251
 msgid "Warp size"
 msgstr ""
 
-#: src/ui/Panels.cpp:1251
+#: src/ui/Panels.cpp:1257
 msgid "Cut out holes"
 msgstr ""
 
-#: src/ui/Panels.cpp:1252
+#: src/ui/Panels.cpp:1258
 msgid "The pattern's holes are see-through (opacity 0): nets, lace, leaves, hair cards, grilles"
 msgstr ""
 
-#: src/ui/Panels.cpp:1259
+#: src/ui/Panels.cpp:1265
 msgid "1 is solid; lower lets what is behind show through (chiffon, glass, ghosts)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1261
+#: src/ui/Panels.cpp:1267
 msgid "A soft light at grazing angles: velvet, satin, fur, peach skin"
 msgstr ""
 
-#: src/ui/Panels.cpp:1263
+#: src/ui/Panels.cpp:1269
 msgid "A smooth varnish on top: car paint, lacquered wood, nail polish"
 msgstr ""
 
-#: src/ui/Panels.cpp:1265
+#: src/ui/Panels.cpp:1271
 msgid "Light that goes in and comes out softer: skin, wax, leaves, marble"
 msgstr ""
 
-#: src/ui/Panels.cpp:1268
+#: src/ui/Panels.cpp:1274
 msgid "Default scale"
 msgstr ""
 
-#: src/ui/Panels.cpp:1271
+#: src/ui/Panels.cpp:1277
 msgid "Save to library"
 msgstr ""
 
-#: src/ui/Panels.cpp:1276
+#: src/ui/Panels.cpp:1282
 #, c-format
 msgid "Saved material %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1282
+#: src/ui/Panels.cpp:1288
 msgid "Paint with preview"
 msgstr ""
 
-#: src/ui/Panels.cpp:1288
+#: src/ui/Panels.cpp:1294
 msgid "Import brushes..."
 msgstr ""
 
-#: src/ui/Panels.cpp:1289
+#: src/ui/Panels.cpp:1295
 msgid ""
 "Brush images (PNG, JPEG, TGA, PSD...) or Photoshop brushes (.abr): each becomes a brush.\n"
 "They are copied into your brushes folder. You can also drop them on this panel."
 msgstr ""
 
-#: src/ui/Panels.cpp:1292 src/ui/Tools04.cpp:473
+#: src/ui/Panels.cpp:1298 src/ui/Tools04.cpp:473
 msgid "Open the folder"
 msgstr ""
 
-#: src/ui/Panels.cpp:1293
+#: src/ui/Panels.cpp:1299
 msgid "Images and .abr files put in it, or in folders inside it (a group each), become brushes by themselves"
 msgstr ""
 
-#: src/ui/Panels.cpp:1316
+#: src/ui/Panels.cpp:1322
 msgid "Paint with This Brush"
 msgstr ""
 
-#: src/ui/Panels.cpp:1342 src/ui/RetopoUI.cpp:795 src/ui/Tools04.cpp:703
+#: src/ui/Panels.cpp:1348 src/ui/RetopoUI.cpp:795 src/ui/Tools04.cpp:703
 msgid "Resolution"
 msgstr ""
 
-#: src/ui/Panels.cpp:1348
+#: src/ui/Panels.cpp:1354
 #, c-format
 msgid "Texture set resolution: %d per tile"
 msgstr ""
 
-#: src/ui/Panels.cpp:1349
+#: src/ui/Panels.cpp:1355
 #, c-format
 msgid "Texture set resolution: %d"
 msgstr ""
 
-#: src/ui/Panels.cpp:1353
+#: src/ui/Panels.cpp:1359
 msgid "Each texture set / UDIM tile gets this resolution"
 msgstr ""
 
-#: src/ui/Panels.cpp:1357
+#: src/ui/Panels.cpp:1363
 msgid "One texture"
 msgstr ""
 
-#: src/ui/Panels.cpp:1357 src/ui/Tools010.cpp:81
+#: src/ui/Panels.cpp:1363 src/ui/Tools010.cpp:81
 msgid "Per material slot"
 msgstr ""
 
-#: src/ui/Panels.cpp:1357
+#: src/ui/Panels.cpp:1363
 msgid "UDIM tiles"
 msgstr ""
 
-#: src/ui/Panels.cpp:1357
+#: src/ui/Panels.cpp:1363
 msgid "Per slot and UDIM"
 msgstr ""
 
-#: src/ui/Panels.cpp:1365
+#: src/ui/Panels.cpp:1371
 msgid "One texture for the whole model"
 msgstr ""
 
-#: src/ui/Panels.cpp:1366
+#: src/ui/Panels.cpp:1372
 #, c-format
 msgid "%d UDIM tiles, %d px each"
 msgstr ""
 
-#: src/ui/Panels.cpp:1367
+#: src/ui/Panels.cpp:1373
 #, c-format
 msgid "%d texture sets, %d px each"
 msgstr ""
 
-#: src/ui/Panels.cpp:1370
+#: src/ui/Panels.cpp:1376
 msgid ""
 "One texture: every face shares one texture.\n"
 "Per material slot: each Blender material gets its own textures and its own 0-1 UV space\n"
@@ -7499,270 +7524,270 @@ msgid ""
 "Switching keeps the paint and clears the undo history."
 msgstr ""
 
-#: src/ui/Panels.cpp:1376 src/ui/UVEditor.cpp:773
+#: src/ui/Panels.cpp:1382 src/ui/UVEditor.cpp:773
 msgid "New set from selection..."
 msgstr ""
 
-#: src/ui/Panels.cpp:1378 src/ui/UVEditor.cpp:546
+#: src/ui/Panels.cpp:1384 src/ui/UVEditor.cpp:546
 msgid "A texture of their own for the selected faces, such as one for the head and one for the body"
 msgstr ""
 
-#: src/ui/Panels.cpp:1379
+#: src/ui/Panels.cpp:1385
 msgid "Select the faces first (Select tool, or the UV editor), or pick the head in the window that opens"
 msgstr ""
 
-#: src/ui/Panels.cpp:1385
+#: src/ui/Panels.cpp:1391
 msgid "Current set"
 msgstr ""
 
-#: src/ui/Panels.cpp:1390
+#: src/ui/Panels.cpp:1396
 msgid "The texture set the UV editor shows, and the one Isolate keeps"
 msgstr ""
 
-#: src/ui/Panels.cpp:1391
+#: src/ui/Panels.cpp:1397
 msgid "Isolate"
 msgstr ""
 
-#: src/ui/Panels.cpp:1393
+#: src/ui/Panels.cpp:1399
 msgid "Draws the other texture sets as dim ghosts in the viewport, and strokes only paint the current one"
 msgstr ""
 
-#: src/ui/Panels.cpp:1395 src/ui/Toolbars.cpp:454 src/ui/ViewPie.cpp:82
+#: src/ui/Panels.cpp:1401 src/ui/Toolbars.cpp:454 src/ui/ViewPie.cpp:82
 msgid "Set lock"
 msgstr ""
 
-#: src/ui/Panels.cpp:1396
+#: src/ui/Panels.cpp:1402
 msgid "A stroke only paints the texture set it starts on"
 msgstr ""
 
-#: src/ui/Panels.cpp:1398 src/ui/Prefs.cpp:114 src/ui/UVEditor.cpp:806
+#: src/ui/Panels.cpp:1404 src/ui/Prefs.cpp:114 src/ui/UVEditor.cpp:806
 #: src/ui/ViewPie.cpp:216
 msgid "Select faces"
 msgstr ""
 
-#: src/ui/Panels.cpp:1402
+#: src/ui/Panels.cpp:1408
 #, c-format
 msgid "Selected the faces of %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1404
+#: src/ui/Panels.cpp:1410
 msgid "Selects every face of the current set (fill with 'Selection' to fill it)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1416
+#: src/ui/Panels.cpp:1422
 msgid "Material slots overlap in UV space"
 msgstr ""
 
-#: src/ui/Panels.cpp:1417
+#: src/ui/Panels.cpp:1423
 msgid "The UVs use several UDIM tiles"
 msgstr ""
 
-#: src/ui/Panels.cpp:1418
+#: src/ui/Panels.cpp:1424
 #, c-format
 msgid "They share texels now. Choose '%s' above."
 msgstr ""
 
-#: src/ui/Panels.cpp:1429
+#: src/ui/Panels.cpp:1435
 msgid "Base material (below all layers)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1439
+#: src/ui/Panels.cpp:1445
 msgid "Height->normal"
 msgstr ""
 
-#: src/ui/Panels.cpp:1440
+#: src/ui/Panels.cpp:1446
 msgid "Dilate seams (gutter fill)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1445
+#: src/ui/Panels.cpp:1451
 msgid "Lighting"
 msgstr ""
 
-#: src/ui/Panels.cpp:1446
+#: src/ui/Panels.cpp:1452
 msgid "Intensity"
 msgstr ""
 
-#: src/ui/Panels.cpp:1450
+#: src/ui/Panels.cpp:1456
 msgid "Background blur"
 msgstr ""
 
-#: src/ui/Panels.cpp:1451
+#: src/ui/Panels.cpp:1457
 msgid "Load HDR..."
 msgstr ""
 
-#: src/ui/Panels.cpp:1453
+#: src/ui/Panels.cpp:1459
 msgid "Studio"
 msgstr ""
 
-#: src/ui/Panels.cpp:1463 src/ui/Tools04.cpp:519
+#: src/ui/Panels.cpp:1469 src/ui/Tools04.cpp:519
 msgid "AO samples"
 msgstr ""
 
-#: src/ui/Panels.cpp:1464
+#: src/ui/Panels.cpp:1470
 msgid "Bake AO"
 msgstr ""
 
-#: src/ui/Panels.cpp:1469
+#: src/ui/Panels.cpp:1475
 msgid "Bake curvature"
 msgstr ""
 
-#: src/ui/Panels.cpp:1473
+#: src/ui/Panels.cpp:1479
 msgid "Bake thickness"
 msgstr ""
 
-#: src/ui/Panels.cpp:1478
+#: src/ui/Panels.cpp:1484
 #, c-format
 msgid ""
 "How thick the model is under each texel (casts %d rays per texel).\n"
 "Thin parts (ears, fins, cloth) for the Thin parts smart mask, subsurface and translucency."
 msgstr ""
 
-#: src/ui/Panels.cpp:1483
+#: src/ui/Panels.cpp:1489
 msgid "rays"
 msgstr ""
 
-#: src/ui/Panels.cpp:1484
+#: src/ui/Panels.cpp:1490
 #, c-format
 msgid "AO + bent normals: %s   Curvature: %s%s   Thickness: %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1485
+#: src/ui/Panels.cpp:1491
 msgid " (+ normal map)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1487
+#: src/ui/Panels.cpp:1493
 msgid "Bake from high-poly..."
 msgstr ""
 
-#: src/ui/Panels.cpp:1490
+#: src/ui/Panels.cpp:1496
 #, c-format
 msgid "normal detail from %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1490
+#: src/ui/Panels.cpp:1496
 msgid "a high-poly mesh"
 msgstr ""
 
-#: src/ui/Panels.cpp:1498
+#: src/ui/Panels.cpp:1504
 #, c-format
 msgid "Undo memory: %.0f MB on the graphics card, %.0f MB compressed"
 msgstr ""
 
-#: src/ui/Panels.cpp:1507
-msgid "Blender Link"
-msgstr ""
-
-#: src/ui/Panels.cpp:1509
-#, c-format
-msgid "Command server: %s"
-msgstr ""
-
-#: src/ui/Panels.cpp:1510
-#, c-format
-msgid "Connections: %d"
-msgstr ""
-
 #: src/ui/Panels.cpp:1513
-#, c-format
-msgid "Linked object: %s"
-msgstr ""
-
-#: src/ui/Panels.cpp:1514
-#, c-format
-msgid "Blender port: %d"
+msgid "Blender Link"
 msgstr ""
 
 #: src/ui/Panels.cpp:1515
 #, c-format
-msgid "Exchange: %s"
+msgid "Command server: %s"
 msgstr ""
 
 #: src/ui/Panels.cpp:1516
+#, c-format
+msgid "Connections: %d"
+msgstr ""
+
+#: src/ui/Panels.cpp:1519
+#, c-format
+msgid "Linked object: %s"
+msgstr ""
+
+#: src/ui/Panels.cpp:1520
+#, c-format
+msgid "Blender port: %d"
+msgstr ""
+
+#: src/ui/Panels.cpp:1521
+#, c-format
+msgid "Exchange: %s"
+msgstr ""
+
+#: src/ui/Panels.cpp:1522
 msgid "UVs edited - they will be sent back"
 msgstr ""
 
-#: src/ui/Panels.cpp:1518
+#: src/ui/Panels.cpp:1524
 msgid "Texture sets changed - Blender gets the material slots with the next send"
 msgstr ""
 
-#: src/ui/Panels.cpp:1519 src/ui/Prefs.cpp:167
+#: src/ui/Panels.cpp:1525 src/ui/Prefs.cpp:167
 msgid "Send textures to Blender"
 msgstr ""
 
-#: src/ui/Panels.cpp:1524
+#: src/ui/Panels.cpp:1530
 msgid "Auto-send after changes"
 msgstr ""
 
-#: src/ui/Panels.cpp:1525
+#: src/ui/Panels.cpp:1531
 msgid "Unlink"
 msgstr ""
 
-#: src/ui/Panels.cpp:1528
+#: src/ui/Panels.cpp:1534
 msgid "Not linked. In Blender: install the Patina Bridge add-on (blender/patina_bridge), then press 'Send to Patina' in the 3D view sidebar (N panel > Patina). The mesh opens here with its UVs; painted textures and UV edits flow back with 'Send textures to Blender'."
 msgstr ""
 
-#: src/ui/Panels.cpp:1534
+#: src/ui/Panels.cpp:1540
 msgid "Every Patina material in Blender's Asset Browser, ready to drag onto objects."
 msgstr ""
 
-#: src/ui/Panels.cpp:1536
+#: src/ui/Panels.cpp:1542
 msgid "Map size"
 msgstr ""
 
-#: src/ui/Panels.cpp:1539
+#: src/ui/Panels.cpp:1545
 msgid "Mapping"
 msgstr ""
 
-#: src/ui/Panels.cpp:1539
+#: src/ui/Panels.cpp:1545
 msgid "Box (like Patina)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1541
+#: src/ui/Panels.cpp:1547
 msgid ""
 "Box: projected from the sides, top and front, so no UVs are needed (tiles per meter).\n"
 "UV: follows the object's UV map, with Patina's normal maps."
 msgstr ""
 
-#: src/ui/Panels.cpp:1543
+#: src/ui/Panels.cpp:1549
 msgid "Add Patina's materials to Blender"
 msgstr ""
 
-#: src/ui/Panels.cpp:1548
+#: src/ui/Panels.cpp:1554
 #, c-format
 msgid "Blender is building the library in %s. It shows in the Asset Browser as Patina Materials."
 msgstr ""
 
-#: src/ui/Panels.cpp:1560
+#: src/ui/Panels.cpp:1566
 msgid ""
 "Blender needs the Patina Bridge add-on 0.8 or newer with its live link on.\n"
 "Run it again to update the library (new materials, your own materials)."
 msgstr ""
 
-#: src/ui/Panels.cpp:1565
+#: src/ui/Panels.cpp:1571
 msgid "Claude"
 msgstr ""
 
-#: src/ui/Panels.cpp:1573
+#: src/ui/Panels.cpp:1579
 msgid "The Claude app can drive this window."
 msgstr ""
 
-#: src/ui/Panels.cpp:1574
+#: src/ui/Panels.cpp:1580
 msgid "Let Claude in the desktop app paint, unwrap and export here (MCP)."
 msgstr ""
 
-#: src/ui/Panels.cpp:1575
+#: src/ui/Panels.cpp:1581
 msgid "Set up again"
 msgstr ""
 
-#: src/ui/Panels.cpp:1575
+#: src/ui/Panels.cpp:1581
 msgid "Connect to Claude app"
 msgstr ""
 
-#: src/ui/Panels.cpp:1578
+#: src/ui/Panels.cpp:1584
 msgid "Patina added to the Claude app: restart the app"
 msgstr ""
 
-#: src/ui/Panels.cpp:1582
+#: src/ui/Panels.cpp:1588
 #, c-format
 msgid ""
 "Adds Patina to the MCP servers in the Claude app's claude_desktop_config.json\n"
@@ -7770,238 +7795,238 @@ msgid ""
 "Claude Code: claude mcp add patina -- <that command> --mcp"
 msgstr ""
 
-#: src/ui/Panels.cpp:1610
+#: src/ui/Panels.cpp:1616
 msgid "command {json args}   e.g.  set_brush {\"size\": 50}   |   list_commands"
 msgstr ""
 
-#: src/ui/Panels.cpp:1636
+#: src/ui/Panels.cpp:1642
 msgid "Export Textures"
 msgstr ""
 
-#: src/ui/Panels.cpp:1646
+#: src/ui/Panels.cpp:1652
 msgid "Value of $mesh in the file names (empty = the mesh name)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1647
+#: src/ui/Panels.cpp:1653
 msgid "Preset"
 msgstr ""
 
-#: src/ui/Panels.cpp:1648 src/ui/Tools027.cpp:211
+#: src/ui/Panels.cpp:1654 src/ui/Tools027.cpp:211
 msgid "Format"
 msgstr ""
 
-#: src/ui/Panels.cpp:1648
+#: src/ui/Panels.cpp:1654
 msgid "PNG"
 msgstr ""
 
-#: src/ui/Panels.cpp:1648
+#: src/ui/Panels.cpp:1654
 msgid "Layered PSD (Photoshop, Krita, GIMP)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1650
+#: src/ui/Panels.cpp:1656
 msgid ""
 "Layered PSD: one file per map (base color, roughness, metallic, height, normal, emission),\n"
 "with a layer per Patina layer, its mask, opacity and blend mode. At the texture set size.\n"
 "Texture sets and UDIM tiles get a set of files each, named like the PNG maps."
 msgstr ""
 
-#: src/ui/Panels.cpp:1660
+#: src/ui/Panels.cpp:1666
 #, c-format
 msgid ""
 "Above the texture set (%d): rendered in tiles, materials and smart masks at full detail;\n"
 "painted layers are scaled up. %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1662
+#: src/ui/Panels.cpp:1668
 msgid "Large: this takes a while and needs room on disk."
 msgstr ""
 
-#: src/ui/Panels.cpp:1664
+#: src/ui/Panels.cpp:1670
 msgid "AO"
 msgstr ""
 
-#: src/ui/Panels.cpp:1671
+#: src/ui/Panels.cpp:1677
 msgid "Bent normals"
 msgstr ""
 
-#: src/ui/Panels.cpp:1673
+#: src/ui/Panels.cpp:1679
 msgid "Baked maps are written when they are baked (Bake menu)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1675 src/ui/Prefs.cpp:356 src/ui/Tools030.cpp:66
+#: src/ui/Panels.cpp:1681 src/ui/Prefs.cpp:356 src/ui/Tools030.cpp:66
 msgid "(none)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1676
+#: src/ui/Panels.cpp:1682
 msgid "All layers"
 msgstr ""
 
-#: src/ui/Panels.cpp:1676
+#: src/ui/Panels.cpp:1682
 #, c-format
 msgid "Only the selected layer: %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1677
+#: src/ui/Panels.cpp:1683
 msgid "The selected layer's mask"
 msgstr ""
 
-#: src/ui/Panels.cpp:1679
+#: src/ui/Panels.cpp:1685
 msgid "Exports the maps as they look with this layer (or folder) soloed."
 msgstr ""
 
-#: src/ui/Panels.cpp:1680
+#: src/ui/Panels.cpp:1686
 msgid "The selected layer has no painted mask."
 msgstr ""
 
-#: src/ui/Panels.cpp:1684
+#: src/ui/Panels.cpp:1690
 #, c-format
 msgid "The maps of %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1686
+#: src/ui/Panels.cpp:1692
 #, c-format
 msgid "Every object's (%d)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1687
+#: src/ui/Panels.cpp:1693
 msgid "A set of maps for each object shown, named after it ($mesh is the object's name)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1690
+#: src/ui/Panels.cpp:1696
 msgid "File names"
 msgstr ""
 
-#: src/ui/Panels.cpp:1692
+#: src/ui/Panels.cpp:1698
 msgid ""
 "Tokens: $mesh  $project  $map  $size  $preset  $layer\n"
 "Example: T_$mesh_$map  or  $project/$layer_$map is not allowed (no folders)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1694
+#: src/ui/Panels.cpp:1700
 msgid "default"
 msgstr ""
 
-#: src/ui/Panels.cpp:1706
+#: src/ui/Panels.cpp:1712
 #, c-format
 msgid "e.g. %s.%s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1751
+#: src/ui/Panels.cpp:1757
 #, c-format
 msgid "It writes %d file:"
 msgid_plural "It writes %d files:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ui/Panels.cpp:1754
+#: src/ui/Panels.cpp:1760
 msgid "What is in it"
 msgstr ""
 
-#: src/ui/Panels.cpp:1770
+#: src/ui/Panels.cpp:1776
 msgid "gray"
 msgstr ""
 
-#: src/ui/Panels.cpp:1772
+#: src/ui/Panels.cpp:1778
 #, c-format
 msgid "%d bits a channel"
 msgstr ""
 
-#: src/ui/Panels.cpp:1773
+#: src/ui/Panels.cpp:1779
 msgid "sRGB"
 msgstr ""
 
-#: src/ui/Panels.cpp:1773
+#: src/ui/Panels.cpp:1779
 msgid "Non-Color"
 msgstr ""
 
-#: src/ui/Panels.cpp:1775
+#: src/ui/Panels.cpp:1781
 msgid "A color map: Blender's Color Space sRGB, an engine's sRGB on"
 msgstr ""
 
-#: src/ui/Panels.cpp:1776
+#: src/ui/Panels.cpp:1782
 msgid "A data map: Blender's Color Space Non-Color, an engine's sRGB off"
 msgstr ""
 
-#: src/ui/Panels.cpp:1780
+#: src/ui/Panels.cpp:1786
 #, c-format
 msgid "... and %d more"
 msgstr ""
 
-#: src/ui/Panels.cpp:1781
+#: src/ui/Panels.cpp:1787
 #, c-format
 msgid "The same for each texture set (%d set)"
 msgid_plural "The same for each texture set (%d sets)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ui/Panels.cpp:1782
+#: src/ui/Panels.cpp:1788
 #, c-format
 msgid "Size: %d x %d. Files that are there are replaced."
 msgstr ""
 
-#: src/ui/Panels.cpp:1793
+#: src/ui/Panels.cpp:1799
 msgid "Nothing to export"
 msgstr ""
 
-#: src/ui/Panels.cpp:1793
+#: src/ui/Panels.cpp:1799
 msgid "Select a layer first."
 msgstr ""
 
-#: src/ui/Panels.cpp:1798
+#: src/ui/Panels.cpp:1804
 msgid "The textures were NOT exported"
 msgstr ""
 
-#: src/ui/Panels.cpp:1801
+#: src/ui/Panels.cpp:1807
 #, c-format
 msgid "Exported %zu file(s) to %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1811
+#: src/ui/Panels.cpp:1817
 msgid "Patina Help"
 msgstr ""
 
-#: src/ui/Panels.cpp:1815
+#: src/ui/Panels.cpp:1821
 #, c-format
 msgid "Keymap: %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:1817
+#: src/ui/Panels.cpp:1823
 msgid "Switch to the Patina keymap"
 msgstr ""
 
-#: src/ui/Panels.cpp:1817
+#: src/ui/Panels.cpp:1823
 msgid "Switch to the Blender keymap"
 msgstr ""
 
-#: src/ui/Panels.cpp:1820
+#: src/ui/Panels.cpp:1826
 msgid "Edit..."
 msgstr ""
 
-#: src/ui/Panels.cpp:1821
+#: src/ui/Panels.cpp:1827
 msgid "All keyboard shortcuts"
 msgstr ""
 
-#: src/ui/Panels.cpp:1841
+#: src/ui/Panels.cpp:1847
 msgid "Every shortcut can be changed in Edit > Keyboard shortcuts."
 msgstr ""
 
-#: src/ui/Panels.cpp:1843
+#: src/ui/Panels.cpp:1849
 msgid "Right-click any slider to type its value (Enter keeps it, Esc goes back)."
 msgstr ""
 
-#: src/ui/Panels.cpp:1844
+#: src/ui/Panels.cpp:1850
 msgid "Navigation (3D view)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1846
+#: src/ui/Panels.cpp:1852
 msgid "Other presets (Blender, Maya, ZBrush style) in View > Navigation; the wheel always zooms"
 msgstr ""
 
-#: src/ui/Panels.cpp:1847
+#: src/ui/Panels.cpp:1853
 msgid "Numpad 1/3/7 front/right/top (Ctrl = opposite), Numpad 5 ortho; frame the mesh: see the table"
 msgstr ""
 
-#: src/ui/Panels.cpp:1848 src/ui/Prefs.cpp:128 src/ui/Prefs.cpp:129
+#: src/ui/Panels.cpp:1854 src/ui/Prefs.cpp:128 src/ui/Prefs.cpp:129
 #: src/ui/Prefs.cpp:130 src/ui/Prefs.cpp:131 src/ui/Prefs.cpp:132
 #: src/ui/Prefs.cpp:133 src/ui/Prefs.cpp:134 src/ui/Prefs.cpp:135
 #: src/ui/Prefs.cpp:136 src/ui/Prefs.cpp:137 src/ui/Prefs.cpp:138
@@ -8010,313 +8035,313 @@ msgstr ""
 msgid "Painting"
 msgstr ""
 
-#: src/ui/Panels.cpp:1849
+#: src/ui/Panels.cpp:1855
 msgid "Tools: see the table above. Clone: Ctrl+click sets the source"
 msgstr ""
 
-#: src/ui/Panels.cpp:1850
+#: src/ui/Panels.cpp:1856
 msgid "Ctrl + wheel: brush size, Ctrl + RMB drag: size (x) / hardness (y)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1851
+#: src/ui/Panels.cpp:1857
 msgid "Shift + click: straight line from the last stroke    Radial symmetry: tool strip"
-msgstr ""
-
-#: src/ui/Panels.cpp:1852
-#, c-format
-msgid "Topology lock (%s) / Island lock (%s) on the brush bar: strokes stay on the piece / UV island they start on"
-msgstr ""
-
-#: src/ui/Panels.cpp:1855
-#, c-format
-msgid "Stencil: hold %s and drag to move, Shift+drag to rotate, wheel to scale; %s turns it on / off"
 msgstr ""
 
 #: src/ui/Panels.cpp:1858
 #, c-format
+msgid "Topology lock (%s) / Island lock (%s) on the brush bar: strokes stay on the piece / UV island they start on"
+msgstr ""
+
+#: src/ui/Panels.cpp:1861
+#, c-format
+msgid "Stencil: hold %s and drag to move, Shift+drag to rotate, wheel to scale; %s turns it on / off"
+msgstr ""
+
+#: src/ui/Panels.cpp:1864
+#, c-format
 msgid "Compare view: %s on / off, %s takes a snapshot; drag the divider"
-msgstr ""
-
-#: src/ui/Panels.cpp:1862
-#, c-format
-msgid "Pie menus over the 3D view (hold, point, let go): %s view, %s channels, %s edit modes, %s Quick Favorites"
-msgstr ""
-
-#: src/ui/Panels.cpp:1865
-#, c-format
-msgid "Notes (%s): click the model to pin a note, click a pin to edit it"
 msgstr ""
 
 #: src/ui/Panels.cpp:1868
 #, c-format
+msgid "Pie menus over the 3D view (hold, point, let go): %s view, %s channels, %s edit modes, %s Quick Favorites"
+msgstr ""
+
+#: src/ui/Panels.cpp:1871
+#, c-format
+msgid "Notes (%s): click the model to pin a note, click a pin to edit it"
+msgstr ""
+
+#: src/ui/Panels.cpp:1874
+#, c-format
 msgid "Object tool (%s): %s moves, %s turns, %s scales the object with the mouse; X / Y / Z one axis, a number for an exact amount, a click keeps it"
 msgstr ""
 
-#: src/ui/Panels.cpp:1872
+#: src/ui/Panels.cpp:1878
 msgid "S samples the color under the cursor. F / Shift+F: move the mouse to set brush size / opacity, G / Shift+G flow / hardness, Ctrl+F the angle; click to confirm"
 msgstr ""
 
-#: src/ui/Panels.cpp:1875
+#: src/ui/Panels.cpp:1881
 msgid "Hold I over the model: quick color pick, release to keep painting. Alt + right-click picks too"
 msgstr ""
 
-#: src/ui/Panels.cpp:1876 src/ui/Prefs.cpp:684
+#: src/ui/Panels.cpp:1882 src/ui/Prefs.cpp:689
 msgid "Hold Ctrl while painting to paint with the secondary color"
 msgstr ""
 
-#: src/ui/Panels.cpp:1877
+#: src/ui/Panels.cpp:1883
 msgid "Colors panel: primary / secondary color, recent colors and swatches"
 msgstr ""
 
-#: src/ui/Panels.cpp:1878
+#: src/ui/Panels.cpp:1884
 msgid "Fill tool: click fills, Alt + click erases"
 msgstr ""
 
-#: src/ui/Panels.cpp:1879
+#: src/ui/Panels.cpp:1885
 msgid "Paint layers store paint; fill layers cover the mesh with a material, shaped by a mask"
 msgstr ""
 
-#: src/ui/Panels.cpp:1880
+#: src/ui/Panels.cpp:1886
 msgid "Adjustment layers shift hue / saturation / brightness / contrast and roughness / metallic / height below them"
 msgstr ""
 
-#: src/ui/Panels.cpp:1881
+#: src/ui/Panels.cpp:1887
 msgid "Click 'Mask' on a layer to paint its mask; smart masks use baked AO/curvature"
 msgstr ""
 
-#: src/ui/Panels.cpp:1882
+#: src/ui/Panels.cpp:1888
 msgid "Folders: + Folder, or group the selection; drag layers onto a folder. Alt+click an eye: solo"
 msgstr ""
 
-#: src/ui/Panels.cpp:1883
+#: src/ui/Panels.cpp:1889
 msgid "Smart... adds a ready-made smart material; right-click a layer to save one, copy/paste settings, export it"
 msgstr ""
 
-#: src/ui/Panels.cpp:1884
+#: src/ui/Panels.cpp:1890
 msgid "Every change is in the History panel (sliders too); click a step to go back to it"
 msgstr ""
 
-#: src/ui/Panels.cpp:1885
+#: src/ui/Panels.cpp:1891
 msgid "Materials are projected tri-planar by default: paint looks right regardless of UVs"
 msgstr ""
 
-#: src/ui/Panels.cpp:1886
+#: src/ui/Panels.cpp:1892
 msgid "Pen tablets: pressure (size / flow / opacity in Dynamics), eraser end, tilt; Help > Pen Tablet Test"
 msgstr ""
 
-#: src/ui/Panels.cpp:1887 src/ui/UVEditor.cpp:752
+#: src/ui/Panels.cpp:1893 src/ui/UVEditor.cpp:752
 msgid "UV Editor"
 msgstr ""
 
-#: src/ui/Panels.cpp:1888
+#: src/ui/Panels.cpp:1894
 msgid "Click select, Shift add, Ctrl remove, drag empty space for box select"
 msgstr ""
 
-#: src/ui/Panels.cpp:1889
+#: src/ui/Panels.cpp:1895
 msgid "Drag a selection to move it; G/R/S move/rotate/scale (Ctrl snaps); A select all"
 msgstr ""
 
-#: src/ui/Panels.cpp:1890
+#: src/ui/Panels.cpp:1896
 msgid "Unwrap / Pack / Seams menus; existing paint is reprojected onto edited UVs"
 msgstr ""
 
-#: src/ui/Panels.cpp:1891
+#: src/ui/Panels.cpp:1897
 msgid "Seams tool (M): drag along the model to lay a seam, Shift+click continues it, Ctrl clears"
 msgstr ""
 
-#: src/ui/Panels.cpp:1892
+#: src/ui/Panels.cpp:1898
 msgid "UV > Unwrap > Cylinder / Sphere Project for limbs and balls; UV > Relax Islands removes stretch in place"
 msgstr ""
 
-#: src/ui/Panels.cpp:1893
+#: src/ui/Panels.cpp:1899
 msgid "Selection combo: Faces / Islands / Vertices; More > Weld / stitch and Align work on UV vertices"
 msgstr ""
 
-#: src/ui/Panels.cpp:1894
+#: src/ui/Panels.cpp:1900
 msgid "Paint mode paints directly in texture space with the current brush"
 msgstr ""
 
-#: src/ui/Panels.cpp:1895 src/ui/Tools030.cpp:116
+#: src/ui/Panels.cpp:1901 src/ui/Tools030.cpp:116
 msgid "Files"
 msgstr ""
 
-#: src/ui/Panels.cpp:1896
+#: src/ui/Panels.cpp:1902
 msgid "Drop meshes (.obj .gltf .glb .fbx .stl .3mf .ply), projects (.patina), material folders, .hdr or brush images"
 msgstr ""
 
-#: src/ui/Panels.cpp:1897
+#: src/ui/Panels.cpp:1903
 msgid "1-9 view modes; File > Open Recent; Edit > Preferences: keymap, navigation, UI scale"
 msgstr ""
 
-#: src/ui/Panels.cpp:1899
+#: src/ui/Panels.cpp:1905
 #, c-format
 msgid "%s: command palette, type to find any action, window, material, brush, layer or file"
 msgstr ""
 
-#: src/ui/Panels.cpp:1901
+#: src/ui/Panels.cpp:1907
 msgid "Edit > Preferences > Features switches newer features (palette, symmetry, macros...) on or off"
 msgstr ""
 
-#: src/ui/Panels.cpp:1903
+#: src/ui/Panels.cpp:1909
 msgid "UV > Mirrored Halves > Check Mesh Symmetry: how far the halves of the model differ, with a heat map"
 msgstr ""
 
-#: src/ui/Panels.cpp:1905
+#: src/ui/Panels.cpp:1911
 msgid "Edit > Record Macro: replay what you did on another model, or save it for 'patina run'"
 msgstr ""
 
-#: src/ui/Panels.cpp:1906
+#: src/ui/Panels.cpp:1912
 msgid "Save Incremental keeps numbered versions; Export Again repeats the last export; F12 renders an image"
 msgstr ""
 
-#: src/ui/Panels.cpp:1907
+#: src/ui/Panels.cpp:1913
 msgid "A changed mesh file on disk can be reloaded with the layers kept (File > Reload Mesh)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1908
-msgid "Island brush and texel density"
-msgstr ""
-
-#: src/ui/Panels.cpp:1909
-#, c-format
-msgid "Island tool (L): paint a part of the model, then %s: seams, unwrap, upright, right density, free space"
-msgstr ""
-
-#: src/ui/Panels.cpp:1911
-msgid "Ctrl removes from the painted area; Ctrl+Numpad +/- grows / shrinks; A all, Alt+A none"
-msgstr ""
-
-#: src/ui/Panels.cpp:1912
-msgid "UV > Islands > Texel Density: targets (fit, 1 texel per pixel, layout, custom) and heat maps"
-msgstr ""
-
-#: src/ui/Panels.cpp:1913
-msgid "Shift + right drag in the viewport rotates the lighting"
-msgstr ""
-
 #: src/ui/Panels.cpp:1914
-msgid "Automation"
+msgid "Island brush and texel density"
 msgstr ""
 
 #: src/ui/Panels.cpp:1915
 #, c-format
+msgid "Island tool (L): paint a part of the model, then %s: seams, unwrap, upright, right density, free space"
+msgstr ""
+
+#: src/ui/Panels.cpp:1917
+msgid "Ctrl removes from the painted area; Ctrl+Numpad +/- grows / shrinks; A all, Alt+A none"
+msgstr ""
+
+#: src/ui/Panels.cpp:1918
+msgid "UV > Islands > Texel Density: targets (fit, 1 texel per pixel, layout, custom) and heat maps"
+msgstr ""
+
+#: src/ui/Panels.cpp:1919
+msgid "Shift + right drag in the viewport rotates the lighting"
+msgstr ""
+
+#: src/ui/Panels.cpp:1920
+msgid "Automation"
+msgstr ""
+
+#: src/ui/Panels.cpp:1921
+#, c-format
 msgid "Command server on 127.0.0.1:%d (JSON lines). Blender add-on and 'patina --mcp' use it. The Console accepts the same commands, e.g.  list_commands"
-msgstr ""
-
-#: src/ui/Panels.cpp:1935
-#, c-format
-msgid "%s (%d of %d objects)"
-msgstr ""
-
-#: src/ui/Panels.cpp:1940
-#, c-format
-msgid "%dpx x %d sets | %zu layers | %.0f fps"
 msgstr ""
 
 #: src/ui/Panels.cpp:1941
 #, c-format
-msgid "%dpx x %d tiles | %zu layers | %.0f fps"
-msgstr ""
-
-#: src/ui/Panels.cpp:1944
-#, c-format
-msgid "%dpx | %zu layers | %.0f fps"
+msgid "%s (%d of %d objects)"
 msgstr ""
 
 #: src/ui/Panels.cpp:1946
 #, c-format
-msgid "Blender: %s"
+msgid "%dpx x %d sets | %zu layers | %.0f fps"
 msgstr ""
 
 #: src/ui/Panels.cpp:1947
+#, c-format
+msgid "%dpx x %d tiles | %zu layers | %.0f fps"
+msgstr ""
+
+#: src/ui/Panels.cpp:1950
+#, c-format
+msgid "%dpx | %zu layers | %.0f fps"
+msgstr ""
+
+#: src/ui/Panels.cpp:1952
+#, c-format
+msgid "Blender: %s"
+msgstr ""
+
+#: src/ui/Panels.cpp:1953
 msgid "Blender: not linked"
 msgstr ""
 
-#: src/ui/Panels.cpp:1951
+#: src/ui/Panels.cpp:1957
 #, c-format
 msgid "REC macro: %zu steps"
 msgstr ""
 
-#: src/ui/Panels.cpp:1969
+#: src/ui/Panels.cpp:1975
 #, c-format
 msgid "%d new brushes from your brushes folder (the Brushes panel)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1970
+#: src/ui/Panels.cpp:1976
 #, c-format
 msgid "%d brushes went with their files from your brushes folder"
 msgstr ""
 
-#: src/ui/Panels.cpp:1977
+#: src/ui/Panels.cpp:1983
 msgid "No brush came of that"
 msgstr ""
 
-#: src/ui/Panels.cpp:1981
+#: src/ui/Panels.cpp:1987
 #, c-format
 msgid "A new brush: %s (kept in your brushes folder)"
 msgstr ""
 
-#: src/ui/Panels.cpp:1982
+#: src/ui/Panels.cpp:1988
 #, c-format
 msgid "%d new brushes (kept in your brushes folder)"
 msgstr ""
 
-#: src/ui/Panels.cpp:2013 src/ui/Panels.cpp:2014
+#: src/ui/Panels.cpp:2019 src/ui/Panels.cpp:2020
 #, c-format
 msgid "Opened %s in your browser"
 msgstr ""
 
-#: src/ui/Panels.cpp:2015
+#: src/ui/Panels.cpp:2021
 #, c-format
 msgid "Could not open a browser: %s  (%s)"
 msgstr ""
 
-#: src/ui/Panels.cpp:2019
+#: src/ui/Panels.cpp:2025
 msgid "The tutorial was not found (expected docs/tutorial/index.html next to the materials)"
 msgstr ""
 
-#: src/ui/Panels.cpp:2020
+#: src/ui/Panels.cpp:2026
 msgid "Manual not found (expected docs/manual/index.html next to the materials)"
 msgstr ""
 
-#: src/ui/Panels.cpp:2021
+#: src/ui/Panels.cpp:2027
 msgid "Patina Web not found (build it with scripts/build_web.py)"
 msgstr ""
 
-#: src/ui/Panels.cpp:2029
+#: src/ui/Panels.cpp:2035
 msgid "Texture painter: paint materials straight onto 3D models regardless of their UVs, edit UVs, and round-trip with Blender. Automate it from any MCP agent."
 msgstr ""
 
-#: src/ui/Panels.cpp:2033
+#: src/ui/Panels.cpp:2039
 #, c-format
 msgid "OpenGL: %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:2034
+#: src/ui/Panels.cpp:2040
 #, c-format
 msgid "Data: %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:2035
+#: src/ui/Panels.cpp:2041
 #, c-format
 msgid "Your library: %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:2036
+#: src/ui/Panels.cpp:2042
 #, c-format
 msgid "Settings: %s"
 msgstr ""
 
-#: src/ui/Panels.cpp:2038
+#: src/ui/Panels.cpp:2044
 #, c-format
 msgid "Command server: 127.0.0.1:%d"
 msgstr ""
 
-#: src/ui/Panels.cpp:2040
+#: src/ui/Panels.cpp:2046
 msgid "Built with Dear ImGui, SDL3, glm, stb, cgltf, tinyobjloader, MikkTSpace, nlohmann/json, portable-file-dialogs and llama.cpp (see the licenses in the source tree)."
 msgstr ""
 
-#: src/ui/Panels.cpp:2042
+#: src/ui/Panels.cpp:2048
 msgid "The Patina Assistant's model is a fine-tune of Qwen3 1.7B by the Qwen team (Apache 2.0, https://huggingface.co/Qwen/Qwen3-1.7B), downloaded separately."
 msgstr ""
 
@@ -8978,142 +9003,142 @@ msgstr ""
 msgid "reset"
 msgstr ""
 
-#: src/ui/Prefs.cpp:662
+#: src/ui/Prefs.cpp:667
 msgid "Blender keymap"
 msgstr ""
 
-#: src/ui/Prefs.cpp:662
+#: src/ui/Prefs.cpp:667
 msgid "Patina keymap"
 msgstr ""
 
-#: src/ui/Prefs.cpp:667
+#: src/ui/Prefs.cpp:672
 msgid "Blender's keys: S samples a color, X flips colors, F / Shift+F set brush size / opacity (G / Shift+G flow / hardness, Ctrl+F the angle), Shift+A adds a layer, Shift+D duplicates, Ctrl+G groups, Numpad / solos, Home frames, Ctrl+Space hides the panels. Choosing a keymap also sets the navigation below."
 msgstr ""
 
-#: src/ui/Prefs.cpp:671
+#: src/ui/Prefs.cpp:676
 msgid "Patina's own keys (see Help > Shortcuts & usage). Choosing a keymap also sets the navigation below."
 msgstr ""
 
-#: src/ui/Prefs.cpp:674
+#: src/ui/Prefs.cpp:679
 msgid "Edit individual shortcuts..."
 msgstr ""
 
-#: src/ui/Prefs.cpp:676
+#: src/ui/Prefs.cpp:681
 msgid "Show all shortcuts"
 msgstr ""
 
-#: src/ui/Prefs.cpp:677
+#: src/ui/Prefs.cpp:682
 msgid "Mouse"
 msgstr ""
 
-#: src/ui/Prefs.cpp:686
+#: src/ui/Prefs.cpp:691
 msgid "Side, top and bottom views are orthographic"
 msgstr ""
 
-#: src/ui/Prefs.cpp:688
+#: src/ui/Prefs.cpp:693
 msgid ""
 "The numpad, the axis gizmo and Alt while orbiting show them without perspective, until you\n"
 "turn away (Blender's Auto Perspective). Numpad 0 goes back to the view you had before."
 msgstr ""
 
-#: src/ui/Prefs.cpp:691
+#: src/ui/Prefs.cpp:696
 msgid "Turn to the side views (instead of jumping)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:692
+#: src/ui/Prefs.cpp:697
 msgid "A click on the axis gizmo turns the view in a quarter second."
 msgstr ""
 
-#: src/ui/Prefs.cpp:695
+#: src/ui/Prefs.cpp:700
 msgid "Display"
 msgstr ""
 
-#: src/ui/Prefs.cpp:698
+#: src/ui/Prefs.cpp:703
 msgid "UI scale"
 msgstr ""
 
-#: src/ui/Prefs.cpp:708
+#: src/ui/Prefs.cpp:713
 msgid ""
 "KDE Plasma's Vivid Dark: navy panels and a cyan accent. The same colors as the\n"
 "\"Vivid Dark\" Blender theme, so the two programs look alike."
 msgstr ""
 
-#: src/ui/Prefs.cpp:710
+#: src/ui/Prefs.cpp:715
 msgid "Patina's own: gray panels and a copper accent."
 msgstr ""
 
-#: src/ui/Prefs.cpp:726 src/ui/Tools04.cpp:831
+#: src/ui/Prefs.cpp:731 src/ui/Tools04.cpp:831
 msgid ""
 "Arranged as Blender is: the steps as workspace tabs, the Outliner and the Properties\n"
 "editor at the right, the asset shelf under the 3D view."
 msgstr ""
 
-#: src/ui/Prefs.cpp:729
+#: src/ui/Prefs.cpp:734
 msgid "Names beside the toolbar icons"
 msgstr ""
 
-#: src/ui/Prefs.cpp:732
+#: src/ui/Prefs.cpp:737
 msgid "Saving"
 msgstr ""
 
-#: src/ui/Prefs.cpp:735
+#: src/ui/Prefs.cpp:740
 msgid "Autosave every"
 msgstr ""
 
-#: src/ui/Prefs.cpp:735
+#: src/ui/Prefs.cpp:740
 #, c-format
 msgid "%d min"
 msgstr ""
 
-#: src/ui/Prefs.cpp:737
+#: src/ui/Prefs.cpp:742
 msgid ""
 "A copy of your work goes to the cache folder this often while there are unsaved changes,\n"
 "written in the background. After a crash, Patina offers to bring it back."
 msgstr ""
 
-#: src/ui/Prefs.cpp:744
+#: src/ui/Prefs.cpp:749
 msgid "Features"
 msgstr ""
 
-#: src/ui/Prefs.cpp:750
+#: src/ui/Prefs.cpp:755
 msgid "Newer features. Switch off any that get in your way; they can come back at any time."
 msgstr ""
 
-#: src/ui/Prefs.cpp:769
+#: src/ui/Prefs.cpp:774
 #, c-format
 msgid "Saved to %s"
 msgstr ""
 
-#: src/ui/Prefs.cpp:789
+#: src/ui/Prefs.cpp:794
 msgid "Patina - error"
 msgstr ""
 
-#: src/ui/Prefs.cpp:796
+#: src/ui/Prefs.cpp:801
 msgid "Copy message"
 msgstr ""
 
-#: src/ui/Prefs.cpp:798
+#: src/ui/Prefs.cpp:803
 msgid "OK"
 msgstr ""
 
-#: src/ui/Prefs.cpp:821
+#: src/ui/Prefs.cpp:826
 msgid "Undo steps"
 msgstr ""
 
-#: src/ui/Prefs.cpp:822
+#: src/ui/Prefs.cpp:827
 msgid "How many steps each object's history keeps (default 100)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:827
+#: src/ui/Prefs.cpp:832
 msgid "Undo memory (RAM)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:827
+#: src/ui/Prefs.cpp:832
 #, c-format
 msgid "%.1f GB"
 msgstr ""
 
-#: src/ui/Prefs.cpp:830
+#: src/ui/Prefs.cpp:835
 #, c-format
 msgid ""
 "Older undo steps are compressed into RAM. Past this much, the oldest steps are dropped,\n"
@@ -9121,22 +9146,22 @@ msgid ""
 "(1 to 8 GB): %.1f GB. Undo is never written to disk, to spare your SSD."
 msgstr ""
 
-#: src/ui/Prefs.cpp:836
+#: src/ui/Prefs.cpp:841
 msgid "Instant undo (graphics card)"
 msgstr ""
 
-#: src/ui/Prefs.cpp:836
+#: src/ui/Prefs.cpp:841
 #, c-format
 msgid "%d MB"
 msgstr ""
 
-#: src/ui/Prefs.cpp:839
+#: src/ui/Prefs.cpp:844
 msgid ""
 "The latest steps keep their copies on the graphics card, so they undo at once (default 1024 MB).\n"
 "Past this much, older steps are compressed into RAM: they undo a moment slower."
 msgstr ""
 
-#: src/ui/Prefs.cpp:841
+#: src/ui/Prefs.cpp:846
 #, c-format
 msgid "Now: %.0f MB on the graphics card, %.0f MB compressed"
 msgstr ""
@@ -10123,7 +10148,7 @@ msgstr ""
 msgid "How much of the brush paints at full strength before its edge fades: 1 is a crisp edge, 0 all soft."
 msgstr ""
 
-#: src/ui/Toolbars.cpp:411 src/ui/Viewport3D.cpp:410
+#: src/ui/Toolbars.cpp:411 src/ui/Viewport3D.cpp:502
 #, c-format
 msgid "Flow %.2f"
 msgstr ""
@@ -10132,7 +10157,7 @@ msgstr ""
 msgid "How much paint each dab lays down: low flow builds up where strokes go over each other."
 msgstr ""
 
-#: src/ui/Toolbars.cpp:413 src/ui/Viewport3D.cpp:410
+#: src/ui/Toolbars.cpp:413 src/ui/Viewport3D.cpp:502
 #, c-format
 msgid "Opacity %.2f"
 msgstr ""
@@ -11606,7 +11631,7 @@ msgstr ""
 msgid "Transparent background"
 msgstr ""
 
-#: src/ui/Tools04.cpp:410 src/ui/ViewPie.cpp:183 src/ui/Viewport3D.cpp:22
+#: src/ui/Tools04.cpp:410 src/ui/ViewPie.cpp:183 src/ui/Viewport3D.cpp:24
 msgid "Path traced"
 msgstr ""
 
@@ -12133,11 +12158,11 @@ msgstr ""
 msgid "Started with --http options on the command line."
 msgstr ""
 
-#: src/ui/UVEditor.cpp:17 src/ui/Viewport3D.cpp:18
+#: src/ui/UVEditor.cpp:17 src/ui/Viewport3D.cpp:20
 msgid "AO (baked)"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:17 src/ui/Viewport3D.cpp:18
+#: src/ui/UVEditor.cpp:17 src/ui/Viewport3D.cpp:20
 msgid "Curvature (baked)"
 msgstr ""
 
@@ -12203,7 +12228,7 @@ msgstr ""
 msgid "%zu faces selected%s%s"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:362 src/ui/UVEditor.cpp:1277
+#: src/ui/UVEditor.cpp:362 src/ui/UVEditor.cpp:1283
 msgid ", pinned"
 msgstr ""
 
@@ -12386,7 +12411,7 @@ msgstr ""
 msgid "Moved into free space"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:458 src/ui/Viewport3D.cpp:19
+#: src/ui/UVEditor.cpp:458 src/ui/Viewport3D.cpp:21
 msgid "Texel Density"
 msgstr ""
 
@@ -12517,7 +12542,7 @@ msgstr ""
 msgid "Re-stack All Mirrored Halves"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:512 src/ui/UVEditor.cpp:1316
+#: src/ui/UVEditor.cpp:512 src/ui/UVEditor.cpp:1322
 msgid "Mirrored halves are stacked on their other half again"
 msgstr ""
 
@@ -12801,12 +12826,12 @@ msgstr ""
 msgid "Show pins and mirrored halves"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:965 src/ui/Viewport3D.cpp:487
+#: src/ui/UVEditor.cpp:965 src/ui/Viewport3D.cpp:579
 #, c-format
 msgid "Selected a ring of %d faces"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:966 src/ui/Viewport3D.cpp:488
+#: src/ui/UVEditor.cpp:966 src/ui/Viewport3D.cpp:580
 #, c-format
 msgid "Selected a loop of %d faces"
 msgstr ""
@@ -12820,79 +12845,79 @@ msgstr ""
 msgid "Clone source set from the UV view"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1234
+#: src/ui/UVEditor.cpp:1235
 msgid "Clone: Ctrl+click to set a source first"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1272
+#: src/ui/UVEditor.cpp:1278
 #, c-format
 msgid "%zu selected UV loops"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1273
+#: src/ui/UVEditor.cpp:1279
 #, c-format
 msgid "%zu selected faces"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1277
+#: src/ui/UVEditor.cpp:1283
 #, c-format
 msgid "island %d: %d faces%s%s%s"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1278
+#: src/ui/UVEditor.cpp:1284
 msgid ", other half stacked on it"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1278
+#: src/ui/UVEditor.cpp:1284
 msgid ", mirrored half (follows the other)"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1280
+#: src/ui/UVEditor.cpp:1286
 #, c-format
 msgid "%u islands  |  %s  |  u %.3f  v %.3f"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1281
+#: src/ui/UVEditor.cpp:1287
 #, c-format
 msgid "%u islands  |  %s"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1312
+#: src/ui/UVEditor.cpp:1318
 #, c-format
 msgid "%d mirrored face moved off the other half they share texels with"
 msgid_plural "%d mirrored faces moved off the other half they share texels with"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ui/UVEditor.cpp:1315
+#: src/ui/UVEditor.cpp:1321
 msgid "Re-stack"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1321
+#: src/ui/UVEditor.cpp:1327
 #, c-format
 msgid "%zu overlapping island: paint appears twice there"
 msgid_plural "%zu overlapping islands: paint appears twice there"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ui/UVEditor.cpp:1329
+#: src/ui/UVEditor.cpp:1335
 #, c-format
 msgid "%zu face with no UV area: they get no paint"
 msgid_plural "%zu faces with no UV area: they get no paint"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ui/UVEditor.cpp:1338
+#: src/ui/UVEditor.cpp:1344
 msgid "Selected the faces with no UV area: unwrap them (right-click > Unwrap selection) to give them some"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1342
+#: src/ui/UVEditor.cpp:1348
 msgid ""
 "Click select | Shift add / remove | Ctrl remove | drag: box / move\n"
 "Right-click: menu | G R S move rotate scale | P pin | F frame"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:1345
+#: src/ui/UVEditor.cpp:1351
 msgid "Click select | Shift add / remove | Ctrl remove | drag: box / move | Right-click: menu | G R S move rotate scale | P pin | F frame"
 msgstr ""
 
@@ -13044,7 +13069,7 @@ msgstr ""
 msgid "The material, lit by the environment: the usual view"
 msgstr ""
 
-#: src/ui/ViewPie.cpp:179 src/ui/Viewport3D.cpp:22
+#: src/ui/ViewPie.cpp:179 src/ui/Viewport3D.cpp:24
 msgid "Solid"
 msgstr ""
 
@@ -13272,144 +13297,144 @@ msgstr ""
 msgid "Reset Quick Favorites"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:18
+#: src/ui/Viewport3D.cpp:20
 msgid "UV Checker"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:19
+#: src/ui/Viewport3D.cpp:21
 msgid "Layer Mask"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:19
+#: src/ui/Viewport3D.cpp:21
 msgid "World Normal"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:20
+#: src/ui/Viewport3D.cpp:22
 msgid "UV Stretch"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:20
+#: src/ui/Viewport3D.cpp:22
 msgid "Thickness (baked)"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:20
+#: src/ui/Viewport3D.cpp:22
 msgid "Bent Normals (baked)"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:21
+#: src/ui/Viewport3D.cpp:23
 msgid "Mesh Check"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:21
+#: src/ui/Viewport3D.cpp:23
 msgid "PBR Range"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:107
+#: src/ui/Viewport3D.cpp:196
 msgid "Viewport"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:217
+#: src/ui/Viewport3D.cpp:309
 msgid "A new fill layer above the selected layer"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:227
+#: src/ui/Viewport3D.cpp:319
 msgid "Added above the selected layer"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:376
+#: src/ui/Viewport3D.cpp:468
 #, c-format
 msgid "Size %.0f px"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:392
+#: src/ui/Viewport3D.cpp:484
 #, c-format
 msgid "Angle %.0f deg"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:407
+#: src/ui/Viewport3D.cpp:499
 #, c-format
 msgid "Hardness %.2f"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:471
+#: src/ui/Viewport3D.cpp:563
 #, c-format
 msgid "That is %s: double-click it to paint it"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:474
+#: src/ui/Viewport3D.cpp:566
 #, c-format
 msgid "%s - double-click to paint it"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:510
+#: src/ui/Viewport3D.cpp:602
 #, c-format
 msgid "Clone source set at UV %.3f, %.3f"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:544
+#: src/ui/Viewport3D.cpp:636
 msgid "Clone: Ctrl+click on the model to set a source first"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:545
+#: src/ui/Viewport3D.cpp:637
 msgid "Nothing to paint: select a layer and enable at least one channel"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:790
+#: src/ui/Viewport3D.cpp:884
 #, c-format
 msgid "[fixes: paint %.2f]"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:792
+#: src/ui/Viewport3D.cpp:886
 msgid "(no layer)"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:792
+#: src/ui/Viewport3D.cpp:886
 msgid "[mask]"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:793
+#: src/ui/Viewport3D.cpp:887
 msgid "flat color"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:812
+#: src/ui/Viewport3D.cpp:906
 msgid "No layer is selected: pick one in Layers, or add a paint layer"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:813
+#: src/ui/Viewport3D.cpp:907
 msgid "A folder is selected: strokes paint its mask"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:814
+#: src/ui/Viewport3D.cpp:908
 msgid "The selected layer is hidden: strokes on it don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:815
+#: src/ui/Viewport3D.cpp:909
 msgid "The selected layer's folder is hidden: strokes don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:816
+#: src/ui/Viewport3D.cpp:910
 msgid "The selected layer's opacity is 0: strokes don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:817
+#: src/ui/Viewport3D.cpp:911
 msgid "No channel is on: switch some on in Paint channels (Properties)"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:832
+#: src/ui/Viewport3D.cpp:926
 #, c-format
 msgid "Path traced: %d samples"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:832
+#: src/ui/Viewport3D.cpp:926
 #, c-format
 msgid "Path traced: %d / %d samples"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:838
+#: src/ui/Viewport3D.cpp:932
 #, c-format
 msgid "Panels hidden - press %s to bring them back"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:845
+#: src/ui/Viewport3D.cpp:939
 msgid "Drop a mesh (.obj .gltf .glb .fbx .stl .3mf .ply) or a .patina project here, or File > Open"
 msgstr ""

@@ -310,6 +310,21 @@ bool BrushLibrary::saveUserPreset(const BrushPreset& p, std::string* err) {
   return true;
 }
 
+const Image* BrushLibrary::alphaPixels(const BrushAlpha& a) {
+  if (a.image.empty() && a.shape == "round") return nullptr;
+  if (!alphaTexture(a)) return nullptr;
+  for (auto& c : alphas_) {
+    if (!(c->key == a)) continue;
+    if (c->cpu.empty() && c->tex.valid()) {
+      int level = 0;  // (a big image: a mip level near 256 pixels)
+      while ((c->tex.width() >> level) > 256 && level + 1 < c->tex.levels()) ++level;
+      c->cpu = c->tex.download(1, level);
+    }
+    return c->cpu.empty() ? nullptr : &c->cpu;
+  }
+  return nullptr;
+}
+
 GLuint BrushLibrary::alphaTexture(const BrushAlpha& a) {
   if (a.image.empty() && a.shape == "round") return 0;
   for (auto& c : alphas_)

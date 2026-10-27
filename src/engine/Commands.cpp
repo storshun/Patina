@@ -1308,22 +1308,44 @@ void Engine::registerCommands() {
                  {"lock_set", prop("boolean", "Set lock: a stroke only paints the texture set (or material slot) it starts on")},
                  {"lock_face_set", prop("boolean", "(1.2) Lock Face Sets: a stroke only paints the face set it starts on")},
                  {"mask_value", num("number", "The value the brush paints into a mask, or into a baked map layer (its map's value: "
-                                              "ambient occlusion 1 = no shadow, curvature 0.5 = flat, thickness 1 = thick)", 0, 1)}}),
+                                              "ambient occlusion 1 = no shadow, curvature 0.5 = flat, thickness 1 = thick)", 0, 1)},
+                 {"tool", propEnum({"paint", "erase", "blur", "clone", "smudge"},
+                                   "(1.2.13) Change this tool's own brush instead of the current tool's (feature tool_brushes; "
+                                   "get_state tool_brushes lists them). The current tool stays")}}),
          [](CommandContext& c, const json& a) {
            if (a.value("lock_set", false) && !c.engine.features.on("texture_set_tools"))  // before anything changes
              throw CommandError("the texture set tools are switched off (features)");
-           applyBrushArgs(c.engine, a);
+           Engine& E = c.engine;
+           int other = -1;
+           if (a.contains("tool")) {
+             if (!E.features.on("tool_brushes")) throw CommandError("a brush for each tool is switched off (features: tool_brushes)");
+             int s = Engine::brushSlotNamed(a["tool"].get<std::string>());
+             if (s < 0) throw CommandError("tool: paint, erase, blur, clone or smudge");
+             if (E.painter.active()) throw CommandError("a stroke is being painted");
+             if (s != E.brushSlot) other = E.brushSlot, E.useToolBrush(Engine::brushSlotTool(s));
+           }
+           json args = a;
+           args.erase("tool");
+           try {
+             applyBrushArgs(E, args);
+           } catch (...) {
+             if (other >= 0) E.useToolBrush(Engine::brushSlotTool(other));
+             throw;
+           }
+           json r = E.painter.brush.toJson();  // (the brush that was set, before going back to the current tool's)
+           json toolOf = E.features.on("tool_brushes") ? json(Engine::brushSlotName(E.brushSlot)) : json("every");
+           if (other >= 0) E.useToolBrush(Engine::brushSlotTool(other));
            Painter& P = c.engine.painter;
            if (a.contains("lock_topology")) P.lockTopology = a["lock_topology"].get<bool>();
            if (a.contains("lock_island")) P.lockIsland = a["lock_island"].get<bool>();
            if (a.contains("lock_set")) P.lockSet = a["lock_set"].get<bool>();
            if (a.contains("lock_face_set")) P.lockFaceSet = a["lock_face_set"].get<bool>();
-           json r = P.brush.toJson();
            r["mask_value"] = P.maskValue;
            r["lock_topology"] = P.lockTopology;
            r["lock_island"] = P.lockIsland;
            r["lock_set"] = P.lockSet;
            r["lock_face_set"] = P.lockFaceSet;
+           r["tool"] = toolOf;
            return r;
          }});
   R.add({"save_brush_preset", "Saves the current brush settings as a user preset.",
@@ -1340,7 +1362,9 @@ void Engine::registerCommands() {
            return json{{"id", p.id}};
          }});
   R.add({"set_tool", "Selects the active tool (in the window: also the tools that are not brushes, such as select, "
-                     "seams, island, note and the retopology tools).",
+                     "seams, island, note and the retopology tools). (1.2.13) Paint, erase, blur, clone and smudge each "
+                     "keep their own brush (feature tool_brushes): set_tool brings the tool's brush, set_brush then "
+                     "changes it.",
          schema({{"tool", propEnum({"paint", "erase", "fill", "picker", "blur", "clone", "smudge", "select", "seams", "island",
                                     "note", "zone_lines", "zones", "flow", "density"}, "Tool")},
                  {"blur_radius", num("number", "Blur tool radius in texels: larger smooths more", 1, 64, 6)},
@@ -1358,6 +1382,7 @@ void Engine::registerCommands() {
              p.tool = t == "erase" ? PaintTool::Erase : t == "fill" ? PaintTool::Fill : t == "picker" ? PaintTool::Picker
                     : t == "blur" ? PaintTool::Blur : t == "clone" ? PaintTool::Clone
                     : t == "smudge" ? PaintTool::Smudge : PaintTool::Paint;
+           if (brush) c.engine.useToolBrush(p.tool);  // (1.2.13) the tool's own brush (Features: tool_brushes)
            p.blurRadius = a.value("blur_radius", p.blurRadius);
            p.seamAware = a.value("seam_aware", p.seamAware);
            std::string fm = a.value("fill_mode", std::string());
@@ -1616,7 +1641,8 @@ void Engine::registerCommands() {
          "Paints one stroke with the current brush/material/tool onto the selected layer (or its mask). "
          "Points are [x,y] or [x,y,pressure]. space 'normalized' = 0..1 of the 3D viewport (origin top-left), "
          "'viewport' = pixels, 'uv' = texture coordinates (0..1, origin bottom-left; brush size in texels). "
-         "Optional brush/material/tool objects are applied first (persistently).",
+         "Optional brush/material/tool objects are applied first (persistently); (1.2.13) a tool comes first and "
+         "brings its own brush (feature tool_brushes), so brush arguments change that tool's brush.",
          schema({{"points", prop("array", "List of [x,y] or [x,y,pressure]")},
                  {"space", propEnum({"normalized", "viewport", "uv"}, "Coordinate space (default normalized)")},
                  {"brush", prop("object", "set_brush arguments")},
@@ -1626,13 +1652,15 @@ void Engine::registerCommands() {
                 {"points"}),
          [](CommandContext& c, const json& a) {
            Engine& e = c.engine;
-           if (a.contains("brush")) applyBrushArgs(e, a["brush"]);
-           if (a.contains("material")) applyMaterialArgs(e, a["material"]);
+           // (1.2.13) the tool first: its own brush is the one the brush arguments change (Features: tool_brushes)
            if (a.contains("tool"))
              e.painter.tool = a["tool"] == "erase" ? PaintTool::Erase : a["tool"] == "blur" ? PaintTool::Blur
                             : a["tool"] == "clone" ? PaintTool::Clone
                             : a["tool"] == "smudge" ? PaintTool::Smudge : PaintTool::Paint;
            if (e.painter.tool == PaintTool::Fill || e.painter.tool == PaintTool::Picker) e.painter.tool = PaintTool::Paint;
+           e.useToolBrush(e.painter.tool);
+           if (a.contains("brush")) applyBrushArgs(e, a["brush"]);
+           if (a.contains("material")) applyMaterialArgs(e, a["material"]);
            std::string space = a.value("space", std::string("normalized"));
            std::vector<StrokePoint> pts;
            for (auto& p : a.at("points")) {

@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include <atomic>
 #include <condition_variable>
 #include <deque>
@@ -240,6 +241,26 @@ class Engine {
   bool renderJobStep(double budgetMs);
   void cancelRenderJob();
   void selectBrush(const std::string& id);
+  // (1.2.13) per-tool brushes (Features "tool_brushes"): Paint, Erase, Blur, Clone and Smudge each keep their own
+  // brush, so an eraser does not take on the paint brush's jar or grunge tip. painter.brush is the brush of the
+  // tool in `brushSlot`; the others wait in toolBrushes. A tool used the first time starts from a plain round
+  // brush (Basic Hard, Basic Soft for Blur and Smudge) at the size of the brush before it.
+  struct ToolBrush {
+    bool set = false;
+    BrushPreset brush;
+    std::string presetId;
+  };
+  static constexpr int kBrushSlots = 5;
+  std::array<ToolBrush, kBrushSlots> toolBrushes;
+  int brushSlot = 0;
+  static int brushSlotOf(PaintTool t);       // -1: no brush of its own (Fill, Picker)
+  static PaintTool brushSlotTool(int slot);
+  static const char* brushSlotName(int slot);  // paint erase blur clone smudge
+  static int brushSlotNamed(const std::string& name);
+  // Makes painter.brush the brush of `t` (nothing when the feature is off, during a stroke, or for Fill / Picker)
+  void useToolBrush(PaintTool t);
+  json toolBrushesJson() const;            // every tool's brush (the current one as painter.brush has it)
+  void toolBrushesFromJson(const json& j, int slot);  // session.json: the others' brushes; `slot` = painter.brush's
   void selectMaterial(const std::string& id);
   bool pickAt(vec2 viewportPx, bool applyToBrush = true, json* out = nullptr);
   RayHit pick(vec2 viewportPx) const;

@@ -522,6 +522,12 @@ void App::drawProperties() {
     engine.uiRects["props.brush_header"] = {ra.x, ra.y, rb.x - ra.x, rb.y - ra.y};  // (the manual's screenshots)
   }
   if (brushOpen) {
+    if (engine.features.on("tool_brushes")) {  // (1.2.13) whose brush this is
+      static const char* kSlotTools[] = {N_("Paint"), N_("Erase"), N_("Blur"), N_("Clone"), N_("Smudge")};
+      ImGui::TextColored(ui::theme().accentLight, "%s",
+                         F_("The %s tool's brush", T_(kSlotTools[std::clamp(engine.brushSlot, 0, 4)])).c_str());
+      ImGui::SetItemTooltip("%s", T_("Each brush tool keeps its own brush (Preferences > Features > A brush for each tool)"));
+    }
     ImGui::Text(T_("Preset: %s"), engine.selectedBrushId.c_str());
     GLuint prev = engine.brushes.previewTexture(b);
     ImGui::Image(texId(prev), ImVec2(56, 56) * uiScale);

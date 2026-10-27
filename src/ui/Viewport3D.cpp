@@ -3,6 +3,8 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
+#include <cmath>
+#include <cstdio>
 #include <cstring>
 
 #include "core/Log.h"
@@ -45,6 +47,93 @@ bool App::viewModeAvailable(ViewMode m) const {
 }
 
 // nearest edge of `face` to a point (object space)
+static ImTextureID texId(GLuint t) { return (ImTextureID)(intptr_t)t; }
+
+// (1.2.13) the painter tool whose brush a viewport tool uses (Fill: none of its own)
+static PaintTool brushToolOf(ViewportTool t) {
+  switch (t) {
+    case ViewportTool::Paint: return PaintTool::Paint;
+    case ViewportTool::Erase: return PaintTool::Erase;
+    case ViewportTool::Blur: return PaintTool::Blur;
+    case ViewportTool::Clone: return PaintTool::Clone;
+    case ViewportTool::Smudge: return PaintTool::Smudge;
+    default: return PaintTool::Fill;
+  }
+}
+
+// (1.2.13) The brush cursor: the outline of the tip where the dabs paint, turned by the brush angle and squashed by
+// its roundness as Painter's dabs are (paint_stamp.fs.glsl dab()), and inside it a dither whose density follows how
+// much one dab paints there: the hardness falloff times the tip's alpha. A soft brush shows thinning dots toward its
+// rim, a hard one a solid core. One outline pixel in the tool's color with a dark ring outside keeps it readable on
+// light and dark models.
+void App::drawTipCursor(ImDrawList* dl, ImVec2 center, float radius, ImU32 color) {
+  const BrushPreset& b = engine.painter.brush;
+  radius = std::max(radius, 1.f);
+  const int kMax = 512;
+  int need = (int)std::ceil(radius * 2.f) + 6;
+  float scale = need > kMax ? float(need) / float(kMax) : 1.f;
+  int N = std::min(need, kMax);
+  const Image* tip = engine.brushes.alphaPixels(b.alpha);
+  char key[512];
+  std::snprintf(key, sizeof key, "%s|%s|%s|%.3f|%.3f|%.3f|%.1f|%.2f|%d|%08x", b.alpha.shape.c_str(), b.alpha.image.c_str(),
+                b.alpha.imageMode.c_str(), b.alpha.seed, b.alpha.param, b.hardness, b.angleDeg, b.roundness, N,
+                (unsigned)color);
+  if (key != tipCursorKey || !tipCursorTex.valid()) {
+    tipCursorKey = key;
+    if (!tipCursorTex.valid() || tipCursorRes != N) {
+      tipCursorTex.create(N, N, GL_RGBA8, 1);
+      tipCursorTex.setFilter(GL_NEAREST, GL_NEAREST);
+      tipCursorRes = N;
+    }
+    tipCursorScale = scale;
+    const float R = radius / scale, c0 = N * 0.5f;
+    const float a = glm::radians(b.angleDeg), ca = std::cos(a), sa = std::sin(a);
+    const float round = std::clamp(b.roundness, 0.05f, 1.f), edge = std::clamp(b.hardness, 0.f, 0.999f);
+    std::vector<float> cov(size_t(N) * N, 0.f);
+    std::vector<uint8_t> in(size_t(N) * N, 0);
+    for (int y = 0; y < N; ++y)
+      for (int x = 0; x < N; ++x) {
+        // the dab's own space: units of the radius, y up (GL), turned back by the angle, stretched by the roundness
+        float dx = (x + 0.5f - c0) / R, dy = -(y + 0.5f - c0) / R;
+        float qx = ca * dx + sa * dy, qy = (-sa * dx + ca * dy) / round;
+        float rr = std::sqrt(qx * qx + qy * qy);
+        if (rr >= 1.f) continue;
+        float t = std::clamp((rr - edge) / (1.f - edge), 0.f, 1.f);
+        float fall = 1.f - t * t * (3.f - 2.f * t);
+        float ta = 1.f;
+        if (tip) {
+          int tx = std::clamp((int)((qx * 0.5f + 0.5f) * tip->width), 0, tip->width - 1);
+          int ty = std::clamp((int)((0.5f - qy * 0.5f) * tip->height), 0, tip->height - 1);  // (row 0 = v 1)
+          ta = tip->at(tx, ty)[0];
+        }
+        cov[size_t(y) * N + x] = ta * fall;
+        in[size_t(y) * N + x] = ta >= 0.5f;
+      }
+    static const int kBayer[4][4] = {{0, 8, 2, 10}, {12, 4, 14, 6}, {3, 11, 1, 9}, {15, 7, 13, 5}};
+    const uint8_t cr = color & 0xff, cg = (color >> 8) & 0xff, cb = (color >> 16) & 0xff;
+    std::vector<uint8_t> px(size_t(N) * N * 4, 0);
+    auto inside = [&](int x, int y) { return x >= 0 && y >= 0 && x < N && y < N && in[size_t(y) * N + x]; };
+    for (int y = 0; y < N; ++y)
+      for (int x = 0; x < N; ++x) {
+        uint8_t* o = &px[(size_t(y) * N + x) * 4];
+        bool me = inside(x, y);
+        bool border = inside(x - 1, y) != me || inside(x + 1, y) != me || inside(x, y - 1) != me || inside(x, y + 1) != me;
+        if (me && border) {  // the outline
+          o[0] = cr, o[1] = cg, o[2] = cb, o[3] = 235;
+        } else if (!me && border) {  // a dark ring outside it
+          o[3] = 150;
+        } else if (cov[size_t(y) * N + x] * 0.5f > (kBayer[y & 3][x & 3] + 0.5f) / 16.f) {  // the dither: half lit at most
+          o[0] = cr, o[1] = cg, o[2] = cb, o[3] = 170;
+        }
+      }
+    tipCursorTex.uploadRaw(GL_RGBA, GL_UNSIGNED_BYTE, px.data());
+  }
+  // whole screen pixels, so the dither stays crisp
+  float side = tipCursorRes * tipCursorScale;
+  ImVec2 p0(std::floor(center.x - side * 0.5f), std::floor(center.y - side * 0.5f));
+  dl->AddImage(texId(tipCursorTex.id()), p0, ImVec2(p0.x + side, p0.y + side));
+}
+
 static int nearestEdge(const Mesh& m, uint32_t face, const vec3& p) {
   int best = -1;
   float bestD = 1e30f;
@@ -128,6 +217,9 @@ void App::drawViewport(bool fullscreen) {
       case PaintTool::Picker: tool = ViewportTool::Picker; break;
     }
   }
+  // (1.2.13) each brush tool paints with its own brush (Features: tool_brushes); the pen's eraser end takes the
+  // Erase brush for its stroke, and the tool's comes back here when the stroke ends
+  if (!P.active()) engine.useToolBrush(brushToolOf(tool));
 
   // ---- the bar over the view (Toolbars.cpp)
   viewportBar();
@@ -524,7 +616,7 @@ void App::drawViewport(bool fullscreen) {
       penEraserStroke = startIdx >= 0 && pen.frameSamples()[startIdx].pen && pen.frameSamples()[startIdx].eraser &&
                         pen.eraserTipErases &&
                         (P.tool == PaintTool::Paint || P.tool == PaintTool::Blur || P.tool == PaintTool::Smudge);
-      if (penEraserStroke) P.tool = PaintTool::Erase;
+      if (penEraserStroke) engine.useToolBrush(PaintTool::Erase), P.tool = PaintTool::Erase;
       // Blender: Ctrl while painting uses the secondary color for this stroke
       strokeUsesSecondary = ctrlPaintsSecondary && ctrl && P.tool == PaintTool::Paint && P.material.id.empty();
       if (strokeUsesSecondary) std::swap(P.material.flat.color, secondaryColor);
@@ -722,7 +814,9 @@ void App::drawViewport(bool fullscreen) {
               : tool == ViewportTool::Clone ? IM_COL32(120, 255, 160, 220)
               : tool == ViewportTool::Smudge ? IM_COL32(255, 200, 120, 220)
                                             : IM_COL32(255, 255, 255, 220);
-    if (std::abs(P.brush.roundness - 1.f) > 0.01f || P.brush.alpha.shape == "square") {
+    if (engine.features.on("tip_cursor")) {
+      drawTipCursor(dl, mouse, r, col);  // (1.2.13) the tip's outline and its falloff, dithered
+    } else if (std::abs(P.brush.roundness - 1.f) > 0.01f || P.brush.alpha.shape == "square") {
       // show the dab footprint orientation
       float a = glm::radians(P.brush.angleDeg);
       ImVec2 c = mouse;

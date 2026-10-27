@@ -265,6 +265,7 @@ Selects a brush preset and/or overrides parameters. Sizes are in viewport pixels
 | `size` | number | 1 to 1000 | Diameter in screen pixels |
 | `size_jitter` | number | 0 to 1 | Random size per dab: 1 = anything from nothing to full size |
 | `spacing` | number | 0.01 to 3 | Distance between dabs as a share of the diameter: small is smooth, large is dotted |
+| `tool` | paint \| erase \| blur \| clone \| smudge |  | (1.2.13) Change this tool's own brush instead of the current tool's (feature tool_brushes; get_state tool_brushes lists them). The current tool stays |
 
 ### `save_brush_preset`
 
@@ -278,7 +279,7 @@ Saves the current brush settings as a user preset.
 
 ### `set_tool`
 
-Selects the active tool (in the window: also the tools that are not brushes, such as select, seams, island, note and the retopology tools).
+Selects the active tool (in the window: also the tools that are not brushes, such as select, seams, island, note and the retopology tools). (1.2.13) Paint, erase, blur, clone and smudge each keep their own brush (feature tool_brushes): set_tool brings the tool's brush, set_brush then changes it.
 
 | argument | type | range, default | description |
 |---|---|---|---|
@@ -323,7 +324,7 @@ Sets the Clone tool source: 'uv' [u,v] or 'point' [x,y] (normalized viewport, pi
 
 ### `paint_stroke`
 
-Paints one stroke with the current brush/material/tool onto the selected layer (or its mask). Points are [x,y] or [x,y,pressure]. space 'normalized' = 0..1 of the 3D viewport (origin top-left), 'viewport' = pixels, 'uv' = texture coordinates (0..1, origin bottom-left; brush size in texels). Optional brush/material/tool objects are applied first (persistently).
+Paints one stroke with the current brush/material/tool onto the selected layer (or its mask). Points are [x,y] or [x,y,pressure]. space 'normalized' = 0..1 of the 3D viewport (origin top-left), 'viewport' = pixels, 'uv' = texture coordinates (0..1, origin bottom-left; brush size in texels). Optional brush/material/tool objects are applied first (persistently); (1.2.13) a tool comes first and brings its own brush (feature tool_brushes), so brush arguments change that tool's brush.
 
 | argument | type | range, default | description |
 |---|---|---|---|

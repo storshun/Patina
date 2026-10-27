@@ -113,7 +113,9 @@ def main():
         check(abs(maps()["ao"]["mean"] - ao0) < 1e-3, "undo takes the fix away")
         R("redo")
         check(abs(maps()["ao"]["mean"] - dark) < 1e-3, "redo puts it back")
-        R("paint_stroke", {"points": stroke, "tool": "erase"})
+        # (1.2.13: the Erase tool keeps a brush of its own, Basic Hard the first time: give it the paint stroke's tip)
+        R("paint_stroke", {"points": stroke, "tool": "erase",
+                           "brush": {"size": 260, "hardness": 1, "opacity": 1, "flow": 1, "spacing": 0.05}})
         check(abs(maps()["ao"]["mean"] - ao0) < 2e-3, "the eraser brings the bake back (%.4f)" % maps()["ao"]["mean"])
         # ---- blur, smudge and clone paint the bake with the fixes
         R("paint_stroke", {"points": [[0.5, 0.5], [0.5, 0.501]], "brush": {"size": 120, "mask_value": 0}})

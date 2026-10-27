@@ -266,7 +266,28 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.12 (2026-10-25)
+### 1.2.13 (2026-10-27)
+
+#### Added
+
+- **A brush for each tool.** Paint, Erase, Blur, Clone and Smudge each keep their own brush: its tip, size, hardness,
+  flow, spacing and dynamics. A jar or grunge tip on Paint no longer comes along when you switch to Erase.
+  - A tool used the first time starts from a plain round brush (Basic Hard; Basic Soft for Blur and Smudge) at the
+    size of the brush you had.
+  - The pen's eraser end erases with the Erase brush.
+  - The Brush panel says whose brush it shows ("The Erase tool's brush"). Patina remembers every tool's brush.
+  - It is on by default. **Preferences › Features › A brush for each tool** turns it off: one brush for every tool,
+    as before.
+  - MCP: `set_brush` `tool` changes another tool's brush, `get_state` `tool_brushes` lists them, and `paint_stroke`
+    `tool` uses that tool's brush.
+- **The brush cursor shows the tip.** Over the 3D view and the UV editor's paint mode, the cursor is the outline of the
+  brush's tip, turned and squashed as the dabs are, instead of a circle. Inside it, a dither shows where the brush
+  paints and how it fades: a soft brush thins out toward its rim, a hard one stays dense to the edge. A thin dark ring
+  keeps the outline readable on light models. **Preferences › Features › The brush cursor shows the tip** brings back
+  the circle.
+
+<details>
+<summary><b>1.2.12 (2026-10-25)</b></summary>
 
 #### Added
 
@@ -276,6 +297,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
   - The welcome window has one button that opens it in your browser. The **x** beside the button hides it for good.
   - It is always in **Help › Patina in 5 Minutes (Tutorial)** and in the command palette.
   - The manual's first page links to it. MCP: `open_window` `tutorial`.
+
+</details>
 
 <details>
 <summary><b>1.2.11 (2026-10-25)</b></summary>

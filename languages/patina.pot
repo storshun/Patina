@@ -7,7 +7,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Patina 1.2.13\n"
+"Project-Id-Version: Patina 1.2.14\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
@@ -424,7 +424,7 @@ msgid "The brush cursor shows the tip"
 msgstr ""
 
 #: src/engine/Features.cpp:210
-msgid "Over the 3D view the brush cursor is the outline of the brush's tip (its alpha), turned and squashed as the dabs are, with a dithered fill that shows where the brush paints and how it fades out at a soft edge. Off: a circle with a faint ring for the hardness, as before 1.2.13."
+msgid "Over the 3D view the brush cursor is the outline of the brush's tip (its alpha), turned and squashed as the dabs are, with a dithered fill that shows where the brush paints, how it fades out at a soft edge and how strongly it paints (its opacity: a faint brush shows faint dots). The size, opacity and angle dials (F, Shift+F and Ctrl+F in the Blender keymap) show the tip as it changes. Off: a circle with a faint ring for the hardness, as before 1.2.13."
 msgstr ""
 
 #: src/engine/Layer.cpp:218 src/ui/Guided.cpp:941 src/ui/Tools04.cpp:516
@@ -2896,7 +2896,7 @@ msgstr ""
 msgid "Alt+right-click"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:79 src/ui/Viewport3D.cpp:419
+#: src/ui/ContextMenus.cpp:79 src/ui/Viewport3D.cpp:421
 msgid "Picked color - the brush now paints these flat values"
 msgstr ""
 
@@ -2947,7 +2947,7 @@ msgstr ""
 msgid "Fill with the Paint Material"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:110 src/ui/Viewport3D.cpp:659
+#: src/ui/ContextMenus.cpp:110 src/ui/Viewport3D.cpp:676
 #, c-format
 msgid "Filled %zu faces"
 msgstr ""
@@ -2960,7 +2960,7 @@ msgstr ""
 msgid "Erase This UV Island"
 msgstr ""
 
-#: src/ui/ContextMenus.cpp:119 src/ui/Viewport3D.cpp:659
+#: src/ui/ContextMenus.cpp:119 src/ui/Viewport3D.cpp:676
 #, c-format
 msgid "Erased %zu faces"
 msgstr ""
@@ -3050,7 +3050,7 @@ msgid "Ctrl+Alt+click (Select)"
 msgstr ""
 
 #: src/ui/ContextMenus.cpp:176 src/ui/UVEditor.cpp:964
-#: src/ui/Viewport3D.cpp:578
+#: src/ui/Viewport3D.cpp:595
 msgid "Loops and rings run through quads: this face isn't one"
 msgstr ""
 
@@ -4644,12 +4644,12 @@ msgid "Yours"
 msgstr ""
 
 #: src/ui/LayersPanel.cpp:97 src/ui/LayersPanel.cpp:757 src/ui/Panels.cpp:978
-#: src/ui/Viewport3D.cpp:322
+#: src/ui/Viewport3D.cpp:324
 msgid "Could not apply the smart material"
 msgstr ""
 
 #: src/ui/LayersPanel.cpp:98 src/ui/LayersPanel.cpp:758 src/ui/Panels.cpp:979
-#: src/ui/Viewport3D.cpp:323
+#: src/ui/Viewport3D.cpp:325
 #, c-format
 msgid "Added the smart material %s"
 msgstr ""
@@ -10148,7 +10148,7 @@ msgstr ""
 msgid "How much of the brush paints at full strength before its edge fades: 1 is a crisp edge, 0 all soft."
 msgstr ""
 
-#: src/ui/Toolbars.cpp:411 src/ui/Viewport3D.cpp:502
+#: src/ui/Toolbars.cpp:411 src/ui/Viewport3D.cpp:516
 #, c-format
 msgid "Flow %.2f"
 msgstr ""
@@ -10157,7 +10157,7 @@ msgstr ""
 msgid "How much paint each dab lays down: low flow builds up where strokes go over each other."
 msgstr ""
 
-#: src/ui/Toolbars.cpp:413 src/ui/Viewport3D.cpp:502
+#: src/ui/Toolbars.cpp:413 src/ui/Viewport3D.cpp:513 src/ui/Viewport3D.cpp:516
 #, c-format
 msgid "Opacity %.2f"
 msgstr ""
@@ -12826,12 +12826,12 @@ msgstr ""
 msgid "Show pins and mirrored halves"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:965 src/ui/Viewport3D.cpp:579
+#: src/ui/UVEditor.cpp:965 src/ui/Viewport3D.cpp:596
 #, c-format
 msgid "Selected a ring of %d faces"
 msgstr ""
 
-#: src/ui/UVEditor.cpp:966 src/ui/Viewport3D.cpp:580
+#: src/ui/UVEditor.cpp:966 src/ui/Viewport3D.cpp:597
 #, c-format
 msgid "Selected a loop of %d faces"
 msgstr ""
@@ -13329,112 +13329,112 @@ msgstr ""
 msgid "PBR Range"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:196
+#: src/ui/Viewport3D.cpp:198
 msgid "Viewport"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:309
+#: src/ui/Viewport3D.cpp:311
 msgid "A new fill layer above the selected layer"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:319
+#: src/ui/Viewport3D.cpp:321
 msgid "Added above the selected layer"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:468
+#: src/ui/Viewport3D.cpp:477
 #, c-format
 msgid "Size %.0f px"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:484
+#: src/ui/Viewport3D.cpp:494
 #, c-format
 msgid "Angle %.0f deg"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:499
+#: src/ui/Viewport3D.cpp:509
 #, c-format
 msgid "Hardness %.2f"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:563
+#: src/ui/Viewport3D.cpp:580
 #, c-format
 msgid "That is %s: double-click it to paint it"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:566
+#: src/ui/Viewport3D.cpp:583
 #, c-format
 msgid "%s - double-click to paint it"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:602
+#: src/ui/Viewport3D.cpp:619
 #, c-format
 msgid "Clone source set at UV %.3f, %.3f"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:636
+#: src/ui/Viewport3D.cpp:653
 msgid "Clone: Ctrl+click on the model to set a source first"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:637
+#: src/ui/Viewport3D.cpp:654
 msgid "Nothing to paint: select a layer and enable at least one channel"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:884
+#: src/ui/Viewport3D.cpp:904
 #, c-format
 msgid "[fixes: paint %.2f]"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:886
+#: src/ui/Viewport3D.cpp:906
 msgid "(no layer)"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:886
+#: src/ui/Viewport3D.cpp:906
 msgid "[mask]"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:887
+#: src/ui/Viewport3D.cpp:907
 msgid "flat color"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:906
+#: src/ui/Viewport3D.cpp:926
 msgid "No layer is selected: pick one in Layers, or add a paint layer"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:907
+#: src/ui/Viewport3D.cpp:927
 msgid "A folder is selected: strokes paint its mask"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:908
+#: src/ui/Viewport3D.cpp:928
 msgid "The selected layer is hidden: strokes on it don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:909
+#: src/ui/Viewport3D.cpp:929
 msgid "The selected layer's folder is hidden: strokes don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:910
+#: src/ui/Viewport3D.cpp:930
 msgid "The selected layer's opacity is 0: strokes don't show"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:911
+#: src/ui/Viewport3D.cpp:931
 msgid "No channel is on: switch some on in Paint channels (Properties)"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:926
+#: src/ui/Viewport3D.cpp:946
 #, c-format
 msgid "Path traced: %d samples"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:926
+#: src/ui/Viewport3D.cpp:946
 #, c-format
 msgid "Path traced: %d / %d samples"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:932
+#: src/ui/Viewport3D.cpp:952
 #, c-format
 msgid "Panels hidden - press %s to bring them back"
 msgstr ""
 
-#: src/ui/Viewport3D.cpp:939
+#: src/ui/Viewport3D.cpp:959
 msgid "Drop a mesh (.obj .gltf .glb .fbx .stl .3mf .ply) or a .patina project here, or File > Open"
 msgstr ""

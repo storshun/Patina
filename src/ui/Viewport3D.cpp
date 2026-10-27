@@ -65,8 +65,9 @@ static PaintTool brushToolOf(ViewportTool t) {
 // its roundness as Painter's dabs are (paint_stamp.fs.glsl dab()), and inside it a dither whose density follows how
 // much one dab paints there: the hardness falloff times the tip's alpha. A soft brush shows thinning dots toward its
 // rim, a hard one a solid core. One outline pixel in the tool's color with a dark ring outside keeps it readable on
-// light and dark models.
-void App::drawTipCursor(ImDrawList* dl, ImVec2 center, float radius, ImU32 color) {
+// light and dark models. (1.2.14) The dither is the stroke's opacity too, so a faint brush shows faint dots; the F /
+// Shift+F / Ctrl+F dials draw it as well.
+void App::drawTipCursor(ImDrawList* dl, ImVec2 center, float radius, ImU32 color, float opacity) {
   const BrushPreset& b = engine.painter.brush;
   radius = std::max(radius, 1.f);
   const int kMax = 512;
@@ -74,10 +75,11 @@ void App::drawTipCursor(ImDrawList* dl, ImVec2 center, float radius, ImU32 color
   float scale = need > kMax ? float(need) / float(kMax) : 1.f;
   int N = std::min(need, kMax);
   const Image* tip = engine.brushes.alphaPixels(b.alpha);
+  const float op = std::round(std::clamp(opacity, 0.f, 1.f) * 100.f) / 100.f;  // (steps the dither can show)
   char key[512];
-  std::snprintf(key, sizeof key, "%s|%s|%s|%.3f|%.3f|%.3f|%.1f|%.2f|%d|%08x", b.alpha.shape.c_str(), b.alpha.image.c_str(),
-                b.alpha.imageMode.c_str(), b.alpha.seed, b.alpha.param, b.hardness, b.angleDeg, b.roundness, N,
-                (unsigned)color);
+  std::snprintf(key, sizeof key, "%s|%s|%s|%.3f|%.3f|%.3f|%.1f|%.2f|%.2f|%d|%08x", b.alpha.shape.c_str(),
+                b.alpha.image.c_str(), b.alpha.imageMode.c_str(), b.alpha.seed, b.alpha.param, b.hardness, b.angleDeg,
+                b.roundness, op, N, (unsigned)color);
   if (key != tipCursorKey || !tipCursorTex.valid()) {
     tipCursorKey = key;
     if (!tipCursorTex.valid() || tipCursorRes != N) {
@@ -106,7 +108,7 @@ void App::drawTipCursor(ImDrawList* dl, ImVec2 center, float radius, ImU32 color
           int ty = std::clamp((int)((0.5f - qy * 0.5f) * tip->height), 0, tip->height - 1);  // (row 0 = v 1)
           ta = tip->at(tx, ty)[0];
         }
-        cov[size_t(y) * N + x] = ta * fall;
+        cov[size_t(y) * N + x] = ta * fall * op;
         in[size_t(y) * N + x] = ta >= 0.5f;
       }
     static const int kBayer[4][4] = {{0, 8, 2, 10}, {12, 4, 14, 6}, {3, 11, 1, 9}, {15, 7, 13, 5}};
@@ -461,10 +463,17 @@ void App::drawViewport(bool fullscreen) {
     ImDrawList* odl = ImGui::GetForegroundDrawList();
     const ImU32 white = IM_COL32(255, 255, 255, 230), faint = IM_COL32(255, 255, 255, 120);
     float* value = radialEdit == 2 ? &P.brush.opacity : radialEdit == 3 ? &P.brush.flow : radialEdit == 4 ? &P.brush.hardness : nullptr;
+    // (1.2.14) the size, opacity and angle dials draw the brush's own tip as it changes, not a stand-in circle
+    // (Features: tip_cursor): the size its outline, the angle the outline turning, the opacity its dither
+    const bool tipDial = engine.features.on("tip_cursor") && (radialEdit == 1 || radialEdit == 2 || radialEdit == 5);
     if (radialEdit == 1) {
       P.brush.size = std::clamp(dist * 2.f, 1.f, 2000.f);
-      odl->AddCircle(radialCenter, P.brush.size * 0.5f, IM_COL32(0, 0, 0, 160), 96, 3.f);
-      odl->AddCircle(radialCenter, P.brush.size * 0.5f, white, 96, 1.5f);
+      if (tipDial) {
+        drawTipCursor(odl, radialCenter, P.brush.size * 0.5f, white, P.brush.opacity);
+      } else {
+        odl->AddCircle(radialCenter, P.brush.size * 0.5f, IM_COL32(0, 0, 0, 160), 96, 3.f);
+        odl->AddCircle(radialCenter, P.brush.size * 0.5f, white, 96, 1.5f);
+      }
       txt = F_("Size %.0f px", P.brush.size);
     } else if (radialEdit == 5) {
       if (dist > 4.f * uiScale) {
@@ -474,7 +483,8 @@ void App::drawViewport(bool fullscreen) {
       }
       float a = glm::radians(P.brush.angleDeg);
       ImVec2 tip(radialCenter.x + std::cos(a) * kStrengthR, radialCenter.y - std::sin(a) * kStrengthR);
-      odl->AddCircle(radialCenter, kStrengthR, faint, 96, 1.f);
+      if (tipDial) drawTipCursor(odl, radialCenter, std::max(1.f, P.brush.size * 0.5f), white, P.brush.opacity);
+      else odl->AddCircle(radialCenter, kStrengthR, faint, 96, 1.f);
       odl->AddLine(radialCenter, ImVec2(radialCenter.x + kStrengthR, radialCenter.y), IM_COL32(255, 255, 255, 90), 1.f);
       odl->PathArcTo(radialCenter, kStrengthR * 0.35f, 0.f, -a, 32);
       odl->PathStroke(ui::themeColor(ui::theme().accent), 0, 2.5f);
@@ -497,15 +507,22 @@ void App::drawViewport(bool fullscreen) {
         }
         odl->AddCircleFilled(radialCenter, r, ui::themeColor(ui::theme().accent, 0.43f), 96);
         txt = F_("Hardness %.2f", *value);
+      } else if (tipDial) {
+        // the tip at its size in the middle of the dial, its dither thinning out as the opacity goes down
+        drawTipCursor(odl, radialCenter, std::max(1.f, P.brush.size * 0.5f), white, *value);
+        txt = F_("Opacity %.2f", *value);
       } else {
         odl->AddCircleFilled(radialCenter, r, ui::themeColor(ui::theme().accent, 0.353f), 96);
         txt = radialEdit == 2 ? F_("Opacity %.2f", *value) : F_("Flow %.2f", *value);
       }
-      odl->AddCircle(radialCenter, r, white, 96, 1.5f);
+      if (!tipDial) odl->AddCircle(radialCenter, r, white, 96, 1.5f);
     }
-    // the value on a dark plate (readable over a light model); the angle's under the middle, off its line
+    // the value on a dark plate (readable over a light model); the angle's under the middle, off its line; (1.2.14)
+    // under the tip on a tip dial, so a small brush isn't hidden behind it
     ImVec2 ts = ImGui::CalcTextSize(txt.c_str());
-    ImVec2 tp(std::round(radialCenter.x - ts.x * 0.5f), std::round(radialCenter.y - ts.y * 0.5f + (radialEdit == 5 ? ts.y * 1.4f : 0.f)));
+    float below = tipDial ? std::min(P.brush.size * 0.5f, kStrengthR * 1.5f) + 6.f * uiScale + ts.y * 0.5f + 2.f * uiScale
+                : radialEdit == 5 ? ts.y * 1.4f : 0.f;
+    ImVec2 tp(std::round(radialCenter.x - ts.x * 0.5f), std::round(radialCenter.y - ts.y * 0.5f + below));
     odl->AddRectFilled(tp - ImVec2(5, 2) * uiScale, tp + ts + ImVec2(5, 2) * uiScale, IM_COL32(20, 20, 22, 190), 4.f * uiScale);
     odl->AddText(tp, IM_COL32(255, 255, 255, 255), txt.c_str());
     bool confirm = ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsKeyPressed(ImGuiKey_Enter) ||
@@ -815,7 +832,10 @@ void App::drawViewport(bool fullscreen) {
               : tool == ViewportTool::Smudge ? IM_COL32(255, 200, 120, 220)
                                             : IM_COL32(255, 255, 255, 220);
     if (engine.features.on("tip_cursor")) {
-      drawTipCursor(dl, mouse, r, col);  // (1.2.13) the tip's outline and its falloff, dithered
+      // (1.2.13) the tip's outline and its falloff, dithered; (1.2.14) the dither's density is the opacity, the pen's
+      // pressure in it while a stroke is painted (as the size above)
+      float op = P.brush.opacity * (P.brush.pressureOpacity && P.active() ? pressure : 1.f);
+      drawTipCursor(dl, mouse, r, col, op);
     } else if (std::abs(P.brush.roundness - 1.f) > 0.01f || P.brush.alpha.shape == "square") {
       // show the dab footprint orientation
       float a = glm::radians(P.brush.angleDeg);

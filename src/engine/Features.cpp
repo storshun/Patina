@@ -208,8 +208,10 @@ const std::vector<FeatureInfo>& Features::all() {
        true, "1.2.13"},
       {"tip_cursor", N_("The brush cursor shows the tip"),
        N_("Over the 3D view the brush cursor is the outline of the brush's tip (its alpha), turned and squashed as the "
-          "dabs are, with a dithered fill that shows where the brush paints and how it fades out at a soft edge. Off: "
-          "a circle with a faint ring for the hardness, as before 1.2.13."),
+          "dabs are, with a dithered fill that shows where the brush paints, how it fades out at a soft edge and how "
+          "strongly it paints (its opacity: a faint brush shows faint dots). The size, opacity and angle dials (F, "
+          "Shift+F and Ctrl+F in the Blender keymap) show the tip as it changes. Off: a circle with a faint ring for "
+          "the hardness, as before 1.2.13."),
        true, "1.2.13"},
   };
   return list;

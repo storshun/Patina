@@ -1250,7 +1250,7 @@ void App::drawUVEditor() {
       float r = P.brush.size * 0.5f;
       ImU32 col = clone ? IM_COL32(120, 255, 160, 220) : IM_COL32(255, 255, 255, 220);
       if (engine.features.on("tip_cursor")) {
-        drawTipCursor(dl, io.MousePos, r, col);  // (1.2.13) the tip's outline and its falloff (Viewport3D.cpp)
+        drawTipCursor(dl, io.MousePos, r, col, P.brush.opacity);  // (1.2.13) the tip's outline and its falloff (Viewport3D.cpp)
       } else {
         dl->AddCircle(io.MousePos, r, IM_COL32(0, 0, 0, 160), 48, 3.f);
         dl->AddCircle(io.MousePos, r, col, 48, 1.5f);

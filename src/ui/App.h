@@ -122,7 +122,7 @@ class App {
   std::string tipCursorKey;
   int tipCursorRes = 0;  // the texture's side in pixels
   float tipCursorScale = 1.f;  // screen pixels per texture pixel (big brushes are made at most 512 wide)
-  void drawTipCursor(ImDrawList* dl, ImVec2 center, float radius, ImU32 color);
+  void drawTipCursor(ImDrawList* dl, ImVec2 center, float radius, ImU32 color, float opacity);  // (1.2.14 opacity)
   float uiScale = 1.f;
   PenInput pen;                  // tablet + mouse samples at the device rate
   bool showPenTest = false;

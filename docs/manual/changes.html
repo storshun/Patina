@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.13 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.14 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -41,7 +41,7 @@
 <a href="translating.html">Translating Patina</a>
 <a href="commands.html">Command reference</a>
 <a href="changes.html" class="cur">What&#x27;s new</a>
-<div class="toc"><a href="#1-2-13-2026-10-27">1.2.13 (2026-10-27)</a><a href="#1-2-12-2026-10-25">1.2.12 (2026-10-25)</a><a href="#1-2-11-2026-10-25">1.2.11 (2026-10-25)</a><a href="#1-2-10-2026-10-25">1.2.10 (2026-10-25)</a><a href="#1-2-9-2026-10-24">1.2.9 (2026-10-24)</a><a href="#1-2-8-2026-10-24">1.2.8 (2026-10-24)</a><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
+<div class="toc"><a href="#1-2-14-2026-10-27">1.2.14 (2026-10-27)</a><a href="#1-2-13-2026-10-27">1.2.13 (2026-10-27)</a><a href="#1-2-12-2026-10-25">1.2.12 (2026-10-25)</a><a href="#1-2-11-2026-10-25">1.2.11 (2026-10-25)</a><a href="#1-2-10-2026-10-25">1.2.10 (2026-10-25)</a><a href="#1-2-9-2026-10-24">1.2.9 (2026-10-24)</a><a href="#1-2-8-2026-10-24">1.2.8 (2026-10-24)</a><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
 <main>
 <article>
 <!-- title: What's new -->
@@ -49,6 +49,13 @@
 <h1>What's new</h1>
 <p>What changed in each version of Patina, newest first. The same list comes with Patina as <code>CHANGELOG.md</code>.</p>
 <p>What changed in each version, newest first. The manual (Help › Manual, or <code>docs/manual</code>) explains how to use each feature, and docs/ROADMAP.md lists every feature with the version it came in.</p>
+<h2 id="1-2-14-2026-10-27">1.2.14 (2026-10-27)</h2>
+<h3 id="changed">Changed</h3>
+<ul><li>
+<b>The brush cursor shows the opacity.</b> The dots inside the tip's outline thin out with the brush's opacity: at 0.2 a fifth of the dots it shows at 1. With <b>Pressure: opacity</b> on, they thin out as you press lighter. The outline stays at any opacity. Also in the UV editor's paint mode.
+</li><li>
+<b>The dials draw the brush's tip, not a circle.</b> With the Blender keymap, <b>F</b> draws the tip's outline at the size you set, <b>Ctrl+F</b> turns it as you go round, and <b>Shift+F</b> thins its dots as you lower the opacity, all live. The value now sits under the tip, so a small brush isn't hidden behind it. <b>Preferences › Features › The brush cursor shows the tip</b> off brings back the circles.
+</li></ul>
 <h2 id="1-2-13-2026-10-27">1.2.13 (2026-10-27)</h2>
 <h3 id="added">Added</h3>
 <ul><li>
@@ -84,7 +91,7 @@ The manual's first page links to it. MCP: <code>open_window</code> <code>tutoria
 <ul><li>
 <b>Frame the selection in the 3D view</b>, as Blender's View Selected: the selected faces fill the view, or the whole model when nothing is selected. It's <b>Shift+F</b> in the Patina keymap and <b>Numpad .</b> in the Blender keymap (Numpad . framed the whole model before). It's also in the view pie (<b>Z</b>, down right) and the View menu, as <b>Frame the Selection</b>. MCP: <code>frame_object</code> <code>selection</code>.
 </li></ul>
-<h3 id="changed">Changed</h3>
+<h3 id="changed-2">Changed</h3>
 <ul><li>
 The view pie's down-right item is now Frame selection. The retopology preview it had is still on the bar over the 3D view and in the View menu.
 </li><li>
@@ -97,7 +104,7 @@ The manual's pie menus section now says "radial menus" too, so a search for eith
 </li><li>
 <b>A</b> selects every face, or none when some are selected, in the 3D view with any tool, as in the UV editor. Before, it worked in the 3D view only with the Select and Island tools.
 </li></ul>
-<h3 id="changed-2">Changed</h3>
+<h3 id="changed-2-2">Changed</h3>
 <ul><li>
 <b>The Face Sets panel works like Blender's vertex groups.</b> A click on a set makes it the active set. Under the list, <b>Add Selection</b> and <b>Remove Selection</b> change its faces, and <b>Select</b>, <b>Deselect</b> and <b>Deselect All</b> change the selection. Each row has a trash button that deletes the set.
 </li><li>
@@ -121,7 +128,7 @@ Clearer names: <b>Create from Selection</b>, <b>Create Sets From...</b>, <b>Show
 <b>The camera didn't move with the Note tool.</b> A middle drag, Alt + drag and the wheel did nothing while it was chosen. Now only a click on the model or on a pin goes to the notes.
 </li></ul>
 <h2 id="1-2-8-2026-10-24">1.2.8 (2026-10-24)</h2>
-<h3 id="changed-2-2">Changed</h3>
+<h3 id="changed-2-2-2">Changed</h3>
 <ul><li>
 <b>The bar over the 3D view is easier to read.</b> Each brush setting is one field with its icon inside it, filled up to its value, as Blender's sliders are; thin lines part the groups (the brush, its projection, the locks, the view). The icons stood apart from their sliders, so which icon went with which slider was hard to see.
 </li><li>
@@ -161,7 +168,7 @@ The borders between the areas are dragged to resize them, and the sizes and tabs
 </li><li>
 <b>A Vivid Dark theme.</b> <i>Edit › Preferences › Display › Theme</i>: Patina's own gray and copper, or Vivid Dark, the navy and cyan of KDE Plasma's Vivid-Dark-Global-6, with rounder corners. It matches the "Vivid Dark" Blender theme, so Patina and Blender look alike side by side. The chosen tool, icons, pie menus, the brush size circle, selections and drop marks follow the theme, and so does the UV editor round the texture. Claude uses <code>layout</code> with <code>theme</code>.
 </li></ul>
-<h3 id="changed-2-2-2">Changed</h3>
+<h3 id="changed-2-2-2-2">Changed</h3>
 <ul><li>
 <b>One UV menu, the same everywhere.</b> UV in the menu bar, the UV editor's More button and its right-click menu had grown apart: the same command had another name or place in each, and some were only in one. Now all three are the same menu, in the same order, with the same names (the right-click menu adds Move, Rotate and Scale at the top). With faces selected, the commands work on their islands; with nothing selected, on every island.
 </li><li>
@@ -235,7 +242,7 @@ The manual's tip for two windows suggested <code>--port 7861</code>, Blender's p
 </li><li>
 <b>See-through parts drew in the wrong order.</b> Back layers of hair cards could land on top of front ones, and an object that was not the one you paint lost its see-through parts in front of the one you do. Every object's opaque parts are drawn first now, then the see-through parts, and the nearest layer of cards hides the ones behind it.
 </li></ul>
-<h3 id="changed-2-2-2-2">Changed</h3>
+<h3 id="changed-2-2-2-2-2">Changed</h3>
 <ul><li>
 The layer's <i>Opacity</i> channel box and its <i>Channel opacity › Opacity</i> slider explain themselves: the see-through channel and its strength, not the slider that says how strongly the whole layer shows.
 </li><li>
@@ -250,7 +257,7 @@ The layer's <i>Opacity</i> channel box and its <i>Channel opacity › Opacity</i
 </li><li>
 A save that fails says why instead of closing Patina, and the autosave tries again later.
 </li></ul>
-<h3 id="changed-2-2-2-2-2">Changed</h3>
+<h3 id="changed-2-2-2-2-2-2">Changed</h3>
 <ul><li>
 Patina Web's material library is baked again with every build. 1.2.0's downloads had the library of 0.26, with its British names; 1.2.1's has the current one.
 </li><li>
@@ -318,7 +325,7 @@ Tips are read the right way round: a dark shape on a light ground paints with th
 </li><li>
 <b>MCP:</b> <code>list_objects</code>, <code>add_object</code>, <code>select_object</code>, <code>set_object</code>, <code>remove_object</code>, <code>duplicate_object</code>, <code>isolate_object</code>, <code>frame_object</code>, <code>pick_object</code>, <code>select_loop</code>, <code>select_linked</code>, <code>list_face_sets</code>, <code>make_face_set</code>, <code>edit_face_set</code>, <code>delete_face_set</code>, <code>use_face_set</code>, <code>reload_brushes</code>, <code>import_brushes</code>. <code>export_model</code> and <code>export_textures</code> take <code>objects</code>, <code>send_to_blender</code> takes <code>objects</code>, and <code>set_brush</code> takes <code>lock_face_set</code>. New feature switches: <code>scene_objects</code> and <code>face_sets</code>.
 </li></ul>
-<h3 id="changed-2-2-2-2-2-2">Changed</h3>
+<h3 id="changed-2-2-2-2-2-2-2">Changed</h3>
 <ul><li>
 A project with several objects is saved in one <code>.patina</code> file. Patina 1.1 and older open its first object only.
 </li><li>
@@ -356,7 +363,7 @@ Painted normals are turned to fit the new surface. The high-poly's shape goes in
 </li><li>
 <b>The compare view</b> can put the high-poly as it was beside the result.
 </li></ul>
-<h3 id="changed-2-2-2-2-2-2-2">Changed</h3>
+<h3 id="changed-2-2-2-2-2-2-2-2">Changed</h3>
 <ul><li>
 <i>Bake from a high-poly mesh</i> uses the same rays: 4 points per texel, with the distance measured from the two models.
 </li><li>

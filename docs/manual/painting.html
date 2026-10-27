@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.13 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.14 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -137,7 +137,15 @@ fully, thinning out across a soft edge. A soft brush shows the whole area it blu
 line. A thin dark ring outside the line keeps it readable on light models.</p>
 <figure><img src="img/tip_cursor.png" alt="The brush cursor for a round soft, a round hard, a star and a splatter tip" style="max-width:640px"><figcaption>The
 cursor for a soft round brush, a hard round brush, a star and a splatter tip.</figcaption></figure>
-<p><b>Edit › Preferences › Features › The brush cursor shows the tip</b> brings back the plain circle.</p>
+<p>The dots show the opacity too (1.2.14): a brush at opacity 0.2 shows a fifth of the dots it shows at 1, and with
+<b>Pressure: opacity</b> on (in the brush's Dynamics) they thin out as you press lighter. The line stays at any opacity. The tip stays on
+screen while you change the brush with the dials of the Blender keymap: <kbd>F</kbd> draws its outline at the size you
+set, <kbd>Ctrl</kbd>+<kbd>F</kbd> turns it as you go round, and <kbd>Shift</kbd>+<kbd>F</kbd> thins its dots as you
+lower the opacity.</p>
+<figure><img src="img/tip_cursor_dials.png" alt="The brush cursor at opacity 1, 0.5 and 0.2, and the F, Ctrl+F and Shift+F dials drawing the tip" style="max-width:640px"><figcaption>Top:
+a hard round brush at opacity 1, 0.5 and 0.2. Bottom: the size, angle and opacity dials draw the brush's own tip.</figcaption></figure>
+<p><b>Edit › Preferences › Features › The brush cursor shows the tip</b> brings back the plain circle (and the dials'
+circles).</p>
 <p>The <b>Brushes</b> tab has 27 presets in six groups: Basic, Artistic, Weathering, Stamps, Projection and Utility. <i>Save preset</i> in Properties stores the current settings as your own preset.</p>
 <figure><img src="img/brushes_panel.png" alt="Brush presets"></figure>
 

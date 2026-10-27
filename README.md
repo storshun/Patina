@@ -266,7 +266,20 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.13 (2026-10-27)
+### 1.2.14 (2026-10-27)
+
+#### Changed
+
+- **The brush cursor shows the opacity.** The dots inside the tip's outline thin out with the brush's opacity: at 0.2
+  a fifth of the dots it shows at 1. With **Pressure: opacity** on, they thin out as you press lighter. The outline
+  stays at any opacity. Also in the UV editor's paint mode.
+- **The dials draw the brush's tip, not a circle.** With the Blender keymap, **F** draws the tip's outline at the size
+  you set, **Ctrl+F** turns it as you go round, and **Shift+F** thins its dots as you lower the opacity, all live. The
+  value now sits under the tip, so a small brush isn't hidden behind it. **Preferences › Features › The brush cursor
+  shows the tip** off brings back the circles.
+
+<details>
+<summary><b>1.2.13 (2026-10-27)</b></summary>
 
 #### Added
 
@@ -285,6 +298,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
   paints and how it fades: a soft brush thins out toward its rim, a hard one stays dense to the edge. A thin dark ring
   keeps the outline readable on light models. **Preferences › Features › The brush cursor shows the tip** brings back
   the circle.
+
+</details>
 
 <details>
 <summary><b>1.2.12 (2026-10-25)</b></summary>

@@ -682,7 +682,7 @@ def run_040(s):
         time.sleep(0.3)
 
     radial_shot("brush_hardness", "g", (-25, 0), mods=("Shift_L",))
-    radial_shot("brush_angle", "f", (-20, -60), mods=("Control_L",))
+    # (1.2.14: Ctrl+F's dial, the tip turning, is in run_1214's tip_cursor_dials)
     s("open_window", window="preferences", keymap="patina")
     time.sleep(0.5)
     s.x.move(*vp(0.5, 0.55))
@@ -1038,7 +1038,7 @@ def run_1200(s):
 
 
 def run_blender_keymap(s):
-    """0.3.1: Preferences window and the Blender keymap (F resizes the brush)."""
+    """0.3.1: Preferences window and the Blender keymap. (1.2.14: F's dial is in run_1214's tip_cursor_dials.)"""
     print("0.3.1: preferences / Blender keymap")
     s("set_camera", view="front", frame=True)
     s("open_window", window="preferences", keymap="blender")
@@ -1048,14 +1048,6 @@ def run_blender_keymap(s):
     s.shot("preferences", crop=(w[0], w[1], w[2], min(w[3], w[1] + 330)), settle=0.5)
     s.x.key("Escape")
     time.sleep(0.5)
-    c = vp(0.5, 0.5)
-    s.x.move(*c)
-    time.sleep(0.4)
-    s.x.key("f")
-    time.sleep(0.8)
-    s.x.move(c[0] + 60, c[1])
-    s.shot("blender_radius", crop=CROP_VIEWPORT, scale=0.7, settle=0.8)
-    s.x.key("Escape")                # cancel: the size goes back
 
 
 def run_welcome(s):
@@ -2156,6 +2148,73 @@ def run_1213(s):
     s("set_brush", alpha="round", hardness=0.8, angle=0)
     for n in ("_tb_paint_cursor", "_tb_paint_head", "_tb_erase_cursor", "_tb_erase_head", "_tc_soft", "_tc_hard",
               "_tc_star", "_tc_splatter"):
+        try:
+            os.remove(os.path.join(s.out, n + ".png"))
+        except OSError:
+            pass
+
+
+def run_1214(s):
+    """Patina 1.2.14: the tip cursor shows the opacity (a hard round brush at 1, 0.5 and 0.2) and the Blender keymap's
+    dials draw the brush's tip: F at the size it sets, Ctrl+F turning a star, Shift+F the dither thinning."""
+    import math
+    print("1.2.14: the tip cursor's opacity, the dials")
+    s("new_project", primitive="plane", resolution=1024)
+    s("set_camera", view="top", frame=True)
+    s("set_view", mode="material", seams=False, wireframe=False)
+    layout(s)
+    s("add_layer", type="fill", material={"id": "patina_paint_chipped_red", "scale": 2})
+    s("add_layer", type="paint", name="Paint")
+    s("set_tool", tool="paint")
+    s("open_window", window="preferences", keymap="blender")  # (the dials are the Blender keymap's F keys)
+    s.settle(4)
+    c = vp(0.5, 0.5)
+    s.x.move(*c)
+    s.settle(4)
+    s.x.key("Escape")
+    s.settle(4)
+
+    def crop(name, half):
+        s.settle(8, 0.6)
+        s.shot(name, crop=(int(c[0] - half), int(c[1] - half), int(c[0] + half), int(c[1] + half)))
+        return os.path.join(s.out, name + ".png")
+
+    def dial(at, to, mods=()):
+        s.x.move(*at)
+        s.settle(4)
+        for m in mods:
+            s.x.key(m, True)
+        s.x.key("f")
+        for m in mods:
+            s.x.key(m, False)
+        s.settle(4)
+        s.x.move(*to)
+
+    cells = []
+    for name, op in (("_to_100", 1.0), ("_to_050", 0.5), ("_to_020", 0.2)):
+        s("set_brush", preset="basic_hard", alpha="round", size=170, hardness=0.9, opacity=op, angle=0, roundness=1)
+        s.x.move(*c)
+        cells.append((crop(name, 150), "Opacity %.1f" % op))
+    s("set_brush", alpha="star", size=170, hardness=0.6, opacity=1.0, angle=0)
+    dial((c[0] + 85, c[1]), (c[0] + 110, c[1]))  # F: the middle where the pointer was, half the size to its left
+    cells.append((crop("_td_size", 150), "F: the size (the tip, not a circle)"))
+    s.x.click(c[0] + 110, c[1], b=3)  # (a right-click: the size as it was)
+    s("set_brush", size=170)
+    a = math.radians(36)
+    dial((c[0] + 120, c[1]), (c[0] + 120 * math.cos(a), c[1] - 120 * math.sin(a)), mods=("Control_L",))
+    cells.append((crop("_td_angle", 150), "Ctrl+F: the angle (the tip turning)"))
+    s.x.click(c[0] + 120 * math.cos(a), c[1] - 120 * math.sin(a), b=3)
+    s("set_brush", alpha="round", hardness=0.9, opacity=0.0)
+    dial(c, (c[0], c[1] - 42), mods=("Shift_L",))  # (from opacity 0 the middle is the pointer: 42 px is 0.35)
+    cells.append((crop("_td_opacity", 150), "Shift+F: the opacity (its dither)"))
+    s.x.click(c[0], c[1] - 42, b=3)
+    s("set_brush", opacity=1.0)
+    compose(cells, os.path.join(s.out, "tip_cursor_dials.png"), cols=3)
+    s("open_window", window="preferences", keymap="patina")
+    s.settle(4)
+    s.x.move(*c)
+    s.x.key("Escape")
+    for n in ("_to_100", "_to_050", "_to_020", "_td_size", "_td_angle", "_td_opacity"):
         try:
             os.remove(os.path.join(s.out, n + ".png"))
         except OSError:

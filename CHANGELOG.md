@@ -3,6 +3,18 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.14 (2026-10-27)
+
+### Changed
+
+- **The brush cursor shows the opacity.** The dots inside the tip's outline thin out with the brush's opacity: at 0.2
+  a fifth of the dots it shows at 1. With **Pressure: opacity** on, they thin out as you press lighter. The outline
+  stays at any opacity. Also in the UV editor's paint mode.
+- **The dials draw the brush's tip, not a circle.** With the Blender keymap, **F** draws the tip's outline at the size
+  you set, **Ctrl+F** turns it as you go round, and **Shift+F** thins its dots as you lower the opacity, all live. The
+  value now sits under the tip, so a small brush isn't hidden behind it. **Preferences › Features › The brush cursor
+  shows the tip** off brings back the circles.
+
 ## 1.2.13 (2026-10-27)
 
 ### Added

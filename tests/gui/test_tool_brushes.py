@@ -3,8 +3,9 @@
 keys and pen events): B and E swap the Paint and Erase brushes (a splatter tip on Paint, a round one on Erase); the
 Brush panel says whose brush it shows; the pen's eraser end erases with the Erase brush and Paint's comes back; the
 session keeps every tool's brush; with the feature off one brush is shared. The cursor: a star tip draws a star, not a
-circle; a hard brush's dither is denser than a soft one's; the feature off draws the old circle. No two widgets share
-an ID.
+circle; a hard brush's dither is denser than a soft one's; (1.2.14) a faint brush's sparser than a full one's; the
+Blender keymap's dials show the tip: F the star at the size it sets, Ctrl+F the star turning, Shift+F the dither
+thinning with the opacity; the feature off draws the old circle. No two widgets share an ID.
 
     python3 tests/gui/test_tool_brushes.py [path/to/patina]
 """
@@ -51,6 +52,102 @@ def cursor_pixels(s, at, r):
                 n += 1
                 pts.append((x - at[0], y - at[1]))
     return n, pts
+
+
+def rim_profile(pts, skip=()):
+    """the farthest changed pixel in each 10-degree sector (screen angles), leaving out the middle and `skip`"""
+    rims = {}
+    for (x, y) in pts:
+        d = math.hypot(x, y)
+        k = int(((math.degrees(math.atan2(y, x)) % 360) // 10))
+        if d >= 30 and k not in skip:
+            rims[k] = max(rims.get(k, 0), d)
+    return rims
+
+
+def dial_cursor_checks(s, center):
+    """(1.2.14) the Blender keymap's dials draw the brush's tip, not a circle (their 120 px ring at UI scale 1)"""
+    s("open_window", window="preferences", keymap="blender")  # (the dials are the Blender keymap's F keys)
+    s.settle(4)
+    s.x.move(*center)
+    s.settle(4)
+    s.x.key("Escape")
+    s.settle(4)
+    cx, cy = center
+
+    def open_dial(at, mods=()):
+        s.x.move(*at)
+        s.settle(4)
+        for m in mods:
+            s.x.key(m, True)
+        s.x.key("f")
+        for m in mods:
+            s.x.key(m, False)
+        s.settle(4)
+
+    def dial_pixels(to, r):
+        """pixels within r of the dial's middle that the open dial changes (then a right-click cancels it)"""
+        s.x.move(*to)
+        s.settle(6, 0.5)
+        value = s("set_brush")
+        on = s.image()
+        s.x.click(*to, b=3)
+        s.x.move(5, 940)
+        s.settle(6, 0.5)
+        off = s.image()
+        pts = []
+        for y in range(int(cy - r), int(cy + r) + 1):
+            for x in range(int(cx - r), int(cx + r) + 1):
+                if math.hypot(x - cx, y - cy) > r:
+                    continue
+                a, b = on.getpixel((x, y)), off.getpixel((x, y))
+                if sum(abs(a[i] - b[i]) for i in range(3)) > 60:
+                    pts.append((x - cx, y - cy))
+        return value, pts
+
+    # F: pressed half the size right of the middle, so the dial's middle is `center`; out to 100 px: size 200
+    s("set_brush", alpha="star", size=160, hardness=1.0, opacity=1.0, angle=0, roundness=1)
+    open_dial((cx + 80, cy))
+    b, pts = dial_pixels((cx + 100, cy), 104)  # (the value's plate is under the tip, past 104)
+    rims = rim_profile(pts)
+    spread = (max(rims.values()) - min(rims.values())) if rims else 0
+    check(abs(b["size"] - 200) < 3 and spread > 20 and 80 < max(rims.values() or [0]) < 104,
+          "F: the dial draws the star at the size it sets (size %.0f; its rim from %.0f to %.0f)" % (
+              b["size"], min(rims.values() or [0]), max(rims.values() or [0])))
+    # Ctrl+F: pressed on the ring's right (angle 0), the middle 120 px left; the star at 0 and turned to 36 degrees
+    # (a five-point star: its points where the notches were). The dial's lines and arc lie in the sectors near 0 / 324
+    skip = (0, 1, 31, 32, 33, 34, 35)
+    s("set_brush", size=160)
+    open_dial((cx + 120, cy), mods=("Control_L",))
+    b0, pts0 = dial_pixels((cx + 120, cy), 84)
+    open_dial((cx + 120, cy), mods=("Control_L",))
+    a = math.radians(36)
+    b36, pts36 = dial_pixels((cx + 120 * math.cos(a), cy - 120 * math.sin(a)), 84)
+    r0, r36 = rim_profile(pts0, skip), rim_profile(pts36, skip)
+    common = [k for k in r0 if k in r36]
+    moved = sum(abs(r0[k] - r36[k]) for k in common) / max(len(common), 1)
+    spread = (max(r36.values()) - min(r36.values())) if r36 else 0
+    check(abs(b36["angle"] - 36) < 3 and spread > 20 and moved > 8,
+          "Ctrl+F: the star turns with the dial (angle %.1f; its rim moved %.1f px on average, spread %.0f)" % (
+              b36["angle"], moved, spread))
+    # Shift+F: from opacity 0 the dial's middle is the pointer; 30 px up is 0.25, past the ring is 1
+    s("set_brush", alpha="round", size=160, hardness=1.0, opacity=0.0)
+    open_dial(center, mods=("Shift_L",))
+    bq, ptsq = dial_pixels((cx, cy - 30), 74)  # (inside the tip's outline)
+    open_dial(center, mods=("Shift_L",))
+    b1, pts1 = dial_pixels((cx, cy - 130), 74)
+    # (the tip keeps its size: dots out to its edge at 0.25, where the old disc was 30 px wide)
+    reach = max([math.hypot(x, y) for (x, y) in ptsq] or [0])
+    check(abs(bq["opacity"] - 0.25) < 0.03 and abs(b1["opacity"] - 1) < 1e-3 and len(pts1) > len(ptsq) * 2 > 0
+          and reach > 60, "Shift+F: the tip's dither in the dial follows the opacity (%.2f: %d pixels out to %.0f px, "
+          "%.2f: %d)" % (bq["opacity"], len(ptsq), reach, b1["opacity"], len(pts1)))
+    s("set_brush", opacity=1.0)
+    s("open_window", window="preferences", keymap="patina")
+    s.settle(4)
+    s.x.move(*center)
+    s.settle(4)
+    s.x.key("Escape")
+    s.settle(4)
 
 
 def main():
@@ -132,6 +229,12 @@ def main():
         s("set_brush", hardness=0.0)
         n_soft, _ = cursor_pixels(s, center, 80)
         check(n_hard > n_soft * 1.3 > 0, "the hard brush's dither is denser than the soft one's (%d / %d)" % (n_hard, n_soft))
+        # ---- (1.2.14) the opacity: a faint brush's dither is sparser
+        s("set_brush", hardness=1.0, opacity=0.25)
+        n_faint, _ = cursor_pixels(s, center, 80)
+        check(n_hard > n_faint * 2 > 0, "opacity 0.25: a sparser dither than full opacity's (%d / %d)" % (n_faint, n_hard))
+        s("set_brush", opacity=1.0)
+        dial_cursor_checks(s, center)
         # ---- the feature off: the old circle (a ring: nothing changes in the middle)
         s("features", id="tip_cursor", on=False)
         s.settle(4)

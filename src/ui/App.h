@@ -892,6 +892,7 @@ class App {
   enum class ShelfKind { Materials = 0, SmartMaterials, SmartMasks, Brushes };
   struct BlenderUI {
     float rightW = 420.f, outlinerH = 560.f, shelfH = 230.f, sidebarW = 310.f;  // (at UI scale 1)
+    float shelfCatalogW = 175.f;    // (1.2.15) the asset shelf's catalog list, its border dragged
     float uvShare = 0.45f;          // the UV editor's part of the width beside the 3D view (UVs step)
     PropsTab props = PropsTab::Step;
     bool propsPinned = false;       // (1.2.10) the Properties tab stays when a tool or workspace is chosen

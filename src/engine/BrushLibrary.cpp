@@ -1,9 +1,14 @@
 #include "engine/BrushLibrary.h"
 
+#include <stb_image_resize2.h>
+
 #include <algorithm>
+#include <atomic>
 #include <filesystem>
+#include <mutex>
 
 #include "core/Image.h"
+#include "core/Jobs.h"
 #include "core/Log.h"
 #include "core/Paths.h"
 #include "engine/BrushImport.h"
@@ -12,6 +17,18 @@
 namespace patina {
 
 namespace fs = std::filesystem;
+
+// (1.2.15) what the worker threads hand back: the tips' pictures they have read (empty: unreadable)
+struct BrushLibrary::PreviewInbox {
+  struct Done {
+    std::string key;
+    Image img;
+    int generation = 0;
+  };
+  std::mutex m;
+  std::vector<Done> done;
+  std::atomic<bool> any{false};
+};
 
 static const std::vector<std::string> kShapes = {"round",  "square",  "star",   "splatter", "noise", "scratches",
                                                  "grunge", "dots",    "hatch",  "cracks",   "bristle", "spray",
@@ -251,6 +268,7 @@ bool BrushLibrary::userFolderChanged() { return signature() != folderSignature_;
 int BrushLibrary::rescan() {
   int before = (int)presets_.size();
   alphas_.clear();  // (an image changed in place makes its tip again)
+  previews_.clear(), ++previewGeneration_;
   loadAll();
   return (int)presets_.size() - before;
 }
@@ -325,6 +343,36 @@ const Image* BrushLibrary::alphaPixels(const BrushAlpha& a) {
   return nullptr;
 }
 
+// An image tip's paint (1 paints, 0 doesn't) from its RGBA pixels. (1.2) Which part paints: its transparency, or (an
+// opaque image) the dark shape on a light ground (Photoshop, GIMP and Krita tips) or the light one on a dark ground, as
+// the border shows. (Safe on a worker thread.)
+static Image tipMask(const Image& rgba, std::string mode) {
+  const size_t N = size_t(rgba.width) * rgba.height;
+  if (mode == "auto") {
+    size_t clear = 0;
+    for (size_t i = 0; i < N; ++i) clear += rgba.pixels[i * 4 + 3] < 0.98f;
+    if (clear > N / 100) {
+      mode = "alpha";
+    } else {
+      double border = 0;
+      size_t n = 0;
+      for (int x = 0; x < rgba.width; ++x)
+        for (int y : {0, rgba.height - 1}) border += rgba.at(x, y)[0] + rgba.at(x, y)[1] + rgba.at(x, y)[2], ++n;
+      for (int y = 0; y < rgba.height; ++y)
+        for (int x : {0, rgba.width - 1}) border += rgba.at(x, y)[0] + rgba.at(x, y)[1] + rgba.at(x, y)[2], ++n;
+      mode = n && border / (3.0 * n) > 0.5 ? "dark" : "light";
+    }
+  }
+  Image img;
+  img.resize(rgba.width, rgba.height, 1);
+  for (size_t i = 0; i < N; ++i) {
+    const float* p = &rgba.pixels[i * 4];
+    float lum = 0.2126f * p[0] + 0.7152f * p[1] + 0.0722f * p[2];
+    img.pixels[i] = mode == "alpha" ? p[3] : mode == "dark" ? (1.f - lum) * p[3] : lum * p[3];
+  }
+  return img;
+}
+
 GLuint BrushLibrary::alphaTexture(const BrushAlpha& a) {
   if (a.image.empty() && a.shape == "round") return 0;
   for (auto& c : alphas_)
@@ -335,32 +383,7 @@ GLuint BrushLibrary::alphaTexture(const BrushAlpha& a) {
   if (!a.image.empty()) {
     Image rgba;
     if (loadImage(a.image, rgba, 4)) {
-      // (1.2) which part paints: its transparency, or (an opaque image) the dark shape on a light ground (Photoshop,
-      // GIMP and Krita tips) or the light one on a dark ground, as the border shows
-      const size_t N = size_t(rgba.width) * rgba.height;
-      std::string mode = a.imageMode;
-      if (mode == "auto") {
-        size_t clear = 0;
-        for (size_t i = 0; i < N; ++i) clear += rgba.pixels[i * 4 + 3] < 0.98f;
-        if (clear > N / 100) {
-          mode = "alpha";
-        } else {
-          double border = 0;
-          size_t n = 0;
-          for (int x = 0; x < rgba.width; ++x)
-            for (int y : {0, rgba.height - 1}) border += rgba.at(x, y)[0] + rgba.at(x, y)[1] + rgba.at(x, y)[2], ++n;
-          for (int y = 0; y < rgba.height; ++y)
-            for (int x : {0, rgba.width - 1}) border += rgba.at(x, y)[0] + rgba.at(x, y)[1] + rgba.at(x, y)[2], ++n;
-          mode = n && border / (3.0 * n) > 0.5 ? "dark" : "light";
-        }
-      }
-      Image img;
-      img.resize(rgba.width, rgba.height, 1);
-      for (size_t i = 0; i < N; ++i) {
-        const float* p = &rgba.pixels[i * 4];
-        float lum = 0.2126f * p[0] + 0.7152f * p[1] + 0.0722f * p[2];
-        img.pixels[i] = mode == "alpha" ? p[3] : mode == "dark" ? (1.f - lum) * p[3] : lum * p[3];
-      }
+      Image img = tipMask(rgba, a.imageMode);
       c->tex.create(img.width, img.height, GL_R8, 0);
       c->tex.upload(img);
       c->tex.generateMips();  // (a big image drawn small: its mip levels)
@@ -418,7 +441,62 @@ GLuint BrushLibrary::previewTexture(const BrushPreset& p) {
     alphas_.push_back(std::move(c));
     return id;
   }
-  return alphaTexture(p.alpha);
+  if (p.alpha.image.empty()) return alphaTexture(p.alpha);  // (a shape: drawn on the GPU, at once)
+  for (auto& c : alphas_)
+    if (c->key == p.alpha) return c->tex.id();  // (the tip itself is loaded: painted with)
+  // (1.2.15) an image: a small copy, read on a worker thread (a folder of hundreds of tips held the window for seconds)
+  collectPreviews();
+  const std::string key = p.alpha.imageMode + "|" + p.alpha.image;
+  Preview& pv = previews_[key];
+  if (pv.tex.valid()) return pv.tex.id();
+  if (pv.failed) return alphaTexture(p.alpha);  // (unreadable: the tip's own fallback)
+  if (!pv.pending) {
+    pv.pending = true;
+    if (!inbox_) inbox_ = std::make_shared<PreviewInbox>();
+    pictureJobs().run([inbox = inbox_, key, path = p.alpha.image, mode = p.alpha.imageMode, gen = previewGeneration_] {
+      PreviewInbox::Done d{key, Image(), gen};
+      Image rgba;
+      if (loadImage(path, rgba, 4)) {
+        Image m = tipMask(rgba, mode);
+        const int big = std::max(m.width, m.height), S = 128;
+        if (big > S) {
+          const int w = std::max(1, m.width * S / big), h = std::max(1, m.height * S / big);
+          d.img.resize(w, h, 1);
+          stbir_resize_float_linear(m.pixels.data(), m.width, m.height, 0, d.img.pixels.data(), w, h, 0, STBIR_1CHANNEL);
+        } else {
+          d.img = std::move(m);
+        }
+      }
+      std::lock_guard<std::mutex> l(inbox->m);
+      inbox->done.push_back(std::move(d));
+      inbox->any = true;
+    });
+  }
+  return 0;
+}
+
+// (1.2.15) the pictures the worker threads have read, onto the GPU
+void BrushLibrary::collectPreviews() {
+  if (!inbox_ || !inbox_->any) return;
+  std::vector<PreviewInbox::Done> done;
+  {
+    std::lock_guard<std::mutex> l(inbox_->m);
+    done.swap(inbox_->done);
+    inbox_->any = false;
+  }
+  for (auto& d : done) {
+    auto it = previews_.find(d.key);
+    if (d.generation != previewGeneration_ || it == previews_.end()) continue;
+    Preview& pv = it->second;
+    pv.pending = false;
+    if (d.img.empty()) {
+      pv.failed = true;
+      continue;
+    }
+    pv.tex.create(d.img.width, d.img.height, GL_R8, 0);
+    pv.tex.upload(d.img);
+    pv.tex.generateMips();
+  }
 }
 
 }  // namespace patina

@@ -1,5 +1,6 @@
 #pragma once
 #include <filesystem>
+#include <map>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -74,7 +75,9 @@ class BrushLibrary {
   bool saveUserPreset(const BrushPreset& p, std::string* err = nullptr);
   // GPU alpha texture for a tip (cached by shape/seed/image). Returns 0 for "round".
   GLuint alphaTexture(const BrushAlpha& a);
-  GLuint previewTexture(const BrushPreset& p);  // alpha thumbnail (64x64)
+  // The tip's picture for the brush lists. (1.2.15) An image tip's is a small copy read on a worker thread: 0 until it
+  // is read (the list draws a spinner), unless the tip itself is already loaded.
+  GLuint previewTexture(const BrushPreset& p);
   // (1.2.13) the tip as a grayscale image on the CPU (at most 256 pixels wide; row 0 = the top, v = 1), for the brush
   // cursor's outline. nullptr for "round" (a circle) or a tip that can't be read.
   const Image* alphaPixels(const BrushAlpha& a);
@@ -90,6 +93,16 @@ class BrushLibrary {
     Image cpu;  // (1.2.13) alphaPixels: read back once
   };
   std::vector<std::unique_ptr<Cached>> alphas_;
+  // (1.2.15) the image tips' pictures, by image and image mode, and the worker threads' finished ones
+  struct Preview {
+    Texture2D tex;
+    bool pending = false, failed = false;
+  };
+  std::map<std::string, Preview> previews_;
+  struct PreviewInbox;
+  std::shared_ptr<PreviewInbox> inbox_;
+  int previewGeneration_ = 0;  // (a rescan: the pictures still being read are of the old files)
+  void collectPreviews();
 };
 
 }  // namespace patina

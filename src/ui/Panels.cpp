@@ -531,6 +531,7 @@ void App::drawProperties() {
     ImGui::Text(T_("Preset: %s"), engine.selectedBrushId.c_str());
     GLuint prev = engine.brushes.previewTexture(b);
     ImGui::Image(texId(prev), ImVec2(56, 56) * uiScale);
+    if (!prev && !b.alpha.image.empty()) ui::loadingSpinner(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
     ImGui::SameLine();
     ImGui::BeginGroup();
     auto shapes = engine.brushes.shapes();
@@ -613,7 +614,9 @@ void App::drawProperties() {
     MaterialRef& m = P.material;
     auto* e = m.id.empty() ? nullptr : engine.materials.find(m.id);
     if (e) {
-      ImGui::Image(texId(engine.materials.thumbnail(*e, engine.env)), ImVec2(56, 56) * uiScale);
+      const GLuint th = engine.materials.thumbnail(*e, engine.env, false);
+      ImGui::Image(texId(th), ImVec2(56, 56) * uiScale);
+      if (!th) ui::loadingSpinner(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
       ImGui::SameLine();
       ImGui::BeginGroup();
       ImGui::Text("%s", e->def.name.c_str());
@@ -768,7 +771,7 @@ void App::drawMaterials() {
     const bool onScreen = ImGui::IsRectVisible(ImVec2(tileW, list ? rowH : tileW));
     GLuint t = e.gpu.thumbnail.id();
     if (!t && onScreen && bakesThisFrame < 2) {  // spread procedural bakes over frames
-      t = engine.materials.thumbnail(e, engine.env);
+      t = engine.materials.thumbnail(e, engine.env, false);  // (1.2.15: an image material's maps: read on a worker thread)
       ++bakesThisFrame;
     }
     bool sel = engine.painter.material.id == e.def.id;
@@ -781,6 +784,7 @@ void App::drawMaterials() {
       ImVec2 a = p0 + ImVec2(2.f * uiScale, (rowH - pic) * 0.5f);
       if (t) dl->AddImage(texId(t), a, a + ImVec2(pic, pic));
       else dl->AddRectFilled(a, a + ImVec2(pic, pic), ImGui::GetColorU32(ImGuiCol_FrameBg), 3.f * uiScale);
+      if (!t && onScreen) ui::loadingSpinner(a, a + ImVec2(pic, pic));
       float tx = a.x + pic + 8.f * uiScale, room = ImGui::GetItemRectMax().x - tx - 4.f * uiScale;
       float lh = ImGui::GetTextLineHeight();
       ImVec2 top(tx, p0.y + rowH * 0.5f - lh);
@@ -792,6 +796,7 @@ void App::drawMaterials() {
       if (sel) ImGui::PushStyleColor(ImGuiCol_Button, ui::theme().accentDeep);
       if (ImGui::ImageButton("##t", texId(t), ImVec2(cell, cell))) engine.selectMaterial(e.def.id);
       if (sel) ImGui::PopStyleColor();
+      if (!t && onScreen) ui::loadingSpinner(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
     }
     if (ImGui::IsItemVisible()) {
       ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
@@ -920,10 +925,13 @@ void App::drawSmartMaterialTiles() {
     }
     if (!list && i % cols) ImGui::SameLine();
     GLuint t = 0;
+    bool waiting = false;  // (1.2.15: its picture is still being made)
     if (auto* e = m.tileMaterial.empty() ? nullptr : engine.materials.find(m.tileMaterial)) {
       t = e->gpu.thumbnail.id();
-      if (!t && bakes < 2 && ImGui::IsRectVisible(ImVec2(tileW, list ? rowH : tileW)))
-        t = engine.materials.thumbnail(*e, engine.env), ++bakes;
+      const bool onScreen = ImGui::IsRectVisible(ImVec2(tileW, list ? rowH : tileW));
+      if (!t && bakes < 2 && onScreen)
+        t = engine.materials.thumbnail(*e, engine.env, false), ++bakes;
+      waiting = !t && onScreen;
     }
     ImGui::PushID(m.path.c_str());
     bool clicked = false;
@@ -936,6 +944,7 @@ void App::drawSmartMaterialTiles() {
       ImVec2 a = p0 + ImVec2(2.f * uiScale, (rowH - pic) * 0.5f);
       if (t) dl->AddImage(texId(t), a, a + ImVec2(pic, pic));
       else dl->AddRectFilled(a, a + ImVec2(pic, pic), ImGui::GetColorU32(ImGuiCol_FrameBg), 3.f * uiScale);
+      if (waiting) ui::loadingSpinner(a, a + ImVec2(pic, pic));
       float tx = a.x + pic + 8.f * uiScale, room = ImGui::GetItemRectMax().x - tx - 4.f * uiScale;
       float lh = ImGui::GetTextLineHeight();
       ImVec2 top(tx, p0.y + rowH * 0.5f - lh);
@@ -945,6 +954,7 @@ void App::drawSmartMaterialTiles() {
     } else {
       ImGui::BeginGroup();
       clicked = t ? ImGui::ImageButton("##t", texId(t), ImVec2(cell, cell)) : ImGui::Button("##t", ImVec2(tileW, cell + 2.f * ImGui::GetStyle().FramePadding.y));
+      if (waiting) ui::loadingSpinner(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
     }
     if (ImGui::IsItemVisible()) {
       ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
@@ -1298,7 +1308,9 @@ void App::drawBrushes() {
   if (ImGui::SmallButton(L_("Open the folder"))) openFolder(paths::ensureDir(BrushLibrary::userDir()));
   ImGui::SetItemTooltip("%s", T_("Images and .abr files put in it, or in folders inside it (a group each), become brushes by themselves"));
   float cell = 64.f * uiScale, tileW = cell + 2.f * ImGui::GetStyle().FramePadding.x;
+  const float tileH = cell + 2.f * ImGui::GetStyle().FramePadding.y;
   int cols = tileColumns(tileW);
+  forgetRects(engine.uiRects, "brushes.tile:");
   std::string lastCat;
   int i = 0;
   for (auto& p : engine.brushes.presets()) {
@@ -1313,8 +1325,18 @@ void App::drawBrushes() {
     ImGui::BeginGroup();
     bool sel = engine.selectedBrushId == p.id;
     if (sel) ImGui::PushStyleColor(ImGuiCol_Button, ui::theme().accentDeep);
-    if (ImGui::ImageButton("##b", texId(engine.brushes.previewTexture(p)), ImVec2(cell, cell))) engine.selectBrush(p.id);
+    // (1.2.15) only the tiles on screen ask for their pictures, which are read on worker threads (a spinner till then):
+    // every tip's image was read at once, in one frame, and a folder of hundreds held the window for seconds
+    const bool onScreen = ImGui::IsRectVisible(ImVec2(tileW, tileH + 2.f * ImGui::GetTextLineHeightWithSpacing()));
+    const GLuint prev = onScreen ? engine.brushes.previewTexture(p) : 0;
+    if (prev ? ImGui::ImageButton("##b", texId(prev), ImVec2(cell, cell)) : ImGui::Button("##b", ImVec2(tileW, tileH)))
+      engine.selectBrush(p.id);
     if (sel) ImGui::PopStyleColor();
+    if (!prev && onScreen) ui::loadingSpinner(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
+    if (ImGui::IsItemVisible()) {
+      ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
+      engine.uiRects["brushes.tile:" + p.id] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
+    }
     if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", p.name.c_str());
     if (contextMenus() && ImGui::BeginPopupContextItem("##brushctx")) {
       ImGui::TextDisabled("%s", p.name.c_str());

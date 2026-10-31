@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <memory>
+#include <set>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
@@ -162,7 +163,9 @@ class MaterialLibrary {
   // GPU resources (lazy). `size` = bake resolution for procedural materials.
   bool ensureBaked(Entry& e, int size = 1024);
   void rebake(Entry& e);
-  GLuint thumbnail(Entry& e, const Environment& env);
+  // The material's picture (a sphere, 128 pixels). (1.2.15) wait=false, for the lists: an image material's maps are
+  // read on a worker thread at the picture's size, and it is 0 until they are (the list draws a spinner).
+  GLuint thumbnail(Entry& e, const Environment& env, bool wait = true);
   // Which of opacity, sheen, clearcoat and subsurface (channel bits 64..512) a material has at other than
   // their defaults (opaque, none): a brush paints only those of them (and those the layer has already).
   int extraChannelsUsed(const MaterialRef& ref);
@@ -178,6 +181,12 @@ class MaterialLibrary {
   std::vector<std::unique_ptr<Entry>> entries_;
   Texture2D white_, flatNormal_, black_, extraDefault_;
   void ensureDefaults();
+  void renderThumbnail(Entry& e, const MaterialGpu& maps, const Environment& env);
+  // (1.2.15) the image materials whose pictures' maps are being read, and the maps the worker threads have read
+  struct ThumbInbox;
+  std::shared_ptr<ThumbInbox> thumbInbox_;
+  std::set<std::string> thumbPending_;
+  void collectThumbnails(const Environment& env);
 };
 
 std::vector<std::string> generatorNames();

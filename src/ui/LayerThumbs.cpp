@@ -47,7 +47,8 @@ const App::LayerThumb& App::layerThumb(const Layer& l) {
     t.hasContent = true;
   } else if (c->type == LayerType::Fill) {
     if (MaterialLibrary::Entry* e = c->material.id.empty() ? nullptr : engine.materials.find(c->material.id)) {
-      if (GLuint th = engine.materials.thumbnail(*e, engine.env)) downsample(t.content, th, 0, S), t.hasContent = true;
+      if (GLuint th = engine.materials.thumbnail(*e, engine.env, false)) downsample(t.content, th, 0, S), t.hasContent = true;
+      else t.updated = -1.0;  // (1.2.15: its picture is being read: looked at again next frame)
     } else {
       // a flat color
       if (!t.content.valid() || t.content.width() != S) t.content = Texture2D(S, S, GL_RGBA8, 1);

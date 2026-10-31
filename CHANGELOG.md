@@ -3,6 +3,25 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.15 (2026-10-31)
+
+### Fixed
+
+- **Opening the Paint workspace no longer freezes the window.** The shelf's pictures are read in the background now,
+  and a tile shows a spinner until its picture is ready. Before, the shelf read every brush image in one frame: a
+  brushes folder of 610 images froze Patina for about 9 seconds. Big image materials froze it too, because each map
+  was read whole for a small picture, two at a time: frames of over a second each.
+  - Only the tiles on screen are read.
+  - A brush's picture is a small copy (128 pixels). 610 brush images take about 13 MB of graphics memory instead of
+    about 820 MB. The full tip is read when you paint with it.
+  - The same goes for the Materials, Smart and Brushes panels of the other layouts, the Paint material and fill
+    material pictures, a Pattern mask's material, and the layer thumbnails.
+
+### Changed
+
+- **The asset shelf's catalog list can be made wider.** In the Blender layout, drag the border between the catalogs
+  and the tiles. Patina remembers the width.
+
 ## 1.2.14 (2026-10-27)
 
 ### Changed

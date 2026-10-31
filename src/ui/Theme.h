@@ -36,5 +36,8 @@ ThemeId themeId();
 void setTheme(ThemeId id);
 ThemeId themeFromId(const std::string& id);  // (unknown: Patina)
 ImU32 themeColor(const ImVec4& c, float alpha = 1.f);  // c, its alpha times `alpha`
+// (1.2.15) a picture still being made (read from disk on a worker thread, or baked): a turning arc in the accent color,
+// drawn in the middle of a..b, where the picture will be
+void loadingSpinner(ImVec2 a, ImVec2 b);
 
 }  // namespace patina::ui

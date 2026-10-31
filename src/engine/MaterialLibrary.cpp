@@ -5,11 +5,14 @@
 #include <stb_image_resize2.h>
 
 #include <algorithm>
+#include <atomic>
 #include <cmath>
 #include <filesystem>
+#include <mutex>
 #include <set>
 
 #include "core/Image.h"
+#include "core/Jobs.h"
 #include "core/Log.h"
 #include "core/Paths.h"
 #include "engine/Environment.h"
@@ -584,6 +587,123 @@ static Image resizeTo(const Image& src, int size) {
   return dst;
 }
 
+// An image material's maps read and packed on the CPU, ready for the GPU: RGBA, all `size` square (an empty one: the
+// material has no such map). (1.2.15: safe on a worker thread, so the library's pictures are read off the main one.)
+struct ImageMaps {
+  int size = 4;
+  float aspect = 1.f;  // the base color's width / height
+  Image color, normal, emissive, rmh, extra;
+};
+
+static ImageMaps readImageMaps(const MaterialDef& d, int maxSize) {
+  ImageMaps out;
+  std::map<std::string, Image> imgs;
+  int sz = 0;
+  for (auto& [k, path] : d.maps) {
+    Image img;
+    if (!loadImage(path, img, k == "basecolor" || k == "emissive" || k == "normal" ? 3 : 1)) continue;
+    std::string ext = fs::path(path).extension().string();
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    bool floatFile = ext == ".exr" || ext == ".hdr";
+    if (floatFile && (k == "basecolor" || k == "emissive")) {
+      // float images hold linear color; the material textures are sRGB
+      for (float& v : img.pixels) {
+        v = std::clamp(v, 0.f, 1.f);
+        v = v <= 0.0031308f ? v * 12.92f : 1.055f * std::pow(v, 1.f / 2.4f) - 0.055f;
+      }
+    }
+    if (k == "height") {
+      // displacement in scene units (EXR, 32-bit TIFF exports): fit into 0..1
+      float lo = 1e30f, hi = -1e30f;
+      for (float v : img.pixels) lo = std::min(lo, v), hi = std::max(hi, v);
+      if (lo < -1e-4f || hi > 1.0001f) {
+        float span = std::max(hi - lo, 1e-8f);
+        for (float& v : img.pixels) v = (v - lo) / span;
+      }
+    }
+    if (floatFile && k != "basecolor" && k != "emissive" && k != "height" && k != "normal")
+      for (float& v : img.pixels) v = std::clamp(v, 0.f, 1.f);
+    if (k == "normal" && floatFile) {
+      // float normal maps may be stored signed (-1..1)
+      float lo = 1e30f;
+      for (float v : img.pixels) lo = std::min(lo, v);
+      if (lo < -0.01f)
+        for (float& v : img.pixels) v = std::clamp(v * 0.5f + 0.5f, 0.f, 1.f);
+    }
+    sz = std::max({sz, img.width, img.height});
+    imgs[k] = std::move(img);
+  }
+  sz = std::clamp(sz, 4, maxSize);
+  int p2 = 4;
+  while (p2 < sz) p2 <<= 1;
+  sz = p2;
+  out.size = sz;
+  auto rgbaOf = [&](const Image& img) {
+    Image r = resizeTo(img, sz);
+    Image rgba;
+    rgba.resize(sz, sz, 4);
+    for (size_t i = 0; i < size_t(sz) * sz; ++i) {
+      for (int c = 0; c < 3; ++c) rgba.pixels[i * 4 + c] = r.pixels[i * r.channels + std::min(c, r.channels - 1)];
+      rgba.pixels[i * 4 + 3] = 1;
+    }
+    return rgba;
+  };
+  if (imgs.count("basecolor")) {
+    out.aspect = float(imgs["basecolor"].width) / float(std::max(1, imgs["basecolor"].height));
+    out.color = rgbaOf(imgs["basecolor"]);
+  }
+  if (imgs.count("normal")) {
+    Image& n = imgs["normal"];
+    if (d.normalDirectX)
+      for (size_t i = 0; i < size_t(n.width) * n.height; ++i) n.pixels[i * 3 + 1] = 1.f - n.pixels[i * 3 + 1];
+    out.normal = rgbaOf(n);
+  }
+  if (imgs.count("emissive")) out.emissive = rgbaOf(imgs["emissive"]);
+  // pack R rough, G metal, B height
+  Image& rmh = out.rmh;
+  rmh.resize(sz, sz, 4);
+  Image rough = imgs.count("roughness") ? resizeTo(imgs["roughness"], sz) : Image();
+  Image gloss = !rough.empty() || !imgs.count("glossiness") ? Image() : resizeTo(imgs["glossiness"], sz);
+  Image metal = imgs.count("metallic") ? resizeTo(imgs["metallic"], sz) : Image();
+  Image height = imgs.count("height") ? resizeTo(imgs["height"], sz) : Image();
+  for (size_t i = 0; i < size_t(sz) * sz; ++i) {
+    rmh.pixels[i * 4 + 0] = !rough.empty() ? rough.pixels[i] : !gloss.empty() ? 1.f - gloss.pixels[i] : 0.6f;
+    rmh.pixels[i * 4 + 1] = !metal.empty() ? metal.pixels[i] : 0.f;
+    rmh.pixels[i * 4 + 2] = !height.empty() ? height.pixels[i] : 0.5f;
+    rmh.pixels[i * 4 + 3] = 1.f;
+  }
+  // r opacity (an opacity map, else opaque); no sheen, clearcoat or subsurface
+  Image& extra = out.extra;
+  extra.resize(sz, sz, 4);
+  Image op = imgs.count("opacity") ? resizeTo(imgs["opacity"], sz) : Image();
+  for (size_t i = 0; i < size_t(sz) * sz; ++i) {
+    extra.pixels[i * 4 + 0] = !op.empty() ? std::clamp(op.pixels[i], 0.f, 1.f) : 1.f;
+    extra.pixels[i * 4 + 1] = extra.pixels[i * 4 + 2] = extra.pixels[i * 4 + 3] = 0.f;
+  }
+  return out;
+}
+
+// readImageMaps' maps onto the GPU (a map the material hasn't: a small one of its default)
+static void uploadImageMaps(MaterialGpu& g, const ImageMaps& m) {
+  auto put = [&](Texture2D& t, const Image& img, vec4 none) {
+    if (img.empty()) {
+      t.create(4, 4, GL_RGBA8, 1);
+      t.clear(none);
+      t.setWrap(GL_REPEAT, GL_REPEAT);
+      return;
+    }
+    t.create(m.size, m.size, GL_RGBA8, 0);
+    t.upload(img);
+    setupTiling(t);
+  };
+  g.aspect = m.aspect;
+  put(g.color, m.color, vec4(0.7f, 0.7f, 0.7f, 1));
+  put(g.normal, m.normal, vec4(0.5f, 0.5f, 1, 1));
+  put(g.emissive, m.emissive, vec4(0, 0, 0, 1));
+  put(g.rmh, m.rmh, vec4(0.6f, 0.f, 0.5f, 1));
+  put(g.extra, m.extra, vec4(1, 0, 0, 0));
+}
+
 bool MaterialLibrary::ensureBaked(Entry& e, int size) {
   // thumbnails use small bakes; painting asks for full resolution and upgrades them
   if (e.gpu.baked && e.gpu.bakedSize >= size) return true;
@@ -689,108 +809,8 @@ bool MaterialLibrary::ensureBaked(Entry& e, int size) {
     for (Texture2D* t : {&g.color, &g.rmh, &g.normal, &g.emissive, &g.extra}) setupTiling(*t);
   } else {
     // image material: load maps, resize to a common size, pack rough/metal/height
-    std::map<std::string, Image> imgs;
-    int sz = 0;
-    for (auto& [k, path] : d.maps) {
-      Image img;
-      if (!loadImage(path, img, k == "basecolor" || k == "emissive" || k == "normal" ? 3 : 1)) continue;
-      std::string ext = fs::path(path).extension().string();
-      std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-      bool floatFile = ext == ".exr" || ext == ".hdr";
-      if (floatFile && (k == "basecolor" || k == "emissive")) {
-        // float images hold linear color; the material textures are sRGB
-        for (float& v : img.pixels) {
-          v = std::clamp(v, 0.f, 1.f);
-          v = v <= 0.0031308f ? v * 12.92f : 1.055f * std::pow(v, 1.f / 2.4f) - 0.055f;
-        }
-      }
-      if (k == "height") {
-        // displacement in scene units (EXR, 32-bit TIFF exports): fit into 0..1
-        float lo = 1e30f, hi = -1e30f;
-        for (float v : img.pixels) lo = std::min(lo, v), hi = std::max(hi, v);
-        if (lo < -1e-4f || hi > 1.0001f) {
-          float span = std::max(hi - lo, 1e-8f);
-          for (float& v : img.pixels) v = (v - lo) / span;
-        }
-      }
-      if (floatFile && k != "basecolor" && k != "emissive" && k != "height" && k != "normal")
-        for (float& v : img.pixels) v = std::clamp(v, 0.f, 1.f);
-      if (k == "normal" && floatFile) {
-        // float normal maps may be stored signed (-1..1)
-        float lo = 1e30f;
-        for (float v : img.pixels) lo = std::min(lo, v);
-        if (lo < -0.01f)
-          for (float& v : img.pixels) v = std::clamp(v * 0.5f + 0.5f, 0.f, 1.f);
-      }
-      sz = std::max({sz, img.width, img.height});
-      imgs[k] = std::move(img);
-    }
-    sz = std::clamp(sz, 4, 2048);
-    int p2 = 4;
-    while (p2 < sz) p2 <<= 1;
-    sz = p2;
-    auto upload = [&](Texture2D& t, const Image& img) {
-      t.create(sz, sz, GL_RGBA8, 0);
-      Image r = resizeTo(img, sz);
-      Image rgba;
-      rgba.resize(sz, sz, 4);
-      for (size_t i = 0; i < size_t(sz) * sz; ++i) {
-        for (int c = 0; c < 3; ++c) rgba.pixels[i * 4 + c] = r.pixels[i * r.channels + std::min(c, r.channels - 1)];
-        rgba.pixels[i * 4 + 3] = 1;
-      }
-      t.upload(rgba);
-      setupTiling(t);
-    };
-    if (imgs.count("basecolor")) {
-      g.aspect = float(imgs["basecolor"].width) / float(std::max(1, imgs["basecolor"].height));
-      upload(g.color, imgs["basecolor"]);
-    }
-    else {
-      g.color.create(4, 4, GL_RGBA8, 1);
-      g.color.clear(vec4(0.7f, 0.7f, 0.7f, 1));
-    }
-    if (imgs.count("normal")) {
-      Image& n = imgs["normal"];
-      if (d.normalDirectX)
-        for (size_t i = 0; i < size_t(n.width) * n.height; ++i) n.pixels[i * 3 + 1] = 1.f - n.pixels[i * 3 + 1];
-      upload(g.normal, n);
-    } else {
-      g.normal.create(4, 4, GL_RGBA8, 1);
-      g.normal.clear(vec4(0.5f, 0.5f, 1, 1));
-    }
-    if (imgs.count("emissive")) upload(g.emissive, imgs["emissive"]);
-    else {
-      g.emissive.create(4, 4, GL_RGBA8, 1);
-      g.emissive.clear(vec4(0, 0, 0, 1));
-    }
-    // pack R rough, G metal, B height
-    Image rmh;
-    rmh.resize(sz, sz, 4);
-    Image rough = imgs.count("roughness") ? resizeTo(imgs["roughness"], sz) : Image();
-    Image gloss = !rough.empty() || !imgs.count("glossiness") ? Image() : resizeTo(imgs["glossiness"], sz);
-    Image metal = imgs.count("metallic") ? resizeTo(imgs["metallic"], sz) : Image();
-    Image height = imgs.count("height") ? resizeTo(imgs["height"], sz) : Image();
-    for (size_t i = 0; i < size_t(sz) * sz; ++i) {
-      rmh.pixels[i * 4 + 0] = !rough.empty() ? rough.pixels[i] : !gloss.empty() ? 1.f - gloss.pixels[i] : 0.6f;
-      rmh.pixels[i * 4 + 1] = !metal.empty() ? metal.pixels[i] : 0.f;
-      rmh.pixels[i * 4 + 2] = !height.empty() ? height.pixels[i] : 0.5f;
-      rmh.pixels[i * 4 + 3] = 1.f;
-    }
-    g.rmh.create(sz, sz, GL_RGBA8, 0);
-    g.rmh.upload(rmh);
-    setupTiling(g.rmh);
-    // r opacity (an opacity map, else opaque); no sheen, clearcoat or subsurface
-    Image extra;
-    extra.resize(sz, sz, 4);
-    Image op = imgs.count("opacity") ? resizeTo(imgs["opacity"], sz) : Image();
-    for (size_t i = 0; i < size_t(sz) * sz; ++i) {
-      extra.pixels[i * 4 + 0] = !op.empty() ? std::clamp(op.pixels[i], 0.f, 1.f) : 1.f;
-      extra.pixels[i * 4 + 1] = extra.pixels[i * 4 + 2] = extra.pixels[i * 4 + 3] = 0.f;
-    }
-    g.extra.create(sz, sz, GL_RGBA8, 0);
-    g.extra.upload(extra);
-    setupTiling(g.extra);
-    for (Texture2D* t : {&g.color, &g.normal, &g.emissive}) t->setWrap(GL_REPEAT, GL_REPEAT);
+    ImageMaps m = readImageMaps(d, 2048);
+    uploadImageMaps(g, m);
   }
   g.baked = true;
   g.bakedSize = d.type == MaterialType::Procedural ? size : (1 << 30);  // images/flat: always full quality
@@ -801,9 +821,64 @@ void MaterialLibrary::rebake(Entry& e) {
   e.gpu = MaterialGpu();
 }
 
-GLuint MaterialLibrary::thumbnail(Entry& e, const Environment& env) {
+// (1.2.15) what the worker threads hand back: an image material's maps, read at the picture's size
+struct MaterialLibrary::ThumbInbox {
+  struct Done {
+    std::string id;
+    MaterialDef def;  // (as it was read: a material changed since is read again)
+    ImageMaps maps;
+  };
+  std::mutex m;
+  std::vector<Done> done;
+  std::atomic<bool> any{false};
+};
+
+GLuint MaterialLibrary::thumbnail(Entry& e, const Environment& env, bool wait) {
   if (e.gpu.thumbnail.valid()) return e.gpu.thumbnail.id();
+  if (!wait && e.def.type == MaterialType::Image && !e.gpu.baked) {
+    // (1.2.15) its maps read on a worker thread, at the picture's size: the 4K images of a library held the window for
+    // a second each, two at a time
+    collectThumbnails(env);
+    if (e.gpu.thumbnail.valid()) return e.gpu.thumbnail.id();
+    if (thumbPending_.insert(e.def.id).second) {
+      if (!thumbInbox_) thumbInbox_ = std::make_shared<ThumbInbox>();
+      pictureJobs().run([inbox = thumbInbox_, id = e.def.id, def = e.def] {
+        ImageMaps maps = readImageMaps(def, 256);
+        std::lock_guard<std::mutex> l(inbox->m);
+        inbox->done.push_back({id, def, std::move(maps)});
+        inbox->any = true;
+      });
+    }
+    return 0;
+  }
   if (!ensureBaked(e, 256)) return 0;
+  renderThumbnail(e, e.gpu, env);
+  return e.gpu.thumbnail.id();
+}
+
+// (1.2.15) the maps the worker threads have read: uploaded, made into the pictures, and let go
+void MaterialLibrary::collectThumbnails(const Environment& env) {
+  if (!thumbInbox_ || !thumbInbox_->any) return;
+  std::vector<ThumbInbox::Done> done;
+  {
+    std::lock_guard<std::mutex> l(thumbInbox_->m);
+    done.swap(thumbInbox_->done);
+    thumbInbox_->any = false;
+  }
+  for (auto& d : done) {
+    thumbPending_.erase(d.id);
+    Entry* e = find(d.id);
+    if (!e || e->gpu.thumbnail.valid() || e->def.type != MaterialType::Image || e->def.maps != d.def.maps ||
+        e->def.normalDirectX != d.def.normalDirectX)
+      continue;
+    MaterialGpu maps;
+    uploadImageMaps(maps, d.maps);
+    renderThumbnail(*e, maps, env);
+  }
+}
+
+void MaterialLibrary::renderThumbnail(Entry& e, const MaterialGpu& maps, const Environment& env) {
+  ensureDefaults();
   const int S = 128;
   e.gpu.thumbnail.create(S, S, GL_RGBA8, 1);
   Framebuffer fbo;
@@ -816,17 +891,16 @@ GLuint MaterialLibrary::thumbnail(Entry& e, const Environment& env) {
   glClearColor(0, 0, 0, 0);
   glClear(GL_COLOR_BUFFER_BIT);
   Shader& s = ShaderCache::get("fullscreen.vs.glsl", "thumb.fs.glsl");
-  s.tex("uColorTex", 0, e.gpu.color.id());
-  s.tex("uRMHTex", 1, e.gpu.rmh.id());
-  s.tex("uNormalTex", 2, e.gpu.normal.id());
-  s.tex("uEmissiveTex", 3, e.gpu.emissive.id());
-  s.tex("uExtraTex", 6, e.gpu.extra.valid() ? e.gpu.extra.id() : extraDefault_.id());
+  s.tex("uColorTex", 0, maps.color.id());
+  s.tex("uRMHTex", 1, maps.rmh.id());
+  s.tex("uNormalTex", 2, maps.normal.id());
+  s.tex("uEmissiveTex", 3, maps.emissive.id());
+  s.tex("uExtraTex", 6, maps.extra.valid() ? maps.extra.id() : extraDefault_.id());
   env.bind(s, 4, 5);
   s.set("uTiles", e.def.type == MaterialType::Flat ? 1.f : 2.f);
   s.set("uShape", 0);
   s.use();
   drawFullscreenTriangle();
-  return e.gpu.thumbnail.id();
 }
 
 void MaterialLibrary::bind(const Shader& s, const MaterialRef& ref, int u, const mat4& screenVP, float screenAspect) {

@@ -54,4 +54,14 @@ ImU32 themeColor(const ImVec4& c, float alpha) {
   return ImGui::ColorConvertFloat4ToU32(ImVec4(c.x, c.y, c.z, std::clamp(c.w * alpha, 0.f, 1.f)));
 }
 
+void loadingSpinner(ImVec2 a, ImVec2 b) {
+  const ImVec2 c((a.x + b.x) * 0.5f, (a.y + b.y) * 0.5f);
+  const float r = std::min(b.x - a.x, b.y - a.y) * 0.2f;
+  if (r < 2.f) return;
+  const float t = float(ImGui::GetTime()) * 6.f;
+  ImDrawList* dl = ImGui::GetWindowDrawList();
+  dl->PathArcTo(c, r, t, t + 4.5f, 24);
+  dl->PathStroke(themeColor(theme().accent, 0.9f), ImDrawFlags_None, std::max(1.5f, r * 0.2f));
+}
+
 }  // namespace patina::ui

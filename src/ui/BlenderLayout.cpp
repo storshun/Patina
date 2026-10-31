@@ -515,9 +515,9 @@ void App::drawViewSidebar() {
 
 void App::drawAssetShelf() {
   const float s = uiScale;
-  const ImVec2 avail = ImGui::GetContentRegionAvail();
-  // ---- the catalogs, as Blender's asset shelf lists them at its left
-  const float catW = std::round(std::min(175.f * s, avail.x * 0.3f));
+  const ImVec2 avail = ImGui::GetContentRegionAvail(), origin = ImGui::GetCursorScreenPos();
+  // ---- the catalogs, as Blender's asset shelf lists them at its left (1.2.15: as wide as its border is dragged)
+  const float catW = std::round(std::clamp(blui.shelfCatalogW * s, 100.f * s, std::max(100.f * s, avail.x * 0.6f)));
   ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_MenuBarBg));
   ImGui::BeginChild("##shelf_catalogs", ImVec2(catW, avail.y), ImGuiChildFlags_AlwaysUseWindowPadding);
   ImGui::PopStyleColor();
@@ -569,7 +569,15 @@ void App::drawAssetShelf() {
   }
   ImGui::EndChild();
   ImGui::EndChild();
-  ImGui::SameLine(0, std::round(4.f * s));
+  const float gap = std::round(4.f * s);
+  if (splitter("##split_shelf_catalogs", ImVec2(origin.x + catW, origin.y), ImVec2(gap, avail.y), true,
+               blui.shelfCatalogW, 1.f, 100.f, 2000.f, s))
+    saveSession(true);
+  {
+    ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
+    engine.uiRects["shelf.border"] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
+  }
+  ImGui::SetCursorScreenPos(ImVec2(origin.x + catW + gap, origin.y));
   // ---- the chosen catalog's tiles: the Materials or Brushes panel, the shelf choosing its tab and category
   const ImVec2 cs = ImGui::GetContentRegionAvail();
   if (blui.shelf == ShelfKind::Brushes) {
@@ -610,6 +618,7 @@ void App::blenderSessionLoad(const json& j) {
   blui.outlinerH = j.value("outliner", blui.outlinerH);
   blui.shelfH = j.value("shelf", blui.shelfH);
   blui.sidebarW = j.value("sidebar", blui.sidebarW);
+  blui.shelfCatalogW = j.value("shelf_catalogs", blui.shelfCatalogW);
   blui.uvShare = std::clamp(j.value("uv_share", blui.uvShare), 0.15f, 0.8f);
   blui.props = (PropsTab)std::clamp(j.value("properties_tab", (int)blui.props), 0, (int)PropsTab::Count - 1);
   blui.side = (SideTab)std::clamp(j.value("sidebar_tab", (int)blui.side), 0, (int)SideTab::Count - 1);
@@ -626,7 +635,7 @@ json App::blenderSessionSave() const {
               {"sidebar", blui.sidebarW},      {"uv_share", blui.uvShare},     {"properties_tab", (int)blui.props},
               {"sidebar_tab", (int)blui.side}, {"sidebar_open", blui.sideOpen}, {"shelf_catalog", (int)blui.shelf},
               {"brush_category", blui.brushCategory}, {"sets_open", blui.setsOpen}, {"layers_open", blui.layersOpen},
-              {"properties_pinned", blui.propsPinned}};
+              {"properties_pinned", blui.propsPinned}, {"shelf_catalogs", blui.shelfCatalogW}};
 }
 
 }  // namespace patina

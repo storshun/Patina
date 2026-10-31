@@ -1118,8 +1118,9 @@ void App::layerProperties() {
     auto* e = m.id.empty() ? nullptr : engine.materials.find(m.id);
     ImGui::BeginGroup();
     if (e) {
-      GLuint t = engine.materials.thumbnail(*e, engine.env);
+      GLuint t = engine.materials.thumbnail(*e, engine.env, false);
       ImGui::Image(texId(t), ImVec2(48, 48) * uiScale);
+      if (!t) ui::loadingSpinner(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
       ImGui::SameLine();
       ImGui::BeginGroup();
       ImGui::Text("%s", e->def.name.c_str());

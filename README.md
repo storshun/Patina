@@ -266,7 +266,27 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.14 (2026-10-27)
+### 1.2.15 (2026-10-31)
+
+#### Fixed
+
+- **Opening the Paint workspace no longer freezes the window.** The shelf's pictures are read in the background now,
+  and a tile shows a spinner until its picture is ready. Before, the shelf read every brush image in one frame: a
+  brushes folder of 610 images froze Patina for about 9 seconds. Big image materials froze it too, because each map
+  was read whole for a small picture, two at a time: frames of over a second each.
+  - Only the tiles on screen are read.
+  - A brush's picture is a small copy (128 pixels). 610 brush images take about 13 MB of graphics memory instead of
+    about 820 MB. The full tip is read when you paint with it.
+  - The same goes for the Materials, Smart and Brushes panels of the other layouts, the Paint material and fill
+    material pictures, a Pattern mask's material, and the layer thumbnails.
+
+#### Changed
+
+- **The asset shelf's catalog list can be made wider.** In the Blender layout, drag the border between the catalogs
+  and the tiles. Patina remembers the width.
+
+<details>
+<summary><b>1.2.14 (2026-10-27)</b></summary>
 
 #### Changed
 
@@ -277,6 +297,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
   you set, **Ctrl+F** turns it as you go round, and **Shift+F** thins its dots as you lower the opacity, all live. The
   value now sits under the tip, so a small brush isn't hidden behind it. **Preferences › Features › The brush cursor
   shows the tip** off brings back the circles.
+
+</details>
 
 <details>
 <summary><b>1.2.13 (2026-10-27)</b></summary>

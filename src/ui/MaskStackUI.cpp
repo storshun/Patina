@@ -144,7 +144,9 @@ bool App::patternWidgets(MaskEffect& e) {
   auto* me = m.id.empty() ? nullptr : engine.materials.find(m.id);
   ImGui::BeginGroup();
   if (me) {
-    ImGui::Image(texId(engine.materials.thumbnail(*me, engine.env)), ImVec2(40, 40) * uiScale);
+    const GLuint th = engine.materials.thumbnail(*me, engine.env, false);
+    ImGui::Image(texId(th), ImVec2(40, 40) * uiScale);
+    if (!th) ui::loadingSpinner(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
     ImGui::SameLine();
   }
   if (ImGui::BeginCombo(L_("Material"), me ? me->def.name.c_str() : T_("Drag one here, or pick"), ImGuiComboFlags_HeightLarge)) {

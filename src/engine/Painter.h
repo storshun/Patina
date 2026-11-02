@@ -59,7 +59,7 @@ class Painter {
   float maskValue = 1.f;  // value painted into masks with the Paint tool
   // (1.2.16) the material follows the stroke: its pattern laid along the stroke's path on screen, turning where the
   // stroke turns (Rotation turns it on top), the stroke trailing the cursor on a rope of followLag pixels (a lazy
-  // mouse) so the turns are smooth. The Paint tool with the Screen projection.
+  // mouse) so the turns are smooth. The Paint tool, every projection mode and UV space (1.2.18).
   bool materialFollow = false;
   float followLag = 24.f;
   Stencil stencil;        // screen-fixed picture strokes paint through (mask) or paint (decal)
@@ -121,6 +121,7 @@ class Painter {
     float worldR = 0;  // smudge: radius on the surface (object units), for the texture-space bounds
     bool onSurface = false;  // (1.2.5) a screen brush's mirror copy the camera can't see: stamped on the surface
     float dirAngle = 0.f;    // (1.2.16) the stroke's direction there (screen, GL y up), radians
+    vec3 dir3{0.f};          // (1.2.18) ... on the surface (Surface mode): along the brush's plane
   };
   void emitAlong(vec2 from, vec2 to, float p0, float p1);
   void emitDab(vec2 pos, float pressure, vec2 dir);
@@ -179,8 +180,9 @@ class Painter {
   bool ribbonOn_ = false;
   float ribbonPx_ = 1.f;
   struct RibbonPath {
-    vec2 last{0.f};
-    float along = 0.f, angle = 0.f;
+    vec3 last{0.f};
+    float along = 0.f;
+    vec4 seg{0.f};  // the latest segment's start and its along (a dab that hasn't moved keeps it)
     bool started = false;
   };
   std::vector<RibbonPath> ribbonPaths_;

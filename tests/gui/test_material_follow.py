@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The paint material's Rotation and Follow the stroke (1.2.16, smooth turns 1.2.17), in the real window:
+"""The paint material's Rotation and Follow the stroke (1.2.16, smooth turns 1.2.17, Surface 1.2.18), in the real window:
 - the material ball in the Brush panel turns with the Rotation slider (it stayed as it was);
 - Follow the stroke lays a striped material along the stroke: an L-shaped stroke (across, then down) shows its stripes
   turned a quarter turn between the two legs, where without it both legs show them the same way;
@@ -125,6 +125,26 @@ def main():
             cohs.append(orientation(im.crop((int(cx - 14), int(cy - 14), int(cx + 14), int(cy + 14))))[1])
         check(min(cohs) > 0.85, "round a long arc the stripes run on smoothly, no steps (coherence %s)" %
               ", ".join("%.2f" % c for c in cohs))
+        # (1.2.18) the same arc with the Surface projection: the stripes follow it on the surface, smoothly
+        s("new_project", primitive="cube", resolution=2048)
+        s("set_camera", view="front", frame=True)
+        s("set_brush", size=110, hardness=1, spacing=0.05, projection="surface", lazy_radius=0)
+        s("set_paint_material", id="patina_breton_stripes", rotation=0, mapping="triplanar", scale=4,
+          follow_stroke=True, follow_rope=24)
+        s("paint_stroke", points=[[0.5 + 0.17 * math.cos(math.radians(a)), 0.55 - 0.17 * math.sin(math.radians(a))]
+                                  for a in range(200, -21, -1)])
+        s.settle(10, 1.0)
+        im = s.image().crop(view)
+        im.save(os.path.join(OUT, "arc_surface.png"))
+        cohs, angs = [], []
+        for a in (150, 120, 90, 60, 30):
+            cx, cy = vw * (0.5 + 0.17 * math.cos(math.radians(a))), vh * (0.55 - 0.17 * math.sin(math.radians(a)))
+            o, c = orientation(im.crop((int(cx - 14), int(cy - 14), int(cx + 14), int(cy + 14))))
+            cohs.append(c)
+            angs.append(o)
+        check(min(cohs) > 0.85 and turn(angs[0], angs[2]) > 45,
+              "with the Surface projection the stripes follow the arc too (coherence %s; %.0f deg turned)" %
+              (", ".join("%.2f" % c for c in cohs), turn(angs[0], angs[2])))
         st = s("get_state")
         check(st.get("material", {}).get("follow_stroke") is True, "get_state reports follow_stroke")
 

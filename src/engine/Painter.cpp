@@ -148,8 +148,7 @@ bool Painter::beginStroke(Document& doc, MaterialLibrary& mats, BrushLibrary& br
   smudgePrev_.assign(8 * 64, vec4(0));
   if (seamAware && (tool == PaintTool::Blur || tool == PaintTool::Smudge)) doc.tex.ensureSeamMap(doc.mesh, doc.bvh);
   stencilActive_ = stencil.enabled && stencil.valid() && !uvSpace_ && (tool == PaintTool::Paint || tool == PaintTool::Erase);
-  ribbonOn_ = materialFollow && tool == PaintTool::Paint && !uvSpace_ && !targetMask_ &&
-              brush.projection == BrushProjection::Screen;
+  ribbonOn_ = materialFollow && tool == PaintTool::Paint && !targetMask_;  // (1.2.18: every projection mode)
   if (ribbonOn_) {
     ivec2 res = doc.tex.size();
     if (!ribbon_.valid() || ribbon_.size() != res) {
@@ -161,14 +160,34 @@ bool Painter::beginStroke(Document& doc, MaterialLibrary& mats, BrushLibrary& br
     ribbon_.clear(vec4(1e30f));
     ribbonDist_.clear(vec4(60000.f));
     ribbonPaths_.assign(8 * 64, RibbonPath());
-    // the pattern as big as the material's own projection makes it where the stroke starts: object units per pixel
-    // there (the screen projection: a view height is its scale 1)
-    float pw = view_.camera.pixelWorld(view_.viewport.y);
-    vec3 o, rd;
-    view_.camera.ray(p.pos, view_.viewport, o, rd);
-    RayHit h = doc.bvh.raycast(doc.mesh, o, rd, 1e30f, doc.hiddenMask());
-    float dist = h.hit ? h.t : glm::length(view_.camera.eye() - doc.mesh.bounds.center());
-    ribbonPx_ = material.mapping == 2 ? 1.f / std::max(view_.viewport.y, 1.f) : view_.camera.ortho ? pw : pw * dist;
+    // the pattern as big as the material's own projection makes it where the stroke starts: the material's units
+    // (object units tri-planar, UV units, view heights for the screen projection) per unit of the path (screen
+    // pixels, object units on the surface, UV units)
+    float objPerUV = 1.f;
+    {
+      double a3 = 0, a2 = 0;
+      for (const auto& tri : doc.mesh.tris) {
+        const auto& m = doc.mesh;  // (triangle corners are loops)
+        vec3 p0 = m.positions[m.loopVert[tri[0]]], p1 = m.positions[m.loopVert[tri[1]]], p2 = m.positions[m.loopVert[tri[2]]];
+        vec2 u0 = doc.mesh.texUV(tri[0]), u1 = doc.mesh.texUV(tri[1]), u2 = doc.mesh.texUV(tri[2]);
+        a3 += glm::length(glm::cross(p1 - p0, p2 - p0));
+        vec2 e1 = u1 - u0, e2 = u2 - u0;
+        a2 += std::abs(e1.x * e2.y - e1.y * e2.x);
+      }
+      if (a2 > 1e-12) objPerUV = float(std::sqrt(a3 / a2));
+    }
+    float objPerPx = 2.f * doc.mesh.boundingRadius / std::max(view_.viewport.y, 1.f);  // (UV space: the model a view)
+    if (!uvSpace_) {
+      float pw = view_.camera.pixelWorld(view_.viewport.y);
+      vec3 o, rd;
+      view_.camera.ray(p.pos, view_.viewport, o, rd);
+      RayHit h = doc.bvh.raycast(doc.mesh, o, rd, 1e30f, doc.hiddenMask());
+      float dist = h.hit ? h.t : glm::length(view_.camera.eye() - doc.mesh.bounds.center());
+      objPerPx = view_.camera.ortho ? pw : pw * dist;
+    }
+    const float H = std::max(view_.viewport.y, 1.f);
+    const float pathToObj = uvSpace_ ? objPerUV : brush.projection == BrushProjection::Surface ? 1.f : objPerPx;
+    ribbonPx_ = material.mapping == 1 ? pathToObj / objPerUV : material.mapping == 2 ? pathToObj / (objPerPx * H) : pathToObj;
   } else {
     ribbon_ = Texture2D(), ribbonDist_ = Texture2D();  // (their memory back)
   }
@@ -193,7 +212,7 @@ void Painter::addPoint(const StrokePoint& p) {
   tilt_ = p.tilt;
   vec2 target = p.pos;
   float lazy = uvSpace_ ? brush.lazyRadius * uvPerPixel_ : brush.lazyRadius;
-  if (ribbonOn_) lazy = std::max(lazy, followLag);  // (1.2.16: the rope the material follows)
+  if (ribbonOn_) lazy = std::max(lazy, uvSpace_ ? followLag * uvPerPixel_ : followLag);  // (1.2.16: the rope)
   if (lazy > 0.f) {
     vec2 d = target - lazyPos_;
     float len = glm::length(d);
@@ -272,6 +291,17 @@ void Painter::emitDab(vec2 pos, float pressure, vec2 dir) {
         }
         Dab m = base;
         m.chain = mm * nr + r;
+        {
+          vec3 md = base.dir3;  // (1.2.18) the ribbon's way, mirrored and turned as the normal is
+          for (int ax = 0; ax < 3; ++ax)
+            if ((mm >> ax) & 1) md[ax] = -md[ax];
+          if (r) {
+            vec3 axis(0.f);
+            axis[std::clamp(radialAxis, 0, 2)] = 1.f;
+            md = glm::mat3(glm::rotate(glm::mat4(1.f), 2.f * kPi * float(r) / float(nr), axis)) * md;
+          }
+          m.dir3 = md;
+        }
         m.c3 = mc;
         m.hit = true;
         if (flips & 1) m.angle = -base.angle;
@@ -312,6 +342,7 @@ void Painter::emitDab(vec2 pos, float pressure, vec2 dir) {
   if (uvSpace_) {
     // a locked stroke starts at the first dab that lands on a face
     if (lock_ == Lock::Pending && !establishLock(nullptr, pos)) return;
+    dab.dirAngle = std::atan2(dir.y, dir.x);  // (UV space is y up already)
     pending_.push_back(dab);
   } else {
     // screen position: convert to GL convention (origin bottom-left) for the shader
@@ -331,6 +362,17 @@ void Painter::emitDab(vec2 pos, float pressure, vec2 dir) {
       dab.n3 = glm::dot(hit.faceNormal, rd) > 0 ? -hit.normal : hit.normal;
       dab.radius = worldR;
       dab.worldR = worldR;
+      if (ribbonOn_) {
+        // (1.2.18) the stroke's way on the surface: the screen direction carried onto the brush's plane
+        vec3 o2, rd2;
+        view_.camera.ray(pos + dir, view_.viewport, o2, rd2);
+        float den = glm::dot(rd2, dab.n3);
+        vec3 p2 = std::abs(den) > 1e-8f ? o2 + rd2 * (glm::dot(dab.c3 - o2, dab.n3) / den) : dab.c3 + rd2;
+        vec3 tg = p2 - dab.c3;
+        tg -= dab.n3 * glm::dot(tg, dab.n3);
+        if (glm::length(tg) > 1e-12f) dab.dir3 = glm::normalize(tg);
+        else dab.dir3 = glm::normalize(glm::cross(dab.n3, std::abs(dab.n3.y) < 0.99f ? vec3(0, 1, 0) : vec3(1, 0, 0)));
+      }
       pending_.push_back(dab);
       addMirrors(dab, hit.position, dab.n3);
     } else {
@@ -362,7 +404,7 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
   Document& d = *doc_;
   ivec2 res = d.tex.size();
   int mode = uvSpace_ ? 2 : (brush.projection == BrushProjection::Surface ? 1 : 0);
-  const bool ribbon = ribbonOn_ && &target == &strokeMask_ && mode == 0;
+  const bool ribbon = ribbonOn_ && &target == &strokeMask_;
   Framebuffer fbo;
   fbo.attach(0, target);
   if (ribbon) fbo.attach(1, ribbon_), fbo.attach(2, ribbonDist_);
@@ -407,7 +449,8 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
     s.set("uOcclusion", brush.occlusion ? 1 : 0);
     s.set("uAngleFalloff", brush.angleFalloff);
   }
-  vec4 A[kMaxDabsPerPass], B[kMaxDabsPerPass], N[kMaxDabsPerPass];
+  vec4 A[kMaxDabsPerPass], B[kMaxDabsPerPass], N[kMaxDabsPerPass], P[kMaxDabsPerPass];
+  bool ribbonPass = ribbon;
   auto stamp = [&](const Dab* list, size_t total) {
     for (size_t i = 0; i < total; i += kMaxDabsPerPass) {
       int n = (int)std::min<size_t>(kMaxDabsPerPass, total - i);
@@ -421,20 +464,24 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
           A[k] = vec4(dab.pos, dab.radius, dab.angle);
           B[k] = vec4(dab.flow, dab.roundness, 0, 0);
           N[k] = vec4(0);
-          if (ribbon) {
-            // (1.2.16) each symmetry copy's own path on screen: how far along it this dab is, and which way it goes
-            RibbonPath& rp = ribbonPaths_[std::clamp(dab.chain, 0, (int)ribbonPaths_.size() - 1)];
-            if (!rp.started) {
-              rp.started = true, rp.last = dab.pos, rp.angle = dab.dirAngle;
-            } else if (vec2 step = dab.pos - rp.last; glm::length(step) > 1e-3f) {
-              N[k] = vec4(rp.last, rp.along, 1.f);  // (1.2.17) its segment of the path, from the dab before
-              rp.angle = std::atan2(step.y, step.x);
-              rp.along += glm::length(step);
-              rp.last = dab.pos;
-            }
-            B[k].z = rp.along;
-            B[k].w = rp.angle;
+        }
+        if (ribbonPass) {
+          // (1.2.16) each symmetry copy's own path (screen pixels, the surface, or UV): this dab's segment of it, from
+          // the dab before; a path's first dab gets a short one behind it, the way the stroke goes (1.2.17, 1.2.18)
+          RibbonPath& rp = ribbonPaths_[std::clamp(dab.chain, 0, (int)ribbonPaths_.size() - 1)];
+          vec3 at = mode == 1 ? dab.c3 : vec3(dab.pos, 0.f);
+          float r = mode == 1 ? dab.worldR : dab.radius;
+          if (!rp.started) {
+            vec3 way = mode == 1 ? dab.dir3 : vec3(std::cos(dab.dirAngle), std::sin(dab.dirAngle), 0.f);
+            float eps = std::max(r, 1e-6f) * 1e-2f;
+            rp.started = true, rp.last = at, rp.along = 0.f;
+            rp.seg = vec4(at - way * eps, -eps);
+          } else if (float step = glm::length(at - rp.last); step > std::max(r, 1e-6f) * 1e-3f) {
+            rp.seg = vec4(rp.last, rp.along);
+            rp.along += step;
+            rp.last = at;
           }
+          P[k] = rp.seg;
         }
       }
       if (ribbon) {
@@ -447,6 +494,7 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
       s.setArray("uStampA", A, n);
       s.setArray("uStampB", B, n);
       s.setArray("uStampN", N, n);
+      if (ribbonPass) s.setArray("uStampP", P, n);
       s.use();
       scissor(true);
       d.gpu.drawTriangles();
@@ -457,7 +505,8 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
   if (!onSurface.empty()) {
     mode = 1;
     s.set("uMode", 1);
-    if (ribbon) fbo.setDrawBuffers(1), s.set("uRibbon", 0);  // (copies stamped on the surface keep the projection)
+    // (a screen stroke's copies stamped on the surface keep the projection: their path isn't in screen pixels)
+    if (ribbon) fbo.setDrawBuffers(1), s.set("uRibbon", 0), ribbonPass = false;
     stamp(onSurface.data(), onSurface.size());
   }
   s.set("uTile", -1);  // the program is shared (fills, locks): no tile filter left behind

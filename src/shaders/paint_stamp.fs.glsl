@@ -18,8 +18,8 @@ layout(location = 2) out float oRibbonDist;  // (1.2.17) ... and how far the tex
 uniform int uMode;            // 0 screen projection, 1 3D surface sphere, 2 UV space, 3 face-flag fill
 uniform int uStampCount;
 uniform vec4 uStampA[MAX_STAMPS];  // screen/uv: xy center, z radius, w angle | surface: xyz center, w radius
-uniform vec4 uStampB[MAX_STAMPS];  // x flow, y roundness, z angle (surface) | screen ribbon: z along, w direction
-uniform vec4 uStampN[MAX_STAMPS];  // surface: brush normal xyz | screen ribbon: segment start xy, its along, has one
+uniform vec4 uStampB[MAX_STAMPS];  // x flow, y roundness, z angle (surface), w unused
+uniform vec4 uStampN[MAX_STAMPS];  // surface: brush normal xyz
 uniform sampler2D uAlpha;
 uniform float uHardness;      // 0 soft .. 1 hard
 uniform int uAlphaIsRound;    // 1 = procedural round falloff only
@@ -38,9 +38,10 @@ uniform int uOcclusion;       // 1 = only paint visible surfaces
 uniform float uAngleFalloff;  // 0 = none; otherwise cos of the grazing limit
 uniform uint uFillFlag;
 uniform uint uLockFlag;       // != 0: only faces with this loop flag (topology / island lock)
-uniform int uRibbon;          // (1.2.16) 1: oRibbon gets the texel's place on the stroke (screen mode)
+uniform int uRibbon;          // (1.2.16) 1: oRibbon gets the texel's place on the stroke
 uniform sampler2D uRibbonPrev;  // (1.2.17) the ribbon so far (the texture written: read before the write, own texel)
 uniform sampler2D uRibbonDistPrev;
+uniform vec4 uStampP[MAX_STAMPS];  // (1.2.18) the ribbon: the dab's segment of the path, its start xyz and along
 
 float linearDepth(float d) {
   if (uOrtho == 1) return uNear + d * (uFar - uNear);
@@ -73,7 +74,47 @@ float accumulateScreen(vec2 sp) {
   return 1.0 - keep;
 }
 
+// (1.2.17) the texel's place on the stroke's center line: along = how far along the path its nearest point is, across =
+// how far to the side. Each dab carries its segment of the path from the dab before (uStampP: the start and its along;
+// a path's first dab, a short one behind it the way the stroke goes). The nearest segment wins, the value already here
+// included, so the pattern runs on smoothly round a turn (the latest dab's own frame made a step at every dab). A
+// segment much further along than the value here is the stroke coming back over it: that one wins. (1.2.18) In all
+// three modes: q and the path in screen pixels, object space on the surface (sides in the brush's plane), or UV.
+void ribbon(vec3 q) {
+  ivec2 at = ivec2(gl_FragCoord.xy);
+  vec2 cur = texelFetch(uRibbonPrev, at, 0).rg;
+  bool have = cur.x < 1e29;
+  float bestD = have ? texelFetch(uRibbonDistPrev, at, 0).r : 1e30;
+  for (int i = 0; i < uStampCount; ++i) {
+    bool surface = uMode == 1;
+    vec3 b = surface ? uStampA[i].xyz : vec3(uStampA[i].xy, 0.0);
+    float radius = surface ? uStampA[i].w : uStampA[i].z;
+    vec3 a = uStampP[i].xyz;
+    float a0 = uStampP[i].w;
+    vec3 ab = b - a;
+    float len = length(ab);
+    if (len < 1e-9) continue;
+    vec3 dir = ab / len;
+    vec3 side = surface ? cross(normalize(uStampN[i].xyz), dir) : vec3(-dir.y, dir.x, 0.0);
+    float tr = dot(q - a, dir), t = clamp(tr, 0.0, len);
+    float d = length(q - (a + dir * t));
+    if (d > radius * 1.5 / max(uStampB[i].y, 0.05)) continue;  // (not this dab's)
+    // past the segment's end the pattern runs on (a later segment, nearer, takes over as the stroke goes on); before
+    // the path's first segment too, so its start is no stretched stripe either
+    float along = a0 + (a0 < 0.0 ? tr : max(t, tr));
+    float across = dot(q - a, side);
+    if (!have || d < bestD || along - cur.x > 3.0 * radius) {
+      cur = vec2(along, across);
+      bestD = d;
+      have = true;
+    }
+  }
+  oRibbon = have ? cur : vec2(1e30);
+  oRibbonDist = have ? min(bestD, 60000.0) : 60000.0;
+}
+
 void main() {
+  vec3 rq = vec3(0.0);  // (screen mode: the texel's place on screen, for the ribbon)
   if ((vFlags & 32u) != 0u) discard;  // (1.2) a hidden face set's faces take no paint
   if (uLockFlag != 0u && (vFlags & uLockFlag) == 0u) discard;
   float s = 0.0;
@@ -115,6 +156,7 @@ void main() {
     vec3 ndc = clip.xyz / clip.w;
     if (any(greaterThan(abs(ndc.xy), vec2(1.02)))) discard;
     vec2 sp = (ndc.xy * 0.5 + 0.5) * uViewport;
+    rq = vec3(sp, 0.0);
     // facing
     vec3 N = normalize(vNormal);
     vec3 V = uOrtho == 1 ? normalize(uCamPos) : normalize(uCamPos - vPos);
@@ -136,41 +178,8 @@ void main() {
                   accumulateScreen(sp + dx - dy) + accumulateScreen(sp - dx - dy));
     }
     s *= facingW;
-    if (uRibbon == 1 && s > 0.0) {
-      // (1.2.17) the texel's place on the stroke's center line: along = how far along the path its nearest point is,
-      // across = how far to the side. Each dab carries its path segment from the dab before (uStampN: start, its
-      // along, whether there is one); the nearest segment wins, the value already here included, so the pattern runs
-      // on smoothly round a turn (the latest dab's own frame made a step at every dab). A segment much further along
-      // the path than the value here is the stroke coming back over it: that one wins.
-      vec2 cur = texelFetch(uRibbonPrev, ivec2(gl_FragCoord.xy), 0).rg;
-      bool have = cur.x < 1e29;
-      float bestD = have ? texelFetch(uRibbonDistPrev, ivec2(gl_FragCoord.xy), 0).r : 1e30;
-      for (int i = 0; i < uStampCount; ++i) {
-        vec2 b = uStampA[i].xy;
-        vec4 n = uStampN[i];
-        vec2 a = n.w > 0.5 ? n.xy : b;
-        vec2 ab = b - a;
-        float len = length(ab);
-        vec2 dir = len > 1e-4 ? ab / len : vec2(cos(uStampB[i].w), sin(uStampB[i].w));
-        float tr = dot(sp - a, dir), t = clamp(tr, 0.0, len);
-        vec2 off = sp - (a + dir * t);
-        float d = length(off);
-        if (d > uStampA[i].z * 1.5 / max(uStampB[i].y, 0.05)) continue;  // (not this dab's)
-        // (past the segment's end the pattern runs on: the stroke's end is not one stretched stripe; a later segment,
-        // nearer, takes those texels over as the stroke goes on)
-        float along = (n.w > 0.5 ? n.z : uStampB[i].z) + max(t, tr);
-        if (len <= 1e-4) along += dot(sp - b, dir);  // (a path's first dab: its own frame)
-        float across = dot(sp - a, vec2(-dir.y, dir.x));
-        if (!have || d < bestD || along - cur.x > 3.0 * uStampA[i].z) {
-          cur = vec2(along, across);
-          bestD = d;
-          have = true;
-        }
-      }
-      oRibbon = have ? cur : vec2(1e30);
-      oRibbonDist = have ? min(bestD, 60000.0) : 60000.0;
-    }
   }
   if (s <= 0.0) discard;
   oMask = vec4(s);
+  if (uRibbon == 1) ribbon(uMode == 1 ? vPos : uMode == 2 ? vec3(vUV, 0.0) : rq);
 }

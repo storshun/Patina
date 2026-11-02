@@ -3,6 +3,14 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.18 (2026-11-01)
+
+### Changed
+
+- **Follow the stroke works in every projection mode.** With **Surface 3D sphere** the material follows the stroke
+  along the model's surface, so it reaches into cracks and under other parts. With **UV space**, and in the UV
+  editor, it follows the stroke across the texture. It was Screen only.
+
 ## 1.2.17 (2026-11-01)
 
 ### Fixed

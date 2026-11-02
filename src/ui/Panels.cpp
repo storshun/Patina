@@ -695,12 +695,11 @@ void App::drawProperties() {
       engine.uiRects["props.material_follow"] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
       ImGui::SetItemTooltip("%s", T_("The material is laid along the stroke and turns where the stroke turns on screen,\n"
                                      "like a ribbon. The stroke trails the cursor on a rope (a lazy mouse) so the turns\n"
-                                     "are smooth. Rotation turns it on top. For the Paint tool with the Screen projection."));
+                                     "are smooth. Rotation turns it on top. With the Paint tool, in every projection mode\n"
+                                     "(Screen, Surface 3D sphere, UV space) and in the UV editor."));
       if (P.materialFollow) {
         ImGui::SliderFloat(L_("Rope##mat"), &P.followLag, 0.f, 200.f, T_("%.0f px"));
         ImGui::SetItemTooltip("%s", T_("How far the stroke trails the cursor: longer is smoother"));
-        if (P.brush.projection != BrushProjection::Screen)
-          ImGui::TextColored(ui::theme().accentLight, "%s", T_("Works with the Screen projection (Brush > Projection > Mode)"));
       }
     }
     if (ImGui::TreeNode(L_("Adjust"))) {

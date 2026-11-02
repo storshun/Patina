@@ -266,13 +266,24 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.17 (2026-11-01)
+### 1.2.18 (2026-11-01)
+
+#### Changed
+
+- **Follow the stroke works in every projection mode.** With **Surface 3D sphere** the material follows the stroke
+  along the model's surface, so it reaches into cracks and under other parts. With **UV space**, and in the UV
+  editor, it follows the stroke across the texture. It was Screen only.
+
+<details>
+<summary><b>1.2.17 (2026-11-01)</b></summary>
 
 #### Fixed
 
 - **Follow the stroke turns smoothly.** The pattern stepped at every dab round a turn, even a long sweeping one, which
   showed as stairs in a material with many lines. Each texel now takes its place from the nearest point on the
   stroke's path, so lines run on smoothly round a curve. The stroke's end no longer smears into one stretched stripe.
+
+</details>
 
 <details>
 <summary><b>1.2.16 (2026-11-01)</b></summary>

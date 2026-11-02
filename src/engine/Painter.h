@@ -175,6 +175,7 @@ class Painter {
   // (1.2.16) the material follows the stroke: per texel along / across the stroke (screen pixels; 1e30 none), each
   // symmetry copy's path so far, and the material's units per screen pixel
   Texture2D ribbon_;
+  Texture2D ribbonDist_;  // (1.2.17) how far each texel is from its place on the path (pixels)
   bool ribbonOn_ = false;
   float ribbonPx_ = 1.f;
   struct RibbonPath {

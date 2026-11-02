@@ -3,6 +3,14 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.17 (2026-11-01)
+
+### Fixed
+
+- **Follow the stroke turns smoothly.** The pattern stepped at every dab round a turn, even a long sweeping one, which
+  showed as stairs in a material with many lines. Each texel now takes its place from the nearest point on the
+  stroke's path, so lines run on smoothly round a curve. The stroke's end no longer smears into one stretched stripe.
+
 ## 1.2.16 (2026-11-01)
 
 ### Added

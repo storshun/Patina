@@ -155,8 +155,11 @@ bool Painter::beginStroke(Document& doc, MaterialLibrary& mats, BrushLibrary& br
     if (!ribbon_.valid() || ribbon_.size() != res) {
       ribbon_.create(res.x, res.y, GL_RG32F, 1);
       ribbon_.setFilter(GL_NEAREST, GL_NEAREST);
+      ribbonDist_.create(res.x, res.y, GL_R16F, 1);
+      ribbonDist_.setFilter(GL_NEAREST, GL_NEAREST);
     }
     ribbon_.clear(vec4(1e30f));
+    ribbonDist_.clear(vec4(60000.f));
     ribbonPaths_.assign(8 * 64, RibbonPath());
     // the pattern as big as the material's own projection makes it where the stroke starts: object units per pixel
     // there (the screen projection: a view height is its scale 1)
@@ -167,7 +170,7 @@ bool Painter::beginStroke(Document& doc, MaterialLibrary& mats, BrushLibrary& br
     float dist = h.hit ? h.t : glm::length(view_.camera.eye() - doc.mesh.bounds.center());
     ribbonPx_ = material.mapping == 2 ? 1.f / std::max(view_.viewport.y, 1.f) : view_.camera.ortho ? pw : pw * dist;
   } else {
-    ribbon_ = Texture2D();  // (its memory back)
+    ribbon_ = Texture2D(), ribbonDist_ = Texture2D();  // (their memory back)
   }
   releaseLock();
   lock_ = lockEnabled() ? Lock::Pending : Lock::Off;
@@ -362,15 +365,15 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
   const bool ribbon = ribbonOn_ && &target == &strokeMask_ && mode == 0;
   Framebuffer fbo;
   fbo.attach(0, target);
-  if (ribbon) fbo.attach(1, ribbon_);
-  fbo.setDrawBuffers(ribbon ? 2 : 1);
+  if (ribbon) fbo.attach(1, ribbon_), fbo.attach(2, ribbonDist_);
+  fbo.setDrawBuffers(ribbon ? 3 : 1);
   gl::FramebufferScope fs(fbo.id());
   gl::ViewportScope vp(0, 0, res.x, res.y);
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
   glEnable(GL_BLEND);
   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-  if (ribbon) glDisablei(GL_BLEND, 1);  // (the latest dab's place is written as it is)
+  if (ribbon) glDisablei(GL_BLEND, 1), glDisablei(GL_BLEND, 2);  // (the place on the path is written as it is)
   Shader& s = ShaderCache::get("uvraster.vs.glsl", "paint_stamp.fs.glsl");
   s.set("uRibbon", ribbon ? 1 : 0);
   // (1.2.5) a screen stroke's mirror copies the camera can't see go on the surface: a pass of their own after
@@ -424,6 +427,7 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
             if (!rp.started) {
               rp.started = true, rp.last = dab.pos, rp.angle = dab.dirAngle;
             } else if (vec2 step = dab.pos - rp.last; glm::length(step) > 1e-3f) {
+              N[k] = vec4(rp.last, rp.along, 1.f);  // (1.2.17) its segment of the path, from the dab before
               rp.angle = std::atan2(step.y, step.x);
               rp.along += glm::length(step);
               rp.last = dab.pos;
@@ -432,6 +436,12 @@ void Painter::renderDabsInto(Texture2D& target, const Dab* dabs, size_t count) {
             B[k].w = rp.angle;
           }
         }
+      }
+      if (ribbon) {
+        // (1.2.17) the shader reads the ribbon it writes, each texel its own: the writes before this draw done first
+        s.tex("uRibbonPrev", 2, ribbon_.id());
+        s.tex("uRibbonDistPrev", 3, ribbonDist_.id());
+        glTextureBarrier();
       }
       s.set("uStampCount", n);
       s.setArray("uStampA", A, n);

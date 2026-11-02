@@ -266,7 +266,16 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.16 (2026-11-01)
+### 1.2.17 (2026-11-01)
+
+#### Fixed
+
+- **Follow the stroke turns smoothly.** The pattern stepped at every dab round a turn, even a long sweeping one, which
+  showed as stairs in a material with many lines. Each texel now takes its place from the nearest point on the
+  stroke's path, so lines run on smoothly round a curve. The stroke's end no longer smears into one stretched stripe.
+
+<details>
+<summary><b>1.2.16 (2026-11-01)</b></summary>
 
 #### Added
 
@@ -282,6 +291,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
   slider turns it, so you see which way it will lie before you paint.
 - **Send to Blender and Auto-Send are on the menu bar.** They were in the Blender menu. **Auto-Send** is filled while
   it is on. Both work once a Blender object is linked.
+
+</details>
 
 <details>
 <summary><b>1.2.15 (2026-10-31)</b></summary>

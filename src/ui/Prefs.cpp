@@ -524,6 +524,8 @@ void App::loadSession() {
       if (!m.id.empty() && !engine.materials.find(m.id)) m.id.clear();
       P.material = m;
     }
+    P.materialFollow = j.value("material_follow", P.materialFollow);
+    P.followLag = std::clamp(j.value("material_follow_rope", P.followLag), 0.f, 200.f);
     tool = (ViewportTool)std::clamp(j.value("tool", 0), 0, (int)ViewportTool::Island);
     if (tool == ViewportTool::SelectFaces || tool == ViewportTool::Seams || tool == ViewportTool::Island) tool = ViewportTool::Paint;
     P.channelMask = j.value("channel_mask", P.channelMask);
@@ -619,6 +621,8 @@ void App::saveSession(bool force) {
             {"tool_brushes", engine.toolBrushesJson()},
             {"material_id", engine.selectedMaterialId},
             {"material", P.material.toJson()},
+            {"material_follow", P.materialFollow},
+            {"material_follow_rope", P.followLag},
             {"tool", (int)tool},
             {"channel_mask", P.channelMask},
             {"channels_v", 2},

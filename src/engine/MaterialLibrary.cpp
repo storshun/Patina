@@ -852,8 +852,14 @@ GLuint MaterialLibrary::thumbnail(Entry& e, const Environment& env, bool wait) {
     return 0;
   }
   if (!ensureBaked(e, 256)) return 0;
-  renderThumbnail(e, e.gpu, env);
+  renderThumbnail(e.gpu.thumbnail, e.def.type, e.gpu, env);
   return e.gpu.thumbnail.id();
+}
+
+bool MaterialLibrary::turnedThumbnail(Entry& e, const Environment& env, float rotationDeg, Texture2D& out) {
+  if (!ensureBaked(e, 256)) return false;  // (an image material not painted with yet: its maps read now, once)
+  renderThumbnail(out, e.def.type, e.gpu, env, rotationDeg);
+  return true;
 }
 
 // (1.2.15) the maps the worker threads have read: uploaded, made into the pictures, and let go
@@ -873,16 +879,17 @@ void MaterialLibrary::collectThumbnails(const Environment& env) {
       continue;
     MaterialGpu maps;
     uploadImageMaps(maps, d.maps);
-    renderThumbnail(*e, maps, env);
+    renderThumbnail(e->gpu.thumbnail, e->def.type, maps, env);
   }
 }
 
-void MaterialLibrary::renderThumbnail(Entry& e, const MaterialGpu& maps, const Environment& env) {
+void MaterialLibrary::renderThumbnail(Texture2D& out, MaterialType type, const MaterialGpu& maps, const Environment& env,
+                                      float rotationDeg) {
   ensureDefaults();
   const int S = 128;
-  e.gpu.thumbnail.create(S, S, GL_RGBA8, 1);
+  if (!out.valid() || out.width() != S) out.create(S, S, GL_RGBA8, 1);
   Framebuffer fbo;
-  fbo.attach(0, e.gpu.thumbnail);
+  fbo.attach(0, out);
   fbo.setDrawBuffers(1);
   gl::FramebufferScope fs(fbo.id());
   gl::ViewportScope vp(0, 0, S, S);
@@ -897,8 +904,9 @@ void MaterialLibrary::renderThumbnail(Entry& e, const MaterialGpu& maps, const E
   s.tex("uEmissiveTex", 3, maps.emissive.id());
   s.tex("uExtraTex", 6, maps.extra.valid() ? maps.extra.id() : extraDefault_.id());
   env.bind(s, 4, 5);
-  s.set("uTiles", e.def.type == MaterialType::Flat ? 1.f : 2.f);
+  s.set("uTiles", type == MaterialType::Flat ? 1.f : 2.f);
   s.set("uShape", 0);
+  s.set("uRotation", glm::radians(rotationDeg));
   s.use();
   drawFullscreenTriangle();
 }

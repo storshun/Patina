@@ -1234,10 +1234,18 @@ void Engine::registerCommands() {
                  {"roughness_offset", num("number", "Added to the material's roughness", -1, 1)},
                  {"metallic_override", num("number", "Forces the metallic value everywhere; -1 keeps the material's own", -1, 1)},
                  {"height_scale", num("number", "Scales the height relief: 0 flat, 2 twice as deep", 0, 4)},
-                 {"normal_strength", num("number", "Scales the normal detail: 0 none, 2 twice as strong", 0, 4)}}),
+                 {"normal_strength", num("number", "Scales the normal detail: 0 none, 2 twice as strong", 0, 4)},
+                 {"follow_stroke", prop("boolean", "(1.2.16) The material follows the stroke: laid along its path on screen like a ribbon, turning where the stroke turns (rotation turns it on top); the stroke trails the cursor on a rope. Paint tool, Screen brush projection. Default off")},
+                 {"follow_rope", num("number", "(1.2.16) follow_stroke: how far the stroke trails the cursor, pixels; longer is smoother", 0, 200, 24)}}),
          [](CommandContext& c, const json& a) {
            applyMaterialArgs(c.engine, a);
-           return c.engine.painter.material.toJson();
+           Painter& P = c.engine.painter;
+           P.materialFollow = a.value("follow_stroke", P.materialFollow);
+           P.followLag = std::clamp(a.value("follow_rope", P.followLag), 0.f, 200.f);
+           json r = P.material.toJson();
+           r["follow_stroke"] = P.materialFollow;
+           r["follow_rope"] = P.followLag;
+           return r;
          }});
 
   // ---------------------------------------------------------------- brushes / tools

@@ -10,13 +10,14 @@ in vec4 vAux;
 flat in uint vFlags;
 flat in uint vFace;
 
-out vec4 oMask;
+layout(location = 0) out vec4 oMask;
+layout(location = 1) out vec2 oRibbon;  // (1.2.16) the material follows the stroke: along / across it, pixels
 
 #define MAX_STAMPS 64
 uniform int uMode;            // 0 screen projection, 1 3D surface sphere, 2 UV space, 3 face-flag fill
 uniform int uStampCount;
 uniform vec4 uStampA[MAX_STAMPS];  // screen/uv: xy center, z radius, w angle | surface: xyz center, w radius
-uniform vec4 uStampB[MAX_STAMPS];  // x flow, y roundness, z angle (surface), w unused
+uniform vec4 uStampB[MAX_STAMPS];  // x flow, y roundness, z angle (surface) | screen ribbon: z along, w direction
 uniform vec4 uStampN[MAX_STAMPS];  // surface: brush normal xyz
 uniform sampler2D uAlpha;
 uniform float uHardness;      // 0 soft .. 1 hard
@@ -36,6 +37,7 @@ uniform int uOcclusion;       // 1 = only paint visible surfaces
 uniform float uAngleFalloff;  // 0 = none; otherwise cos of the grazing limit
 uniform uint uFillFlag;
 uniform uint uLockFlag;       // != 0: only faces with this loop flag (topology / island lock)
+uniform int uRibbon;          // (1.2.16) 1: oRibbon gets the latest dab's along / across (screen mode)
 
 float linearDepth(float d) {
   if (uOrtho == 1) return uNear + d * (uFar - uNear);
@@ -131,6 +133,24 @@ void main() {
                   accumulateScreen(sp + dx - dy) + accumulateScreen(sp - dx - dy));
     }
     s *= facingW;
+    if (uRibbon == 1 && s > 0.0) {
+      // the latest dab over this texel lays its part of the stroke: along = the stroke's length there plus the
+      // offset along its direction, across = the offset to its side (the dabs agree where they overlap)
+      int best = -1, near = 0;
+      float nearD = 1e30;
+      for (int i = uStampCount - 1; i >= 0; --i) {
+        vec2 d = (sp - uStampA[i].xy) / uStampA[i].z;
+        float dd = dot(d, d);
+        if (dd < nearD) nearD = dd, near = i;
+        if (dd < 1.0 / max(uStampB[i].y * uStampB[i].y, 1e-4)) {
+          best = i;
+          break;
+        }
+      }
+      if (best < 0) best = near;
+      vec2 local = sp - uStampA[best].xy, dir = vec2(cos(uStampB[best].w), sin(uStampB[best].w));
+      oRibbon = vec2(uStampB[best].z + dot(local, dir), dot(local, vec2(-dir.y, dir.x)));
+    }
   }
   if (s <= 0.0) discard;
   oMask = vec4(s);

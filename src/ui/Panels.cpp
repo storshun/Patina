@@ -311,14 +311,8 @@ void App::drawMenuBar() {
   }
   if (menuHeader(engine, "blender", L_("Blender"))) {
     bool linked = d.bridge.active;
-    if (ImGui::MenuItem(L_("Send Textures to Blender"), keyLabel("blender.send"), false, linked)) {
-      std::string err;
-      if (engine.pushToBlender(&err)) setStatus(T_("Sent textures to Blender"));
-      else setStatus(F_("Send failed: %s", err.c_str()));
-    }
-    ImGui::MenuItem(L_("Auto-Send After Changes"), nullptr, &engine.autoPushToBlender, linked);
+    // (1.2.16) Send Textures to Blender and Auto-Send After Changes are buttons on the menu bar (menuBarBlenderButtons)
     if (engine.features.on("model_export")) {
-      ImGui::Separator();
       if (ImGui::MenuItem(L_("Send Model to Blender as a New Object"), nullptr, false, d.hasMesh())) {
         json r;
         if (runCommand("send_model_to_blender", json::object(), &r))
@@ -349,9 +343,49 @@ void App::drawMenuBar() {
     if (ImGui::MenuItem(L_("About Patina"))) showAbout = true;
     ImGui::EndMenu();
   }
+  menuBarBlenderButtons();
   if (blenderOn()) blenderStepTabs();  // (1.2.7) the steps as workspace tabs
   layoutSwitch();  // (0.46) Guided | Full; (1.2.7) | Blender
   ImGui::EndMainMenuBar();
+}
+
+// (1.2.16) on the menu bar, one click away: send the textures to Blender, and switch sending after every change on or
+// off (filled while it is on). Only with a Blender object linked.
+void App::menuBarBlenderButtons() {
+  const bool linked = engine.doc.bridge.active;
+  const float s = uiScale;
+  ImGui::SameLine(0, 10.f * s);
+  ImGui::BeginDisabled(!linked);
+  auto rect = [&](const char* key) {
+    ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
+    engine.uiRects[key] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
+  };
+  if (ImGui::Button(L_("Send to Blender"))) {
+    std::string err;
+    if (engine.pushToBlender(&err)) setStatus(T_("Sent textures to Blender"));
+    else setStatus(F_("Send failed: %s", err.c_str()));
+  }
+  rect("menubar.blender_send");
+  const char* unlinked = T_("Not linked: use 'Send to Patina' in Blender first");
+  if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+    ImGui::SetTooltip("%s", linked ? F_("Send the textures to Blender (%s)", keyLabel("blender.send")).c_str() : unlinked);
+  const bool autoOn = engine.autoPushToBlender;
+  if (autoOn) {
+    ImGui::PushStyleColor(ImGuiCol_Button, ui::theme().accentDeep);
+    ImGui::PushStyleColor(ImGuiCol_Text, ui::theme().onAccent);
+  }
+  if (ImGui::Button(L_("Auto-Send"))) {
+    engine.autoPushToBlender = !engine.autoPushToBlender;
+    setStatus(engine.autoPushToBlender ? T_("The textures go to Blender after every change")
+                                       : T_("The textures go to Blender only when you send them"));
+  }
+  if (autoOn) ImGui::PopStyleColor(2);
+  rect("menubar.blender_auto");
+  if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+    ImGui::SetTooltip("%s", !linked ? unlinked
+                            : autoOn ? T_("On: the textures go to Blender after every change. Click to turn it off.")
+                                     : T_("Off: click to send the textures to Blender after every change."));
+  ImGui::EndDisabled();
 }
 
 void App::handleShortcuts() {
@@ -614,8 +648,24 @@ void App::drawProperties() {
     MaterialRef& m = P.material;
     auto* e = m.id.empty() ? nullptr : engine.materials.find(m.id);
     if (e) {
-      const GLuint th = engine.materials.thumbnail(*e, engine.env, false);
+      GLuint th = engine.materials.thumbnail(*e, engine.env, false);
+      // (1.2.16) the ball turns as the Rotation turns the pattern (drawn again when either changes)
+      if (th && std::abs(m.rotationDeg) > 0.05f && e->def.type != MaterialType::Flat) {
+        char key[160];
+        std::snprintf(key, sizeof key, "%s|%.1f|%d|%u", e->def.id.c_str(), m.rotationDeg, e->gpu.bakedSize,
+                      e->gpu.color.id());
+        if (paintBallKey != key && engine.materials.turnedThumbnail(*e, engine.env, m.rotationDeg, paintBallTurned)) {
+          std::snprintf(key, sizeof key, "%s|%.1f|%d|%u", e->def.id.c_str(), m.rotationDeg, e->gpu.bakedSize,
+                        e->gpu.color.id());  // (the bake it made, if any)
+          paintBallKey = key;
+        }
+        if (paintBallTurned.valid()) th = paintBallTurned.id();
+      }
       ImGui::Image(texId(th), ImVec2(56, 56) * uiScale);
+      {
+        ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
+        engine.uiRects["props.material_ball"] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
+      }
       if (!th) ui::loadingSpinner(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
       ImGui::SameLine();
       ImGui::BeginGroup();
@@ -638,6 +688,21 @@ void App::drawProperties() {
     helpMarker(T_("Tri-planar ignores UV layout entirely; Screen projects the material from the camera like a decal"));
     ImGui::SliderFloat(L_("Scale##mat"), &m.scale, 0.05f, 20.f, "%.2f", ImGuiSliderFlags_Logarithmic);
     ImGui::SliderFloat(L_("Rotation##mat"), &m.rotationDeg, -180.f, 180.f);
+    {
+      // (1.2.16) the material follows the stroke: laid along its path on screen, turning where it turns
+      ImGui::Checkbox(L_("Follow the stroke##mat"), &P.materialFollow);
+      ImVec2 a = ImGui::GetItemRectMin(), b = ImGui::GetItemRectMax();
+      engine.uiRects["props.material_follow"] = {a.x, a.y, b.x - a.x, b.y - a.y};  // (for tests)
+      ImGui::SetItemTooltip("%s", T_("The material is laid along the stroke and turns where the stroke turns on screen,\n"
+                                     "like a ribbon. The stroke trails the cursor on a rope (a lazy mouse) so the turns\n"
+                                     "are smooth. Rotation turns it on top. For the Paint tool with the Screen projection."));
+      if (P.materialFollow) {
+        ImGui::SliderFloat(L_("Rope##mat"), &P.followLag, 0.f, 200.f, T_("%.0f px"));
+        ImGui::SetItemTooltip("%s", T_("How far the stroke trails the cursor: longer is smoother"));
+        if (P.brush.projection != BrushProjection::Screen)
+          ImGui::TextColored(ui::theme().accentLight, "%s", T_("Works with the Screen projection (Brush > Projection > Mode)"));
+      }
+    }
     if (ImGui::TreeNode(L_("Adjust"))) {
       colorEdit(L_("Tint"), m.tint);
       ImGui::SliderFloat(L_("Rough scale"), &m.roughnessScale, 0.f, 2.f);

@@ -74,6 +74,20 @@ vec2 atlasToMeshUV(vec2 a) {
   return a * g - c + uAtlasOrigin[int(c.y) * uAtlasGrid + int(c.x)];
 }
 
+// the material at a plane position (UV and screen mappings, and the follow-the-stroke ribbon)
+MatSample sampleMaterialPlanar(vec2 uv) {
+  MatSample s;
+  MatTap t = matTap(uv);
+  s.color = t.color;
+  s.rough = t.rmh.r;
+  s.metal = t.rmh.g;
+  s.height = t.rmh.b;
+  s.emissive = t.emissive;
+  s.extra = t.extra;
+  s.normal = t.n;  // (screen projection: the plane's normal is toward the camera; the mesh normal frame stands in)
+  return s;
+}
+
 // pos/normal: object space; T/sign: mesh tangent frame; meshUV: texture coordinate
 MatSample sampleMaterial(vec3 pos, vec3 N, vec4 T, vec2 meshUV) {
   MatSample s;
@@ -95,19 +109,7 @@ MatSample sampleMaterial(vec3 pos, vec3 N, vec4 T, vec2 meshUV) {
       // centered on the view, image aspect preserved: scale 1 = image fills the view height
       uv = vec2(ndc.x * uMatScreenAspect / max(uMatImageAspect, 1e-3), ndc.y) * 0.5 * uMatScale + 0.5;
     }
-    MatTap t = matTap(uv);
-    s.color = t.color;
-    s.rough = t.rmh.r;
-    s.metal = t.rmh.g;
-    s.height = t.rmh.b;
-    s.emissive = t.emissive;
-    s.extra = t.extra;
-    if (uMatMapping == 1) {
-      s.normal = t.n;
-    } else {
-      // screen projection: plane normal = toward camera; approximate with mesh normal frame
-      s.normal = t.n;
-    }
+    s = sampleMaterialPlanar(uv);
   } else {
     vec3 w = pow(abs(N), vec3(uMatTriSharpness));
     w /= max(w.x + w.y + w.z, 1e-5);

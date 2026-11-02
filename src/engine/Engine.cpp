@@ -940,6 +940,8 @@ json Engine::state() {
   s["brush"]["tool"] = features.on("tool_brushes") ? json(brushSlotName(brushSlot)) : json("every");  // (1.2.13) whose brush it is (Features: tool_brushes)
   s["tool_brushes"] = features.on("tool_brushes") ? toolBrushesJson() : json::object();
   s["material"] = painter.material.toJson();
+  s["material"]["follow_stroke"] = painter.materialFollow;  // (1.2.16)
+  s["material"]["follow_rope"] = painter.followLag;
   static const char* tools[] = {"paint", "erase", "fill", "picker", "blur", "clone", "smudge"};
   s["tool"] = tools[(int)painter.tool];
   if (!windowTool.empty()) s["window_tool"] = windowTool;

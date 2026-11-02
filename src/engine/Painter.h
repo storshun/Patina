@@ -57,6 +57,11 @@ class Painter {
   vec2 cloneOffsetUV() const { return cloneOffsetUV_; }
   bool cloneOffsetValid() const { return cloneOffsetValid_; }
   float maskValue = 1.f;  // value painted into masks with the Paint tool
+  // (1.2.16) the material follows the stroke: its pattern laid along the stroke's path on screen, turning where the
+  // stroke turns (Rotation turns it on top), the stroke trailing the cursor on a rope of followLag pixels (a lazy
+  // mouse) so the turns are smooth. The Paint tool with the Screen projection.
+  bool materialFollow = false;
+  float followLag = 24.f;
   Stencil stencil;        // screen-fixed picture strokes paint through (mask) or paint (decal)
   // Stroke locks: a stroke only paints the connected part of the mesh (topology) or the
   // UV island (island) under its first dab, plus their symmetry counterparts.
@@ -115,6 +120,7 @@ class Painter {
     bool hit = true;   // smudge: the dab landed on the surface (c3 valid)
     float worldR = 0;  // smudge: radius on the surface (object units), for the texture-space bounds
     bool onSurface = false;  // (1.2.5) a screen brush's mirror copy the camera can't see: stamped on the surface
+    float dirAngle = 0.f;    // (1.2.16) the stroke's direction there (screen, GL y up), radians
   };
   void emitAlong(vec2 from, vec2 to, float p0, float p1);
   void emitDab(vec2 pos, float pressure, vec2 dir);
@@ -166,6 +172,17 @@ class Painter {
 
   RenderTarget depth_;
   Texture2D strokeMask_;
+  // (1.2.16) the material follows the stroke: per texel along / across the stroke (screen pixels; 1e30 none), each
+  // symmetry copy's path so far, and the material's units per screen pixel
+  Texture2D ribbon_;
+  bool ribbonOn_ = false;
+  float ribbonPx_ = 1.f;
+  struct RibbonPath {
+    vec2 last{0.f};
+    float along = 0.f, angle = 0.f;
+    bool started = false;
+  };
+  std::vector<RibbonPath> ribbonPaths_;
   Texture2D dummyTransparent_;
   Texture2D dabMask_;          // smudge: one dab's coverage
   Texture2D smudgeTmp_[kChannelCount];  // smudge: copies of the live channels around the dab

@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.15 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.16 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -74,6 +74,13 @@ visible?</i></p>
 Seams don't break it, islands at different scales don't stretch it, and rotated or mirrored islands don't twist it.
 Materials are sampled in 3D as well, using <b>tri-planar</b> projection, so a wood grain or tile pattern lines up across
 seams too.</p>
+<p>The <b>Paint material</b> section of the Brush panel sets the material's projection, scale and <b>Rotation</b>.
+The material's ball turns with the Rotation, so you see which way the pattern will lie before you paint (1.2.16).</p>
+<p><b>Follow the stroke</b> (1.2.16) lays the material along the stroke like a ribbon. Where the stroke turns on screen,
+the pattern turns with it, so stripes, planks or stitches follow a curve. The stroke trails the cursor on a rope (a lazy
+mouse), so the turns stay smooth: <b>Rope</b> sets how far it trails, in pixels, and a longer rope is smoother. The
+Rotation turns the pattern on top. It works with the Paint tool and the Screen projection (<i>Brush › Projection ›
+Mode</i>). The pattern starts the size the material's own projection gives it where the stroke starts.</p>
 
 <h2 id="tools">Tools</h2>
 <table>

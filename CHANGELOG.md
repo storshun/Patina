@@ -3,6 +3,23 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.16 (2026-11-01)
+
+### Added
+
+- **Follow the stroke.** In the Brush panel's **Paint material** section, this lays the material along the stroke like
+  a ribbon. Where the stroke turns on screen, the pattern turns with it, so stripes, planks or stitches follow a curve.
+  The stroke trails the cursor on a rope (a lazy mouse) so the turns stay smooth, and **Rope** sets how far it trails.
+  **Rotation** turns the pattern on top. It works with the Paint tool and the Screen projection. MCP:
+  `set_paint_material` `follow_stroke` and `follow_rope`.
+
+### Changed
+
+- **The material ball turns with the Rotation.** The Paint material's ball shows the pattern turned as the Rotation
+  slider turns it, so you see which way it will lie before you paint.
+- **Send to Blender and Auto-Send are on the menu bar.** They were in the Blender menu. **Auto-Send** is filled while
+  it is on. Both work once a Blender object is linked.
+
 ## 1.2.15 (2026-10-31)
 
 ### Fixed

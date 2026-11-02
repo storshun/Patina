@@ -39,6 +39,22 @@ uniform sampler2D uStrokeMask;
 uniform sampler2D uPosMap;
 uniform sampler2D uNrmMap;
 uniform sampler2D uTanMap;
+// (1.2.16) the material follows the stroke: per texel its place along / across the stroke in screen pixels (x 1e30:
+// none, the material's own projection), and the material's units per pixel at scale 1
+uniform int uRibbonOn;
+uniform sampler2D uRibbon;
+uniform float uRibbonPx;
+MatSample paintMaterial(ivec2 p, vec3 pos, vec3 N, vec4 T, vec2 meshUV) {
+  if (uRibbonOn == 1 && uMatHasTex == 1) {
+    vec2 r = texelFetch(uRibbon, p, 0).rg;
+    if (r.x < 1e29) {
+      vec2 q = r * uRibbonPx * uMatScale;
+      if (uMatMapping == 2) q.x /= max(uMatImageAspect, 1e-3);
+      return sampleMaterialPlanar(q);
+    }
+  }
+  return sampleMaterial(pos, N, T, meshUV);
+}
 
 uniform sampler2D uSeamMap;   // gutter texel -> UV across the seam (x < 0 none)
 uniform int uUseSeams;
@@ -266,8 +282,8 @@ void main() {
   if ((uTool == 8) && (m <= 0.0 || !covered(p))) discard;
   vec4 v = vec4(1, 0, 0, 0);
   if (uTool == 0 && m > 0.0) {
-    MatSample ms = sampleMaterial(texelFetch(uPosMap, p, 0).xyz, normalize(texelFetch(uNrmMap, p, 0).xyz),
-                                  texelFetch(uTanMap, p, 0), vUV);
+    MatSample ms = paintMaterial(p, texelFetch(uPosMap, p, 0).xyz, normalize(texelFetch(uNrmMap, p, 0).xyz),
+                                 texelFetch(uTanMap, p, 0), vUV);
     v = ms.extra;
   }
   oX0 = extraOne(0, uSnapX0, p, m, uChanOpacity2.x, v.x);
@@ -428,7 +444,7 @@ void main() {
   vec4 P = texelFetch(uPosMap, p, 0);
   vec4 N = texelFetch(uNrmMap, p, 0);
   vec4 T = texelFetch(uTanMap, p, 0);
-  MatSample ms = sampleMaterial(P.xyz, normalize(N.xyz), T, vUV);
+  MatSample ms = paintMaterial(p, P.xyz, normalize(N.xyz), T, vUV);
   if (uStencilOn == 1 && uStencilMode == 1) ms.color = stencil.rgb;  // decal: the picture's colors
   oColor = over(sc, ms.color, m * uChanOpacity0.x);
   oRough = vec4(over1(sr.rg, ms.rough, m * uChanOpacity0.y), 0, 1);

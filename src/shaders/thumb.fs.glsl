@@ -13,6 +13,7 @@ uniform vec4 uSH[9];
 uniform float uEnvMips;
 uniform float uTiles;
 uniform int uShape;  // 0 sphere, 1 flat swatch
+uniform float uRotation;  // (1.2.16) radians: the pattern turned as the paint material's Rotation turns it
 vec3 irradianceSH(vec3 n) {
   float x = n.x, y = n.y, z = n.z;
   vec3 r = uSH[0].rgb * 0.886227 + uSH[1].rgb * 1.023328 * y + uSH[2].rgb * 1.023328 * z +
@@ -39,10 +40,14 @@ void main() {
       if (a <= 0.0) return;
     }
     N = normalize(vec3(p, sqrt(max(1.0 - r2, 0.0))));
+    // (1.2.16) the ball turned round the view axis for the lookup, so the pattern turns on screen
+    vec3 Nt = vec3(rot2(uRotation) * N.xy, N.z);
     // spherical uv
-    uv = vec2(atan(N.x, N.z) / (2.0 * PI) + 0.5, acos(-N.y) / PI) * vec2(2.0, 1.0) * uTiles * 0.5;
-    T = normalize(vec3(N.z, 0.0, -N.x) + 1e-5);
-    B = cross(N, T);
+    uv = vec2(atan(Nt.x, Nt.z) / (2.0 * PI) + 0.5, acos(-Nt.y) / PI) * vec2(2.0, 1.0) * uTiles * 0.5;
+    T = normalize(vec3(Nt.z, 0.0, -Nt.x) + 1e-5);
+    B = cross(Nt, T);
+    T.xy = transpose(rot2(uRotation)) * T.xy;  // (back to the ball as seen: the lighting stays)
+    B.xy = transpose(rot2(uRotation)) * B.xy;
   }
   vec3 base = srgbToLinear(texture(uColorTex, uv).rgb);
   vec4 rmh = texture(uRMHTex, uv);

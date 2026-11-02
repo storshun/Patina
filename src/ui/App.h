@@ -248,6 +248,9 @@ class App {
   };
   std::map<uint32_t, LayerThumb> layerThumbs;
   int thumbBudget = 0;
+  // (1.2.16) the Paint material's ball turned by its Rotation, and what it was drawn for
+  Texture2D paintBallTurned;
+  std::string paintBallKey;
   const LayerThumb& layerThumb(const Layer& l);
   struct ScribblePoint { vec2 p; float w; bool start; };
   std::vector<ScribblePoint> scribble;
@@ -906,6 +909,7 @@ class App {
   bool outlinerDrawing = false;     // layersTree draws the Outliner's layers (its search applies)
   void drawBlenderLayout();
   void blenderStepTabs();           // the steps as workspace tabs, in the menu bar
+  void menuBarBlenderButtons();     // (1.2.16) Send to Blender and Auto-Send, on the menu bar
   void setBlenderStep(GuidedStep s);
   void drawOutliner();
   void drawPropertiesEditor();

@@ -166,6 +166,8 @@ class MaterialLibrary {
   // The material's picture (a sphere, 128 pixels). (1.2.15) wait=false, for the lists: an image material's maps are
   // read on a worker thread at the picture's size, and it is 0 until they are (the list draws a spinner).
   GLuint thumbnail(Entry& e, const Environment& env, bool wait = true);
+  // (1.2.16) the picture turned by `rotationDeg` (the paint material's Rotation), drawn into `out` (128 pixels)
+  bool turnedThumbnail(Entry& e, const Environment& env, float rotationDeg, Texture2D& out);
   // Which of opacity, sheen, clearcoat and subsurface (channel bits 64..512) a material has at other than
   // their defaults (opaque, none): a brush paints only those of them (and those the layer has already).
   int extraChannelsUsed(const MaterialRef& ref);
@@ -181,7 +183,8 @@ class MaterialLibrary {
   std::vector<std::unique_ptr<Entry>> entries_;
   Texture2D white_, flatNormal_, black_, extraDefault_;
   void ensureDefaults();
-  void renderThumbnail(Entry& e, const MaterialGpu& maps, const Environment& env);
+  void renderThumbnail(Texture2D& out, MaterialType type, const MaterialGpu& maps, const Environment& env,
+                       float rotationDeg = 0.f);
   // (1.2.15) the image materials whose pictures' maps are being read, and the maps the worker threads have read
   struct ThumbInbox;
   std::shared_ptr<ThumbInbox> thumbInbox_;

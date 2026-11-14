@@ -261,6 +261,8 @@ void main() {
   if (uShowPins == 1 && (vFlags & 8u) != 0u && fract((gl_FragCoord.x + gl_FragCoord.y) / 14.0) < 0.36)
     outc = mix(outc, vec3(0.22, 0.52, 1.0), 0.7);
   if (vIds.x == uHoverFace) outc = mix(outc, vec3(1.0, 1.0, 0.4), 0.18);
+  // (1.2.19) the piece under the Solo picker (Document::kHoverPieceFlag): lit, its outline read from the light
+  if ((vFlags & 64u) != 0u) outc = mix(outc, vec3(0.45, 0.85, 1.0), 0.35);
   if (uIsolateTile >= 0 && int((vFlags >> 16u) & 255u) != uIsolateTile)
     outc = vec3(0.16, 0.17, 0.19) + 0.08 * max(dot(Ng, V), 0.0);
   if (uAlphaPass == 1 && alpha < 0.995) discard;

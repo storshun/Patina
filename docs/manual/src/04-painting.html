@@ -217,6 +217,27 @@ island lock decides (an island never spans two separate pieces of mesh). The tog
 and Claude can set them with <code>set_brush</code> (<code>lock_topology</code>, <code>lock_island</code>,
 <code>lock_set</code>).</p>
 
+<h2 id="solo">Solo: one piece alone</h2>
+<p>To paint one piece of a model by itself (the hair, the eyelashes, a face piece, a sleeve), show it alone. Hidden
+faces leave the 3D view and the UV editor, and they take no paint from any brush, projection mode or fill. They also
+stop hiding what is behind them, so a brush reaches under a collar or between hair cards.</p>
+<table>
+  <tr><th>Do this</th><th>Key</th><th>What happens</th></tr>
+  <tr><td>Show the piece under the pointer alone</td><td><kbd>Shift</kbd>+<kbd>H</kbd></td><td>Everything else is hidden. Again on the same piece: everything shows.</td></tr>
+  <tr><td>Hide the piece under the pointer</td><td><kbd>H</kbd></td><td>That piece is hidden, the rest stays as it is.</td></tr>
+  <tr><td>Show everything</td><td><kbd>Alt</kbd>+<kbd>H</kbd></td><td>Every piece and every hidden face set comes back.</td></tr>
+</table>
+<p>The [[icon:solo]] <b>Solo</b> button on the viewport bar turns on the picker. The piece under the pointer is lit;
+a click shows it alone, <kbd>Shift</kbd>+click shows it too, <kbd>Ctrl</kbd>+click hides it. These clicks don't paint.
+Press <kbd>Esc</kbd> or <b>Done</b> to paint again; what is hidden stays hidden. While anything is hidden, a bar over
+the 3D view says how much, with <b>Invert</b> and <b>Show All</b>. In that bar you choose what a piece is: a
+<b>UV Island</b> (the default), a <b>Connected Part</b> of the mesh, a <b>Material Slot</b> or a
+<a href="uv.html#face-sets">face set</a>.</p>
+<p>Each change is one undo step, and what's hidden is saved with the project. Renders, exports and Send to Blender
+keep every face. One thing Solo can't separate: islands stacked on the same place in the UVs (a mirrored half, hair
+cards sharing an atlas strip) share their texels, so paint on one shows on the other. Claude uses <code>solo</code>
+(<code>action</code> only, add, hide, show_all or invert; <code>by</code>; a <code>face</code> or <code>point</code>).</p>
+
 <h2 id="colors">Colors</h2>
 <p>When the brush paints a flat color (no library material selected), the <b>Colors</b> panel next to Properties is
 the place to choose it.</p>

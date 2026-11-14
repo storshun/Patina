@@ -173,6 +173,11 @@ void App::initKeymap(KeymapPreset preset) {
       {"object.turn", N_("Object tool: turn the object about the line of sight (X, Y, Z: an axis; click: keep it)"), N_("Tools"), ImGuiKey_R, ImGuiKey_R, 0, 0},
       {"object.scale", N_("Object tool: scale the object evenly (X, Y, Z: along one axis; click: keep it)"), N_("Tools"), ImGuiKey_S, ImGuiKey_S, 0, 0},
       {"view.local", N_("Only the active object (Local view) on / off"), N_("View"), ImGuiKey_Slash, ImGuiKey_Slash, 0, 0},
+      // (1.2.19) Solo, as Blender's sculpt hide keys (H, Shift+H, Alt+H), over the 3D view
+      {"solo.only", N_("Solo: show the piece under the pointer alone (again: everything)"), N_("View"), S | ImGuiKey_H, S | ImGuiKey_H, 0, 0},
+      {"solo.hide", N_("Solo: hide the piece under the pointer"), N_("View"), ImGuiKey_H, ImGuiKey_H, 0, 0},
+      {"solo.show_all", N_("Solo: show everything again"), N_("View"), A | ImGuiKey_H, A | ImGuiKey_H, 0, 0},
+      {"solo.pick", N_("Solo picker on / off (clicks pick pieces to show alone)"), N_("View"), 0, 0, 0, 0},
   };
   keymapPreset = preset;
   for (auto& a : keymap) a.chord = a.defaultChord = preset == KeymapPreset::Blender ? a.blenderChord : a.patinaChord;

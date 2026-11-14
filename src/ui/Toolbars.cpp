@@ -461,6 +461,18 @@ void App::viewportBar() {
                 "Works together with the other locks."),
              nullptr);
   }
+  // (1.2.19) Solo: the picker (clicks pick pieces of the mesh to show and paint alone)
+  if (!viewOnly && engine.doc.hasMesh()) {
+    gap();
+    bool on = engine.soloPicking;
+    next(iconButtonWidth(T_("Solo"), fh));
+    if (iconButton("solo", "solo", T_("Solo"), on || engine.doc.pieceHiddenCount() ? IconState::On : IconState::Normal, fh,
+                   T_("Show one piece of the model alone: the hair, the lashes, a sleeve. Click a piece to show it\n"
+                      "alone, Shift+click to show it too, Ctrl+click to hide it; what is hidden takes no paint.\n"
+                      "Over the model: Shift+H shows the piece under the pointer alone, H hides it, Alt+H shows everything."),
+                   "solo.pick"))
+      engine.soloPicking = !on;
+  }
   // view: the view mode, wireframe and seams
   gap();
   {

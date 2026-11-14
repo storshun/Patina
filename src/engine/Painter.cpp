@@ -1136,7 +1136,12 @@ std::vector<uint32_t> Painter::facesForFill(Document& d, uint32_t face, FillMode
   return out;
 }
 
-bool Painter::fillFaces(Document& doc, MaterialLibrary& mats, const std::vector<uint32_t>& faces) {
+bool Painter::fillFaces(Document& doc, MaterialLibrary& mats, const std::vector<uint32_t>& allFaces) {
+  // (1.2.19) hidden faces (a hidden face set, a piece Solo hides) take no paint, as from the brush
+  std::vector<uint32_t> faces;
+  faces.reserve(allFaces.size());
+  for (uint32_t f : allFaces)
+    if (f >= doc.hiddenFaces.size() || !doc.hiddenFaces[f]) faces.push_back(f);
   if (faces.empty() || !doc.hasMesh()) return false;
   if (active()) endStroke();
   init();

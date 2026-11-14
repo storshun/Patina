@@ -404,6 +404,7 @@ void App::handleShortcuts() {
     setStatus(engine.isolateActive ? F_("Only %s is shown (%s: all of them again)", engine.doc.displayName().c_str(), keyLabel("view.local"))
                                    : std::string(T_("Every object is shown")));
   }
+  soloKeys();  // (1.2.19)
   if (keyPressed("file.export")) exportWhat = 0, showExport = true;
   if (keyPressed("file.export_again")) exportAgain();
   if (keyPressed("file.save_incremental")) saveIncremental();

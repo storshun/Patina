@@ -11,6 +11,7 @@ uniform int uMode;      // 0 selected faces only, 1 aux color (distortion heat),
 uniform vec4 uColor;
 uniform uint uSelFlag;
 void main() {
+  if ((vFlags & 32u) != 0u) discard;  // (1.2.19) a hidden face (a hidden face set, Solo)
   if (uMode == 0) {
     if ((vFlags & uSelFlag) == 0u) discard;
     oColor = uColor;

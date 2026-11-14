@@ -266,13 +266,31 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.18 (2026-11-01)
+### 1.2.19 (2026-11-14)
+
+#### Added
+
+- **Solo: show one piece of the model alone, and paint only it.** Hover over a piece and press **Shift+H** to show it
+  alone (press again to show everything). **H** hides the piece under the pointer and **Alt+H** shows everything, as
+  in Blender's sculpt mode. The **Solo** button on the viewport bar turns on a picker: the piece under the pointer
+  lights up, a click shows it alone, Shift+click shows it too and Ctrl+click hides it (Esc when you're done). A piece
+  is a UV island by default, or a connected part, a material slot or a face set, chosen in the bar over the 3D view.
+  That bar also has Invert and Show All.
+  Hidden faces take no paint from any brush, projection mode or fill. They don't block the brush from what's behind
+  them, so lashes, hair cards, the inside of a collar or a sleeve's underside are easy to reach. Renders and exports
+  keep every face. What's hidden is one undo step and is saved with the project. Islands stacked on the same texels
+  still share paint there, since the pixels are the same. MCP: `solo` (and `solo_pieces` in `get_state`).
+
+<details>
+<summary><b>1.2.18 (2026-11-01)</b></summary>
 
 #### Changed
 
 - **Follow the stroke works in every projection mode.** With **Surface 3D sphere** the material follows the stroke
   along the model's surface, so it reaches into cracks and under other parts. With **UV space**, and in the UV
   editor, it follows the stroke across the texture. It was Screen only.
+
+</details>
 
 <details>
 <summary><b>1.2.17 (2026-11-01)</b></summary>

@@ -374,6 +374,11 @@ class Engine {
   bool saveScene(const std::string& path, std::string* err = nullptr);
   std::unique_ptr<Document::SaveJob> prepareSceneSave(const std::string& path, std::string* err);
   bool isolateActive = false;  // (Local view) only the active object is shown
+  // (1.2.19) Solo (Solo.cpp): the window's picker is on (clicks in the 3D view pick pieces to show alone instead of
+  // painting) and what a piece is (Document::PieceBy)
+  bool soloPicking = false;
+  int soloBy = 0;
+  json soloJson() const;
   // The model file of the scene (SceneExport.cpp): every object shown (allObjects), placed as it is in the scene, or
   // the active one alone
   bool exportSceneModel(const ModelExportOptions& opt, bool allObjects, json* out, std::string* err);
@@ -532,6 +537,7 @@ class Engine {
   void registerInterfaceCommands();  // 0.36: layers_at, languages
   void registerSceneCommands();  // (1.2) objects
   void registerSelectCommands(); // (1.2) loops, rings, linked faces, face sets
+  void registerSoloCommands();   // (1.2.19) solo pieces of the mesh
   select::EdgeFaces edgeFaces_;
   uint64_t edgeFacesKey_ = 0;
   void attachDocument(Document& d);  // the engine's hooks on the active document

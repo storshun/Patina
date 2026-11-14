@@ -676,6 +676,14 @@ class App {
   float iconButtonWidth(const char* name, float h, bool withName = false) const;
   void shortcutMenu(const char* keyId, const char* name);  // the right-click menu of a button with a shortcut
   void viewportBar();        // the bar over the 3D view: brush, locks, view, the tool's own settings
+  // ---- (1.2.19) Solo (SoloUI.cpp): pieces of the mesh shown alone (Shift+H / H / Alt+H, the picker)
+  bool soloFaceUnderPointer(uint32_t& face, vec2& point) const;
+  void soloAct(const char* action, uint32_t face, bool toggle);
+  void soloKeys();
+  void soloViewport(vec2 local, bool hovered, bool& lmbClicked, bool shift, bool ctrl);
+  void soloBar(ImVec2 origin, ImVec2 avail);
+  uint32_t soloHoverFace = 0xFFFFFFFFu;
+  int soloLitBy = -1;
   void selectTool(ViewportTool t);
   // translations (LanguageUI.cpp, core/I18n.h)
   void drawLanguagePrefs();

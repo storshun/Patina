@@ -3,6 +3,21 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.19 (2026-11-14)
+
+### Added
+
+- **Solo: show one piece of the model alone, and paint only it.** Hover over a piece and press **Shift+H** to show it
+  alone (press again to show everything). **H** hides the piece under the pointer and **Alt+H** shows everything, as
+  in Blender's sculpt mode. The **Solo** button on the viewport bar turns on a picker: the piece under the pointer
+  lights up, a click shows it alone, Shift+click shows it too and Ctrl+click hides it (Esc when you're done). A piece
+  is a UV island by default, or a connected part, a material slot or a face set, chosen in the bar over the 3D view.
+  That bar also has Invert and Show All.
+  Hidden faces take no paint from any brush, projection mode or fill. They don't block the brush from what's behind
+  them, so lashes, hair cards, the inside of a collar or a sleeve's underside are easy to reach. Renders and exports
+  keep every face. What's hidden is one undo step and is saved with the project. Islands stacked on the same texels
+  still share paint there, since the pixels are the same. MCP: `solo` (and `solo_pieces` in `get_state`).
+
 ## 1.2.18 (2026-11-01)
 
 ### Changed

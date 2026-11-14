@@ -163,6 +163,18 @@ class Document {
   // The face sets moved onto a new mesh by where its faces are on the old one (a bake-down, a mended mesh)
   void carryFaceSets(const Mesh& oldMesh, const Bvh& oldBvh, const std::vector<uint32_t>& oldOf);
   static constexpr uint32_t kHiddenFlag = 32u;  // loop flag of the hidden faces (shaders leave them out)
+  // ---- (1.2.19) Solo: pieces of the mesh (UV islands, connected parts, material slots, face sets) hidden by hand, as
+  // Blender's H / Shift+H / Alt+H, so one piece (the hair, the lashes, a sleeve) is shown and painted alone. Hidden
+  // faces leave the 3D view, the brush, fills and picking, as a hidden face set's (FaceSets.cpp, Solo.cpp)
+  enum class PieceBy { Island = 0, Connected, Material, FaceSet };
+  std::vector<uint8_t> pieceHidden;  // per face: hidden by Solo; empty when none is
+  size_t pieceHiddenCount() const;
+  // The faces of the piece `face` is in (every face of it, shown or hidden)
+  std::vector<uint32_t> pieceFaces(uint32_t face, PieceBy by) const;
+  // The Solo state as one undo step `label` (showSets: the face sets shown too, as Alt+H shows everything)
+  void setPieceHidden(std::vector<uint8_t> hidden, const std::string& label, bool showSets = false);
+  std::vector<uint32_t> hoverPiece;  // (1.2.19) the piece under the Solo picker, lit in the 3D view
+  static constexpr uint32_t kHoverPieceFlag = 64u;
 
   // Loads a mesh. keepLayers: keep the layer stack if the mesh topology matches
   // (same loop count), reprojecting paint when UVs differ.

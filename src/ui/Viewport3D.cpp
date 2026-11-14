@@ -296,6 +296,7 @@ void App::drawViewport(bool fullscreen) {
                          ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight | ImGuiButtonFlags_MouseButtonMiddle);
   bool hovered = ImGui::IsItemHovered();
   bool active = ImGui::IsItemActive();
+  if (!viewOnly) soloBar(origin, avail);  // (1.2.19) what Solo hides, over the top of the view
   // (0.22.5) a material (from the library or a fill layer) or a smart material dropped on the model: added
   // above the selected layer
   if (ImGui::BeginDragDropTarget()) {
@@ -597,6 +598,7 @@ void App::drawViewport(bool fullscreen) {
       else setStatus(F_("Selected a loop of %d faces", r.value("faces", 0)));
     }
   }
+  soloViewport(local, hovered && !alt && !viewOnly && !P.active(), lmbClicked, shift, ctrl);  // (1.2.19) the Solo picker
   float pressure = currentPressure();
   Painter::View view = engine.paintView(cam, lastViewportSize);  // (1.2) in the active object's space
   bool brushTool = !viewOnly && (tool == ViewportTool::Paint || tool == ViewportTool::Erase || tool == ViewportTool::Blur ||

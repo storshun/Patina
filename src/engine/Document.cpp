@@ -614,6 +614,7 @@ void Document::setMesh(Mesh&& m, int resolution, bool keepLayers) {
     newTextureSet(R);
     symmetryPlane = NAN;  // another model: back to the automatic plane
     faceSets.clear(), faceSetOf.clear(), hiddenFaces.clear(), nextFaceSetId = 1, hideUnsetFaces = false;
+    pieceHidden.clear(), hoverPiece.clear();
   }
   // (1.2) Blender's sculpt face sets, when Patina has none for the model yet
   if (mesh.faceSetIds.size() == mesh.faceCount() && faceSets.empty()) {
@@ -2040,6 +2041,9 @@ void Document::updateSelectionFlags() {
     if (bits)
       for (uint32_t l = mesh.faceStart[f]; l < mesh.faceStart[f + 1]; ++l) flags[l] |= bits;
   }
+  for (uint32_t f : hoverPiece)  // (1.2.19) the piece under the Solo picker
+    if (f < mesh.faceCount())
+      for (uint32_t l = mesh.faceStart[f]; l < mesh.faceStart[f + 1]; ++l) flags[l] |= kHoverPieceFlag;
   gpu.updateFlags(flags);
 }
 
@@ -2297,6 +2301,8 @@ json Document::appendToSave(SaveJob& sj, const std::string& prefix) {
     h["face_sets_hide_unset"] = hideUnsetFaces;
     ready("face_set_of", std::vector<uint8_t>((const uint8_t*)faceSetOf.data(), (const uint8_t*)(faceSetOf.data() + faceSetOf.size())));
   }
+  // (1.2.19) the pieces hidden by Solo, one byte a face
+  if (pieceHidden.size() == mesh.faceCount() && pieceHiddenCount()) ready("piece_hidden", pieceHidden);
   return h;
 }
 
@@ -2506,6 +2512,7 @@ bool Document::loadFrom(const container::File& f, const json& h, const std::stri
   objectFromJson(h.value("object", json::object()));
   // (1.2) the face sets
   faceSets.clear(), faceSetOf.clear(), hiddenFaces.clear(), nextFaceSetId = 1, hideUnsetFaces = false;
+    pieceHidden.clear(), hoverPiece.clear();
   if (const container::Block* fb = block("face_set_of"); fb && fb->bytes.size() == size_t(mesh.faceCount()) * 4) {
     faceSetOf.resize(mesh.faceCount());
     std::memcpy(faceSetOf.data(), fb->bytes.data(), fb->bytes.size());
@@ -2521,6 +2528,8 @@ bool Document::loadFrom(const container::File& f, const json& h, const std::stri
     nextFaceSetId = std::max(nextFaceSetId, h.value("next_face_set_id", 1u));
     hideUnsetFaces = h.value("face_sets_hide_unset", false);
   }
+  if (const container::Block* pb = block("piece_hidden"); pb && pb->bytes.size() == size_t(mesh.faceCount()))
+    pieceHidden.assign(pb->bytes.begin(), pb->bytes.end());
   projectPath = path;
   faceSelection.assign(mesh.faceCount(), 0);
   updateHiddenFaces();

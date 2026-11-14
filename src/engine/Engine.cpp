@@ -57,6 +57,7 @@ bool Engine::init(bool hl) {
   registerInterfaceCommands();
   registerSceneCommands();
   registerSelectCommands();
+  registerSoloCommands();
   doc.library = &materials;
   materials.atlas = &doc.mesh.tiles;
   doc.tex.materials = &materials;
@@ -942,6 +943,7 @@ json Engine::state() {
   s["material"] = painter.material.toJson();
   s["material"]["follow_stroke"] = painter.materialFollow;  // (1.2.16)
   s["material"]["follow_rope"] = painter.followLag;
+  s["solo_pieces"] = soloJson();  // (1.2.19; "solo" is the soloed layer)
   static const char* tools[] = {"paint", "erase", "fill", "picker", "blur", "clone", "smudge"};
   s["tool"] = tools[(int)painter.tool];
   if (!windowTool.empty()) s["window_tool"] = windowTool;

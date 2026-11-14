@@ -49,12 +49,18 @@ vec3 Document::faceSetColor(uint32_t id) {
 void Document::updateHiddenFaces() {
   bool any = hideUnsetFaces && !faceSets.empty();
   for (auto& s : faceSets) any |= s.hidden;
-  if (!any || faceSetOf.size() != mesh.faceCount()) {
+  if (any && faceSetOf.size() != mesh.faceCount()) any = false;
+  // (1.2.19) the pieces hidden by Solo (a stale list, from another mesh, goes)
+  if (!pieceHidden.empty() && pieceHidden.size() != mesh.faceCount()) pieceHidden.clear();
+  bool pieces = !pieceHidden.empty();
+  if (!any && !pieces) {
     hiddenFaces.clear();
   } else {
     hiddenFaces.assign(mesh.faceCount(), 0);
     for (uint32_t f = 0; f < mesh.faceCount(); ++f) {
-      if (!faceSetOf[f]) hiddenFaces[f] = hideUnsetFaces;
+      if (pieces && pieceHidden[f]) hiddenFaces[f] = 1;
+      else if (!any) continue;
+      else if (!faceSetOf[f]) hiddenFaces[f] = hideUnsetFaces;
       else if (const FaceSet* s = findFaceSet(faceSetOf[f]); s && s->hidden) hiddenFaces[f] = 1;
     }
   }

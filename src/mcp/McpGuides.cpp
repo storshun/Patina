@@ -181,6 +181,12 @@ The shapes made with `mesh_collision` are used; without them they are made with 
 
 ## export_textures {directory, preset}
 Only the texture maps, laid out for `blender`, `gltf`, `unreal` or `unity`; `format: "psd"` writes layered PSDs.
+Baked maps come along when baked (`bake_mesh_maps`): `include_ao`, `include_curvature`, `include_thickness`,
+`include_bent_normal` (each default true; false leaves it out). (1.2.20) Curvature is `$mesh_curvature.png`
+(`Curvature` for unreal/unity): 8-bit grayscale data, not sRGB (Blender's Non-Color), 0.5 = flat, lighter = convex
+edges, darker = concave creases. `export_model` writes it too: `<name>_curvature.png` beside the .obj, .gltf or .glb
+(glTF has no curvature slot, so a .glb keeps it as a file beside it), next to `<name>_ao.png` (.obj) or
+`<name>_occlusion.png` (.gltf).
 
 ## Blender
 - `send_to_blender`: the textures (and edited UVs) to the linked Blender object.

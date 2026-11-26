@@ -1756,6 +1756,10 @@ void App::drawExportDialog() {
   }
   ImGui::Checkbox(L_("AO"), &exportAO);
   ImGui::SameLine();
+  ImGui::BeginDisabled(!d.tex.hasCurvature());
+  ImGui::Checkbox(L_("Curvature"), &exportCurvature);
+  ImGui::EndDisabled();
+  ImGui::SameLine();
   ImGui::BeginDisabled(!d.tex.hasThickness());
   ImGui::Checkbox(L_("Thickness"), &exportThickness);
   ImGui::EndDisabled();
@@ -1817,6 +1821,7 @@ ExportOptions App::exportOptions() {
   o.size = exportFormatIdx == 1 ? 0 : sz[std::clamp(exportSizeIdx, 0, 7)];
   o.psd = exportFormatIdx == 1;
   o.includeAO = exportAO;
+  o.includeCurvature = exportCurvature;
   o.includeThickness = exportThickness;
   o.includeBentNormal = exportBent;
   o.nameTemplate = exportTemplate;

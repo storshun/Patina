@@ -266,7 +266,19 @@ On Windows, use `patina-cli.exe` for these. It is the same program as a console 
 The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What's New* shows it in the app.
 
 <!-- changelog: filled from CHANGELOG.md by scripts/readme_changelog.py -->
-### 1.2.19 (2026-11-14)
+### 1.2.20 (2026-11-25)
+
+#### Added
+
+- **Curvature map export.** Once curvature is baked (Bake menu, or `bake_mesh_maps`), Export Textures writes it as
+  `<name>_curvature.png` (`Curvature` for the Unreal and Unity presets), next to the AO. It's an 8-bit grayscale data
+  map, not sRGB (set it to Non-Color in Blender): 0.5 is flat, lighter is convex edges, darker is concave creases.
+  A new **Curvature** check box in the export window turns it off. Export Model writes `<name>_curvature.png` beside
+  the .obj, .gltf or .glb too (glTF has no place for curvature, so a .glb keeps it as a file beside it).
+  MCP: `export_textures {include_curvature}` (default true).
+
+<details>
+<summary><b>1.2.19 (2026-11-14)</b></summary>
 
 #### Added
 
@@ -280,6 +292,8 @@ The full list of changes is in [CHANGELOG.md](CHANGELOG.md), and *Help › What'
   them, so lashes, hair cards, the inside of a collar or a sleeve's underside are easy to reach. Renders and exports
   keep every face. What's hidden is one undo step and is saved with the project. Islands stacked on the same texels
   still share paint there, since the pixels are the same. MCP: `solo` (and `solo_pieces` in `get_state`).
+
+</details>
 
 <details>
 <summary><b>1.2.18 (2026-11-01)</b></summary>

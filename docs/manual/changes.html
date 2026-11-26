@@ -10,7 +10,7 @@
 <body>
 <header class="top">
   <button class="menu-btn" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
-  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.19 manual</span></a>
+  <a class="brand" href="index.html"><img class="logo" src="img/icon.png" alt=""> Patina <span class="ver">1.2.20 manual</span></a>
   <input id="search" type="search" placeholder="Search the manual" autocomplete="off">
   <div id="results" hidden></div>
 </header>
@@ -41,7 +41,7 @@
 <a href="translating.html">Translating Patina</a>
 <a href="commands.html">Command reference</a>
 <a href="changes.html" class="cur">What&#x27;s new</a>
-<div class="toc"><a href="#1-2-19-2026-11-14">1.2.19 (2026-11-14)</a><a href="#1-2-18-2026-11-01">1.2.18 (2026-11-01)</a><a href="#1-2-17-2026-11-01">1.2.17 (2026-11-01)</a><a href="#1-2-16-2026-11-01">1.2.16 (2026-11-01)</a><a href="#1-2-15-2026-10-31">1.2.15 (2026-10-31)</a><a href="#1-2-14-2026-10-27">1.2.14 (2026-10-27)</a><a href="#1-2-13-2026-10-27">1.2.13 (2026-10-27)</a><a href="#1-2-12-2026-10-25">1.2.12 (2026-10-25)</a><a href="#1-2-11-2026-10-25">1.2.11 (2026-10-25)</a><a href="#1-2-10-2026-10-25">1.2.10 (2026-10-25)</a><a href="#1-2-9-2026-10-24">1.2.9 (2026-10-24)</a><a href="#1-2-8-2026-10-24">1.2.8 (2026-10-24)</a><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
+<div class="toc"><a href="#1-2-20-2026-11-25">1.2.20 (2026-11-25)</a><a href="#1-2-19-2026-11-14">1.2.19 (2026-11-14)</a><a href="#1-2-18-2026-11-01">1.2.18 (2026-11-01)</a><a href="#1-2-17-2026-11-01">1.2.17 (2026-11-01)</a><a href="#1-2-16-2026-11-01">1.2.16 (2026-11-01)</a><a href="#1-2-15-2026-10-31">1.2.15 (2026-10-31)</a><a href="#1-2-14-2026-10-27">1.2.14 (2026-10-27)</a><a href="#1-2-13-2026-10-27">1.2.13 (2026-10-27)</a><a href="#1-2-12-2026-10-25">1.2.12 (2026-10-25)</a><a href="#1-2-11-2026-10-25">1.2.11 (2026-10-25)</a><a href="#1-2-10-2026-10-25">1.2.10 (2026-10-25)</a><a href="#1-2-9-2026-10-24">1.2.9 (2026-10-24)</a><a href="#1-2-8-2026-10-24">1.2.8 (2026-10-24)</a><a href="#1-2-7-2026-10-24">1.2.7 (2026-10-24)</a><a href="#1-2-6-2026-10-23">1.2.6 (2026-10-23)</a><a href="#1-2-5-2026-10-23">1.2.5 (2026-10-23)</a><a href="#1-2-4-2026-10-22">1.2.4 (2026-10-22)</a><a href="#1-2-3-2026-10-22">1.2.3 (2026-10-22)</a><a href="#1-2-2-2026-10-22">1.2.2 (2026-10-22)</a><a href="#1-2-1-2026-10-22">1.2.1 (2026-10-22)</a><a href="#1-2-0-2026-10-21">1.2.0 (2026-10-21)</a><a href="#1-1-0-2026-10-21">1.1.0 (2026-10-21)</a><a href="#1-0-0-2026-10-21">1.0.0 (2026-10-21)</a><a href="#before-1-0">Before 1.0</a></div></nav>
 <main>
 <article>
 <!-- title: What's new -->
@@ -49,8 +49,13 @@
 <h1>What's new</h1>
 <p>What changed in each version of Patina, newest first. The same list comes with Patina as <code>CHANGELOG.md</code>.</p>
 <p>What changed in each version, newest first. The manual (Help › Manual, or <code>docs/manual</code>) explains how to use each feature, and docs/ROADMAP.md lists every feature with the version it came in.</p>
-<h2 id="1-2-19-2026-11-14">1.2.19 (2026-11-14)</h2>
+<h2 id="1-2-20-2026-11-25">1.2.20 (2026-11-25)</h2>
 <h3 id="added">Added</h3>
+<ul><li>
+<b>Curvature map export.</b> Once curvature is baked (Bake menu, or <code>bake_mesh_maps</code>), Export Textures writes it as <code>&lt;name&gt;_curvature.png</code> (<code>Curvature</code> for the Unreal and Unity presets), next to the AO. It's an 8-bit grayscale data map, not sRGB (set it to Non-Color in Blender): 0.5 is flat, lighter is convex edges, darker is concave creases. A new <b>Curvature</b> check box in the export window turns it off. Export Model writes <code>&lt;name&gt;_curvature.png</code> beside the .obj, .gltf or .glb too (glTF has no place for curvature, so a .glb keeps it as a file beside it). MCP: <code>export_textures {include_curvature}</code> (default true).
+</li></ul>
+<h2 id="1-2-19-2026-11-14">1.2.19 (2026-11-14)</h2>
+<h3 id="added-2">Added</h3>
 <ul><li>
 <b>Solo: show one piece of the model alone, and paint only it.</b> Hover over a piece and press <b>Shift+H</b> to show it alone (press again to show everything). <b>H</b> hides the piece under the pointer and <b>Alt+H</b> shows everything, as in Blender's sculpt mode. The <b>Solo</b> button on the viewport bar turns on a picker: the piece under the pointer lights up, a click shows it alone, Shift+click shows it too and Ctrl+click hides it (Esc when you're done). A piece is a UV island by default, or a connected part, a material slot or a face set, chosen in the bar over the 3D view. That bar also has Invert and Show All. Hidden faces take no paint from any brush, projection mode or fill. They don't block the brush from what's behind them, so lashes, hair cards, the inside of a collar or a sleeve's underside are easy to reach. Renders and exports keep every face. What's hidden is one undo step and is saved with the project. Islands stacked on the same texels still share paint there, since the pixels are the same. MCP: <code>solo</code> (and <code>solo_pieces</code> in <code>get_state</code>).
 </li></ul>
@@ -65,7 +70,7 @@
 <b>Follow the stroke turns smoothly.</b> The pattern stepped at every dab round a turn, even a long sweeping one, which showed as stairs in a material with many lines. Each texel now takes its place from the nearest point on the stroke's path, so lines run on smoothly round a curve. The stroke's end no longer smears into one stretched stripe.
 </li></ul>
 <h2 id="1-2-16-2026-11-01">1.2.16 (2026-11-01)</h2>
-<h3 id="added-2">Added</h3>
+<h3 id="added-2-2">Added</h3>
 <ul><li>
 <b>Follow the stroke.</b> In the Brush panel's <b>Paint material</b> section, this lays the material along the stroke like a ribbon. Where the stroke turns on screen, the pattern turns with it, so stripes, planks or stitches follow a curve. The stroke trails the cursor on a rope (a lazy mouse) so the turns stay smooth, and <b>Rope</b> sets how far it trails. <b>Rotation</b> turns the pattern on top. It works with the Paint tool and the Screen projection. MCP: <code>set_paint_material</code> <code>follow_stroke</code> and <code>follow_rope</code>.
 </li></ul>
@@ -99,7 +104,7 @@ The same goes for the Materials, Smart and Brushes panels of the other layouts, 
 <b>The dials draw the brush's tip, not a circle.</b> With the Blender keymap, <b>F</b> draws the tip's outline at the size you set, <b>Ctrl+F</b> turns it as you go round, and <b>Shift+F</b> thins its dots as you lower the opacity, all live. The value now sits under the tip, so a small brush isn't hidden behind it. <b>Preferences › Features › The brush cursor shows the tip</b> off brings back the circles.
 </li></ul>
 <h2 id="1-2-13-2026-10-27">1.2.13 (2026-10-27)</h2>
-<h3 id="added-2-2">Added</h3>
+<h3 id="added-2-2-2">Added</h3>
 <ul><li>
 <b>A brush for each tool.</b> Paint, Erase, Blur, Clone and Smudge each keep their own brush: its tip, size, hardness, flow, spacing and dynamics. A jar or grunge tip on Paint no longer comes along when you switch to Erase.
 <ul><li>
@@ -117,7 +122,7 @@ MCP: <code>set_brush</code> <code>tool</code> changes another tool's brush, <cod
 <b>The brush cursor shows the tip.</b> Over the 3D view and the UV editor's paint mode, the cursor is the outline of the brush's tip, turned and squashed as the dabs are, instead of a circle. Inside it, a dither shows where the brush paints and how it fades: a soft brush thins out toward its rim, a hard one stays dense to the edge. A thin dark ring keeps the outline readable on light models. <b>Preferences › Features › The brush cursor shows the tip</b> brings back the circle.
 </li></ul>
 <h2 id="1-2-12-2026-10-25">1.2.12 (2026-10-25)</h2>
-<h3 id="added-2-2-2">Added</h3>
+<h3 id="added-2-2-2-2">Added</h3>
 <ul><li>
 <b>Patina in 5 Minutes</b>, a guided tutorial that comes with Patina. It has sixteen short chapters with real screenshots: connect Blender and Claude, import, add objects, unwrap, bake, paint layers, brushes, your own materials, smart materials and export. Each chapter shows the long way and the pie, and Play runs it like a short video.
 <ul><li>
@@ -129,7 +134,7 @@ The manual's first page links to it. MCP: <code>open_window</code> <code>tutoria
 </li></ul>
 </li></ul>
 <h2 id="1-2-11-2026-10-25">1.2.11 (2026-10-25)</h2>
-<h3 id="added-2-2-2-2">Added</h3>
+<h3 id="added-2-2-2-2-2">Added</h3>
 <ul><li>
 <b>Frame the selection in the 3D view</b>, as Blender's View Selected: the selected faces fill the view, or the whole model when nothing is selected. It's <b>Shift+F</b> in the Patina keymap and <b>Numpad .</b> in the Blender keymap (Numpad . framed the whole model before). It's also in the view pie (<b>Z</b>, down right) and the View menu, as <b>Frame the Selection</b>. MCP: <code>frame_object</code> <code>selection</code>.
 </li></ul>
@@ -140,7 +145,7 @@ The view pie's down-right item is now Frame selection. The retopology preview it
 The manual's pie menus section now says "radial menus" too, so a search for either finds it.
 </li></ul>
 <h2 id="1-2-10-2026-10-25">1.2.10 (2026-10-25)</h2>
-<h3 id="added-2-2-2-2-2">Added</h3>
+<h3 id="added-2-2-2-2-2-2">Added</h3>
 <ul><li>
 <b>A pin for the Properties tabs</b> (Blender layout): the pin above the tabs keeps the tab you chose when you pick a tool or a workspace. Unpinned, as before, the Select tool shows the Step tab and the Paint tool the Layer tab. MCP: <code>layout</code> <code>pin_properties</code> and <code>properties_tab</code>.
 </li><li>
@@ -159,7 +164,7 @@ Clearer names: <b>Create from Selection</b>, <b>Create Sets From...</b>, <b>Show
 <b>Linux install:</b> <code>install.sh</code> now installs every shipped data folder. Before, it copied only materials, the Blender add-on, Patina Web and the samples, so an installed Patina had no built-in smart materials, recipes, fonts or translations. Running the new <code>install.sh</code> adds them; your own library is left alone.
 </li></ul>
 <h2 id="1-2-9-2026-10-24">1.2.9 (2026-10-24)</h2>
-<h3 id="added-2-2-2-2-2-2">Added</h3>
+<h3 id="added-2-2-2-2-2-2-2">Added</h3>
 <ul><li>
 <b>Red marks</b> (Retopology window › Show, and the arrow beside the Retopology preview button) hides the red crosses over the quads. Its tooltip says what they mark: parts too thin for the quads, tight spots patched where zones meet, and, with Mirror on, places where the two sides of the model differ. MCP: <code>retopo_view</code> <code>marks</code>.
 </li></ul>

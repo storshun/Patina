@@ -2262,6 +2262,7 @@ json Document::appendToSave(SaveJob& sj, const std::string& prefix) {
             {"export", hasLastExport ? json{{"preset", exportPresetName(lastExport.preset)}, {"directory", lastExport.directory},
                                             {"base_name", lastExport.baseName}, {"size", lastExport.size},
                                             {"name_template", lastExport.nameTemplate}, {"include_ao", lastExport.includeAO},
+                                            {"include_curvature", lastExport.includeCurvature},
                                             {"include_thickness", lastExport.includeThickness},
                                             {"include_bent_normal", lastExport.includeBentNormal}}
                                      : json()},
@@ -2475,6 +2476,7 @@ bool Document::loadFrom(const container::File& f, const json& h, const std::stri
     lastExport.size = ex.value("size", 0);
     lastExport.nameTemplate = ex.value("name_template", std::string("$mesh_$map"));
     lastExport.includeAO = ex.value("include_ao", true);
+    lastExport.includeCurvature = ex.value("include_curvature", true);
     lastExport.includeThickness = ex.value("include_thickness", true);
     lastExport.includeBentNormal = ex.value("include_bent_normal", true);
     hasLastExport = !lastExport.directory.empty();
@@ -2602,6 +2604,7 @@ fs::path Document::exportFileName(const ExportOptions& opt, const std::string& m
 std::vector<ExportMap> Document::exportMaps(const ExportOptions& opt) {
   std::vector<ExportMap> outs;
   bool ao = opt.includeAO && tex.hasAO() && tex.bakedShown(0);  // (0.44.2) a map switched off stays out
+  bool curv = opt.includeCurvature && tex.hasCurvature() && tex.bakedShown(1);
   bool thick = opt.includeThickness && tex.hasThickness() && tex.bakedShown(2);
   bool bent = opt.includeBentNormal && tex.hasBentNormals();
   int hb = opt.height16 ? 16 : 8;
@@ -2645,6 +2648,8 @@ std::vector<ExportMap> Document::exportMaps(const ExportOptions& opt) {
     bool dx = opt.preset == ExportPreset::Unreal;
     const char* tn = opt.preset == ExportPreset::Unity ? "Thickness" : opt.preset == ExportPreset::Unreal ? "Thickness" : "thickness";
     const char* bn = opt.preset == ExportPreset::Unity ? "BentNormal" : opt.preset == ExportPreset::Unreal ? "BentNormal" : "bentNormal";
+    const char* cn = opt.preset == ExportPreset::Unity || opt.preset == ExportPreset::Unreal ? "Curvature" : "curvature";
+    if (curv) outs.push_back({"curvature", cn, 20, 1, 8});  // (1.2.20) grayscale data, 0.5 = flat
     if (thick) outs.push_back({"thickness", tn, 12, 1, 8});
     if (bent) outs.push_back({"bent_normal", bn, dx ? 14 : 13, 3, 8});
   }
@@ -2674,8 +2679,9 @@ std::vector<ExportPlanFile> Document::exportPlan(const ExportOptions& opt) {
                                     "R occlusion, G roughness, B metallic", "G roughness, B metallic (R is 1)",
                                     "R metallic, G occlusion, A smoothness", "smoothness", "thickness",
                                     "bent normal, OpenGL (Y up)", "bent normal, DirectX (Y down)", "opacity", "sheen",
-                                    "clearcoat", "subsurface", "RGB base color, A opacity"};
-      f.contents = mode >= 0 && mode < 20 ? kWhat[mode] : key;
+                                    "clearcoat", "subsurface", "RGB base color, A opacity",
+                                    "curvature (0.5 flat, lighter convex, darker concave)"};
+      f.contents = mode >= 0 && mode < 21 ? kWhat[mode] : key;
       if (mode == -1) f.contents = "the layer's painted mask";
       if (psd) f.contents += ", a layer per Patina layer";
       plan.push_back(f);
@@ -2878,6 +2884,7 @@ bool Document::exportTextures(const ExportOptions& opt, std::map<std::string, st
       s.tex("uNrmMap", 6, tex.nrmMap.id());
       s.tex("uTanMap", 7, tex.tanMap.id());
       s.tex("uExtra", 8, tex.finExtra.id());
+      s.tex("uCurv", 9, tex.curvView().id());
       s.set("uOut", o.mode);
       s.use();
       drawFullscreenTriangle();
@@ -3018,6 +3025,7 @@ bool Document::exportTiled(const ExportOptions& opt, const std::vector<ExportMap
           ex.tex("uNrmMap", 6, tile.nrmMap.id());
           ex.tex("uTanMap", 7, tile.tanMap.id());
           ex.tex("uExtra", 8, tile.finExtra.id());
+          ex.tex("uCurv", 9, tile.curvView().id());
           ex.set("uOut", wr->m.mode);
           ex.use();
           drawFullscreenTriangle();
@@ -3138,6 +3146,7 @@ bool Document::exportPsd(const ExportOptions& opt, const std::function<fs::path(
       s.tex("uNrmMap", 6, tex.nrmMap.id());
       s.tex("uTanMap", 7, tex.tanMap.id());
       s.tex("uExtra", 8, tex.finExtra.id());
+      s.tex("uCurv", 9, tex.curvView().id());
       s.set("uOut", m.mode);
       s.use();
       drawFullscreenTriangle();

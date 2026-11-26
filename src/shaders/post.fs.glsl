@@ -157,9 +157,10 @@ uniform sampler2D uNormal;    // signed
 uniform sampler2D uEmissive;
 uniform int uOut;  // 0 color,1 rough,2 metal,3 height,4 normalGL,5 normalDX,6 emissive,7 ao,8 ORM,9 glTF MR (g rough b metal),10 unity mask (r metal g ao b 0 a smooth),11 smoothness,
                    // 12 thickness, 13 bent normal (tangent, GL), 14 bent normal (tangent, DX),
-                   // 15 opacity, 16 sheen, 17 clearcoat, 18 subsurface, 19 color with opacity in alpha
+                   // 15 opacity, 16 sheen, 17 clearcoat, 18 subsurface, 19 color with opacity in alpha, 20 curvature
 uniform sampler2D uExtra;  // opacity, sheen, clearcoat, subsurface
 uniform sampler2D uThick;
+uniform sampler2D uCurv;     // (1.2.20) curvature, 0.5 flat, above convex, below concave
 uniform sampler2D uBent;     // object space
 uniform sampler2D uNrmMap;
 uniform sampler2D uTanMap;
@@ -194,6 +195,7 @@ void main() {
   else if (uOut == 10) o = vec4(rmh.g, rmh.a, 0.0, 1.0 - rmh.r);
   else if (uOut == 11) o.rgb = vec3(1.0 - rmh.r);
   else if (uOut == 12) o.rgb = vec3(texelFetch(uThick, p, 0).r);
+  else if (uOut == 20) o.rgb = vec3(texelFetch(uCurv, p, 0).r);
   else if (uOut >= 15 && uOut <= 18) o.rgb = vec3(texelFetch(uExtra, p, 0)[uOut - 15]);
   else if (uOut == 19) o = vec4(c, texelFetch(uExtra, p, 0).r);
   else if (uOut == 13 || uOut == 14) {

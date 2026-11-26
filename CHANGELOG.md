@@ -3,6 +3,17 @@
 What changed in each version, newest first. The manual (Help › Manual, or `docs/manual`) explains how to use each
 feature, and [docs/ROADMAP.md](docs/ROADMAP.md) lists every feature with the version it came in.
 
+## 1.2.20 (2026-11-25)
+
+### Added
+
+- **Curvature map export.** Once curvature is baked (Bake menu, or `bake_mesh_maps`), Export Textures writes it as
+  `<name>_curvature.png` (`Curvature` for the Unreal and Unity presets), next to the AO. It's an 8-bit grayscale data
+  map, not sRGB (set it to Non-Color in Blender): 0.5 is flat, lighter is convex edges, darker is concave creases.
+  A new **Curvature** check box in the export window turns it off. Export Model writes `<name>_curvature.png` beside
+  the .obj, .gltf or .glb too (glTF has no place for curvature, so a .glb keeps it as a file beside it).
+  MCP: `export_textures {include_curvature}` (default true).
+
 ## 1.2.19 (2026-11-14)
 
 ### Added

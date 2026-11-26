@@ -406,7 +406,7 @@ class App {
   std::string blenderLibStatus;
   int exportSizeIdx = 0;
   int exportFormatIdx = 0;  // 0 PNG, 1 layered PSD
-  bool exportAO = true, exportThickness = true, exportBent = true;
+  bool exportAO = true, exportCurvature = true, exportThickness = true, exportBent = true;
   std::string exportDir;
   std::string exportBaseName;
   MaterialDef editMaterial;       // material editor working copy

@@ -897,6 +897,10 @@ void Engine::registerCommands() {
                  {"layer", num("integer", "Export only this layer / folder (its index), as if soloed", 0, 100000)},
                  {"mask", prop("boolean", "With layer: export that layer's painted mask as a grayscale PNG")},
                  {"include_ao", prop("boolean", "Write the AO map when baked (default true)")},
+                 {"include_curvature", prop("boolean", "(1.2.20) Write the curvature map when baked (default true): "
+                                                       "$mesh_curvature.png, 8-bit grayscale data (not sRGB; "
+                                                       "Blender's Non-Color), 0.5 = flat, lighter = convex edges, "
+                                                       "darker = concave creases")},
                  {"include_thickness", prop("boolean", "Write the thickness map when baked (default true)")},
                  {"include_bent_normal", prop("boolean", "Write the bent normal map when baked (default true)")},
                  {"dry_run", prop("boolean", "(0.47) Write nothing: answer `plan`, the files it would write, each with "
@@ -920,6 +924,7 @@ void Engine::registerCommands() {
            o.includeAO = a.value("include_ao", true);
            o.psd = a.value("format", std::string("png")) == "psd";
            if (o.size > 32768) throw CommandError("size: at most 32768");
+           o.includeCurvature = a.value("include_curvature", true);
            o.includeThickness = a.value("include_thickness", true);
            o.includeBentNormal = a.value("include_bent_normal", true);
            if (a.value("dry_run", false)) {
@@ -3615,7 +3620,9 @@ void Engine::registerCommands() {
          "Exports the model with its textures: .glb (one file, textures inside), .gltf (with a .bin and PNG files) or "
          ".obj (with a .mtl and PNG files). A material per texture set / UDIM tile; glTF gets base color (with "
          "opacity as alpha: MASK or BLEND), metallic-roughness, normal, emissive, occlusion when baked, and the "
-         "KHR_materials_sheen / KHR_materials_clearcoat extensions when used. lods adds levels of detail that share the "
+         "KHR_materials_sheen / KHR_materials_clearcoat extensions when used. (1.2.20) A baked curvature map is written "
+         "as <name>_curvature.png beside the file (all three formats; grayscale data, 0.5 = flat), as the AO is "
+         "(<name>_ao.png beside an .obj). lods adds levels of detail that share the "
          "textures: glTF nodes name_LOD0, name_LOD1... (with MSFT_lod on LOD0), or name_LOD1.obj... beside the .obj. "
          ".stl: 3D printing (mm, Z up, no textures); .ply: the base color as sRGB vertex colors, with UVs and normals "
          "(Z up, meters, faces as they are).",

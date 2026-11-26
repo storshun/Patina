@@ -230,6 +230,21 @@ bool Document::exportModel(const ModelExportOptions& opt, json* out, std::string
     eo.includeBentNormal = false;
     eo.height16 = false;
     if (!exportTextures(eo, &tex, err)) return false;
+    if (glb) {
+      // (1.2.20) glTF has no slot for curvature: the .glb gets it as <name>_curvature.png beside it
+      for (auto& [k, p] : tex) {
+        if (k.rfind("curvature", 0) != 0) continue;
+        fs::path dst = (path.parent_path().empty() ? fs::path(".") : path.parent_path()) / fs::path(p).filename();
+        fs::rename(p, dst, ec);
+        if (ec) {
+          ec.clear();
+          fs::copy_file(p, dst, fs::copy_options::overwrite_existing, ec);
+          fs::remove(p, ec);
+          ec.clear();
+        }
+        p = fs::absolute(dst).string();
+      }
+    }
   }
   const int nt = mesh.tiles.active() ? mesh.tiles.count() : 1;
   auto texFor = [&](const std::string& key, int tile) -> std::string {
@@ -538,6 +553,10 @@ bool Document::exportModel(const ModelExportOptions& opt, json* out, std::string
     if (!paths::writeFileAtomic(path, file)) return fail("Could not write " + path.string());
     for (auto& e : embedded) fs::remove(e, ec);
     fs::remove(texDir, ec);
+    json files = json::object();
+    for (auto& [k, p] : tex)
+      if (k.rfind("curvature", 0) == 0) files[k] = p;
+    if (!files.empty()) result["textures"] = files;
   } else {
     fs::path binPath = path;
     binPath.replace_extension(".bin");

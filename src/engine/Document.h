@@ -48,6 +48,7 @@ struct ExportOptions {
   std::string baseName;      // file prefix; default mesh name
   int size = 0;              // 0 = texture set resolution
   bool includeAO = true;
+  bool includeCurvature = true;   // when baked (0.5 = flat, linear data)
   bool includeThickness = true;   // when baked
   bool includeBentNormal = true;  // when baked (with the AO)
   bool psd = false;               // layered Photoshop files (one per map, a layer per Patina layer)

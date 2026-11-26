@@ -301,10 +301,12 @@ layers' materials and smart masks are rendered at the full export size, so they 
 painted layers and masks (which only exist at the texture set's resolution) are scaled up. The PNG files are written
 a band at a time, so a 32K export doesn't need the whole image in memory, but it does take a while and needs space on
 disk: a 32K base color PNG is often over a gigabyte.</p>
-<p>The <b>AO</b>, <b>Thickness</b> and <b>Bent normals</b> boxes add those baked maps to the export (as
-<code>ao</code>, <code>thickness</code> and <code>bentNormal</code>; <code>Thickness</code> and <code>BentNormal</code> for
-Unreal and Unity). They are only available once baked. Bent normals are tangent space, OpenGL style, or DirectX style
-for Unreal.</p>
+<p>The <b>AO</b>, <b>Curvature</b>, <b>Thickness</b> and <b>Bent normals</b> boxes add those baked maps to the export (as
+<code>ao</code>, <code>curvature</code>, <code>thickness</code> and <code>bentNormal</code>; <code>Curvature</code>,
+<code>Thickness</code> and <code>BentNormal</code> for Unreal and Unity). They are only available once baked. Curvature
+is a grayscale data map, not sRGB (Non-Color in Blender): 0.5 is flat, lighter is convex edges, darker is concave
+creases. <i>Export Model</i> writes it as <code>&lt;name&gt;_curvature.png</code> beside the .obj, .gltf or .glb.
+Bent normals are tangent space, OpenGL style, or DirectX style for Unreal.</p>
 <h3 id="layered-psd">Layered PSD</h3>
 <p>Set <b>Format</b> to <i>Layered PSD</i> to hand the layer stack to Photoshop, Krita, GIMP or Affinity Photo instead of
 flat maps. Patina writes one <code>.psd</code> file per map: base color, roughness, metallic, height (16-bit),
